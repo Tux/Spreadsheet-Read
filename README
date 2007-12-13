@@ -1,0 +1,55 @@
+=head1 NAME
+
+Spreadsheet::Read - Meta-Wrapper for reading spreadsheet data
+
+=head1 SYNOPSYS
+
+  use Spreadsheet::Read;
+  my $ref = ReadData ("file.xls");
+
+=head1 DESCRIPTION
+
+Spreadsheet::Read offers a uniformed wrapper to Spreadsheet::ParseExcel
+and Spreadheet::ReadSXC to give the end-user a single point of view to
+various types of spreadsheets and deal with these in a transparent way.
+
+See for more thorrough documentation the pod in the module, or
+
+  $ man Spreadsheet::Read
+
+after installation
+
+=head1 INSTALLATION
+
+  $ perl Makefile.PL
+  $ make
+  $ make test
+  $ make install
+
+If the C<make test> warns you in the xls tests, read the message and
+apply the generated patch. Spreadsheet::ParseExcel has a small bug in
+the parsing of the default format regarding UTF-8.
+
+This module requires perl-5.6.x or newer.
+
+=head1 TODO
+
+  * Make tests for examples/xlscat
+  * Field attributes (See Read.pm - TODO)
+  * Support Parsers native module options
+  * Check if Tk is installed before asking if ss2tk is wanted
+  * Test diagnostics output
+  * Make clip skip empty sheets
+
+=head1 AUTHOR
+
+H.Merijn Brand, <h.m.brand@xs4all.nl>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2005-2007 H.Merijn Brand
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+=cut

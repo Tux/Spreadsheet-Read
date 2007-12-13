@@ -1,0 +1,169 @@
+Revision history for Spreadsheet::Read
+
+0*25	Thu 13 Dec 2007
+
+    - Spreadsheet-Read now under git
+
+0.24	Thu 05 Oct 2007
+
+    - -? and --help in utils moved to Getopt::Long
+    - Adjusted copyright notice in utils
+    - removed prototypes in utils
+    - next is illegal in do {} while (); (Johan Vromans)
+      only happens with old Text::CSV_XS
+
+0.23	Thu 21 Jun 2007
+
+    - Use IO::Scalar instead of File::Temp when installed
+      Thanks to David Cantrell for making a OpenBSD test box available!
+    - use binmode () when opening files
+    - Also use 3-arg open in test files
+    - die if test files cannot be opene'ed
+
+0.22	Mon 18 Jun 2007
+
+    - 0.21 should already support Text::CSV_PP 1.05
+      Tested Text::CSV_PP 1.05 on bleadperl.
+    - Better detection of (not) installed modules
+    - Module requires perl 5.6.x
+
+0.21	Mon 18 Jun 2007
+
+    - Text::CSV_XS uses keep_meta_info instead of get_flags
+    - Removed always_quote from xlscat's CSV output
+
+0.20	Thu 31 May 2007
+
+    - perlcritic OK
+    - CSV parsing now uses getline (), and auto-detects eol
+      Assumes first line does not contain embedded eol. This implies that
+      parsing CSV with embedded eol sequences is now safe.
+    - As I now also maintain Text::CSV_XS, I changed the references
+    - Changed TODO's from Text::CSV to Text::CSV_PP (::CSV is dated 1997)
+
+0.19	Fri 04 May 2007
+
+    - Could not retreive '0' fields from OpenOffice (Jim Kelly)
+
+0.18	Fri 27 Apr 2007
+
+    - use strict in Makefile.PL
+    - Added test_cover make target
+    - Added "ods" for OpenOffice conversions
+    - Added color tests for ods (but SR::RS doesn't support that yet)
+    - Switched from \d to 0-9 in regexp
+    - Added more test files and tests (increase coverage)
+
+0.17	Tue 04 Jul 2006
+
+    - xlscat new option: --ansii to (try to) use the ansi colors for fields
+    - Fixed a color attribute off-by-one error
+    - Added test cases (not yet complete)
+    - Added bold and underline
+
+0.16	Tue 04 Jul 2006
+
+    - xlscat new option: --in-sep-char to force-define input sep-char for CSV
+    - More debug lines
+    - Parser name info in $ref->[0]
+    - SquirrelCalc now reports Spreadsheet::Read and its version for parser info
+    - Most of the attributes for Excel now implemented. Tested, but no test case
+
+0.15	Wed 21 Jun 2006
+
+    - Small doc change from AnnoCPAN
+    - Sheets with undefined labels might cause havoc
+    - Clip now skips empty xls sheets (TODO: sxc)
+    - xlscat clips by default
+    - xlscat new options -d and --noclip
+    - xlscat usage () from -?/--help to STDOUT from fault to STDERR
+
+0.14	Fri 20 Jan 2006
+
+    - maxrow and maxcol were swapped in csv sheets
+    - promoted internal debug flag to option
+    - small doc changes
+
+0.13	Thu 04 Nov 2005
+
+    - Control attrib 'cells' was misinterpreted
+    - New option: clip, default is true if {cell} is selected, false otherwise
+      Removes trailing lines and columns in each sheet that have no visible data
+    - new test t/11_call.t for checking options. Not complete yet
+    - Added test_cover target to Makefile.PL
+
+0.12	Mon 31 Oct 2005
+
+    - Added ss2tk to examples
+
+0.11	Wed 26 Oct 2005
+
+    - Allow ods (OpenOffice 2.0) for sxc
+    - include real ods test files and new test
+    - Check if sc.version is undef, not 0
+
+0.10	Mon 19 Sep 2005
+
+    - More test coverage
+    - cr2cell () returns ""     for illegal col/row values
+    - cell2cr () returns (0, 0) for illegal cell    values
+    - rows () tests even better for valid reference pointer
+    - Renamed the test files
+
+0.09	Sun 18 Sep 2005
+
+    - Added Test::Pod
+    - Added Test::Pod::Coverage
+    - Spreadsheet::ReadSXC 0.20 now required (too many tests fail on 0.12)
+    - Small changes to the docs
+    - More secure handling of false values
+    - Mention a bug in Spreadsheet::ParseExcel
+
+0.08	Mon 22 Aug 2005
+
+    - Slightly changed the Synopsis
+
+0.07	Wed 06 Jul 2005
+
+    - Added function rows ()
+    - Added function parses ()
+    - Made all modules optional
+    - Prepared for Spreadsheet::Perl
+    - Doc updates
+
+0.06	Wed 22 Jun 2005
+
+    - Repaired error in label names in metadata for SXC
+
+0.05	Thu 17 Jun 2005
+
+    - Spreadsheet::ReadSXC >= 0.20 supports sheet order
+    - Spreadsheet::ReadSXC has new data structure (we still support the old)
+    - Added "version" to the meta data for parser version
+    - More tests
+
+0.04	Tue 14 Jun 2005
+
+    - Changed TODO
+    - Added options "rc", and "cell"
+    - Added CSV
+    - Added CSV options "sep", and "quote"
+    - Support xls from content
+    - Added basic support for SquirrelCalc format
+    - Updated pod
+    - xlscat -R option for row selection was a one-off
+    - xlscat now supports selecting fields with -F
+
+0.03	Thu 19 May 2005
+
+    - Expanded xlscat to support -i for index
+    - Optionally install xlscat
+
+0.02	Thu 19 May 2005
+
+    - Typoes in the doc
+    - Small change in organization so it actually installs
+
+0.01	Thu 12 May 2005
+
+    - Initial CPAN version. A lot can still change

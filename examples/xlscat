@@ -1,0 +1,273 @@
+#!/pro/bin/perl
+
+# xls2cat: show XLS/SXC file as Text
+#	  (m)'07 [26-06-2007] Copyright H.M.Brand 2005-2007
+
+use strict;
+use warnings;
+
+our $VERSION = "1.5";
+
+sub usage
+{
+    my $err = shift and select STDERR;
+    print
+	"usage: xlscat [-s <sep>] [-L] [-u] [ Selection ] file.xls\n",
+	"              [-c | -m]       [-u] [ Selection ] file.xls\n",
+	"               -i                  [ -S sheets ] file.xls\n",
+	"    Generic options:\n",
+	"       -v[#]       Set verbose level (xlscat)\n",
+	"       -d[#]       Set debug   level (Spreadsheet::Read)\n",
+	"       -u          Use unformatted values\n",
+	"       --noclip    Do not strip empty sheets and\n",
+	"                   trailing empty rows and columns\n",
+	"    Input CSV:\n",
+	"       --in-sep=c  Set input sep_char for CSV\n",
+	"    Output Text (default):\n",
+	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
+	"       -L          Line up the columns\n",
+	"    Output Index only:\n",
+	"       -i          Show sheet names and size only\n",
+	"    Output CSV:\n",
+	"       -c          Output CSV, separator = ','\n",
+	"       -m          Output CSV, separator = ';'\n",
+	"    Selection:\n",
+	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set\n",
+	"                   Default only prints the first sheet\n",
+	"       -R <rows>   Only print rows    <rows>. Default is 'all'\n",
+	"       -C <cols>   Only print columns <cols>. Default is 'all'\n",
+	"       -F <flds>   Only fields <flds> e.g. -FA3,B16\n";
+    @_ and print join "\n", @_, "";
+    exit $err;
+    } # usage
+
+use Getopt::Long qw(:config bundling nopermute noignorecase);
+my $opt_c;		# Generate CSV
+my $opt_s;		# Text separator
+my $opt_S;		# Sheets to print
+my $opt_R;		# Rows to print
+my $opt_C;		# Columns to print
+my $opt_F = "";		# Fields to print
+my $opt_i = 0;		# Index
+my $opt_L = 0;		# Auto-size/align columns
+my $opt_u = 0;		# Show unformatted values
+my $opt_v = 0;		# Verbosity for xlscat
+my $opt_d = 0;		# Debug level for Spreadsheet::Read
+my $opt_A = 0;		# Show field colors in ansi escapes
+my $clip  = 1;
+my $sep;		# Input field sep for CSV
+GetOptions (
+    "help|?"		=> sub { usage (0); },
+
+    "c|csv"		=> sub { $opt_c = "," },
+    "m|ms"		=> sub { $opt_c = ";" },
+    "insepchar".
+     "|in-sep-char=s"	=> \$sep,
+    "i|index"		=> \$opt_i,
+    "s|separator".
+     "|outsepchar".
+     "|out-sep-char=s"	=> \$opt_s,
+    "S|sheets=s"	=> \$opt_S,
+    "R|rows=s"		=> \$opt_R,
+    "C|columns=s"	=> \$opt_C,
+    "F|fields=s"	=> \$opt_F,
+    "L|fit|align"	=> \$opt_L,
+    "A|ansi"		=> \$opt_A,
+    "u|unformatted"	=> \$opt_u,
+    "v|verbose:1"	=> \$opt_v,
+    "d|debug:1"		=> \$opt_d,
+    "noclip"		=> sub { $clip = 0 },
+    ) or usage 1, "GetOpt: $@";
+
+#binmode STDOUT;
+
+$opt_i && $opt_L and usage 1, "Options i and L are mutually exclusive";
+$opt_i && $opt_s and usage 1, "Options i and s are mutually exclusive";
+$opt_i && $opt_c and usage 1, "Options i and c are mutually exclusive";
+$opt_i && $opt_u and usage 1, "Options i and u are mutually exclusive";
+$opt_i && $opt_S and usage 1, "Options i and S are mutually exclusive";
+$opt_i && $opt_R and usage 1, "Options i and R are mutually exclusive";
+$opt_i && $opt_C and usage 1, "Options i and C are mutually exclusive";
+$opt_i && $opt_F and usage 1, "Options i and F are mutually exclusive";
+$opt_c && $opt_s and usage 1, "Options c and s are mutually exclusive";
+
+defined $opt_s or $opt_s = "|"; eval "\$opt_s = qq{$opt_s}";
+defined $opt_S or $opt_S = $opt_i ? "all" : "1";
+$opt_i && $opt_v < 1 and $opt_v = 1;
+
+if ($opt_c) {
+    $opt_L = 0;	# Cannot align CSV
+    $opt_c =~ m/^1?$/ and $opt_c = ",";
+    $opt_c = Text::CSV_XS->new ({
+	binary       => 1,
+	sep_char     => $opt_c,
+	});
+    }
+
+use Data::Dumper; $Data::Dumper::Sortkeys = 1;
+
+@ARGV or usage 1;
+my $file = shift;
+-f $file or usage 1, "the first argument is not a regular file";
+-s $file or usage 1, "the file is empty";
+
+use Spreadsheet::Read;
+if ($opt_c) {
+    Spreadsheet::Read::parses ("csv") or die "No CSV module found\n";
+    eval { use Text::CSV_XS };
+    }
+
+my @RDarg = (debug => $opt_d, clip => $clip);
+defined $sep and push @RDarg, "sep" => $sep;
+$opt_A       and push @RDarg, "attr" => 1;
+$opt_v > 4 and print STDERR "ReadData ($file, @RDarg);\n";
+my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
+$opt_v > 7 and print STDERR Dumper ($xls);
+my $sc  = $xls->[0]{sheets}	or die "No sheets in $file\n";
+$opt_v > 1 and print STDERR "Opened $file with $sc sheets\n";
+
+$opt_S eq "all" and $opt_S = "1..$sc";	# all
+$opt_S =~ s/-$/-$sc/;			# 3,6-
+$opt_S =~ s/-/../g;
+my %print;
+eval "%{\$print{sheet}} = map { \$_ => 1 } $opt_S";
+
+my $v_fmt = $opt_C || $opt_R || $opt_F ? "" : "%6d x %6d%s";
+
+# New style xterm (based on ANSI colors):
+# 30 Black
+# 31 Red
+# 32 Green
+# 33 Yellow
+# 34 Blue
+# 35 Magenta
+# 36 Cyan
+# 37 White
+sub color_reduce
+{
+    my ($rgb, $base) = @_;
+    defined $rgb or return "";
+    my ($r, $g, $b) = map { hex >> 7 }
+	($rgb =~ m/^\s*#?([\da-f]{2})([\da-f]{2})([\da-f]{2})/);
+    $base + 4 * $b + 2 * $g + $r;
+    } # color_reduce
+
+sub ansi_color
+{
+    my ($fg, $bg, $bold, $ul) = @_;
+
+    #print STDERR "$fg on $bg $bold $ul\n";
+    my $attr = join ";", 0, grep { /\S/ }
+	$bold ? 1 : "",
+	$ul   ? 4 : "",
+	color_reduce ($fg, 30),
+	color_reduce ($bg, 40);
+
+    "\e[${attr}m";
+    } # ansi_color
+
+my $name_len = 30;
+if ($opt_i) {
+    my $nl = 0;
+    foreach my $sn (keys %{$xls->[0]{sheet}}) {
+	length ($sn) > $nl and $nl = length $sn;
+	}
+    $nl and $name_len = $nl;
+    }
+my @opt_F = split m/[^A-Z\d]+/ => $opt_F;
+foreach my $si (1 .. $sc) {
+    my @data;
+    exists $print{sheet}{$si} or next;
+    $opt_v > 1 and print STDERR "Opening sheet $si ...\n";
+    my $s = $xls->[$si] or next;
+    $opt_v > 5 and print STDERR Dumper ($s);
+    my @r = (1, $s->{maxrow});
+    my @c = (1, $s->{maxcol});
+    my ($sn, $nr, $nc) = ($s->{label}, $r[-1], $c[-1]);
+    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows\n",
+	$file, $si, $name_len, $sn, $nc, $nr;
+    $opt_i and next;
+
+    if (@opt_F) {
+	foreach my $fld (@opt_F) {
+	    print "$fld:",$s->{$fld},"\n";
+	    }
+	next;
+	}
+
+    if (my $rows = $opt_R) {
+	$rows eq "all" and $rows = "1..$nr";	# all
+	$rows =~ s/-$/-$nr/;			# 3,6-
+	$rows =~ s/-/../g;
+	eval "%{\$print{row}} = map { \$_ => 1 } $rows";
+	}
+    if (my $cols = $opt_C) {
+	$cols eq "all" and $cols = "1..$nc";	# all
+	$cols =~ s/-$/-$nc/;			# 3,6-
+	$cols =~ s/-/../g;
+	eval "\$print{col} = [ map { \$_ - 1  } $cols ]";
+	$nc = @{$print{col}};
+	}
+    $opt_v >= 8 and print Dumper (\%print);
+
+    my $undef = $opt_v > 2 ? "-- undef --" : "";
+    my ($h, @w) = (0, (0) x $nc); # data height, -width, and default column widths
+    my @align = ("") x $nc;
+    foreach my $r ($r[0] .. $r[1]) {
+	exists $print{row} && !exists $print{row}{$r} and next;
+	my @att;
+	my @row = map {
+	    my $cell = cr2cell ($_, $r);
+	    my ($uval, $fval) = map {
+		defined $_ ? $_ : $undef
+		} $s->{cell}[$_][$r], $s->{$cell};
+	    $opt_v > 2 and print STDERR "$_:$r '$uval' / '$fval'\n";
+	    $opt_A and 
+		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline )} ];
+	    defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
+	    } $c[0] .. $c[1];
+	exists $print{col} and @row = @row[@{$print{col}}];
+	if ($opt_L) {
+	    foreach my $c (0 .. $#row) {
+		my $l = length $row[$c];
+		$l > $w[$c] and $w[$c] = $l;
+		$row[$c] =~ m/\D/ and $align[$c] = "-";
+		}
+	    }
+	if ($opt_c) {	# CSV
+	    $opt_c->combine (@row) or die "Data error: ", $opt_c->error_input, "\n";
+	    print $opt_c->string, "\r\n";
+	    next;
+	    }
+	if ($opt_L) {	# Autofit / Align
+	    push @data, [ [ @row ], [ @att ] ];
+	    next;
+	    }
+	if ($opt_A) {
+	    foreach my $c (0 .. $#row) {
+		$row[$c] =
+		    ansi_color (@{$att[$c]}).
+		    $row[$c] .
+		    "\e[0m";
+		}
+	    }
+	print join ($opt_s => @row), "\n";
+	} continue {
+	    ++$h % 100 or printf STDERR $v_fmt, $nc, $h, "\r";
+	    }
+    printf STDERR $v_fmt, $nc, $h, "\n";
+    $opt_L or next;
+    my $fmt = join ($opt_s =>
+	map { my $f = "%$align[$_]$w[$_]s";
+	      $opt_A ? "%s$f%s" : $f } 0 .. $#w)."\n";
+    for (@data) {
+	my ($row, $att) = @$_;
+	my @row = $opt_A
+	    ? map { (
+		ansi_color (@{$att->[$_]}),
+		$row->[$_],
+		"\e[0m" ) } 0 .. $#$row
+	    : @$row;
+	printf $fmt, @row;
+	}
+    }

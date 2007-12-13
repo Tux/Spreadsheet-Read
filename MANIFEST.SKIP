@@ -1,0 +1,10 @@
+\.git
+blib/
+color.pl
+cover_db/
+Makefile
+MANIFEST.SKIP
+pm_to_blib
+Rsync
+Spreadsheet/
+test/

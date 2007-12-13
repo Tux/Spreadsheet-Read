@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ `hostname` = pc03 ]; then
+    exec  /usr/bin/rsync -avz --delete rsync://merijn@pc09p:21973/Spreadsheet-Read .
+    fi
+
+case `ifconfig | grep addr:192.0.1.` in
+    *192.0.1.*) rsync -avz --delete pc09::Spreadsheet-Read               . ;;
+    *)          rsync -avz --delete rsync://pc09p:21973/Spreadsheet-Read . ;;
+    esac
