@@ -1,3 +1,6 @@
+\.old$
+\.tar\.gz$
+\.tgz$
 \.git
 blib/
 color.pl
