@@ -19,17 +19,24 @@ my %wm = (
     EXE_FILES    => [ @exe ],
     PREREQ_FATAL => 0,
     PREREQ_PM    => {
-# Backend parsers
-	"Text::CSV_XS"			=> 0.00,
-	"Text::CSV_PP"			=> 1.05,
+	# Core modules
+	"Exporter"			=> 0.00,
+	"Data::Dumper"			=> 0.00,
+	"File::Temp"			=> 0.14,
+	"IO::Scalar"			=> 0.00,	# Optional
+
+	# Backend parsers, all optional
+	"Text::CSV"			=> 1.00,
+	"Text::CSV_XS"			=> 0.23,	# 0.32 or up preferred
+	"Text::CSV_PP"			=> 1.05,	# 1.08 or up preferred
 	"Spreadsheet::ReadSXC"		=> 0.20,
 	"Spreadsheet::ParseExcel"	=> 0.26,
 #	"Spreadsheet::Perl"		=> 0.00,	# Not yet
 
-	# Core modules
-	"File::Temp"			=> 0.14,
+	# For testing
+	"Test::More"			=> 0.00,
 
-# for ss2tk
+	# for ss2tk
 #	"Tk"				=> 804.027,
 #	"Tk::NoteBook"			=> 4.009,
 #	"Tk::TableMatrix::Spreadsheet"	=> 1.2,
