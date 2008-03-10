@@ -21,9 +21,10 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.25";
+our $VERSION = "0.26";
 sub  Version { $VERSION }
 
+use Carp;
 use Exporter;
 our @ISA       = qw( Exporter );
 our @EXPORT    = qw( ReadData cell2cr cr2cell );
@@ -100,7 +101,7 @@ sub cr2cell
     while ($c) {
 	use integer;
 
-	substr ($cell, 0, 0) = chr (--$c % 26 + ord "A");
+	substr $cell, 0, 0, chr (--$c % 26 + ord "A");
 	$c /= 26;
 	}
     "$cell$r";
@@ -200,7 +201,7 @@ sub ReadData ($;@)
 
     # CSV not supported from streams
     if ($txt =~ m/\.(csv)$/i and -f $txt) {
-	$can{csv} or die "CSV parser not installed";
+	$can{csv} or croak "CSV parser not installed";
 
 	$debug and print STDERR "Opening CSV $txt\n";
 	open my $in, "<", $txt or return;
@@ -242,7 +243,7 @@ sub ReadData ($;@)
 	    eol            => $eol,
 	    keep_meta_info => 1,	# Ignored for Text::CSV_XS <= 0.27
 	    binary         => 1,
-	    }) or die "Cannot create a csv ('$sep', '$quo', '$eol') parser!";
+	    }) or croak "Cannot create a csv ('$sep', '$quo', '$eol') parser!";
 
 	# while ($row = $csv->getline () {
 	# doesn't work, because I have to fetch the first line for auto
@@ -278,7 +279,7 @@ sub ReadData ($;@)
     if ($txt =~ m/^(\376\067\0\043
 		   |\320\317\021\340\241\261\032\341
 		   |\333\245-\0\0\0)/x) {
-	$can{xls} or die "Spreadsheet::ParseExcel not installed";
+	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
 	if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
 	    $xls_from_txt = \$txt;
 	    }
@@ -290,7 +291,7 @@ sub ReadData ($;@)
 	    }
 	}
     if ($xls_from_txt or $txt =~ m/\.xls$/i && -f $txt) {
-	$can{xls} or die "Spreadsheet::ParseExcel not installed";
+	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
 	my $oBook;
 	if ($xls_from_txt) {
 	    $debug and print STDERR "Opening XLS \$txt\n";
@@ -424,7 +425,7 @@ sub ReadData ($;@)
 	}
 
     if ($txt =~ m/^<\?xml/ or -f $txt) {
-	$can{sxc} or die "Spreadsheet::ReadSXC not installed";
+	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
 	my $sxc_options = { OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
 	   if ($txt =~ m/\.(sxc|ods)$/i) {

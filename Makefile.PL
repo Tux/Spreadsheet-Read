@@ -5,11 +5,14 @@ require 5.006;
 use ExtUtils::MakeMaker;
 
 my @exe;
-for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
-      [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
-      ) {
-    prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "n") =~ m/[Yy]/ and
-	push @exe, "examples/$_->[0]";
+unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
+    for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
+	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
+	  [ "xls2csv",	"Wrapper around xlscat for easy XLS => CSV"	],
+	  ) {
+	prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "n") =~ m/[Yy]/ and
+	    push @exe, "examples/$_->[0]";
+	}
     }
 my %wm = (
     NAME         => "Spreadsheet::Read",
@@ -55,6 +58,9 @@ sub postamble
 	'	cover -delete',
 	'	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test',
 	'	cover',
+	'',
+	'tgzdist:	$(DISTVNAME).tar.gz',
+	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'';
     } # postamble
 
