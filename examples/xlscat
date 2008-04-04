@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'07 [26-06-2007] Copyright H.M.Brand 2005-2008
+#	  (m)'08 [04-04-2008] Copyright H.M.Brand 2005-2008
 
 use strict;
 use warnings;
 
-our $VERSION = "1.5";
+our $VERSION = "1.6";
 
 sub usage
 {
@@ -21,6 +21,9 @@ sub usage
 	"       -u          Use unformatted values\n",
 	"       --noclip    Do not strip empty sheets and\n",
 	"                   trailing empty rows and columns\n",
+	"	-e <enc>    Set encoding for input and output\n",
+	"	-b <enc>    Set encoding for input\n",
+	"	-a <enc>    Set encoding for output\n",
 	"    Input CSV:\n",
 	"       --in-sep=c  Set input sep_char for CSV\n",
 	"    Output Text (default):\n",
@@ -55,6 +58,8 @@ my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_A = 0;		# Show field colors in ansi escapes
 my $clip  = 1;
+my $enc_i;		# Input  encoding
+my $enc_o;		# Output encoding
 my $sep;		# Input field sep for CSV
 GetOptions (
     "help|?"		=> sub { usage (0); },
@@ -77,9 +82,14 @@ GetOptions (
     "v|verbose:1"	=> \$opt_v,
     "d|debug:1"		=> \$opt_d,
     "noclip"		=> sub { $clip = 0 },
+
+    "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
+    "b|encoding-in=s"	=> \$enc_i,
+    "a|encoding-out=s"	=> \$enc_o,
     ) or usage 1, "GetOpt: $@";
 
 #binmode STDOUT;
+binmode STDERR, ":utf8";
 
 $opt_i && $opt_L and usage 1, "Options i and L are mutually exclusive";
 $opt_i && $opt_s and usage 1, "Options i and s are mutually exclusive";
@@ -99,8 +109,9 @@ if ($opt_c) {
     $opt_L = 0;	# Cannot align CSV
     $opt_c =~ m/^1?$/ and $opt_c = ",";
     $opt_c = Text::CSV_XS->new ({
-	binary       => 1,
-	sep_char     => $opt_c,
+	binary   => 1,
+	sep_char => $opt_c,
+	eol      => "\r\n",
 	});
     }
 
@@ -111,6 +122,7 @@ my $file = shift;
 -f $file or usage 1, "the first argument is not a regular file";
 -s $file or usage 1, "the file is empty";
 
+use Encode qw( encode decode );
 use Spreadsheet::Read;
 if ($opt_c) {
     Spreadsheet::Read::parses ("csv") or die "No CSV module found\n";
@@ -219,7 +231,7 @@ foreach my $si (1 .. $sc) {
 	my @row = map {
 	    my $cell = cr2cell ($_, $r);
 	    my ($uval, $fval) = map {
-		defined $_ ? $_ : $undef
+		defined $_ ? $enc_i ? decode ($enc_i, $_) : $_ : $undef
 		} $s->{cell}[$_][$r], $s->{$cell};
 	    $opt_v > 2 and print STDERR "$_:$r '$uval' / '$fval'\n";
 	    $opt_A and 
@@ -235,8 +247,8 @@ foreach my $si (1 .. $sc) {
 		}
 	    }
 	if ($opt_c) {	# CSV
-	    $opt_c->combine (@row) or die "Data error: ", $opt_c->error_input, "\n";
-	    print $opt_c->string, "\r\n";
+	    if ($enc_o) { $_ = encode ($enc_o, $_) for @row; }
+	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
 	    next;
 	    }
 	if ($opt_L) {	# Autofit / Align
