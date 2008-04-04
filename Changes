@@ -1,12 +1,13 @@
 Revision history for Spreadsheet::Read
 
-0.26	Mon 10 Mar 2008
+0.26	Fri 04 Apr 2008
 
     - Added examples/xls2csv
     - Upped copyright to 2008 in examples
     - Don't ask to install examples under automated testing
     - die => croak
     - Added tgzdist target
+    - Added encoding options to examples/xlscat
 
 0.25	Wed 02 Jan 2008
 
