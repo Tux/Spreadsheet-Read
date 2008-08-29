@@ -336,6 +336,10 @@ sub ReadData ($;@)
 			if ($opt{attr}) {
 			    my $FmT = $oWkC->{Format};
 			    my $FnT = $FmT->{Font};
+			    my $fmt = $FmT->{FmtIdx}
+			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
+			       : undef;
+			    $fmt and $fmt =~ s/\\//g;
 			    $sheet{attr}[$c + 1][$r + 1] = {
 				@def_attr,
 
@@ -344,9 +348,7 @@ sub ReadData ($;@)
 				merged	=> $oWkC->{Merged} || 0,
 				hidden	=> $FmT->{Hidden},
 				locked	=> $FmT->{Lock},
-				format  => $FmT->{FmtIdx}
-					   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
-					   : undef,
+				format  => $fmt,
 				halign  => [ undef, qw( left center right
 					    fill justify ), undef,
 					    "equal_space" ]->[$FmT->{AlignH}],

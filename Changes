@@ -1,6 +1,6 @@
 Revision history for Spreadsheet::Read
 
-0.26	Fri 04 Apr 2008
+0.26	Fri 29 Aug 2008
 
     - Added examples/xls2csv
     - Upped copyright to 2008 in examples
@@ -8,6 +8,7 @@ Revision history for Spreadsheet::Read
     - die => croak
     - Added tgzdist target
     - Added encoding options to examples/xlscat
+    - Added date-type checks for SS:PE > 0.32
 
 0.25	Wed 02 Jan 2008
 
