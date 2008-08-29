@@ -5,6 +5,7 @@ examples/xls2csv
 files/attr.ods
 files/attr.xls
 files/content.xml
+files/Dates.xls
 files/empty.csv
 files/empty.ods
 files/empty.sc
@@ -35,6 +36,7 @@ t/30_xls.t
 t/31_clr.t
 t/33_misc.t
 t/32_fmt.t
+t/34_dates.t
 t/40_sxc.t
 t/45_ods.t
 t/46_clr.t

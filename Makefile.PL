@@ -55,13 +55,15 @@ sub postamble
 {
     join "\n" =>
 	'cover test_cover:',
-	'	cover -delete',
-	'	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test',
-	'	cover',
+	'	ccache -C',
+	'	cover -test',
 	'',
-	'tgzdist:	$(DISTVNAME).tar.gz',
+	'fixmeta:	distmeta',
+	'	perl sandbox/genMETA.pl',
+	'',
+	'tgzdist:	fixmeta $(DISTVNAME).tar.gz distcheck',
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
-	'';
+	'	-@cpants_lint.pl $(DISTVNAME).tgz';
     } # postamble
 
 1;
