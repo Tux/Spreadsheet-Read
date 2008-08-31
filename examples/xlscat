@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'08 [04-04-2008] Copyright H.M.Brand 2005-2008
+#	  (m)'08 [31-08-2008] Copyright H.M.Brand 2005-2008
 
 use strict;
 use warnings;
 
-our $VERSION = "1.6";
+our $VERSION = "1.7";
 
 sub usage
 {
@@ -26,6 +26,9 @@ sub usage
 	"	-a <enc>    Set encoding for output\n",
 	"    Input CSV:\n",
 	"       --in-sep=c  Set input sep_char for CSV\n",
+	"    Input XLS:\n",
+	"       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'\n",
+	"                   the default replacement is 'yyyy-mm-dd'\n",
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"       -L          Line up the columns\n",
@@ -50,6 +53,7 @@ my $opt_s;		# Text separator
 my $opt_S;		# Sheets to print
 my $opt_R;		# Rows to print
 my $opt_C;		# Columns to print
+my $dtfmt;		# Default date-format for Excel
 my $opt_F = "";		# Fields to print
 my $opt_i = 0;		# Index
 my $opt_L = 0;		# Auto-size/align columns
@@ -64,10 +68,17 @@ my $sep;		# Input field sep for CSV
 GetOptions (
     "help|?"		=> sub { usage (0); },
 
+    # Input CSV
     "c|csv"		=> sub { $opt_c = "," },
     "m|ms"		=> sub { $opt_c = ";" },
     "insepchar".
      "|in-sep-char=s"	=> \$sep,
+
+    # Input XLS
+    "dtfmt".
+     "|date-format=s"	=> \$dtfmt,
+
+    # Output
     "i|index"		=> \$opt_i,
     "s|separator".
      "|outsepchar".
@@ -83,6 +94,7 @@ GetOptions (
     "d|debug:1"		=> \$opt_d,
     "noclip"		=> sub { $clip = 0 },
 
+    # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
     "b|encoding-in=s"	=> \$enc_i,
     "a|encoding-out=s"	=> \$enc_o,
@@ -130,8 +142,9 @@ if ($opt_c) {
     }
 
 my @RDarg = (debug => $opt_d, clip => $clip);
-defined $sep and push @RDarg, "sep" => $sep;
-$opt_A       and push @RDarg, "attr" => 1;
+$opt_A         and push @RDarg, "attr"  => 1;
+defined $sep   and push @RDarg, "sep"   => $sep;
+defined $dtfmt and push @RDarg, "dtfmt" => $dtfmt;
 $opt_v > 4 and print STDERR "ReadData ($file, @RDarg);\n";
 my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
 $opt_v > 7 and print STDERR Dumper ($xls);
