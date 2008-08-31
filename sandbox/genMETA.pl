@@ -3,6 +3,14 @@
 use strict;
 use warnings;
 
+use Getopt::Long qw(:config bundling nopermute);
+my $check = 0;
+my $opt_v = 0;
+GetOptions (
+    "c|check"		=> \$check,
+    "v|verbose:1"	=> \$opt_v,
+    ) or die "usage: $0 [--check]\n";
+
 my $version;
 open my $pm, "<", "Read.pm" or die "Cannot read Read.pm";
 while (<$pm>) {
@@ -12,13 +20,28 @@ while (<$pm>) {
     }
 close $pm;
 
-my @my = glob <*/META.yml>;
-@my == 1 && open my $my, ">", $my[0] or die "Cannot update META.yml|n";
+my @yml;
 while (<DATA>) {
     s/VERSION/$version/o;
-    print $my $_;
+    push @yml, $_;
     }
-close $my;
+
+if ($check) {
+    use YAML::Syck;
+    use Test::YAML::Meta::Version;
+    my $h;
+    eval { $h = Load (join "", @yml) };
+    $@ and die "$@\n";
+    $opt_v and print Dump $h;
+    my $t = Test::YAML::Meta::Version->new (yaml => $h);
+    $t->parse () and print join "\n", $t->errors, "";
+    }
+else {
+    my @my = glob <*/META.yml>;
+    @my == 1 && open my $my, ">", $my[0] or die "Cannot update META.yml|n";
+    print $my $_;
+    close $my;
+    }
 
 __END__
 --- #YAML:1.0
@@ -46,9 +69,8 @@ build_requires:
   perl:                 5.006
   Test::Harness:        0
   Test::More:           0
-
 optional_features:
-  - CSV:
+- opt_csv:
     description:        Provides parsing of CSV streams
     requires:
       Text::CSV_XS:     0.23
@@ -56,17 +78,17 @@ optional_features:
       Text::CSV:        1
       Text::CSV_PP:     1.05
       Text::CSV_XS:     0.52
-  - Excel:
+- opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel: 0.26
     recommends:
       Spreadsheet::ParseExcel: 0.33
-  - OpenOffice:
+- opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
       Spreadsheet::ReadSXC:    0.2
-  - Tools:
+- opt_tools:
     description:        Spreadsheet tools
     recommends:
       Tk:                           0
@@ -75,5 +97,5 @@ optional_features:
 resources:
   license:      http://dev.perl.org/licenses/
 meta-spec:
-  url:          http://module-build.sourceforge.net/META-spec-v1.3.html
-  version:      1.3
+  version:      1.4
+  url:          http://module-build.sourceforge.net/META-spec-v1.4.html
