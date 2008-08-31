@@ -1,5 +1,10 @@
 Revision history for Spreadsheet::Read
 
+0.27	Sun 31 Aug 2008
+
+    - Fixed META.yml (the specs are inconsistent)
+    - Added --dtfmt to xlscat
+
 0.26	Fri 29 Aug 2008
 
     - Added examples/xls2csv
