@@ -46,7 +46,7 @@ if ($check) {
 else {
     my @my = glob <*/META.yml>;
     @my == 1 && open my $my, ">", $my[0] or die "Cannot update META.yml|n";
-    print $my $_;
+    print $my @yml;
     close $my;
     }
 

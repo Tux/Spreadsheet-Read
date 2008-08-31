@@ -58,10 +58,14 @@ sub postamble
 	'	ccache -C',
 	'	cover -test',
 	'',
+	'checkmeta:',
+	'	perl sandbox/genMETA.pl -c',
+	'',
 	'fixmeta:	distmeta',
 	'	perl sandbox/genMETA.pl',
+	'	ls -l */META.yml',
 	'',
-	'tgzdist:	fixmeta $(DISTVNAME).tar.gz distcheck',
+	'tgzdist:	checkmeta fixmeta $(DISTVNAME).tar.gz distcheck',
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'	-@cpants_lint.pl $(DISTVNAME).tgz';
     } # postamble
