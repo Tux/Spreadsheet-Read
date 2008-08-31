@@ -11,6 +11,7 @@ GetOptions (
     "v|verbose:1"	=> \$opt_v,
     ) or die "usage: $0 [--check]\n";
 
+
 my $version;
 open my $pm, "<", "Read.pm" or die "Cannot read Read.pm";
 while (<$pm>) {
@@ -34,7 +35,13 @@ if ($check) {
     $@ and die "$@\n";
     $opt_v and print Dump $h;
     my $t = Test::YAML::Meta::Version->new (yaml => $h);
-    $t->parse () and print join "\n", $t->errors, "";
+    $t->parse () and die join "\n", $t->errors, "";
+
+    my $req_vsn = $h->{requires}{perl};
+    print "Checking if $req_vsn is still OK as minimal version\n";
+    use Test::MinimumVersion;
+    all_minimum_version_ok ($req_vsn, { paths =>
+	["t", "examples", "Read.pm", "Makefile.PL" ]});
     }
 else {
     my @my = glob <*/META.yml>;
