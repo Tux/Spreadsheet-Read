@@ -11,7 +11,6 @@ GetOptions (
     "v|verbose:1"	=> \$opt_v,
     ) or die "usage: $0 [--check]\n";
 
-
 my $version;
 open my $pm, "<", "Read.pm" or die "Cannot read Read.pm";
 while (<$pm>) {
@@ -43,6 +42,9 @@ if ($check) {
     all_minimum_version_ok ($req_vsn, { paths =>
 	["t", "examples", "Read.pm", "Makefile.PL" ]});
     }
+elsif ($opt_v) {
+    print @yml;
+    }
 else {
     my @my = glob <*/META.yml>;
     @my == 1 && open my $my, ">", $my[0] or die "Cannot update META.yml|n";
@@ -51,7 +53,7 @@ else {
     }
 
 __END__
---- #YAML:1.0
+--- #YAML:1.4
 name:                   Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
@@ -89,8 +91,9 @@ optional_features:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel: 0.26
+      Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel: 0.33
+      Spreadsheet::ParseExcel: 0.34
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
