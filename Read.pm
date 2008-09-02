@@ -653,6 +653,12 @@ date format. The default format in Excel is 'm-d-yy', which is both
 not year 2000 safe, nor very useful. The default is now 'yyyy-mm-dd',
 which is more ISO-like.
 
+Note that date formatting in M$Excel is not reliable at all, as it will
+store/replace/change the date field separator in already stored formats
+if you change your locale settings. So the above mentioned default can
+be either "m-d-yy" OR "m/d/yy" depending on what that specific character
+happened to be at the time the user saved the file.
+
 =item debug
 
 Enable some diagnostic messages to STDERR.
@@ -813,37 +819,41 @@ OO interface.
 
 =item Text::CSV_XS, Text::CSV_PP
 
-http://search.cpan.org/~hmbrand/
+http://search.cpan.org/dist/Text-CSV_XS ,
+http://search.cpan.org/dist/Text-CSV_PP , and
+http://search.cpan.org/dist/Text-CSV .
 
-A pure perl version is available on http://search.cpan.org/~makamaka/
+Text::CSV is a wrapper over Text::CSV_XS (the fast XS version) and/or
+Text::CSV_PP (the pure perl version)
 
 =item Spreadsheet::ParseExcel
 
-http://search.cpan.org/~kwitknr/
+http://search.cpan.org/dist/Spreadsheet-ParseExcel
 
 =item Spreadsheet::ReadSXC
 
-http://search.cpan.org/~terhechte/
+http://search.cpan.org/dist/Spreadsheet-ReadSXC
 
 =item Spreadsheet::BasicRead
 
-http://search.cpan.org/~gng/ for xlscat likewise functionality (Excel only)
+http://search.cpan.org/dist/Spreadsheet-BasicRead
+for xlscat likewise functionality (Excel only)
 
 =item Spreadsheet::ConvertAA
 
-http://search.cpan.org/~nkh/ for an alternative set of cell2cr () /
-cr2cell () pair
+http://search.cpan.org/dist/Spreadsheet-ConvertAA
+for an alternative set of cell2cr () / cr2cell () pair
 
 =item Spreadsheet::Perl
 
-http://search.cpan.org/~nkh/ offers a Pure Perl implementation of a
-spreadsheet engine. Users that want this format to be supported in
-Spreadsheet::Read are hereby motivated to offer patches. It's not high
-on my todo-list.
+http://search.cpan.org/dist/Spreadsheet-Perl
+offers a Pure Perl implementation of a spreadsheet engine. Users that want
+this format to be supported in Spreadsheet::Read are hereby motivated to
+offer patches. It's not high on my todo-list.
 
 =item xls2csv
 
-http://search.cpan.org/~ken/ offers an alternative for my C<xlscat -c>,
+http://search.cpan.org/dist/xls2csv offers an alternative for my C<xlscat -c>,
 in the xls2csv tool, but this tool focusses on character encoding
 transparency, and requires some other modules.
 

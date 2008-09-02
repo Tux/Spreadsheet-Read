@@ -1,5 +1,12 @@
 Revision history for Spreadsheet::Read
 
+0.28	Tue 02 Sep 2008
+
+    - More tests on date formats
+    - Declare Spreadsheet::ParseExcel::FmtDefault in META.yml
+    - Add 'size' from Excel font size
+    - Update docs about Excel quircks and CPAN links
+
 0.27	Sun 31 Aug 2008
 
     - Fixed META.yml (the specs are inconsistent)
