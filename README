@@ -2,7 +2,7 @@
 
 Spreadsheet::Read - Meta-Wrapper for reading spreadsheet data
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
   use Spreadsheet::Read;
   my $ref = ReadData ("file.xls");
@@ -13,7 +13,7 @@ Spreadsheet::Read offers a uniformed wrapper to Spreadsheet::ParseExcel
 and Spreadheet::ReadSXC to give the end-user a single point of view to
 various types of spreadsheets and deal with these in a transparent way.
 
-See for more thorrough documentation the pod in the module, or
+See for more thorough documentation the pod in the module, or
 
   $ man Spreadsheet::Read
 
@@ -31,6 +31,9 @@ apply the generated patch. Spreadsheet::ParseExcel has a small bug in
 the parsing of the default format regarding UTF-8.
 
 This module requires perl-5.6.x or newer.
+
+Recent changes can be (re)viewed in the public GIT repository at
+http://repo.or.cz/w/Spreadsheet-Read.git
 
 =head1 TODO
 

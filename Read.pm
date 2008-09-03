@@ -225,7 +225,7 @@ sub ReadData ($;@)
 	    );
 	$_ = <$in>;
 	my $quo = defined $opt{quote} ? $opt{quote} : '"';
-	my $sep = # If explicitely set, use it
+	my $sep = # If explicitly set, use it
 	   defined $opt{sep} ? $opt{sep} :
 	       # otherwise start auto-detect with quoted strings
 	       m/["0-9];["0-9;]/	? ";"  :
@@ -539,7 +539,7 @@ For OpenOffice this module uses Spreadsheet::ReadSXC
 For Excel this module uses Spreadsheet::ParseExcel
 
 For CSV this module uses Text::CSV_XS (0.29 or up prefered) or
-Text_PP (1.05 or up required).
+Text::CSV_PP (1.05 or up required).
 
 For SquirrelCalc there is a very simplistic built-in parser
 
