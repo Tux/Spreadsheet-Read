@@ -54,3 +54,15 @@ is ($ss->{E1},	"08 Aug 2008",	"Cell content E1");
 is ($ss->{E2},	"12 Aug 2008",	"Cell content E2");
 is ($ss->{E3},	"08 Dec 2008",	"Cell content E3");
 is ($ss->{E4},	"13 Aug 2008",	"Cell content E4");
+
+# Below can only be checked when SS::PE 0.34 is out
+#use DDumper;
+#foreach my $r (1..4,6..7) {
+#    foreach my $c (1..5) {
+#	my $cell = cr2cell ($c, $r);
+#	my $fmt  = $ss->{attr}[$c][$r]{format};
+#	defined $ss->{$cell} or next;
+#	printf STDERR "# attr %s: %-22s %s\n",
+#	    $cell, $ss->{$cell}, defined $fmt ? "'$fmt'" : "<undef>";
+#	}
+#    }
