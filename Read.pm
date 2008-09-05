@@ -21,7 +21,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.28";
+our $VERSION = "0.29";
 sub  Version { $VERSION }
 
 use Carp;
@@ -308,7 +308,7 @@ sub ReadData ($;@)
 	    type	=> "xls",
 	    parser	=> "Spreadsheet::ParseExcel",
 	    version	=> $Spreadsheet::ParseExcel::VERSION,
-	    sheets	=> $oBook->{SheetCount},
+	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
 	    } );
 	# Overrule the default date format strings

@@ -1,5 +1,10 @@
 Revision history for Spreadsheet::Read
 
+0.29	Wed 05 Sep 2008
+
+    - Make Read safer for files that do not match extension,
+      like HTML in foo.xls
+
 0.28	Wed 04 Sep 2008
 
     - More tests on date formats
