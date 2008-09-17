@@ -13,11 +13,12 @@ Spreadsheet::Read offers a uniformed wrapper to Spreadsheet::ParseExcel
 and Spreadheet::ReadSXC to give the end-user a single point of view to
 various types of spreadsheets and deal with these in a transparent way.
 
-See for more thorough documentation the pod in the module, or
+For more thorough documentation please refer to the perl documentation
+in the module in pod format, or
 
   $ man Spreadsheet::Read
 
-after installation
+after installation.
 
 =head1 INSTALLATION
 
@@ -52,6 +53,6 @@ H.Merijn Brand, <h.m.brand@xs4all.nl>
 Copyright (C) 2005-2008 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
