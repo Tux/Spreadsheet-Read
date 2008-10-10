@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'08 [31-08-2008] Copyright H.M.Brand 2005-2008
+#	  (m)'08 [10-10-2008] Copyright H.M.Brand 2005-2008
 
 use strict;
 use warnings;
 
-our $VERSION = "1.7";
+our $VERSION = "1.8";
 
 sub usage
 {
@@ -32,6 +32,7 @@ sub usage
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"       -L          Line up the columns\n",
+	"       -A          Show field attributes in ANSI escapes\n",
 	"    Output Index only:\n",
 	"       -i          Show sheet names and size only\n",
 	"    Output CSV:\n",
@@ -60,7 +61,7 @@ my $opt_L = 0;		# Auto-size/align columns
 my $opt_u = 0;		# Show unformatted values
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
-my $opt_A = 0;		# Show field colors in ansi escapes
+my $opt_A = 0;		# Show field colors in ANSI escapes
 my $clip  = 1;
 my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
