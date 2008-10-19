@@ -1,9 +1,10 @@
 Revision history for Spreadsheet::Read
 
-0.29	Wed 05 Sep 2008
+0.29	Sun 19 Oct 2008
 
     - Make Read safer for files that do not match extension,
       like HTML in foo.xls
+    - YAML declared 1.4 (META.yml) instead of 1.1 (YAML)
 
 0.28	Wed 04 Sep 2008
 

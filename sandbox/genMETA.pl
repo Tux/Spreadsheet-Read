@@ -54,7 +54,7 @@ else {
     }
 
 __END__
---- #YAML:1.4
+--- #YAML:1.1
 name:                   Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
