@@ -87,7 +87,7 @@ optional_features:
     recommends:
       Text::CSV:        1
       Text::CSV_PP:     1.05
-      Text::CSV_XS:     0.54
+      Text::CSV_XS:     0.56
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:

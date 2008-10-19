@@ -5,6 +5,7 @@ Revision history for Spreadsheet::Read
     - Make Read safer for files that do not match extension,
       like HTML in foo.xls
     - YAML declared 1.4 (META.yml) instead of 1.1 (YAML)
+    - Recommend Text-CSV-0.56
 
 0.28	Wed 04 Sep 2008
 
