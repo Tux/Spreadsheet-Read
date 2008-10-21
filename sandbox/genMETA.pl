@@ -30,11 +30,16 @@ if ($check) {
     use YAML::Syck;
     use Test::YAML::Meta::Version;
     my $h;
-    eval { $h = Load (join "", @yml) };
+    my $yml = join "", @yml;
+    eval { $h = Load ($yml) };
     $@ and die "$@\n";
     $opt_v and print Dump $h;
     my $t = Test::YAML::Meta::Version->new (yaml => $h);
     $t->parse () and die join "\n", $t->errors, "";
+
+    #use Parse::CPAN::Meta;
+    #eval { Parse::CPAN::Meta::Load ($yml) };
+    #$@ and die "$@\n";
 
     my $req_vsn = $h->{requires}{perl};
     print "Checking if $req_vsn is still OK as minimal version\n";
