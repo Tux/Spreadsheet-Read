@@ -90,7 +90,8 @@ sub postamble
 	'tgzdist:	checkmeta fixmeta $(DISTVNAME).tar.gz distcheck',
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'	-@cpants_lint.pl $(DISTVNAME).tgz',
-	'	-@rm -f Debian_CPANTS.txt';
+	'	-@rm -f Debian_CPANTS.txt',
+	'';
     } # postamble
 
 1;

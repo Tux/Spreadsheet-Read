@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.30	Mon 17 Nov 2008
+
+    - Wrong e-mail in META.yml
+
 0.29	Sun 19 Oct 2008
 
     - Make Read safer for files that do not match extension,
