@@ -206,6 +206,8 @@ sub ReadData ($;@)
 
 	$debug and print STDERR "Opening CSV $txt\n";
 	open my $in, "<", $txt or return;
+
+	local $/ = $/;
 	my $csv;
 	my @data = (
 	    {	type	=> "csv",
@@ -223,7 +225,16 @@ sub ReadData ($;@)
 		attr	=> [],
 		},
 	    );
+
 	$_ = <$in>;
+	if (eof ($in)) {
+	    # This file is either just one single line, or uses \r as eol
+	    close $in;
+	    open $in, "<", $txt or return;
+	    $/ = "\r";
+	    $_ = <$in>;
+	    }
+
 	my $quo = defined $opt{quote} ? $opt{quote} : '"';
 	my $sep = # If explicitly set, use it
 	   defined $opt{sep} ? $opt{sep} :
@@ -236,15 +247,14 @@ sub ReadData ($;@)
 	       m/\w,[\w,]/		? ","  :
 	       m/\w\t[\w,]/		? "\t" :
 					  ","  ;
-	my ($eol) = m{([\r\n]+)\z};
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
 	$csv = $can{csv}->new ({
 	    sep_char       => ($data[0]{sepchar} = $sep),
 	    quote_char     => ($data[0]{quote}   = $quo),
-	    eol            => $eol,
 	    keep_meta_info => 1,	# Ignored for Text::CSV_XS <= 0.27
 	    binary         => 1,
-	    }) or croak "Cannot create a csv ('$sep', '$quo', '$eol') parser!";
+	    eol            => $/,
+	    }) or croak "Cannot create a csv ('$sep', '$quo') parser!";
 
 	# while ($row = $csv->getline () {
 	# doesn't work, because I have to fetch the first line for auto
@@ -267,6 +277,7 @@ sub ReadData ($;@)
 		$csv = undef;
 		}
 	    } while ($csv && ($row = $csv->getline ($in)));
+	$csv->eof () or $csv->error_diag;
 	close $in;
 
 	for (@{$data[1]{cell}}) {

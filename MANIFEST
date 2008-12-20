@@ -11,6 +11,7 @@ files/empty.ods
 files/empty.sc
 files/empty.sxc
 files/empty.xls
+files/macosx.csv
 files/macosx.xls
 files/misc.xls
 files/test.csv
@@ -32,6 +33,7 @@ t/10_basics.t
 t/11_call.t
 t/20_csv.t
 t/21_csv.t
+t/22_csv.t
 t/30_xls.t
 t/31_clr.t
 t/33_misc.t
