@@ -1,6 +1,6 @@
 Revision history for Spreadsheet::Read
 
-0.30	Sat 20 Dec 2008
+0.30	Mon 22 Dec 2008
 
     - Wrong e-mail in META.yml
     - CSV files from a Mac, with \r as eol, would not parse
