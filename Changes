@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.31	Fri 02 Jan 2009
+
+    - Upped Copyright notices to 2009
+
 0.30	Mon 22 Dec 2008
 
     - Wrong e-mail in META.yml
