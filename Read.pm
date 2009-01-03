@@ -359,9 +359,13 @@ sub ReadData ($;@)
 			   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			   : undef;
 			if (defined $fmt) {
-			    # Fixed in 0.33 and up
-			    $oWkC->{Type} eq "Numeric" && $fmt =~ m{^[dmy][-\\/dmy]*$} and
-				$oWkC->{Type} = "Date";
+			    if ($oWkC->{Type} eq "Numeric") {
+				# Fixed in 0.33 and up
+				$fmt =~ m{^[dmy][-\\/dmy]*$}	and
+				    $oWkC->{Type} = "Date";
+				$fmt =~ m{^0+\.0+%$}		and
+				    $oWkC->{Type} = "Percentage";
+				}
 			    $fmt =~ s/\\//g;
 			    }
 			$opt{cells} and	# Formatted value
