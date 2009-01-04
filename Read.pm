@@ -358,16 +358,22 @@ sub ReadData ($;@)
 			my $fmt = $FmT->{FmtIdx}
 			   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			   : undef;
-			if (defined $fmt) {
-			    if ($oWkC->{Type} eq "Numeric") {
-				# Fixed in 0.33 and up
-				$fmt =~ m{^[dmy][-\\/dmy]*$}	and
-				    $oWkC->{Type} = "Date";
-				$fmt =~ m{^0+\.0+%$}		and
-				    $oWkC->{Type} = "Percentage";
-				}
-			    $fmt =~ s/\\//g;
+			if ($oWkC->{Type} eq "Numeric") {
+			    # Fixed in 0.33 and up
+			    # see Spreadsheet/ParseExcel/FmtDefault.pm
+			    $FmT->{FmtIdx} == 0x0e ||
+			    $FmT->{FmtIdx} == 0x0f ||
+			    $FmT->{FmtIdx} == 0x10 ||
+			    $FmT->{FmtIdx} == 0x11 ||
+			    $FmT->{FmtIdx} == 0x16 ||
+			    (defined $fmt && $fmt =~ m{^[dmy][-\\/dmy]*$}) and
+				$oWkC->{Type} = "Date";
+			    $FmT->{FmtIdx} == 0x09 ||
+			    $FmT->{FmtIdx} == 0x0a ||
+			    (defined $fmt && $fmt =~ m{^0+\.0+%$}) and
+				$oWkC->{Type} = "Percentage";
 			    }
+			defined $fmt and $fmt =~ s/\\//g;
 			$opt{cells} and	# Formatted value
 			    $sheet{$cell} = exists $def_fmt{$FmT->{FmtIdx}}
 				? $oFmt->ValFmt ($oWkC, $oBook)

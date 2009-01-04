@@ -14,6 +14,7 @@ files/empty.xls
 files/macosx.csv
 files/macosx.xls
 files/misc.xls
+files/perc.xls
 files/test.csv
 files/test_m.csv
 files/test.ods
@@ -39,6 +40,7 @@ t/31_clr.t
 t/33_misc.t
 t/32_fmt.t
 t/34_dates.t
+t/35_perc.t
 t/40_sxc.t
 t/45_ods.t
 t/46_clr.t
