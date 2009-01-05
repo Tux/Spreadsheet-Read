@@ -25,5 +25,5 @@ foreach my $row (1 .. 19) {
     is ($ss->{attr}[3][$row]{type}, "percentage",	"Type C$row percentage");
 
     my $i = int $ss->{"A$row"};
-    is ("$i%", $ss->{"B$row"},		"Formatted values for row $row\n");
+    is ($ss->{"B$row"}, "$i%",		"Formatted values for row $row\n");
     }
