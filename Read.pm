@@ -13,6 +13,7 @@ package Spreadsheet::Read;
  my $ref = ReadData ("test.sxc");
  my $ref = ReadData ("test.ods");
  my $ref = ReadData ("test.xls");
+ my $ref = ReadData ("test.xlsx");
 
  my $a3 = $ref->[1]{A3}, "\n"; # content of field A3 of sheet 1
 
@@ -21,7 +22,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.31";
+our $VERSION = "0.32";
 sub  Version { $VERSION }
 
 use Carp;
@@ -40,6 +41,7 @@ my @parsers = (
     [ ods	=> "Spreadsheet::ReadSXC"	],
     [ sxc	=> "Spreadsheet::ReadSXC"	],
     [ xls	=> "Spreadsheet::ParseExcel"	],
+    [ xlsx	=> "Spreadsheet::XLSX"		],
     [ prl	=> "Spreadsheet::Perl"		],
 
     # Helper modules
@@ -171,6 +173,7 @@ sub _clipsheets
 
 sub _xls_color {
     my ($clr, @clr) = @_;
+    defined $clr               or  return undef;
     @clr == 0 && $clr == 32767 and return undef; # Default fg color
     @clr == 2 && $clr ==     0 and return undef; # No fill bg color
     @clr == 2 && $clr ==     1 and ($clr, @clr) = ($clr[0]);
@@ -302,23 +305,30 @@ sub ReadData ($;@)
 	    $txt = "$tmpfile";
 	    }
 	}
-    if ($xls_from_txt or $txt =~ m/\.xls$/i && -f $txt) {
-	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
+    if ($xls_from_txt or $txt =~ m/\.(xlsx?)$/i && -f $txt) {
+	my $parse_type = $txt =~ m/\.xlsx$/i ? "XLSX" : "XLS";
+	$can{lc $parse_type} or croak "Parser for $parse_type is not installed";
 	my $oBook;
 	if ($xls_from_txt) {
-	    $debug and print STDERR "Opening XLS \$txt\n";
-	    $oBook = Spreadsheet::ParseExcel::Workbook->Parse (\$txt);
+	    $debug and print STDERR "Opening $parse_type \$txt\n";
+	    $oBook = $parse_type eq "XLSX"
+		? Spreadsheet::XLSX::Workbook->Parse (\$txt)
+		: Spreadsheet::ParseExcel::Workbook->Parse (\$txt);
 	    }
 	else {
 	    $debug and print STDERR "Opening XLS $txt\n";
-	    $oBook = Spreadsheet::ParseExcel::Workbook->Parse ($txt);
+	    $oBook = $parse_type eq "XLSX"
+		? Spreadsheet::XLSX->new ($txt)
+		: Spreadsheet::ParseExcel::Workbook->Parse ($txt);
 	    }
 	$oBook or return;
 	$debug > 8 and print STDERR Data::Dumper->Dump ([$oBook],["oBook"]);
 	my @data = ( {
-	    type	=> "xls",
-	    parser	=> "Spreadsheet::ParseExcel",
-	    version	=> $Spreadsheet::ParseExcel::VERSION,
+	    type	=> lc $parse_type,
+	    parser	=> $can{lc $parse_type},
+	    version	=> $parse_type eq "XLSX"
+			 ? $Spreadsheet::XLSX::VERSION
+			 : $Spreadsheet::ParseExcel::VERSION,
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
 	    } );
@@ -330,7 +340,9 @@ sub ReadData ($;@)
 	    0x16	=> "yyyy-mm-dd hh:mm",	# m-d-yy h:mm
 	    );
 	$oBook->{FormatStr}{$_} = $def_fmt{$_} for keys %def_fmt;
-	my $oFmt = Spreadsheet::ParseExcel::FmtDefault->new;
+	my $oFmt = $parse_type eq "XLSX"
+	    ? Spreadsheet::XLSX::Fmt2007->new
+	    : Spreadsheet::ParseExcel::FmtDefault->new;
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
 	foreach my $oWkS (@{$oBook->{Worksheet}}) {
@@ -354,10 +366,30 @@ sub ReadData ($;@)
 			defined (my $val = $oWkC->{Val})  or next;
 			my $cell = cr2cell ($c + 1, $r + 1);
 			$opt{rc}    and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
+
+			my $fmt;
 			my $FmT = $oWkC->{Format};
-			my $fmt = $FmT->{FmtIdx}
-			   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
-			   : undef;
+			if ($FmT) {
+			    unless (ref $FmT) {
+				$fmt = $FmT;
+				$FmT = {};
+				}
+			    }
+			else {
+			    $FmT = {};
+			    }
+			foreach my $attr (qw( AlignH AlignV FmtIdx Hidden Lock
+					      Wrap )) {
+			    exists $FmT->{$attr} or $FmT->{$attr} = 0;
+			    }
+			exists $FmT->{Fill} or $FmT->{Fill} = [ 0 ];
+			exists $FmT->{Font} or $FmT->{Font} = undef;
+
+			unless (defined $fmt) {
+			    $fmt = $FmT->{FmtIdx}
+			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
+			       : undef;
+			    }
 			if ($oWkC->{Type} eq "Numeric") {
 			    # Fixed in 0.33 and up
 			    # see Spreadsheet/ParseExcel/FmtDefault.pm
@@ -375,7 +407,7 @@ sub ReadData ($;@)
 			    }
 			defined $fmt and $fmt =~ s/\\//g;
 			$opt{cells} and	# Formatted value
-			    $sheet{$cell} = exists $def_fmt{$FmT->{FmtIdx}}
+			    $sheet{$cell} = $FmT && exists $def_fmt{$FmT->{FmtIdx}}
 				? $oFmt->ValFmt ($oWkC, $oBook)
 				: $oWkC->Value;
 			if ($opt{attr}) {
@@ -557,7 +589,8 @@ module that does the actual spreadsheet scanning.
 
 For OpenOffice this module uses Spreadsheet::ReadSXC
 
-For Excel this module uses Spreadsheet::ParseExcel
+For Microsoft Excel this module uses Spreadsheet::ParseExcel or
+Spreadsheet::XLSX
 
 For CSV this module uses Text::CSV_XS (0.29 or up prefered) or
 Text::CSV_PP (1.05 or up required).
@@ -850,6 +883,10 @@ Text::CSV_PP (the pure perl version)
 =item Spreadsheet::ParseExcel
 
 http://search.cpan.org/dist/Spreadsheet-ParseExcel
+
+=item Spreadsheet::XLSX
+
+http://search.cpan.org/dist/Spreadsheet-XLSX
 
 =item Spreadsheet::ReadSXC
 

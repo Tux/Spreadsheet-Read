@@ -78,6 +78,7 @@ requires:
   Carp:                 0
   Data::Dumper:         0
 recommends:
+  perl:                 5.008005
   File::Temp:           0.14
   IO::Scalar:           0
 build_requires:
@@ -90,16 +91,20 @@ optional_features:
     requires:
       Text::CSV_XS:     0.23
     recommends:
-      Text::CSV:        1
-      Text::CSV_PP:     1.05
-      Text::CSV_XS:     0.57
+      Text::CSV:        1.10
+      Text::CSV_PP:     1.10
+      Text::CSV_XS:     0.58
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel: 0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel: 0.41
+      Spreadsheet::ParseExcel: 0.42
+- opt_excelx:
+    description:        Provides parsing of Microsoft Excel 2007 files
+    requires:
+      Spreadsheet::XLSX:       0.07
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
