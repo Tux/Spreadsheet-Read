@@ -53,7 +53,7 @@ for (@parsers) {
     $can{$flag} and next;
     eval "require $mod; \@_ or \$can{\$flag} = '$mod'";
     }
-$can{sc} = 1;	# SquirelCalc is built-in
+$can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
 my $debug = 0;
 my @def_attr = (

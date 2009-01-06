@@ -6,7 +6,8 @@ use warnings;
 use Test::More;
 
 use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xlsx")) {
+if (my $parser = Spreadsheet::Read::parses ("xlsx")) {
+    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
     plan tests => 62;
     }
 else {

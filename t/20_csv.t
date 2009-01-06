@@ -6,7 +6,8 @@ use warnings;
 use Test::More;
 
 use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("csv")) {
+if (my $parser = Spreadsheet::Read::parses ("csv")) {
+    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
     plan tests => 117;
     }
 else {
