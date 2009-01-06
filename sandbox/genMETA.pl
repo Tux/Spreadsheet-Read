@@ -37,9 +37,9 @@ if ($check) {
     my $t = Test::YAML::Meta::Version->new (yaml => $h);
     $t->parse () and die join "\n", $t->errors, "";
 
-    #use Parse::CPAN::Meta;
-    #eval { Parse::CPAN::Meta::Load ($yml) };
-    #$@ and die "$@\n";
+    use Parse::CPAN::Meta;
+    eval { Parse::CPAN::Meta::Load ($yml) };
+    $@ and die "$@\n";
 
     my $req_vsn = $h->{requires}{perl};
     print "Checking if $req_vsn is still OK as minimal version\n";
@@ -85,38 +85,38 @@ build_requires:
   perl:                 5.006
   Test::Harness:        0
   Test::More:           0
+resources:
+  license:              http://dev.perl.org/licenses/
+meta-spec:
+  version:              1.4
+  url:                  http://module-build.sourceforge.net/META-spec-v1.4.html
 optional_features:
 - opt_csv:
     description:        Provides parsing of CSV streams
     requires:
-      Text::CSV_XS:     0.23
+      Text::CSV_XS:                        0.23
     recommends:
-      Text::CSV:        1.10
-      Text::CSV_PP:     1.10
-      Text::CSV_XS:     0.58
+      Text::CSV:                           1.10
+      Text::CSV_PP:                        1.10
+      Text::CSV_XS:                        0.58
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
-      Spreadsheet::ParseExcel: 0.26
+      Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel: 0.42
+      Spreadsheet::ParseExcel:             0.42
 - opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
-      Spreadsheet::XLSX:       0.07
+      Spreadsheet::XLSX:                   0.08
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
-      Spreadsheet::ReadSXC:    0.2
+      Spreadsheet::ReadSXC:                0.2
 - opt_tools:
     description:        Spreadsheet tools
     recommends:
-      Tk:                           0
-      Tk::NoteBook:                 0
-      Tk::TableMatrix::Spreadsheet: 0
-resources:
-  license:      http://dev.perl.org/licenses/
-meta-spec:
-  version:      1.4
-  url:          http://module-build.sourceforge.net/META-spec-v1.4.html
+      Tk:                                  0
+      Tk::NoteBook:                        0
+      Tk::TableMatrix::Spreadsheet:        0
