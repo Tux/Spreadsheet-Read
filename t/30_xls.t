@@ -6,7 +6,8 @@ use warnings;
 use Test::More;
 
 use Spreadsheet::Read;
-if (my $parser = Spreadsheet::Read::parses ("xls")) {
+my $parser;
+if ($parser = Spreadsheet::Read::parses ("xls")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
     plan tests => 217;
     }
@@ -98,7 +99,7 @@ foreach my $cell (qw( A18 B1 B6 B20 C26 D14 )) {
     }
 
 eval {
-    eval "use Spreadsheet::ParseExcel::FmtDefault";
+    eval "use ".$parser."::FmtDefault";
     my ($pm) = map { $INC{$_} } grep m{FmtDefault.pm$}i => keys %INC;
     if (open PM, "<", $pm) {
 	my $l;
