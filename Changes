@@ -1,8 +1,9 @@
 Revision history for Spreadsheet::Read
 
-0.32	Mon 05 Jan 2009
+0.32	Tue 06 Jan 2009
 
-    - Add support for M$ Excel 2007 using Spreadsheet::XLSX
+    - Add basic support for M$ Excel 2007 using Spreadsheet::XLSX
+    - Test suite reports the parsers it found
 
 0.31	Sun 04 Jan 2009
 
