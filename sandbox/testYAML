@@ -1,0 +1,27 @@
+#!/bin/sh
+
+sandbox/genMETA.pl -v >META.yml
+head -4 META.yml
+echo ---
+
+perl -w -MParse::CPAN::Meta \
+    -e'print STDERR "Parse::CPAN::Meta-",Parse::CPAN::Meta->VERSION,"\t";' \
+    -e'Parse::CPAN::Meta::LoadFile("META.yml")'	&& echo OK
+
+perl -w -MYAML::Syck \
+    -e'print STDERR "YAML::Syck-",YAML::Syck->VERSION,"\t\t";' \
+    -e'Load ("META.yml")'			&& echo OK
+
+perl -w -MYAML::Tiny \
+    -e'print STDERR "YAML::Tiny-",YAML::Tiny->VERSION,"\t\t";' \
+    -e'YAML::Tiny->read ("META.yml")'		&& echo OK
+
+perl -w -MYAML::XS \
+    -e'print STDERR "YAML::XS-",YAML::XS->VERSION,"\t\t";' \
+    -e'Load ("META.yml")'			&& echo OK
+
+perl -w -MYAML -0777 \
+    -e'print STDERR "YAML-",YAML->VERSION,"\t\t";' \
+    -e'Load (<>)' META.yml			&& echo OK
+
+rm -f META.yml
