@@ -110,6 +110,7 @@ optional_features:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
       Spreadsheet::XLSX:                   0.08
+      Spreadsheet::XLSX::Fmt2007:          0
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
