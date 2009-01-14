@@ -26,6 +26,7 @@ my $content;
     open my $xls, "<", "files/test.xlsx" or die "files/test.xlsx: $!";
     binmode $xls;
     $content = <$xls>;
+    close   $xls;
     }
 
 my $xls;

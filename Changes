@@ -1,8 +1,8 @@
 Revision history for Spreadsheet::Read
 
-0.33	Thu 08 Jan 2009
+0.33	Wed 14 Jan 2009
 
-    -
+    - A few Perl::Critic inspired changes
 
 0.32	Tue 06 Jan 2009
 

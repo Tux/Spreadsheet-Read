@@ -19,6 +19,7 @@ my $content;
     open my $xml, "<", "files/content.xml" or die "files/content.xml: $!\n";
     binmode $xml;
     $content = <$xml>;
+    close   $xml;
     }
 
 {   my $ref;

@@ -6,7 +6,7 @@ package Spreadsheet::Read;
 
  Spreadsheet::Read - Read the data from a spreadsheet
 
-=head1 SYNOPSYS
+=head1 SYNOPSIS
 
  use Spreadsheet::Read;
  my $ref = ReadData ("test.csv", sep => ";");
@@ -78,7 +78,7 @@ my @def_attr = (
 # Helper functions
 
 # Spreadsheet::Read::parses ("csv") or die "Cannot parse CSV"
-sub parses ($)
+sub parses
 {
     my $type = shift		or  return 0;
     $type = lc $type;
@@ -110,7 +110,7 @@ sub cr2cell
     } # cr2cell
 
 # cell2cr ("D18") => (4, 18)
-sub cell2cr ($)
+sub cell2cr
 {
     my ($cc, $r) = ((uc $_[0]) =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
     my $c = 0;
@@ -122,7 +122,7 @@ sub cell2cr ($)
 
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = rows ($ss->[1]);
-sub rows ($)
+sub rows
 {
     my $sheet = shift or return;
     ref    $sheet eq "HASH" && exists $sheet->{cell}   or return;
@@ -149,7 +149,7 @@ sub _clipsheets
 	while ($ss->{maxcol} and not (
 		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]})
 		) {
-	    (my $col = cr2cell ($ss->{maxcol}, 1)) =~ s/1$//; 
+	    (my $col = cr2cell ($ss->{maxcol}, 1)) =~ s/1$//;
 	    my $recol = qr{^$col(?=[0-9]+)$};
 	    delete $ss->{$_} for grep m/$recol/, keys %{$ss};
 	    $ss->{maxcol}--;
@@ -181,7 +181,7 @@ sub _xls_color {
     "#" . lc Spreadsheet::ParseExcel->ColorIdxToRGB ($clr);
     } # _xls_color
 
-sub ReadData ($;@)
+sub ReadData
 {
     my $txt = shift	or  return;
     ref $txt		and return; # TODO: support IO stream (ref $txt eq "IO")
@@ -233,7 +233,7 @@ sub ReadData ($;@)
 	if (eof ($in)) {
 	    # This file is either just one single line, or uses \r as eol
 	    close $in;
-	    open $in, "<", $txt or return;
+	    open  $in, "<", $txt or return;
 	    $/ = "\r";
 	    $_ = <$in>;
 	    }
@@ -360,8 +360,8 @@ sub ReadData ($;@)
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 	    if (exists $oWkS->{MinRow}) {
-		foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) { 
-		    foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) { 
+		foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
+		    foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
 			my $oWkC = $oWkS->{Cells}[$r][$c] or next;
 			defined (my $val = $oWkC->{Val})  or next;
 			my $cell = cr2cell ($c + 1, $r + 1);
@@ -412,10 +412,10 @@ sub ReadData ($;@)
 				: $oWkC->Value;
 			if ($opt{attr}) {
 			    my $FnT = $FmT->{Font};
-			    my $fmt = $FmT->{FmtIdx}
+			    my $fmi = $FmT->{FmtIdx}
 			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			       : undef;
-			    $fmt and $fmt =~ s/\\//g;
+			    $fmi and $fmi =~ s/\\//g;
 			    $sheet{attr}[$c + 1][$r + 1] = {
 				@def_attr,
 
@@ -424,7 +424,7 @@ sub ReadData ($;@)
 				merged  => $oWkC->{Merged} || 0,
 				hidden  => $FmT->{Hidden},
 				locked  => $FmT->{Lock},
-				format  => $fmt,
+				format  => $fmi,
 				halign  => [ undef, qw( left center right
 					   fill justify ), undef,
 					   "equal_space" ]->[$FmT->{AlignH}],
@@ -463,6 +463,7 @@ sub ReadData ($;@)
 	    local $/;
 	    open my $sc, "<", $txt or return;
 	    $txt = <$sc>;
+	    close   $sc;
 	    $txt =~ m/\S/ or return;
 	    }
 	my @data = (
@@ -522,6 +523,7 @@ sub ReadData ($;@)
 	    open my $f, "<", $txt	or  return;
 	    local $/;
 	    $txt = <$f>;
+	    close $f;
 	    }
 	!$sxc && $txt =~ m/^<\?xml/i and
 	    $sxc = Spreadsheet::ReadSXC::read_xml_string ($txt, $sxc_options);
@@ -926,6 +928,6 @@ H.Merijn Brand, <h.m.brand@xs4all.nl>
 Copyright (C) 2005-2009 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself. 
+it under the same terms as Perl itself.
 
 =cut
