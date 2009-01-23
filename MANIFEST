@@ -1,5 +1,6 @@
 Changes
 examples/ss2tk
+examples/ss-dups-tk.pl
 examples/xlscat
 examples/xls2csv
 files/attr.ods
