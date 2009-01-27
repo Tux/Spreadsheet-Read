@@ -19,7 +19,7 @@ my $xls;
 ok ($xls = ReadData ("files/Dates.xlsx", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.08 and
+    $xls->[0]{version} <= 0.09 and
 	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
 
     my $ss   = $xls->[1];

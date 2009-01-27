@@ -1,5 +1,11 @@
 Revision history for Spreadsheet::Read
 
+0.34	Fri 23 Jan 2009
+
+    - Spreadsheet::XLSX 0.09 still does not support attributes
+      still think it is better to follow closely. 0.09 is much
+      better than 0.08
+
 0.33	Fri 23 Jan 2009
 
     - A few Perl::Critic inspired changes

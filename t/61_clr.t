@@ -17,7 +17,7 @@ my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.08 and
+    $xls->[0]{version} <= 0.09 and
 	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support colours", 255;
 
     my $clr = $xls->[$xls->[0]{sheet}{Colours}];
