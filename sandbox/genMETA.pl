@@ -85,6 +85,7 @@ build_requires:
   perl:                 5.006
   Test::Harness:        0
   Test::More:           0
+  Test::NoWarnings:     0
 resources:
   license:              http://dev.perl.org/licenses/
 meta-spec:
@@ -94,11 +95,11 @@ optional_features:
 - opt_csv:
     description:        Provides parsing of CSV streams
     requires:
-      Text::CSV_XS:                        0.23
+      Text::CSV_XS:                        0.29
     recommends:
       Text::CSV:                           1.10
       Text::CSV_PP:                        1.10
-      Text::CSV_XS:                        0.60
+      Text::CSV_XS:                        0.61
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:

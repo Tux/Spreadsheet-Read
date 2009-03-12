@@ -1,6 +1,10 @@
 Revision history for Spreadsheet::Read
 
-0.34	Fri 23 Jan 2009
+0.35	Thu 12 Mar 2009
+
+    - Text::CSV_XS requires 0.29 or up, as we use ->eof ()
+
+0.34	Tue 27 Jan 2009
 
     - Spreadsheet::XLSX 0.09 still does not support attributes
       still think it is better to follow closely. 0.09 is much
