@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (my $parser = Spreadsheet::Read::parses ("xlsx")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 62;
+    plan tests => 63;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No M\$-Excel parser found";

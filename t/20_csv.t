@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (my $parser = Spreadsheet::Read::parses ("csv")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 117;
+    plan tests => 118;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No CSV parser found";

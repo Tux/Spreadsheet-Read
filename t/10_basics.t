@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 98;
+use Test::More tests => 99;
+use Test::NoWarnings;
 
 use Spreadsheet::Read qw(:DEFAULT parses rows );
 

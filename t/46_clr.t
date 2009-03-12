@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (Spreadsheet::Read::parses ("ods")) {
@@ -11,7 +12,8 @@ if (Spreadsheet::Read::parses ("ods")) {
 	plan skip_all => "Spreadsheet::ReadSXC version $v doesn't support field attributes";
 	}
     else {
-	plan tests => 256;
+	plan tests => 257;
+    Test::NoWarnings->import;
 	}
     }
 else {

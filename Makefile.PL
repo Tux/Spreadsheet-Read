@@ -40,6 +40,7 @@ my %wm = (
 
 	# For testing
 	"Test::More"			=> 0.00,
+	"Test::NoWarnings"		=> 0.00,
 
 	# for ss2tk
 #	"Tk"				=> 804.027,

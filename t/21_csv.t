@@ -3,11 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (Spreadsheet::Read::parses ("csv")) {
-    plan "no_plan";
+    plan tests => 13;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No CSV parser found";

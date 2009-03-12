@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (my $parser = Spreadsheet::Read::parses ("sxc")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 301;
+    plan tests => 302;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No SXC parser found";

@@ -3,11 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (Spreadsheet::Read::parses ("xlsx")) {
-    plan "no_plan";
+    plan tests => 3;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No M\$-Excel parser found";

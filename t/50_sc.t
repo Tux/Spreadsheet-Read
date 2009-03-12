@@ -3,12 +3,14 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (my $parser = Spreadsheet::Read::parses ("sc")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 48;
+    plan tests => 49;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No SquirelCalc parser found";

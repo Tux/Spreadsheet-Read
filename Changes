@@ -3,6 +3,7 @@ Revision history for Spreadsheet::Read
 0.35	Thu 12 Mar 2009
 
     - Text::CSV_XS requires 0.29 or up, as we use ->eof ()
+    - add Test::NoWarnings
 
 0.34	Tue 27 Jan 2009
 

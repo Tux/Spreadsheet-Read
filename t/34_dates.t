@@ -3,13 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 use Spreadsheet::Read;
 if (Spreadsheet::Read::parses ("xls")) {
-    plan tests => 69;
+    plan tests => 70;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No M\$-Excel parser found";

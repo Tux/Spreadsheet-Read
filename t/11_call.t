@@ -5,11 +5,13 @@
 use strict;
 use warnings;
 
-use Test::More;
+use     Test::More;
+require Test::NoWarnings;
 
 use Spreadsheet::Read;
 if (Spreadsheet::Read::parses ("sc")) {
-    plan tests => 80;
+    plan tests => 81;
+    Test::NoWarnings->import;
     }
 else {
     plan skip_all => "No SquirelCalc parser found";
