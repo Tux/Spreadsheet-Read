@@ -112,7 +112,7 @@ sub cr2cell
 # cell2cr ("D18") => (4, 18)
 sub cell2cr
 {
-    my ($cc, $r) = ((uc $_[0]) =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
+    my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
     my $c = 0;
     while ($cc =~ s/^([A-Z])//) {
 	$c = 26 * $c + 1 + ord ($1) - ord ("A");
