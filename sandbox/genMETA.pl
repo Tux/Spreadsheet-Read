@@ -88,6 +88,7 @@ build_requires:
   Test::NoWarnings:     0
 resources:
   license:              http://dev.perl.org/licenses/
+  repository:           http://repo.or.cz/w/Spreadsheet-Read.git
 meta-spec:
   version:              1.4
   url:                  http://module-build.sourceforge.net/META-spec-v1.4.html
