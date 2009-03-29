@@ -3,18 +3,16 @@
 use strict;
 use warnings;
 
+my     $tests = 62;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (my $parser = Spreadsheet::Read::parses ("xlsx")) {
-    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 63;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+
+my $parser = Spreadsheet::Read::parses ("xlsx") or
     plan skip_all => "No M\$-Excel parser found";
-    }
+
+print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 {   my $ref;
     $ref = ReadData ("no_such_file.xlsx");
@@ -82,3 +80,9 @@ is ($ss->{C1},		undef, "formatted empty");
 is ($ss->{D1},		"0",   "formatted numeric 0");
 is ($ss->{E1},		"1",   "formatted numeric 1");
 is ($ss->{F1},		"",    "formatted a single '");
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

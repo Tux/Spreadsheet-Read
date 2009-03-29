@@ -3,19 +3,15 @@
 use strict;
 use warnings;
 
+my     $tests = 69;
 use     Test::More;
 require Test::NoWarnings;
 
-BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
-
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xls")) {
-    plan tests => 70;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("xls") or
     plan skip_all => "No M\$-Excel parser found";
-    }
+
+BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $xls;
 ok ($xls = ReadData ("files/Dates.xls", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
@@ -68,3 +64,9 @@ is ($ss->{E4},	"13 Aug 2008",	"Cell content E4");
 #	    $cell, $ss->{$cell}, defined $fmt ? "'$fmt'" : "<undef>";
 #	}
 #    }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

@@ -3,17 +3,13 @@
 use strict;
 use warnings;
 
+my     $tests = 12;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("csv")) {
-    plan tests => 13;
-    Test::NoWarnings->import;
-    }
-else {
-    plan skip_all => "No CSV parser found";
-    }
+use     Spreadsheet::Read;
+	Spreadsheet::Read::parses ("csv") or
+	    plan skip_all => "No CSV parser found";
 
 my $csv;
 ok ($csv = ReadData ("files/test.csv"),		"Read/Parse csv file");
@@ -31,3 +27,9 @@ ok ($csv = ReadData ("files/test_t.csv", quote => "'"),
 is ($csv->[0]{sepchar},	"\t",			"{sepchar}");
 is ($csv->[0]{quote},	"'",			"{quote}");
 is ($csv->[1]{C3},      "C3",			"cell C3");
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

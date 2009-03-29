@@ -84,7 +84,7 @@ recommends:
 build_requires:
   perl:                 5.006
   Test::Harness:        0
-  Test::More:           0
+  Test::More:           0.88
   Test::NoWarnings:     0
 resources:
   license:              http://dev.perl.org/licenses/
@@ -98,9 +98,9 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.29
     recommends:
-      Text::CSV:                           1.10
-      Text::CSV_PP:                        1.10
-      Text::CSV_XS:                        0.62
+      Text::CSV:                           1.11
+      Text::CSV_PP:                        1.11
+      Text::CSV_XS:                        0.63
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -111,7 +111,7 @@ optional_features:
 - opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
-      Spreadsheet::XLSX:                   0.09
+      Spreadsheet::XLSX:                   0.1
       Spreadsheet::XLSX::Fmt2007:          0
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets

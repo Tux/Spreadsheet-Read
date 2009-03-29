@@ -1,21 +1,16 @@
 #!/usr/bin/perl
 
-# Use the sc parser because it's a builtin
-
 use strict;
 use warnings;
 
-use     Test::More;
-require Test::NoWarnings;
+use Test::More;
+use Test::NoWarnings;
 
 use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("sc")) {
-    plan tests => 81;
-    Test::NoWarnings->import;
-    }
-else {
-    plan skip_all => "No SquirelCalc parser found";
-    }
+    Spreadsheet::Read::parses ("sc") or
+	plan skip_all => "No SquirelCalc parser found";
+
+plan tests => 81;
 
 # Base attributes
 foreach my $onoff (0, 1) {

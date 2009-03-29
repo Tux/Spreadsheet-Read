@@ -3,17 +3,13 @@
 use strict;
 use warnings;
 
+my     $tests = 4;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("csv")) {
-    plan tests => 5;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
-    }
 
 my $csv;
 ok ($csv = ReadData ("files/macosx.csv"),	"Read/Parse csv file");
@@ -24,6 +20,12 @@ is ($csv->[1]{maxrow},		16,		"Last row");
 is ($csv->[1]{maxcol},		15,		"Last column");
 is ($csv->[1]{cell}[$csv->[1]{maxcol}][$csv->[1]{maxrow}],
 				"",		"Last field");
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);
 
 __END__
 ok (1, "Defined fields");

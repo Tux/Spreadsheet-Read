@@ -3,23 +3,19 @@
 use strict;
 use warnings;
 
+my     $tests = 39;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xlsx")) {
-    plan tests => 40;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("xlsx") or
     plan skip_all => "No M\$-Excel parser found";
-    }
 
 my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.09 and
+    $xls->[0]{version} <= 0.10 and
 	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support attributes", 38;
 
     my $fmt = $xls->[$xls->[0]{sheet}{Format}];
@@ -54,3 +50,9 @@ SKIP: {
     #    ok (defined $fmt->{attr}[1][$r]{format},	"Defined format A$r");
     #    }
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

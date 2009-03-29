@@ -3,18 +3,15 @@
 use strict;
 use warnings;
 
+my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (my $parser = Spreadsheet::Read::parses ("sxc")) {
-    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 302;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+my $parser = Spreadsheet::Read::parses ("sxc") or
     plan skip_all => "No SXC parser found";
-    }
+
+print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 my $content;
 {   local $/;
@@ -116,3 +113,9 @@ foreach my $base ( [ "files/test.sxc",		"Read/Parse sxc file" ],
 	is ("@sheets", "@{['Sheet1','Second Sheet']}", "Sheet order");
 	}
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

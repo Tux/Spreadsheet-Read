@@ -3,18 +3,15 @@
 use strict;
 use warnings;
 
+my     $tests = 117;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (my $parser = Spreadsheet::Read::parses ("csv")) {
-    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 118;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
-    }
+
+print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 {   my $ref;
     $ref = ReadData ("no_such_file.csv");
@@ -86,3 +83,9 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
     is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

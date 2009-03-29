@@ -3,17 +3,13 @@
 use strict;
 use warnings;
 
+my     $tests = 77;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xls")) {
-    plan tests => 78;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("xls") or
     plan skip_all => "No M\$-Excel parser found";
-    }
 
 my $xls;
 ok ($xls = ReadData ("files/perc.xls", attr => 1), "Excel Percentage testcase");
@@ -29,3 +25,9 @@ foreach my $row (1 .. 19) {
     my $i = int $ss->{"A$row"};
     is ($ss->{"B$row"}, "$i%",		"Formatted values for row $row\n");
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

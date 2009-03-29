@@ -3,18 +3,15 @@
 use strict;
 use warnings;
 
+my     $tests = 48;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (my $parser = Spreadsheet::Read::parses ("sc")) {
-    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 49;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+my $parser = Spreadsheet::Read::parses ("sc") or
     plan skip_all => "No SquirelCalc parser found";
-    }
+
+print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 {   my $ref;
     $ref = ReadData ("no_such_file.sc");
@@ -53,3 +50,9 @@ foreach my $txt ("files/test.sc", $content) {
 	is ($sc->[1]{cell}[1][22],	"  Workspace",	"Just checking one cell");
 	}
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

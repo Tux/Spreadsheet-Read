@@ -3,17 +3,13 @@
 use strict;
 use warnings;
 
+my     $tests = 39;
 use     Test::More;
 require Test::NoWarnings;
 
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xls")) {
-    plan tests => 40;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("xls") or
     plan skip_all => "No M\$-Excel parser found";
-    }
 
 my $xls;
 ok ($xls = ReadData ("files/attr.xls", attr => 1), "Excel Attributes testcase");
@@ -49,3 +45,9 @@ foreach my $r (2 .. 9, 11, 12) {
 #foreach my $r (2 .. 12) {
 #    ok (defined $fmt->{attr}[1][$r]{format},	"Defined format A$r");
 #    }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);

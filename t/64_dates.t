@@ -3,25 +3,21 @@
 use strict;
 use warnings;
 
+my     $tests = 69;
 use     Test::More;
 require Test::NoWarnings;
 
-BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
-
-use Spreadsheet::Read;
-if (Spreadsheet::Read::parses ("xlsx")) {
-    plan tests => 70;
-    Test::NoWarnings->import;
-    }
-else {
+use     Spreadsheet::Read;
+Spreadsheet::Read::parses ("xlsx") or
     plan skip_all => "No M\$-Excel parser found";
-    }
+
+BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $xls;
 ok ($xls = ReadData ("files/Dates.xlsx", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.09 and
+    $xls->[0]{version} <= 0.10 and
 	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
 
     my $ss   = $xls->[1];
@@ -61,3 +57,9 @@ SKIP: {
     is ($ss->{E3},	"08 Dec 2008",	"Cell content E3");
     is ($ss->{E4},	"13 Aug 2008",	"Cell content E4");
     }
+
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
+done_testing ($tests);
