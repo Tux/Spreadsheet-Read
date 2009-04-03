@@ -81,6 +81,8 @@ recommends:
   perl:                 5.008005
   File::Temp:           0.14
   IO::Scalar:           0
+configure_requires:
+  ExtUtils::MakeMaker:  0
 build_requires:
   perl:                 5.006
   Test::Harness:        0
