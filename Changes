@@ -1,12 +1,13 @@
 Revision history for Spreadsheet::Read
 
-0.35	Sun 29 Mar 2009
+0.35	Wed 05 Mar 2009
 
     - add Test::NoWarnings, which is not run in AUTOMATED_TESTING
     - switched to Test::More using tests_done ()
     - Text::CSV_XS requires 0.29 or up, as we use ->eof ()
       still prefer a really new realease, like 0.63, which
       is Test::NoWarnings safe
+    - Added -n to xlscat
 
 0.34	Tue 27 Jan 2009
 

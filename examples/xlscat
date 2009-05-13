@@ -1,20 +1,20 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'08 [10-10-2008] Copyright H.M.Brand 2005-2009
+#	  (m)'09 [13-05-2009] Copyright H.M.Brand 2005-2009
 
 use strict;
 use warnings;
 
-our $VERSION = "1.8";
+our $VERSION = "1.9";
 
 sub usage
 {
     my $err = shift and select STDERR;
     print
-	"usage: xlscat [-s <sep>] [-L] [-u] [ Selection ] file.xls\n",
-	"              [-c | -m]       [-u] [ Selection ] file.xls\n",
-	"               -i                  [ -S sheets ] file.xls\n",
+	"usage: xlscat [-s <sep>] [-L] [-n] [-A] [-u] [ Selection ] file.xls\n",
+	"              [-c | -m]                 [-u] [ Selection ] file.xls\n",
+	"               -i                            [ -S sheets ] file.xls\n",
 	"    Generic options:\n",
 	"       -v[#]       Set verbose level (xlscat)\n",
 	"       -d[#]       Set debug   level (Spreadsheet::Read)\n",
@@ -32,6 +32,7 @@ sub usage
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"       -L          Line up the columns\n",
+	"       -n          Number lines (prefix with column number)\n",
 	"       -A          Show field attributes in ANSI escapes\n",
 	"    Output Index only:\n",
 	"       -i          Show sheet names and size only\n",
@@ -58,6 +59,7 @@ my $dtfmt;		# Default date-format for Excel
 my $opt_F = "";		# Fields to print
 my $opt_i = 0;		# Index
 my $opt_L = 0;		# Auto-size/align columns
+my $opt_n = 0;		# Prefix lines with column number
 my $opt_u = 0;		# Show unformatted values
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
@@ -89,6 +91,7 @@ GetOptions (
     "C|columns=s"	=> \$opt_C,
     "F|fields=s"	=> \$opt_F,
     "L|fit|align"	=> \$opt_L,
+    "n|number"		=> \$opt_n,
     "A|ansi"		=> \$opt_A,
     "u|unformatted"	=> \$opt_u,
     "v|verbose:1"	=> \$opt_v,
@@ -100,9 +103,6 @@ GetOptions (
     "b|encoding-in=s"	=> \$enc_i,
     "a|encoding-out=s"	=> \$enc_o,
     ) or usage 1, "GetOpt: $@";
-
-#binmode STDOUT;
-binmode STDERR, ":utf8";
 
 $opt_i && $opt_L and usage 1, "Options i and L are mutually exclusive";
 $opt_i && $opt_s and usage 1, "Options i and s are mutually exclusive";
@@ -128,7 +128,9 @@ if ($opt_c) {
 	});
     }
 
-use Data::Dumper; $Data::Dumper::Sortkeys = 1;
+use Data::Dumper;	# I should use Data::Peek instead
+   $Data::Dumper::Sortkeys = 1;
+   $Data::Dumper::Indent   = 1;
 
 @ARGV or usage 1;
 my $file = shift;
@@ -191,6 +193,9 @@ sub ansi_color
 
     "\e[${attr}m";
     } # ansi_color
+
+	    binmode STDERR, ":utf8";
+$enc_o and  binmode STDOUT, ":encoding($enc_o)";
 
 my $name_len = 30;
 if ($opt_i) {
@@ -265,6 +270,10 @@ foreach my $si (1 .. $sc) {
 	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
 	    next;
 	    }
+	if ($opt_n) {
+	    unshift @row, $r;
+	    unshift @att, [ "#ffffff", "#000000", 0, 0 ];
+	    }
 	if ($opt_L) {	# Autofit / Align
 	    push @data, [ [ @row ], [ @att ] ];
 	    next;
@@ -283,6 +292,10 @@ foreach my $si (1 .. $sc) {
 	    }
     printf STDERR $v_fmt, $nc, $h, "\n";
     $opt_L or next;
+    if ($opt_n) {
+	unshift @w, length $data[-1][0][0];
+	unshift @align, "";
+	}
     my $fmt = join ($opt_s =>
 	map { my $f = "%$align[$_]$w[$_]s";
 	      $opt_A ? "%s$f%s" : $f } 0 .. $#w)."\n";
