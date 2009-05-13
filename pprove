@@ -1,0 +1,55 @@
+#!/pro/bin/perl
+
+use strict;
+use warnings;
+
+use Unix::Processors;
+
+{   my $prove = App::Prove::Rules->new;
+    @ARGV or @ARGV = ("-j", 1 + Unix::Processors->new->max_online);
+
+    $prove->process_args (@ARGV);
+    $prove->test_rules ({
+	seq => [
+	    { seq => [ glob "t/0*" ] },
+	    { seq => [ glob "t/1*" ] },
+	    { par => [
+		{ seq => [ glob "t/2*" ] },
+		{ seq => [ glob "t/3*" ] },
+		{ seq => [ glob "t/4*" ] },
+		{ seq => [ glob "t/5*" ] },
+		{ seq => [ glob "t/6*" ] },
+		] },
+	    ] });
+
+    exit ($prove->run ? 0 : 1);
+    }
+
+package App::Prove::Rules;
+
+use strict;
+use warnings;
+
+use App::Prove 3.13;
+use base "App::Prove";
+
+sub test_rules
+{
+    my $self = shift;
+
+    @_ and $self->{test_rules} = shift;
+    return $self->{test_rules};
+    } # test_rules
+
+sub _get_args
+{
+    my $self = shift;
+
+    my ($args, $class) = $self->SUPER::_get_args (@_);
+
+    $self->test_rules and $args->{rules} = $self->{test_rules};
+
+    return ($args, $class);
+    } # _get_args
+
+1;

@@ -9,6 +9,7 @@ cover_db/
 Makefile
 MANIFEST.SKIP
 pm_to_blib
+pprove
 Rsync
 Spreadsheet/
 sandbox/
