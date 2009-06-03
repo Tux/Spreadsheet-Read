@@ -98,11 +98,11 @@ optional_features:
 - opt_csv:
     description:        Provides parsing of CSV streams
     requires:
-      Text::CSV_XS:                        0.29
+      Text::CSV_XS:                        0.43
     recommends:
-      Text::CSV:                           1.11
-      Text::CSV_PP:                        1.11
-      Text::CSV_XS:                        0.63
+      Text::CSV:                           1.12
+      Text::CSV_PP:                        1.20
+      Text::CSV_XS:                        0.65
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:

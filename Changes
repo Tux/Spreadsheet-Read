@@ -1,14 +1,15 @@
 Revision history for Spreadsheet::Read
 
-0.35	Wed 05 Mar 2009
+0.35	Wed 03 Jun 2009
 
     - Add Test::NoWarnings, which is not run in AUTOMATED_TESTING
     - Switched to Test::More using tests_done ()
-    - Text::CSV_XS requires 0.29 or up, as we use ->eof ()
-      still prefer a really new release, like 0.64, which
+    - Text::CSV_XS requires 0.43 or up, as we use ->eof ()
+      still prefer a really new release, like 0.65, which
       is Test::NoWarnings safe
     - Spreadsheet::XLSX 0.10 still does not support attributes
     - Added -n to xlscat
+    - XLSX tests skip on feature, not on version
 
 0.34	Tue 27 Jan 2009
 
