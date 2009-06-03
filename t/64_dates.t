@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 69;
+my     $tests = 71;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -17,11 +17,11 @@ my $xls;
 ok ($xls = ReadData ("files/Dates.xlsx", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.10 and
-	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
+    ok (my $ss   = $xls->[1],	"sheet");
+    ok (my $attr = $ss->{attr},	"attr");
 
-    my $ss   = $xls->[1];
-    my $attr = $ss->{attr};
+    defined $attr->[2][1]{format} or
+	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
 
     my @date = (undef, 39668, 39672,      39790,        39673);
     my @fmt  = (undef, undef, "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");

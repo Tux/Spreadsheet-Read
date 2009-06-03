@@ -23,7 +23,7 @@ foreach my $row (1 .. 19) {
     is ($ss->{attr}[3][$row]{type}, "percentage",	"Type C$row percentage");
 
     SKIP: {
-	$xls->[0]{version} <= 0.10 and
+	$ss->{B18} =~ m/[.]/ and
 	    skip "$xls->[0]{parser} $xls->[0]{version} has format problems", 1;
 	my $i = int $ss->{"A$row"};
 	is ($ss->{"B$row"}, "$i%",		"Formatted values for row $row\n");

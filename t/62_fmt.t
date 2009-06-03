@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 39;
+my     $tests = 40;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -15,15 +15,15 @@ my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.10 and
-	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support attributes", 38;
+    ok (my $fmt = $xls->[$xls->[0]{sheet}{Format}],	"format");
 
-    my $fmt = $xls->[$xls->[0]{sheet}{Format}];
+    $fmt->{attr}[2][2]{merged} or
+	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support attributes yet", 38;
 
     is ($fmt->{B2},		"merged",	"Merged cell left    formatted");
-    is ($fmt->{C2},		"",		"Merged cell right   formatted");
+    is ($fmt->{C2},		undef,		"Merged cell right   formatted");
     is ($fmt->{cell}[2][2],	"merged",	"Merged cell left  unformatted");
-    is ($fmt->{cell}[3][2],	"",		"Merged cell right unformatted");
+    is ($fmt->{cell}[3][2],	undef,		"Merged cell right unformatted");
     is ($fmt->{attr}[2][2]{merged}, 1,	"Merged cell left  merged");
     is ($fmt->{attr}[3][2]{merged}, 1,	"Merged cell right merged");
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 256;
+my     $tests = 257;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -15,10 +15,10 @@ my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
 
 SKIP: {
-    $xls->[0]{version} <= 0.10 and
-	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support colours", 255;
+    ok (my $clr = $xls->[$xls->[0]{sheet}{Colours}], "colours");
 
-    my $clr = $xls->[$xls->[0]{sheet}{Colours}];
+    defined $clr->{attr}[2][2]{fgcolor} or
+	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support colours yet", 255;
 
     is ($clr->{cell}[1][1],		"auto",	"Auto");
     is ($clr->{attr}[1][1]{fgcolor}, undef,	"Unspecified font color");
