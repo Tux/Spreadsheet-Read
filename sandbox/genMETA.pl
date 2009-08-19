@@ -78,8 +78,8 @@ requires:
   Carp:                 0
   Data::Dumper:         0
 recommends:
-  perl:                 5.008005
-  File::Temp:           0.14
+  perl:                 5.010001
+  File::Temp:           0.22
   IO::Scalar:           0
 configure_requires:
   ExtUtils::MakeMaker:  0
@@ -100,16 +100,16 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.43
     recommends:
-      Text::CSV:                           1.12
-      Text::CSV_PP:                        1.20
-      Text::CSV_XS:                        0.65
+      Text::CSV:                           1.13
+      Text::CSV_PP:                        1.21
+      Text::CSV_XS:                        0.67
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel:             0.49
+      Spreadsheet::ParseExcel:             0.50
 - opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
