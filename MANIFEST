@@ -43,6 +43,7 @@ t/11_call.t
 t/20_csv.t
 t/21_csv.t
 t/22_csv.t
+t/23_csv.t
 t/30_xls.t
 t/31_clr.t
 t/33_misc.t

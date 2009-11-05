@@ -4,7 +4,9 @@ Revision history for Spreadsheet::Read
 
     - Add strip option
     - Spreadsheet::XLSX 0.12 still does not support attributes
-    - Require Text::CSV_XS for CSV for auto-detection of \r
+    - Require Text::CSV_XS-0.69 for CSV for auto-detection of \r
+    - New attribute "parser" to force format
+    - Allow CSV streams
 
 0.35	Wed 03 Jun 2009
 
