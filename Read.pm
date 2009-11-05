@@ -22,7 +22,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.35";
+our $VERSION = "0.36";
 sub  Version { $VERSION }
 
 use Carp;
@@ -139,8 +139,24 @@ sub rows
 # columns in each sheet that contain no visible data
 sub _clipsheets
 {
-    my ($clip, $ref) = @_;
-    $clip or return $ref;
+    my ($opt, $ref) = @_;
+
+    if (my $s = $opt->{strip}) {
+	foreach my $sheet (1 .. $ref->[0]{sheets}) {
+	    my $ss = $ref->[$sheet];
+	    foreach my $row (1 .. $ss->{maxrow}) {
+		foreach my $col (1 .. $ss->{maxcol}) {
+		    defined $ss->{cell}[$col][$row] or next;
+		    $s & 2 && $ss->{cell}[$col][$row] =~ s/\s+$// and
+			$ss->{cr2cell ($col, $row)}   =~ s/\s+$//;
+		    $s & 1 && $ss->{cell}[$col][$row] =~ s/^\s+// and
+			$ss->{cr2cell ($col, $row)}   =~ s/^\s+//;
+		    }
+		}
+	    }
+	}
+
+    $opt->{clip} or return $ref;
 
     foreach my $sheet (1 .. $ref->[0]{sheets}) {
 	my $ss = $ref->[$sheet];
@@ -197,6 +213,7 @@ sub ReadData
     defined $opt{cells}	or $opt{cells}	= 1;
     defined $opt{attr}	or $opt{attr}	= 0;
     defined $opt{clip}	or $opt{clip}	= $opt{cell};
+    defined $opt{strip}	or $opt{strip}	= 0;
     defined $opt{dtfmt} or $opt{dtfmt}	= "yyyy-mm-dd"; # Format 14
 
     # $debug = $opt{debug} // 0;
@@ -279,7 +296,7 @@ sub ReadData
 	for (@{$data[1]{cell}}) {
 	    defined $_ or $_ = [];
 	    }
-	return _clipsheets $opt{clip}, [ @data ];
+	return _clipsheets \%opt, [ @data ];
 	}
 
     # From /etc/magic: Microsoft Office Document
@@ -448,7 +465,7 @@ sub ReadData
 		$data[0]{sheet}{$sheet{label}} = $#data;
 		}
 	    }
-	return _clipsheets $opt{clip}, [ @data ];
+	return _clipsheets \%opt, [ @data ];
 	}
 
     if ($txt =~ m/^# .*SquirrelCalc/ or $txt =~ m/\.sc$/ && -f $txt) {
@@ -494,7 +511,7 @@ sub ReadData
 	for (@{$data[1]{cell}}) {
 	    defined $_ or $_ = [];
 	    }
-	return _clipsheets $opt{clip}, [ @data ];
+	return _clipsheets \%opt, [ @data ];
 	}
 
     if ($txt =~ m/^<\?xml/ or -f $txt) {
@@ -567,7 +584,7 @@ sub ReadData
 		$data[0]{sheets}++;
 		$data[0]{sheet}{$sheet->{label}} = $#data;
 		}
-	    return _clipsheets $opt{clip}, [ @data ];
+	    return _clipsheets \%opt, [ @data ];
 	    }
 	}
 
@@ -686,6 +703,18 @@ If set, C<ReadData ()> will remove all trailing lines and columns per
 sheet that have no visual data.
 This option is only valid if C<cells> is true. The default value is
 true if C<cells> is true, and false otherwise.
+
+=item strip
+
+If set, C<ReadData ()> will remove trailing- and/or leading-whitespace
+from every field.
+
+  strip  leading  strailing
+  -----  -------  ---------
+    0      n/a      n/a
+    1     strip     n/a
+    2      n/a     strip
+    3     strip    strip
 
 =item sep
 

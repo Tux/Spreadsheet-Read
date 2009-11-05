@@ -2,6 +2,7 @@ Revision history for Spreadsheet::Read
 
 0.36	Thu 05 Nov 2009
 
+    - Add strip option
     - Require Text::CSV_XS for CSV for auto-detection of \r
 
 0.35	Wed 03 Jun 2009
