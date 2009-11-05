@@ -230,13 +230,6 @@ sub ReadData
 	    );
 
 	$_ = <$in>;
-	if (eof ($in)) {
-	    # This file is either just one single line, or uses \r as eol
-	    close $in;
-	    open  $in, "<", $txt or return;
-	    $/ = "\r";
-	    $_ = <$in>;
-	    }
 
 	my $quo = defined $opt{quote} ? $opt{quote} : '"';
 	my $sep = # If explicitly set, use it

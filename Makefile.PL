@@ -30,9 +30,9 @@ my %wm = (
 	"IO::Scalar"			=> 0.00,	# Optional
 
 	# Backend parsers, all optional
-	"Text::CSV"			=> 1.00,
-	"Text::CSV_XS"			=> 0.23,	# 0.32 or up preferred
-	"Text::CSV_PP"			=> 1.05,	# 1.08 or up preferred
+	"Text::CSV"			=> 1.15,
+	"Text::CSV_XS"			=> 0.69,
+	"Text::CSV_PP"			=> 1.23,
 	"Spreadsheet::ReadSXC"		=> 0.20,
 	"Spreadsheet::ParseExcel"	=> 0.26,
 	"Spreadsheet::ParseExcel::FmtDefault" => 0,

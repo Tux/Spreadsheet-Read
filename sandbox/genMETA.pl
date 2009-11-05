@@ -98,22 +98,22 @@ optional_features:
 - opt_csv:
     description:        Provides parsing of CSV streams
     requires:
-      Text::CSV_XS:                        0.43
+      Text::CSV_XS:                        0.69
     recommends:
-      Text::CSV:                           1.13
-      Text::CSV_PP:                        1.21
-      Text::CSV_XS:                        0.67
+      Text::CSV:                           1.15
+      Text::CSV_PP:                        1.23
+      Text::CSV_XS:                        0.69
 - opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel:             0.50
+      Spreadsheet::ParseExcel:             0.55
 - opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
-      Spreadsheet::XLSX:                   0.1
+      Spreadsheet::XLSX:                   0.12
       Spreadsheet::XLSX::Fmt2007:          0
 - opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
