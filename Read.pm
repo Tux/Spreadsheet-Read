@@ -696,6 +696,7 @@ Control the generation of the {cell}[c][r] entries. Default is true.
 =item attr
 
 Control the generation of the {attr}[c][r] entries. Default is false.
+See L<Cell Attributes> below.
 
 =item clip
 
@@ -802,63 +803,65 @@ use argument list, or call it fully qualified.
 
 =back
 
+=head2 Cell Attributes
+
+If the constructor was called with C<attr> having a true value, effort
+is made to analyse and store field attributes like this:
+
+    { label  => "Sheet 1",
+      maxrow => 2,
+      maxcol => 4,
+      cell   => [ undef,
+	[ undef, 1 ],
+	[ undef, undef, undef, undef, undef, "Nugget" ],
+	],
+      attr   => [ undef,
+	[ undef, {
+	  type    => "numeric",
+	  fgcolor => "#ff0000",
+	  bgcolor => undef,
+	  font    => "Arial",
+	  size    => undef,
+	  format  => "## ##0.00",
+	  halign  => "right",
+	  valign  => "top",
+	  uline   => 0,
+	  bold    => 0,
+	  italic  => 0,
+	  wrap    => 0,
+	  merged  => 0,
+	  hidden  => 0,
+	  locked  => 0,
+	  enc     => "utf-8",
+	  }, ]
+	[ undef, undef, undef, undef, undef, {
+	  type    => "text",
+	  fgcolor => "#e2e2e2",
+	  bgcolor => undef,
+	  font    => "Letter Gothic",
+	  size    => 15,
+	  format  => undef,
+	  halign  => "left",
+	  valign  => "top",
+	  uline   => 0,
+	  bold    => 0,
+	  italic  => 0,
+	  wrap    => 0,
+	  merged  => 0,
+	  hidden  => 0,
+	  locked  => 0,
+	  enc     => "iso8859-1",
+	  }, ]
+      A1     => 1,
+      B5     => "Nugget",
+      },
+
+This has now been partially implemented, mainly for Excel, as the other
+parsers do not (yet) support all of that. YMMV.
+
 =head1 TODO
 
 =over 4
-
-=item Cell attributes
-
-Future plans include cell attributes, available as for example:
-
-        { label  => "Sheet 1",
-          maxrow => 2,
-          maxcol => 4,
-          cell   => [ undef,
-            [ undef, 1 ],
-            [ undef, undef, undef, undef, undef, "Nugget" ],
-            ],
-          attr   => [ undef,
-            [ undef, {
-              type    => "numeric",
-              fgcolor => "#ff0000",
-              bgcolor => undef,
-              font    => "Arial",
-              size    => undef,
-              format  => "## ##0.00",
-              halign  => "right",
-              valign  => "top",
-              uline   => 0,
-              bold    => 0,
-              italic  => 0,
-              wrap    => 0,
-              merged  => 0,
-              hidden  => 0,
-              locked  => 0,
-              enc     => "utf-8",
-              }, ]
-            [ undef, undef, undef, undef, undef, {
-              type    => "text",
- 	      fgcolor => "#e2e2e2",
-              bgcolor => undef,
-              font    => "Letter Gothic",
-              size    => 15,
-              format  => undef,
-              halign  => "left",
-              valign  => "top",
-              uline   => 0,
-              bold    => 0,
-              italic  => 0,
-              wrap    => 0,
-              merged  => 0,
-              hidden  => 0,
-              locked  => 0,
- 	      enc     => "iso8859-1",
- 	      }, ]
- 	  A1     => 1,
- 	  B5     => "Nugget",
- 	  },
-
-This has now been partially implemented. Excel only.
 
 =item Options
 
