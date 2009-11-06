@@ -224,12 +224,14 @@ sub ReadData
     $debug = defined $opt{debug} ? $opt{debug} : 0;
     $debug > 4 and print STDERR Data::Dumper->Dump ([\%opt],["Options"]);
 
+    my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? 1 : 0;
+
     # CSV not supported from streams
     if ($opt{parser} ? _parser ($opt{parser}) eq "csv"
 		     : ($txt =~ m/\.(csv)$/i && -f $txt)) {
 	$can{csv} or croak "CSV parser not installed";
 
-	my $csv_is_file = ref $txt ? 0 : $txt =~ m/.csv$/ && -f $txt ? 1 : 0;
+	my $csv_is_file = $io_ref ? 0 : $txt =~ m/.csv$/ && -f $txt ? 1 : 0;
 	my $label = $csv_is_file ? $txt : "IO";
 
 	$debug and print STDERR "Opening CSV $label\n";
@@ -483,13 +485,18 @@ sub ReadData
 
     if ($opt{parser} ? _parser ($opt{parser}) eq "sc"
 		     : ($txt =~ m/^# .*SquirrelCalc/ or $txt =~ m/\.sc$/ && -f $txt)) {
-	if ($txt !~ m/\n/ && -f $txt) {
+	if ($io_ref) {
+	    local $/;
+	    my $x = <$txt>;
+	    $txt = $x;
+	    }
+	elsif ($txt !~ m/\n/ && -f $txt) {
 	    local $/;
 	    open my $sc, "<", $txt or return;
 	    $txt = <$sc>;
 	    close   $sc;
-	    $txt =~ m/\S/ or return;
 	    }
+	$txt =~ m/\S/ or return;
 	my @data = (
 	    {	type	=> "sc",
 		parser	=> "Spreadsheet::Read",
@@ -694,7 +701,7 @@ structure described above.
 
 Precessing data from a stream or content is supported for Excel
 (through a File::Temp temporary file or IO::Scalar when available),
-or for XML (OpenOffice), but not for CSV.
+for XML (OpenOffice), for CSV, and for CS.
 
 ReadSXC does preserve sheet order as of version 0.20.
 
