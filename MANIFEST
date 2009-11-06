@@ -50,12 +50,13 @@ t/33_misc.t
 t/32_fmt.t
 t/34_dates.t
 t/35_perc.t
+t/36_xls.t
 t/40_sxc.t
 t/45_ods.t
 t/46_clr.t
 t/50_sc.t
 t/51_sc.t
-t/60_xls.t
+t/60_xlsx.t
 t/61_clr.t
 t/62_fmt.t
 t/63_misc.t

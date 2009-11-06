@@ -8,6 +8,7 @@ Revision history for Spreadsheet::Read
     - New attribute "parser" to force format
     - Allow CSV streams
     - Allow SC  streams
+    - Allow XLS streams
 
 0.35	Wed 03 Jun 2009
 

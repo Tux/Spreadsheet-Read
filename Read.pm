@@ -314,10 +314,11 @@ sub ReadData
 
     # From /etc/magic: Microsoft Office Document
     my $xls_from_txt;
-    if (_parser ($opt{parser}) =~ m{^xlsx?} && -f $txt or
+    if (!$io_ref and (
+        _parser ($opt{parser}) =~ m{^xlsx?} && -f $txt or
 	$txt =~ m/^(\376\067\0\043
 		   |\320\317\021\340\241\261\032\341
-		   |\333\245-\0\0\0)/x) {
+		   |\333\245-\0\0\0)/x)) {
 	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
 	if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
 	    $xls_from_txt = \$txt;
