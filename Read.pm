@@ -226,7 +226,6 @@ sub ReadData
 
     my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? 1 : 0;
 
-    # CSV not supported from streams
     if ($opt{parser} ? _parser ($opt{parser}) eq "csv"
 		     : ($txt =~ m/\.(csv)$/i && -f $txt)) {
 	$can{csv} or croak "CSV parser not installed";
@@ -700,9 +699,8 @@ the sheets when accessing them by name:
 Tries to convert the given file, string, or stream to the data
 structure described above.
 
-Precessing data from a stream or content is supported for Excel
-(through a File::Temp temporary file or IO::Scalar when available),
-for XML (OpenOffice), for CSV, and for CS.
+Processing Excel data from a stream or content is supported through
+a File::Temp temporary file or IO::Scalar when available.  
 
 ReadSXC does preserve sheet order as of version 0.20.
 
