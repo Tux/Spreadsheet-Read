@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 117;
+my     $tests = 116;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -11,17 +11,13 @@ use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
 
-print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-
 sub ReadDataCSV
 {
     ReadData (@_, parser => "csv");
     } # ReadDataCSV
 
 {   my $ref;
-    $ref = ReadDataCSV ("no_such_file.txt");
-    ok (!defined $ref, "Nonexistent file");
-    $ref = ReadDataCSV ("empty.txt");
+    $ref = ReadDataCSV ("files/empty.txt");
     ok (!defined $ref, "Empty file");
     }
 

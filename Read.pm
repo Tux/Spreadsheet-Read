@@ -224,14 +224,18 @@ sub ReadData
     $debug = defined $opt{debug} ? $opt{debug} : 0;
     $debug > 4 and print STDERR Data::Dumper->Dump ([\%opt],["Options"]);
 
-    my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? 1 : 0;
+    my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? $txt : undef;
+    my $io_fil = $io_ref ? 0 : do { no warnings "newline"; -f $txt ? 1 : 0 };
+    my $io_txt = $io_ref || $io_fil ? 0 : 1;
+
+    $io_fil && ! -s $txt  and return;
+    $io_ref && eof ($txt) and return;
 
     if ($opt{parser} ? _parser ($opt{parser}) eq "csv"
-		     : ($txt =~ m/\.(csv)$/i && -f $txt)) {
+		     : ($io_fil && $txt =~ m/\.(csv)$/i)) {
 	$can{csv} or croak "CSV parser not installed";
 
-	my $csv_is_file = $io_ref ? 0 : $txt =~ m/.csv$/ && -f $txt ? 1 : 0;
-	my $label = $csv_is_file ? $txt : "IO";
+	my $label = $io_fil ? $txt : "IO";
 
 	$debug and print STDERR "Opening CSV $label\n";
 
@@ -256,7 +260,7 @@ sub ReadData
 	my ($sep, $quo, $in) = (",", '"');
 	defined $opt{sep}   and $sep = $opt{sep};
 	defined $opt{quote} and $quo = $opt{quote};
-	if ($csv_is_file) {
+	if ($io_fil) {
 	    unless (defined $opt{quote} && defined $opt{sep}) {
 		local $/ = $/;
 		open $in, "<", $txt or return;
@@ -312,36 +316,38 @@ sub ReadData
 	}
 
     # From /etc/magic: Microsoft Office Document
-    my $xls_from_txt;
-    if (!$io_ref and (
-        _parser ($opt{parser}) =~ m{^xlsx?} && -f $txt or
-	$txt =~ m/^(\376\067\0\043
-		   |\320\317\021\340\241\261\032\341
-		   |\333\245-\0\0\0)/x)) {
+    if ($io_txt && _parser ($opt{parser}) !~ m/^xlsx?$/ &&
+		    $txt =~ m/^(\376\067\0\043
+			       |\320\317\021\340\241\261\032\341
+			       |\333\245-\0\0\0)/x) {
 	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
+	my $tmpfile;
 	if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
-	    $xls_from_txt = \$txt;
+	    $tmpfile = \$txt;
 	    }
 	else {
-	    my $tmpfile = File::Temp->new (SUFFIX => ".xls", UNLINK => 1);
+	    $tmpfile = File::Temp->new (SUFFIX => ".xls", UNLINK => 1);
 	    binmode $tmpfile;
 	    print   $tmpfile $txt;
-	    $txt = "$tmpfile";
+	    close   $tmpfile;
 	    }
+	open $io_ref, "<", $tmpfile or return;
+	$io_txt = 0;
+	$opt{parser} = "xls";
 	}
-    if ($opt{parser} ? _parser ($opt{parser}) =~ m/^xlsx?$/
-		     : ($xls_from_txt or $txt =~ m/\.(xlsx?)$/i && -f $txt)) {
-	my $parse_type = $txt =~ m/\.xlsx$/i ? "XLSX" : "XLS";
+    my $_parser;
+    if ($opt{parser} ? ($_parser = _parser ($opt{parser})) =~ m/^xlsx?$/
+		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
+	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
 	$can{lc $parse_type} or croak "Parser for $parse_type is not installed";
 	my $oBook;
-	if ($xls_from_txt) {
-	    $debug and print STDERR "Opening $parse_type \$txt\n";
+	$debug and print STDERR "Opening $parse_type \$txt\n";
+	if ($io_ref) {
 	    $oBook = $parse_type eq "XLSX"
-		? Spreadsheet::XLSX::Workbook->Parse (\$txt)
-		: Spreadsheet::ParseExcel::Workbook->Parse (\$txt);
+		? Spreadsheet::XLSX::Workbook->Parse ($io_ref)
+		: Spreadsheet::ParseExcel::Workbook->Parse ($io_ref);
 	    }
 	else {
-	    $debug and print STDERR "Opening XLS $txt\n";
 	    $oBook = $parse_type eq "XLSX"
 		? Spreadsheet::XLSX->new ($txt)
 		: Spreadsheet::ParseExcel::Workbook->Parse ($txt);
@@ -484,13 +490,15 @@ sub ReadData
 	}
 
     if ($opt{parser} ? _parser ($opt{parser}) eq "sc"
-		     : ($txt =~ m/^# .*SquirrelCalc/ or $txt =~ m/\.sc$/ && -f $txt)) {
+		     : $io_fil
+			 ? $txt =~ m/\.sc$/
+			 : $txt =~ m/^# .*SquirrelCalc/) {
 	if ($io_ref) {
 	    local $/;
 	    my $x = <$txt>;
 	    $txt = $x;
 	    }
-	elsif ($txt !~ m/\n/ && -f $txt) {
+	elsif ($io_fil) {
 	    local $/;
 	    open my $sc, "<", $txt or return;
 	    $txt = <$sc>;
