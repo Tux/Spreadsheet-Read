@@ -13,6 +13,7 @@ files/empty.csv
 files/empty.ods
 files/empty.sc
 files/empty.sxc
+files/empty.txt
 files/empty.xls
 files/empty.xlsx
 files/macosx.csv
@@ -23,11 +24,15 @@ files/perc.xls
 files/perc.xlsx
 files/test.csv
 files/test_m.csv
+files/test_m.txt
 files/test.ods
 files/test.sc
 files/test.sxc
+files/test.txt
 files/test_t.csv
+files/test_t.txt
 files/test_x.csv
+files/test_x.txt
 files/test.xls
 files/test.xlsx
 files/values.xls
@@ -44,6 +49,7 @@ t/20_csv.t
 t/21_csv.t
 t/22_csv.t
 t/23_csv.t
+t/24_csv.t
 t/30_xls.t
 t/31_clr.t
 t/33_misc.t

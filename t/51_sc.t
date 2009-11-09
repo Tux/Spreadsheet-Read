@@ -11,8 +11,6 @@ use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("sc") or
     plan skip_all => "No SquirelCalc parser found";
 
-print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-
 sub ReadDataStream
 {
     my $file = shift;

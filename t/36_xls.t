@@ -9,7 +9,6 @@ require Test::NoWarnings;
 use Spreadsheet::Read;
 my $parser;
 if ($parser = Spreadsheet::Read::parses ("xls")) {
-    print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
     plan tests => 172;
     Test::NoWarnings->import;
     }
