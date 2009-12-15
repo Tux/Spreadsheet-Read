@@ -35,7 +35,8 @@ if ($check) {
     $@ and die "$@\n";
     $opt_v and print Dump $h;
     my $t = Test::YAML::Meta::Version->new (yaml => $h);
-    $t->parse () and die join "\n", $t->errors, "";
+    $t->parse () and
+	die join "\n", "Test::YAML::Meta reported failure:", $t->errors, "";
 
     use Parse::CPAN::Meta;
     eval { Parse::CPAN::Meta::Load ($yml) };
@@ -95,7 +96,7 @@ meta-spec:
   version:              1.4
   url:                  http://module-build.sourceforge.net/META-spec-v1.4.html
 optional_features:
-- opt_csv:
+  opt_csv:
     description:        Provides parsing of CSV streams
     requires:
       Text::CSV_XS:                        0.69
@@ -103,23 +104,23 @@ optional_features:
       Text::CSV:                           1.15
       Text::CSV_PP:                        1.23
       Text::CSV_XS:                        0.69
-- opt_excel:
+  opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
       Spreadsheet::ParseExcel:             0.55
-- opt_excelx:
+  opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
       Spreadsheet::XLSX:                   0.12
       Spreadsheet::XLSX::Fmt2007:          0
-- opt_oo:
+  opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
       Spreadsheet::ReadSXC:                0.2
-- opt_tools:
+  opt_tools:
     description:        Spreadsheet tools
     recommends:
       Tk:                                  0

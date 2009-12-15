@@ -1,6 +1,10 @@
 Revision history for Spreadsheet::Read
 
-0.37	Thu 09 Nov 2009
+0.38	Tue 15 Dec 2009
+
+    - Updated META.yml to meet most recent specs (optional_features = map)
+
+0.37	Mon 09 Nov 2009
 
     - IO streams improvements
     - MANIFEST fix
