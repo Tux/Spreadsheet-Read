@@ -23,14 +23,14 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.37";
+our $VERSION = "0.38";
 sub  Version { $VERSION }
 
 use Carp;
 use Exporter;
 our @ISA       = qw( Exporter );
 our @EXPORT    = qw( ReadData cell2cr cr2cell );
-our @EXPORT_OK = qw( parses rows );
+our @EXPORT_OK = qw( parses rows cellrow row );
 
 use File::Temp   qw( );
 use Data::Dumper;
@@ -126,6 +126,29 @@ sub cell2cr
 	}
     ($c, $r);
     } # cell2cr
+
+# my @row = cellrow ($ss->[1], 1);
+sub cellrow
+{
+    my $sheet = shift or return;
+    ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
+    exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
+    my $row   = shift or return;
+    $row > 0 && $row <= $sheet->{maxrow} or return;
+    my $s = $sheet->{cell};
+    map { $s->[$_][$row] } 1..$sheet->{maxcol};
+    } # cellrow
+
+# my @row = row ($ss->[1], 1);
+sub row
+{
+    my $sheet = shift or return;
+    ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
+    exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
+    my $row   = shift or return;
+    $row > 0 && $row <= $sheet->{maxrow} or return;
+    map { $sheet->{cr2cell ($_, $row)} } 1..$sheet->{maxcol};
+    } # row
 
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = rows ($ss->[1]);
@@ -819,6 +842,28 @@ pair (1 based):
 
   my ($col, $row) = cell2cr ("D14"); # returns ( 4, 14)
   my ($col, $row) = cell2cr ("AB4"); # returns (28,  4)
+
+=item my @row = row ($ref, $row)
+
+=item my @row = Spreadsheet::Read::row ($ss->[1], 3)
+
+Get full row of formatted values (like C<< $ss->{A3} .. $ss->{G3} >>)
+
+Note that the indexes in the returned list are 0-based.
+
+C<row ()> is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
+
+=item my @row = cellrow ($ref, $row)
+
+=item my @row = Spreadsheet::Read::cellrow ($ss->[1], 3)
+
+Get full row of unformatted values (like C<< $ss->{cell}[1][3] .. $ss->{cell}[7][3] >>)
+
+Note that the indexes in the returned list are 0-based.
+
+C<cellrow ()> is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
 
 =item my @rows = rows ($ref)
 

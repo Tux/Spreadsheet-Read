@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 
-my     $tests = 116;
+my     $tests = 118;
 use     Test::More;
 require Test::NoWarnings;
 
-use     Spreadsheet::Read;
+use     Spreadsheet::Read qw( ReadData cell2cr row cellrow );
 my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
 
@@ -51,6 +51,10 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
     is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
     }
+
+my @row = ("A3", "", "C3", "D3", (undef) x 15);
+is_deeply ([ row     ($csv->[1], 3) ], \@row, "Formatted   row 3");
+is_deeply ([ cellrow ($csv->[1], 3) ], \@row, "Unformatted row 3");
 
 ok ($csv = ReadDataCSV ("files/test_m.txt"),	"Read/Parse M\$ csv file");
 
