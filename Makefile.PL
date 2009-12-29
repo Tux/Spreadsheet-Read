@@ -26,7 +26,7 @@ my %wm = (
 	"Exporter"			=> 0.00,
 	"Carp"				=> 0.00,
 	"Data::Dumper"			=> 0.00,
-	"File::Temp"			=> 0.14,
+	"File::Temp"			=> 0.22,
 	"IO::Scalar"			=> 0.00,	# Optional
 
 	# Backend parsers, all optional
