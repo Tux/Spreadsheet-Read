@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'09 [13-05-2009] Copyright H.M.Brand 2005-2009
+#	  (m)'09 [13-05-2009] Copyright H.M.Brand 2005-2010
 
 use strict;
 use warnings;
