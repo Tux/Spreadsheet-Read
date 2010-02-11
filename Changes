@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.39	Thu 11 Feb 2010
+
+    - Doc fix (RT#54507, Patrick Cronin)
+
 0.38	Tue 15 Dec 2009
 
     - Add row () and cellrow ()
