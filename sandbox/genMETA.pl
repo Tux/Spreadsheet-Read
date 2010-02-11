@@ -27,6 +27,18 @@ while (<DATA>) {
     }
 
 if ($check) {
+    print STDERR "Check required and recommended module versions ...\n";
+    BEGIN { $V::NO_EXIT = $V::NO_EXIT = 1 } require V;
+    my %vsn = map { m/^\s*([\w:]+):\s+([0-9.]+)$/ ? ($1, $2) : () } @yml;
+    delete @vsn{qw( perl version )};
+    for (sort keys %vsn) {
+	$vsn{$_} eq "0" and next;
+	my $v = V::get_version ($_);
+	$v eq $vsn{$_} and next;
+	printf STDERR "%-35s %-6s => %s\n", $_, $vsn{$_}, $v;
+	}
+
+    print STDERR "Checking generated YAML ...\n";
     use YAML::Syck;
     use Test::YAML::Meta::Version;
     my $h;
@@ -78,10 +90,6 @@ requires:
   Exporter:             0
   Carp:                 0
   Data::Dumper:         0
-recommends:
-  perl:                 5.010001
-  File::Temp:           0.22
-  IO::Scalar:           0
 configure_requires:
   ExtUtils::MakeMaker:  0
 build_requires:
@@ -89,6 +97,11 @@ build_requires:
   Test::Harness:        0
   Test::More:           0.88
   Test::NoWarnings:     0
+recommends:
+  perl:                 5.010001
+  File::Temp:           0.22
+  IO::Scalar:           0
+  Test::More:           0.94
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           http://repo.or.cz/w/Spreadsheet-Read.git
@@ -110,7 +123,7 @@ optional_features:
       Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel:             0.56
+      Spreadsheet::ParseExcel:             0.57
   opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
@@ -119,7 +132,7 @@ optional_features:
   opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
-      Spreadsheet::ReadSXC:                0.2
+      Spreadsheet::ReadSXC:                0.20
   opt_tools:
     description:        Spreadsheet tools
     recommends:
