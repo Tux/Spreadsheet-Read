@@ -72,7 +72,7 @@ else {
     }
 
 __END__
---- #YAML:1.1
+--- #YAML:1.0
 name:                   Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
@@ -116,7 +116,7 @@ optional_features:
     recommends:
       Text::CSV:                           1.16
       Text::CSV_PP:                        1.24
-      Text::CSV_XS:                        0.70
+      Text::CSV_XS:                        0.72
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
