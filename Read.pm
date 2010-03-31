@@ -239,7 +239,7 @@ sub ReadData
     defined $opt{rc}	or $opt{rc}	= 1;
     defined $opt{cells}	or $opt{cells}	= 1;
     defined $opt{attr}	or $opt{attr}	= 0;
-    defined $opt{clip}	or $opt{clip}	= $opt{cell};
+    defined $opt{clip}	or $opt{clip}	= $opt{cells};
     defined $opt{strip}	or $opt{strip}	= 0;
     defined $opt{dtfmt} or $opt{dtfmt}	= "yyyy-mm-dd"; # Format 14
 

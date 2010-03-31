@@ -70,7 +70,8 @@ foreach my $base ( [ "files/test.xls",	"Read/Parse xls file"	],
 
 # This files is generated under Mac OS/X Tiger
 ok (1, "XLS File fom Mac OS X");
-ok ($xls = ReadData ("files/macosx.xls"),	"Read/Parse Mac OS X xls file");
+ok ($xls = ReadData ("files/macosx.xls", clip => 0),
+						"Read/Parse Mac OS X xls file");
 
 ok (1, "Base values");
 is ($xls->[0]{sheets},		3,		"Sheet count");
