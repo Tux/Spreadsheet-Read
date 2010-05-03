@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.40	Wed 31 Mar 2010
+
+    - Default option for clip fixed (RT#56151 - Alan James)
+
 0.39	Tue 16 Mar 2010
 
     - Doc fix (RT#54507, Patrick Cronin)
