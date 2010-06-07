@@ -23,7 +23,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.40";
+our $VERSION = "0.41";
 sub  Version { $VERSION }
 
 use Carp;
@@ -657,8 +657,8 @@ For OpenOffice this module uses Spreadsheet::ReadSXC
 For Microsoft Excel this module uses Spreadsheet::ParseExcel or
 Spreadsheet::XLSX
 
-For CSV this module uses Text::CSV_XS (0.29 or up prefered) or
-Text::CSV_PP (1.05 or up required).
+For CSV this module uses Text::CSV_XS (0.29 or up required, 0.73 or
+up preferred) or Text::CSV_PP (1.05 or up required).
 
 For SquirrelCalc there is a very simplistic built-in parser
 
@@ -806,7 +806,7 @@ happened to be at the time the user saved the file.
 Enable some diagnostic messages to STDERR.
 
 The value determines how much diagnostics are dumped (using Data::Dumper).
-A value of 9 and higher will dump the entire structure from the backend
+A value of 9 and higher will dump the entire structure from the back-end
 parser.
 
 =back
@@ -901,7 +901,7 @@ use argument list, or call it fully qualified.
 =head2 Cell Attributes
 
 If the constructor was called with C<attr> having a true value, effort
-is made to analyse and store field attributes like this:
+is made to analyze and store field attributes like this:
 
     { label  => "Sheet 1",
       maxrow => 5,
@@ -981,7 +981,7 @@ names C<meta>, or just be new values in the C<attr> hashes.
 
 I consider adding any spreadsheet interface that offers a usable API.
 
-=item OO-ify
+=item Add an OO interface
 
 Consider making the ref an object, though I currently don't see the big
 advantage (yet). Maybe I'll make it so that it is a hybrid functional /
@@ -1029,12 +1029,12 @@ for an alternative set of cell2cr () / cr2cell () pair
 http://search.cpan.org/dist/Spreadsheet-Perl
 offers a Pure Perl implementation of a spreadsheet engine. Users that want
 this format to be supported in Spreadsheet::Read are hereby motivated to
-offer patches. It's not high on my todo-list.
+offer patches. It's not high on my TODO-list.
 
 =item xls2csv
 
 http://search.cpan.org/dist/xls2csv offers an alternative for my C<xlscat -c>,
-in the xls2csv tool, but this tool focusses on character encoding
+in the xls2csv tool, but this tool focuses on character encoding
 transparency, and requires some other modules.
 
 =back
