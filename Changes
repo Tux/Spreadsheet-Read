@@ -1,8 +1,9 @@
 Revision history for Spreadsheet::Read
 
-0.41	Mon 07 Jun 2010
+0.41	Wed 06 Oct 2010
 
     - Spell-check
+    - Fixed requiring optional modules (RT#61928 - Roderick Schupp)
 
 0.40	Wed 31 Mar 2010
 

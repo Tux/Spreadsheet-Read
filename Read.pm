@@ -52,7 +52,7 @@ my %can = map { $_->[0] => 0 } @parsers;
 for (@parsers) {
     my ($flag, $mod) = @$_;
     $can{$flag} and next;
-    eval "require $mod; \@_ or \$can{\$flag} = '$mod'";
+    eval "require $mod; \$can{\$flag} = '$mod'";
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
