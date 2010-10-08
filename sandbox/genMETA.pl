@@ -101,7 +101,7 @@ recommends:
   perl:                 5.010001
   File::Temp:           0.22
   IO::Scalar:           0
-  Test::More:           0.94
+  Test::More:           0.96
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           http://repo.or.cz/w/Spreadsheet-Read.git
@@ -114,16 +114,16 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.69
     recommends:
-      Text::CSV:                           1.17
-      Text::CSV_PP:                        1.25
-      Text::CSV_XS:                        0.73
+      Text::CSV:                           1.19
+      Text::CSV_PP:                        1.27
+      Text::CSV_XS:                        0.75
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel:             0.26
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel:             0.57
+      Spreadsheet::ParseExcel:             0.58
   opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
