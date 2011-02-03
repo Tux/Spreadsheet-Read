@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.42	Thu 03 Feb 2011
+
+    - Add --html output option to xlscat
+
 0.41	Wed 06 Oct 2010
 
     - Spell-check

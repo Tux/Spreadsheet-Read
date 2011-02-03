@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'09 [13-05-2009] Copyright H.M.Brand 2005-2010
+#	  (m)'11 [03-02-2011] Copyright H.M.Brand 2005-2011
 
 use strict;
 use warnings;
 
-our $VERSION = "1.9";
+our $VERSION = "2.0";
 
 sub usage
 {
@@ -39,6 +39,8 @@ sub usage
 	"    Output CSV:\n",
 	"       -c          Output CSV, separator = ','\n",
 	"       -m          Output CSV, separator = ';'\n",
+	"    Output HTML:\n",
+	"       -H          Output HTML\n",
 	"    Selection:\n",
 	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set\n",
 	"                   Default only prints the first sheet\n",
@@ -64,6 +66,7 @@ my $opt_u = 0;		# Show unformatted values
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_A = 0;		# Show field colors in ANSI escapes
+my $opt_H = 0;		# Output in HTML
 my $clip  = 1;
 my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
@@ -96,6 +99,7 @@ GetOptions (
     "u|unformatted"	=> \$opt_u,
     "v|verbose:1"	=> \$opt_v,
     "d|debug:1"		=> \$opt_d,
+    "H|html:1"		=> \$opt_H,
     "noclip"		=> sub { $clip = 0 },
 
     # Encoding
@@ -112,7 +116,10 @@ $opt_i && $opt_S and usage 1, "Options i and S are mutually exclusive";
 $opt_i && $opt_R and usage 1, "Options i and R are mutually exclusive";
 $opt_i && $opt_C and usage 1, "Options i and C are mutually exclusive";
 $opt_i && $opt_F and usage 1, "Options i and F are mutually exclusive";
+$opt_i && $opt_H and usage 1, "Options i and H are mutually exclusive";
 $opt_c && $opt_s and usage 1, "Options c and s are mutually exclusive";
+$opt_c && $opt_H and usage 1, "Options c and H are mutually exclusive";
+$opt_s && $opt_H and usage 1, "Options s and H are mutually exclusive";
 
 defined $opt_s or $opt_s = "|"; eval "\$opt_s = qq{$opt_s}";
 defined $opt_S or $opt_S = $opt_i ? "all" : "1";
@@ -141,7 +148,17 @@ use Encode qw( encode decode );
 use Spreadsheet::Read;
 if ($opt_c) {
     Spreadsheet::Read::parses ("csv") or die "No CSV module found\n";
-    eval { use Text::CSV_XS };
+    eval q{use Text::CSV_XS};
+    }
+if ($opt_H) {
+    $enc_o = "utf-8";
+    $opt_H = sub { $_[0]; };
+    eval q{
+	use HTML::Entities;
+	$opt_H = sub {
+	    encode_entities (decode ("utf-8", $_[0]));
+	    };
+	};
     }
 
 my @RDarg = (debug => $opt_d, clip => $clip);
@@ -194,8 +211,40 @@ sub ansi_color
     "\e[${attr}m";
     } # ansi_color
 
+sub css_color
+{
+    my ($fg, $bg, $bold, $ul, $ha) = @_;
+
+    my @css;
+    $bold and push @css, "font-weight: bold";
+    $ul   and push @css, "text-decoration: underline";
+    $fg   and push @css, "color: $fg";
+    $bg   and push @css, "background: $bg";
+    $ha   and push @css, "text-align: $ha";
+
+    local $" = "; ";
+    @css ? qq{ style="@css"} : "";
+    } # css_color
+
 	    binmode STDERR, ":utf8";
 $enc_o and  binmode STDOUT, ":encoding($enc_o)";
+
+if ($opt_H) {
+    print <<EOH;
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <title>$file</title>
+  <meta name="Author" content="xlscat $VERSION" />
+  <style type="text/css"><!--
+    body, h2, td { font-family: "Nimbus Sans L", Helvetica, Arial, sans; }
+    td           { padding:     5px; }
+    --></style>
+  </head>
+<body>
+EOH
+    }
 
 my $name_len = 30;
 if ($opt_i) {
@@ -241,6 +290,7 @@ foreach my $si (1 .. $sc) {
 	}
     $opt_v >= 8 and print Dumper (\%print);
 
+    $opt_H and print qq{<h2>$sn</h2>\n\n<table border="1">\n};
     my $undef = $opt_v > 2 ? "-- undef --" : "";
     my ($h, @w) = (0, (0) x $nc); # data height, -width, and default column widths
     my @align = ("") x $nc;
@@ -254,7 +304,7 @@ foreach my $si (1 .. $sc) {
 		} $s->{cell}[$_][$r], $s->{$cell};
 	    $opt_v > 2 and print STDERR "$_:$r '$uval' / '$fval'\n";
 	    $opt_A and 
-		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline )} ];
+		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
 	    defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
 	    } $c[0] .. $c[1];
 	exists $print{col} and @row = @row[@{$print{col}}];
@@ -265,8 +315,18 @@ foreach my $si (1 .. $sc) {
 		$row[$c] =~ m/\D/ and $align[$c] = "-";
 		}
 	    }
+	if ($enc_o) { $_ = encode ($enc_o, $_) for @row; }
+	if ($opt_H) {	# HTML
+	    print "  <tr>";
+	    foreach my $c (0 .. $#row) {
+		my $css = css_color (@{$att[$c]});
+		my $td  = $opt_H->($row[$c]);
+		print "<td$css>$td</td>";
+		}
+	    print "</tr>\n";
+	    next;
+	    }
 	if ($opt_c) {	# CSV
-	    if ($enc_o) { $_ = encode ($enc_o, $_) for @row; }
 	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
 	    next;
 	    }
@@ -290,6 +350,7 @@ foreach my $si (1 .. $sc) {
 	} continue {
 	    ++$h % 100 or printf STDERR $v_fmt, $nc, $h, "\r";
 	    }
+    $opt_H and print "  </table>\n\n";
     printf STDERR $v_fmt, $nc, $h, "\n";
     $opt_L or next;
     if ($opt_n) {
@@ -310,3 +371,4 @@ foreach my $si (1 .. $sc) {
 	printf $fmt, @row;
 	}
     }
+$opt_H and print "</body>\n</html>\n";
