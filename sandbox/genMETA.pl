@@ -92,13 +92,12 @@ requires:
   Data::Dumper:         0
 configure_requires:
   ExtUtils::MakeMaker:  0
-build_requires:
-  perl:                 5.006
+test_requires:
   Test::Harness:        0
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.010001
+  perl:                 5.012003
   File::Temp:           0.22
   IO::Scalar:           0
   Test::More:           0.96
@@ -114,9 +113,9 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.69
     recommends:
-      Text::CSV:                           1.19
-      Text::CSV_PP:                        1.27
-      Text::CSV_XS:                        0.75
+      Text::CSV:                           1.21
+      Text::CSV_PP:                        1.29
+      Text::CSV_XS:                        0.80
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
