@@ -137,9 +137,19 @@ if ($opt_c) {
 	});
     }
 
-use Data::Dumper;	# I should use Data::Peek instead
-   $Data::Dumper::Sortkeys = 1;
-   $Data::Dumper::Indent   = 1;
+# Debugging. Prefer Data::Peek over Data::Dumper if available
+{   use Data::Dumper;
+    my $dp = 0;
+    eval q{
+	use Data::Peek;
+	$dp = 1;
+	};
+    sub ddumper
+    {
+	$dp ? DDumper (@_)
+	    : print STDERR Dumper (@_);
+	} # ddumper
+    }
 
 @ARGV or usage 1;
 my $file = shift;
@@ -148,6 +158,7 @@ my $file = shift;
 
 use Encode qw( encode decode );
 use Spreadsheet::Read;
+
 if ($opt_c) {
     Spreadsheet::Read::parses ("csv") or die "No CSV module found\n";
     eval q{use Text::CSV_XS};
@@ -169,7 +180,7 @@ defined $sep   and push @RDarg, "sep"   => $sep, parser => "csv";
 defined $dtfmt and push @RDarg, "dtfmt" => $dtfmt;
 $opt_v > 4 and print STDERR "ReadData ($file, @RDarg);\n";
 my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
-$opt_v > 7 and print STDERR Dumper ($xls);
+$opt_v > 7 and ddumper ($xls);
 my $sc  = $xls->[0]{sheets}	or die "No sheets in $file\n";
 $opt_v > 1 and print STDERR "Opened $file with $sc sheets\n";
 
@@ -262,7 +273,7 @@ foreach my $si (1 .. $sc) {
     exists $print{sheet}{$si} or next;
     $opt_v > 1 and print STDERR "Opening sheet $si ...\n";
     my $s = $xls->[$si] or next;
-    $opt_v > 5 and print STDERR Dumper ($s);
+    $opt_v > 5 and ddumper ($s);
     my @r = (1, $s->{maxrow});
     my @c = (1, $s->{maxcol});
     my ($sn, $nr, $nc) = ($s->{label}, $r[-1], $c[-1]);
@@ -290,7 +301,7 @@ foreach my $si (1 .. $sc) {
 	eval "\$print{col} = [ map { \$_ - 1  } $cols ]";
 	$nc = @{$print{col}};
 	}
-    $opt_v >= 8 and print Dumper (\%print);
+    $opt_v >= 8 and ddumper (\%print);
 
     $opt_H and print qq{<h2>$sn</h2>\n\n<table border="1">\n};
     my $undef = $opt_v > 2 ? "-- undef --" : "";
