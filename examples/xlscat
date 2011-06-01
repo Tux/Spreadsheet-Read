@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-our $VERSION = "2.0";
+our $VERSION = "2.1";
 
 sub usage
 {
@@ -78,6 +78,7 @@ GetOptions (
     "c|csv"		=> sub { $opt_c = "," },
     "m|ms"		=> sub { $opt_c = ";" },
     "insepchar".
+     "|in-sep".
      "|in-sep-char=s"	=> \$sep,
 
     # Input XLS
@@ -88,6 +89,7 @@ GetOptions (
     "i|index"		=> \$opt_i,
     "s|separator".
      "|outsepchar".
+     "|out-sep".
      "|out-sep-char=s"	=> \$opt_s,
     "S|sheets=s"	=> \$opt_S,
     "R|rows=s"		=> \$opt_R,
@@ -163,7 +165,7 @@ if ($opt_H) {
 
 my @RDarg = (debug => $opt_d, clip => $clip);
 $opt_A         and push @RDarg, "attr"  => 1;
-defined $sep   and push @RDarg, "sep"   => $sep;
+defined $sep   and push @RDarg, "sep"   => $sep, parser => "csv";
 defined $dtfmt and push @RDarg, "dtfmt" => $dtfmt;
 $opt_v > 4 and print STDERR "ReadData ($file, @RDarg);\n";
 my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
