@@ -251,8 +251,20 @@ if ($opt_H) {
   <title>$file</title>
   <meta name="Author" content="xlscat $VERSION" />
   <style type="text/css"><!--
-    body, h2, td { font-family: "Nimbus Sans L", Helvetica, Arial, sans; }
-    td           { padding:     5px; }
+    body, h2,
+    td, th { font-family:     "Nimbus Sans L", "DejaVu Sans",
+                              Helvetica, Arial, sans; }
+    table  { border-spacing:  2px;
+             border-collapse: collapse;               }
+    td, th { vertical-align:  top;
+             padding:         4px;                    }
+    table  > tbody > tr > th,
+    table  > tr > th {
+             background:      #e0e0e0;                }
+    table  > tbody > tr > td:not([class]),
+    table  > tr > td:not([class]) {
+             background:      #f0f0f0;                }
+    .odd   { background:      #e0e0e0;                }
     --></style>
   </head>
 <body>
@@ -333,6 +345,7 @@ foreach my $si (1 .. $sc) {
 	    print "  <tr>";
 	    foreach my $c (0 .. $#row) {
 		my $css = css_color (@{$att[$c]});
+		$r % 2 and $css .= qq{ class="odd"};
 		my $td  = $opt_H->($row[$c]);
 		print "<td$css>$td</td>";
 		}
