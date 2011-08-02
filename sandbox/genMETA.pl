@@ -73,7 +73,7 @@ else {
 
 __END__
 --- #YAML:1.0
-name:                   Read
+name:                   Spreadsheet::Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
 license:                perl
@@ -97,7 +97,7 @@ test_requires:
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.012003
+  perl:                 5.014001
   File::Temp:           0.22
   IO::Scalar:           0
   Test::More:           0.98

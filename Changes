@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.43	Tue 02 Aug 2011
+
+    - Changed name in META.yml (RT#69574)
+
 0.42	Wed 01 Jun 2011
 
     - Add --html output option to xlscat
