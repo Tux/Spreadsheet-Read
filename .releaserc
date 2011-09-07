@@ -2,4 +2,5 @@ cpan_user HMBRAND
 automated_testing 1
 skip_kwalitee 1
 skip_prereqs 1
-perls /pro/bin/perl:/pro/bin/perl5.11.0:/pro/bin/perl5.8.8:/pro/bin/perl5.6.2:/usr/bin/perl
+allow_glob_in_perls 1
+perls /pro/bin/perl:/usr/bin/perl:/media/Tux/perls/bin/perl5.[68].*:/media/Tux/perls/bin/perl5.1[02456]*:/media/Tux/perls/bin/tperl5.[68].*:/media/Tux/perls/bin/tperl5.1[02456]*
