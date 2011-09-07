@@ -11,69 +11,30 @@ GetOptions (
     "v|verbose:1"	=> \$opt_v,
     ) or die "usage: $0 [--check]\n";
 
-my $version;
-open my $pm, "<", "Read.pm" or die "Cannot read Read.pm";
-while (<$pm>) {
-    m/^our\s+.VERSION\s*=\s*"?([-0-9._]+)"?\s*;\s*$/ or next;
-    $version = $1;
-    last;
-    }
-close $pm;
+use lib "sandbox";
+use genMETA;
+my $meta = genMETA->new (
+    from    => "Read.pm",
+    verbose => $opt_v,
+    );
 
-my @yml;
-while (<DATA>) {
-    s/VERSION/$version/o;
-    push @yml, $_;
-    }
+$meta->from_data (<DATA>);
 
 if ($check) {
-    print STDERR "Check required and recommended module versions ...\n";
-    BEGIN { $V::NO_EXIT = $V::NO_EXIT = 1 } require V;
-    my %vsn = map { m/^\s*([\w:]+):\s+([0-9.]+)$/ ? ($1, $2) : () } @yml;
-    delete @vsn{qw( perl version )};
-    for (sort keys %vsn) {
-	$vsn{$_} eq "0" and next;
-	my $v = V::get_version ($_);
-	$v eq $vsn{$_} and next;
-	printf STDERR "%-35s %-6s => %s\n", $_, $vsn{$_}, $v;
-	}
-
-    print STDERR "Checking generated YAML ...\n";
-    use YAML::Syck;
-    use Test::YAML::Meta::Version;
-    my $h;
-    my $yml = join "", @yml;
-    eval { $h = Load ($yml) };
-    $@ and die "$@\n";
-    $opt_v and print Dump $h;
-    my $t = Test::YAML::Meta::Version->new (yaml => $h);
-    $t->parse () and
-	die join "\n", "Test::YAML::Meta reported failure:", $t->errors, "";
-
-    use Parse::CPAN::Meta;
-    eval { Parse::CPAN::Meta::Load ($yml) };
-    $@ and die "$@\n";
-
-    my $req_vsn = $h->{requires}{perl};
-    print "Checking if $req_vsn is still OK as minimal version\n";
-    use Test::MinimumVersion;
-    all_minimum_version_ok ($req_vsn, { paths =>
-	["t", "examples", "Read.pm", "Makefile.PL" ]});
+    $meta->check_encoding ();
+    $meta->check_required ();
+    $meta->check_minimum ([ "t", "examples", "Read.pm", "Makefile.PL" ]);
     }
 elsif ($opt_v) {
-    print @yml;
+    $meta->print_yaml ();
     }
 else {
-    my @my = glob <*/META.yml>;
-    @my == 1 && open my $my, ">", $my[0] or die "Cannot update META.yml\n";
-    print $my @yml;
-    close $my;
-    chmod 0644, $my[0];
+    $meta->fix_meta ();
     }
 
 __END__
 --- #YAML:1.0
-name:                   Spreadsheet::Read
+name:                   Spreadsheet-Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
 license:                perl
@@ -90,6 +51,7 @@ requires:
   Exporter:             0
   Carp:                 0
   Data::Dumper:         0
+  File::Temp:           0.22
 configure_requires:
   ExtUtils::MakeMaker:  0
 test_requires:
@@ -98,7 +60,6 @@ test_requires:
   Test::NoWarnings:     0
 recommends:
   perl:                 5.014001
-  File::Temp:           0.22
   IO::Scalar:           0
   Test::More:           0.98
 resources:

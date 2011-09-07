@@ -15,7 +15,7 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	}
     }
 my %wm = (
-    NAME         => "Spreadsheet::Read",
+    NAME         => "Spreadsheet-Read",
     ABSTRACT     => "Read the data from a spreadsheet",
     AUTHOR       => "H.Merijn Brand <h.merijn\@procura.nl>",
     VERSION_FROM => "Read.pm",
@@ -23,24 +23,24 @@ my %wm = (
     PREREQ_FATAL => 0,
     PREREQ_PM    => {
 	# Core modules
-	"Exporter"			=> 0.00,
-	"Carp"				=> 0.00,
-	"Data::Dumper"			=> 0.00,
+	"Exporter"			=> 0,
+	"Carp"				=> 0,
+	"Data::Dumper"			=> 0,
 	"File::Temp"			=> 0.22,
-	"IO::Scalar"			=> 0.00,	# Optional
+	"IO::Scalar"			=> 0,	# Optional
 
 	# Backend parsers, all optional
-	"Text::CSV"			=> 1.15,
-	"Text::CSV_XS"			=> 0.69,
-	"Text::CSV_PP"			=> 1.23,
-	"Spreadsheet::ReadSXC"		=> 0.20,
-	"Spreadsheet::ParseExcel"	=> 0.26,
-	"Spreadsheet::ParseExcel::FmtDefault" => 0,
-#	"Spreadsheet::Perl"		=> 0.00,	# Not yet
+#	"Text::CSV"			=> 1.15,
+#	"Text::CSV_XS"			=> 0.69,
+#	"Text::CSV_PP"			=> 1.23,
+#	"Spreadsheet::ReadSXC"		=> 0.20,
+#	"Spreadsheet::ParseExcel"	=> 0.26,
+#	"Spreadsheet::ParseExcel::FmtDefault" => 0,
+#	"Spreadsheet::Perl"		=> 0,	# Not yet
 
 	# For testing
 	"Test::More"			=> 0.88,
-	"Test::NoWarnings"		=> 0.00,
+	"Test::NoWarnings"		=> 0,
 
 	# for ss2tk
 #	"Tk"				=> 804.027,

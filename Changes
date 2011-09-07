@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.44	Wed 07 Sep 2011
+
+    - More cross-checks for META data
+
 0.43	Tue 02 Aug 2011
 
     - Changed name in META.yml (RT#69574)
