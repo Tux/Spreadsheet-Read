@@ -15,7 +15,8 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	}
     }
 my %wm = (
-    NAME         => "Spreadsheet-Read",
+    NAME         => "Spreadsheet::Read",
+    DISTNAME     => "Spreadsheet-Read",
     ABSTRACT     => "Read the data from a spreadsheet",
     AUTHOR       => "H.Merijn Brand <h.merijn\@procura.nl>",
     VERSION_FROM => "Read.pm",

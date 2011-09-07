@@ -1,5 +1,9 @@
 Revision history for Spreadsheet::Read
 
+0.45	Wed 07 Sep 2011
+
+    - NAME / DISTNAME in Makefile.PL
+
 0.44	Wed 07 Sep 2011
 
     - More cross-checks for META data
