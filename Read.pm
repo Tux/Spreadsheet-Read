@@ -23,7 +23,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.45";
+our $VERSION = "0.46";
 sub  Version { $VERSION }
 
 use Carp;
@@ -1045,7 +1045,7 @@ H.Merijn Brand, <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2011 H.Merijn Brand
+Copyright (C) 2005-2012 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
