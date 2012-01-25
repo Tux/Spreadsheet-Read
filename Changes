@@ -1,5 +1,6 @@
-0.46	- 11 Jan 2012, H.Merijn Brand
-    *  Updated copyright to 2012
+0.46	- 25 Jan 2012, H.Merijn Brand
+    * Updated copyright to 2012
+    * Support passing attributes to the underlying parser
 
 0.45	- 07 Sep 2011, H.Merijn Brand
     * NAME / DISTNAME in Makefile.PL

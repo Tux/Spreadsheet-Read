@@ -57,6 +57,18 @@ for (@parsers) {
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
 my $debug = 0;
+my %def_opts = (
+    rc      => 1,
+    cells   => 1,
+    attr    => 0,
+    clip    => undef, # $opt{cells};
+    strip   => 0,
+    dtfmt   => "yyyy-mm-dd", # Format 14
+    debug   => 0,
+    parser  => undef,
+    sep     => undef,
+    quote   => undef,
+    );
 my @def_attr = (
     type    => "text",
     fgcolor => undef,
@@ -236,16 +248,21 @@ sub ReadData
 	   if (ref $_[0] eq "HASH")  { %opt = %{shift @_} }
 	elsif (@_ % 2 == 0)          { %opt = @_          }
 	}
-    defined $opt{rc}	or $opt{rc}	= 1;
-    defined $opt{cells}	or $opt{cells}	= 1;
-    defined $opt{attr}	or $opt{attr}	= 0;
+
+    defined $opt{rc}	or $opt{rc}	= $def_opts{rc};
+    defined $opt{cells}	or $opt{cells}	= $def_opts{cells};
+    defined $opt{attr}	or $opt{attr}	= $def_opts{attr};
     defined $opt{clip}	or $opt{clip}	= $opt{cells};
-    defined $opt{strip}	or $opt{strip}	= 0;
-    defined $opt{dtfmt} or $opt{dtfmt}	= "yyyy-mm-dd"; # Format 14
+    defined $opt{strip}	or $opt{strip}	= $def_opts{strip};
+    defined $opt{dtfmt} or $opt{dtfmt}	= $def_opts{dtfmt};
 
     # $debug = $opt{debug} // 0;
-    $debug = defined $opt{debug} ? $opt{debug} : 0;
+    $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
     $debug > 4 and print STDERR Data::Dumper->Dump ([\%opt],["Options"]);
+
+    my %parser_opts = map { $_ => $opt{$_} }
+		      grep { !exists $def_opts{$_} }
+		      keys %opt;
 
     my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? $txt : undef;
     my $io_fil = $io_ref ? 0 : do { no warnings "newline"; -f $txt ? 1 : 0 };
@@ -310,6 +327,8 @@ sub ReadData
 	    }
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
 	$csv = $can{csv}->new ({
+	    %parser_opts,
+
 	    sep_char       => ($data[0]{sepchar} = $sep),
 	    quote_char     => ($data[0]{quote}   = $quo),
 	    keep_meta_info => 1,
@@ -367,13 +386,13 @@ sub ReadData
 	$debug and print STDERR "Opening $parse_type \$txt\n";
 	if ($io_ref) {
 	    $oBook = $parse_type eq "XLSX"
-		? Spreadsheet::XLSX::Workbook->Parse ($io_ref)
-		: Spreadsheet::ParseExcel::Workbook->Parse ($io_ref);
+		? Spreadsheet::XLSX->new ($io_ref)
+		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($io_ref);
 	    }
 	else {
 	    $oBook = $parse_type eq "XLSX"
 		? Spreadsheet::XLSX->new ($txt)
-		: Spreadsheet::ParseExcel::Workbook->Parse ($txt);
+		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
 	    }
 	$oBook or return;
 	$debug > 8 and print STDERR Data::Dumper->Dump ([$oBook],["oBook"]);
@@ -569,7 +588,7 @@ sub ReadData
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
 	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
-	my $sxc_options = { OrderBySheet => 1 }; # New interface 0.20 and up
+	my $sxc_options = { %parser_opts, OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
 	   if ($txt =~ m/\.(sxc|ods)$/i) {
 	    $debug and print STDERR "Opening \U$1\E $txt\n";
@@ -810,6 +829,9 @@ A value of 9 and higher will dump the entire structure from the back-end
 parser.
 
 =back
+
+All other attributes/options will be passed to the underlying parser if
+that parser supports attributes.
 
 =back
 
