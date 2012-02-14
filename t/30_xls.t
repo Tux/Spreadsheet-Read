@@ -10,7 +10,7 @@ use Spreadsheet::Read;
 my $parser;
 if ($parser = Spreadsheet::Read::parses ("xls")) {
     print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
-    plan tests => 218;
+    plan tests => 222;
     Test::NoWarnings->import;
     }
 else {
@@ -20,7 +20,7 @@ else {
 {   my $ref;
     $ref = ReadData ("no_such_file.xls");
     ok (!defined $ref, "Nonexistent file");
-    $ref = ReadData ("empty.xls");
+    $ref = ReadData ("files/empty.xls");
     ok (!defined $ref, "Empty file");
     }
 
@@ -140,6 +140,13 @@ is ($ss->{C1},		undef, "formatted empty");
 is ($ss->{D1},		"0",   "formatted numeric 0");
 is ($ss->{E1},		"1",   "formatted numeric 1");
 is ($ss->{F1},		"",    "formatted a single '");
+
+{   # RT#74976] Error Received when reading empty sheets
+    foreach my $strip (0 .. 3) {
+	my $ref = ReadData ("files/blank.xls", strip => $strip);
+	ok ($ref, "File with no content - strip $strip");
+	}
+    }
 
 __END__
 --- PM    2005-09-15 14:16:36.163623616 +0200

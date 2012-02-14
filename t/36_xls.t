@@ -26,7 +26,7 @@ sub ReadDataStream
 {   my $ref;
     $ref = ReadDataStream ("no_such_file.xls");
     ok (!defined $ref, "Nonexistent file");
-    $ref = ReadDataStream ("empty.xls");
+    $ref = ReadDataStream ("files/empty.xls");
     ok (!defined $ref, "Empty file");
     }
 

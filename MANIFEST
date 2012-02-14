@@ -6,6 +6,9 @@ examples/xls2csv
 files/attr.ods
 files/attr.xls
 files/attr.xlsx
+files/blank.csv
+files/blank.xls
+files/blank.xlsx
 files/content.xml
 files/Dates.xls
 files/Dates.xlsx

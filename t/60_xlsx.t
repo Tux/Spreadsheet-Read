@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 62;
+my     $tests = 66;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -17,7 +17,7 @@ print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 {   my $ref;
     $ref = ReadData ("no_such_file.xlsx");
     ok (!defined $ref, "Nonexistent file");
-    $ref = ReadData ("empty.xlsx");
+    $ref = ReadData ("files/empty.xlsx");
     ok (!defined $ref, "Empty file");
     }
 
@@ -80,6 +80,13 @@ is ($ss->{C1},		undef, "formatted empty");
 is ($ss->{D1},		"0",   "formatted numeric 0");
 is ($ss->{E1},		"1",   "formatted numeric 1");
 is ($ss->{F1},		"",    "formatted a single '");
+
+{   # RT#74976] Error Received when reading empty sheets
+    foreach my $strip (0 .. 3) {
+	my $ref = ReadData ("files/blank.xlsx", strip => $strip);
+	ok ($ref, "File with no content - strip $strip");
+	}
+    }
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

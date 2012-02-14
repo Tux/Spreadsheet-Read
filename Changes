@@ -1,6 +1,7 @@
-0.46	- 25 Jan 2012, H.Merijn Brand
+0.46	- 14 Feb 2012, H.Merijn Brand
     * Updated copyright to 2012
     * Support passing attributes to the underlying parser
+    * Do not strip fields in sheets with no cells at all (RT#74976)
 
 0.45	- 07 Sep 2011, H.Merijn Brand
     * NAME / DISTNAME in Makefile.PL

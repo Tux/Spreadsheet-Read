@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 117;
+my     $tests = 121;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -16,7 +16,7 @@ print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 {   my $ref;
     $ref = ReadData ("no_such_file.csv");
     ok (!defined $ref, "Nonexistent file");
-    $ref = ReadData ("empty.csv");
+    $ref = ReadData ("files/empty.csv");
     ok (!defined $ref, "Empty file");
     }
 
@@ -82,6 +82,13 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
     is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
     is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    }
+
+{   # RT#74976] Error Received when reading empty sheets
+    foreach my $strip (0 .. 3) {
+	my $ref = ReadData ("files/blank.csv", strip => $strip);
+	ok ($ref, "File with no content - strip $strip");
+	}
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {

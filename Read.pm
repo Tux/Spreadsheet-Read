@@ -183,9 +183,10 @@ sub _clipsheets
 {
     my ($opt, $ref) = @_;
 
-    if (my $s = $opt->{strip}) {
+    if (my $s = $opt->{strip} and $ref->[0]{sheets}) {
 	foreach my $sheet (1 .. $ref->[0]{sheets}) {
 	    my $ss = $ref->[$sheet];
+	    $ss->{maxrow} && $ss->{maxcol} or next;
 	    foreach my $row (1 .. $ss->{maxrow}) {
 		foreach my $col (1 .. $ss->{maxcol}) {
 		    defined $ss->{cell}[$col][$row] or next;
@@ -394,7 +395,6 @@ sub ReadData
 		? Spreadsheet::XLSX->new ($txt)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
 	    }
-	$oBook or return;
 	$debug > 8 and print STDERR Data::Dumper->Dump ([$oBook],["oBook"]);
 	my @data = ( {
 	    type	=> lc $parse_type,
