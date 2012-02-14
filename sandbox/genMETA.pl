@@ -59,7 +59,7 @@ test_requires:
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.014001
+  perl:                 5.014002
   IO::Scalar:           0
   Test::More:           0.98
 resources:
@@ -76,7 +76,7 @@ optional_features:
     recommends:
       Text::CSV:                           1.21
       Text::CSV_PP:                        1.29
-      Text::CSV_XS:                        0.85
+      Text::CSV_XS:                        0.86
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
