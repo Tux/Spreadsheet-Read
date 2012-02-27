@@ -23,7 +23,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.46";
+our $VERSION = "0.47";
 sub  Version { $VERSION }
 
 use Carp;
@@ -783,7 +783,9 @@ See L<Cell Attributes> below.
 =item clip
 
 If set, C<ReadData ()> will remove all trailing lines and columns per
-sheet that have no visual data.
+sheet that have no visual data. If a sheet has no data at all, the
+sheet will be skipped entirely when this attribute is true.
+
 This option is only valid if C<cells> is true. The default value is
 true if C<cells> is true, and false otherwise.
 

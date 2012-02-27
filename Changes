@@ -1,3 +1,6 @@
+0.47	- 27 Feb 2012, H.Merijn Brand
+    * Note that empty sheets are skipped when clip is true (RT#75277)
+
 0.46	- 14 Feb 2012, H.Merijn Brand
     * Updated copyright to 2012
     * Support passing attributes to the underlying parser
