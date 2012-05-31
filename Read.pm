@@ -189,11 +189,12 @@ sub _clipsheets
 	    $ss->{maxrow} && $ss->{maxcol} or next;
 	    foreach my $row (1 .. $ss->{maxrow}) {
 		foreach my $col (1 .. $ss->{maxcol}) {
-		    defined $ss->{cell}[$col][$row] or next;
-		    $s & 2 && $ss->{cell}[$col][$row] =~ s/\s+$// and
-			$ss->{cr2cell ($col, $row)}   =~ s/\s+$//;
-		    $s & 1 && $ss->{cell}[$col][$row] =~ s/^\s+// and
-			$ss->{cr2cell ($col, $row)}   =~ s/^\s+//;
+		    for (($opt->{cells} ? $ss->{cell}[$col][$row] : ()),
+		         ($opt->{rc} ? $ss->{cr2cell ($col, $row)} : ())) {
+			defined or next;
+		        $s & 2 and s/\s+$//;
+			$s & 1 and s/^\s+//;
+			}
 		    }
 		}
 	    }

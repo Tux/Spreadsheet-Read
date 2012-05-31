@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 5;
+my     $tests = 6;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -41,6 +41,17 @@ is ($xls->[0]{sheets}, 3,		"Sheet Count");
 ok ($xls,				"Open with options");
 is (0+@{ $xls->[1]{cell}[1]}, 0,	"undef works as option value for 'rc'");
 ok (!exists $xls->[1]{A1},		"undef works as option value for 'cells'");
+
+{   local *STDERR;	# We want the debug activated, but not shown
+    open   STDERR, ">", "/dev/null" or die "/dev/null: $!\n";
+    $xls = ReadData ("files/misc_ws.xls",
+	# No cells generated, but we strip whitespace. We don't want any warning
+	cells	=> 0,
+	strip	=> 3,
+	debug	=> 5,
+	);
+    }
+ok ($xls,				"Open with options, let's see if we get any warnings");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
