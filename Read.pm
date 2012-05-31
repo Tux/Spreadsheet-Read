@@ -676,8 +676,7 @@ For OpenOffice this module uses Spreadsheet::ReadSXC
 For Microsoft Excel this module uses Spreadsheet::ParseExcel or
 Spreadsheet::XLSX
 
-For CSV this module uses Text::CSV_XS (0.29 or up required, 0.73 or
-up preferred) or Text::CSV_PP (1.05 or up required).
+For CSV this module uses Text::CSV_XS or Text::CSV_PP.
 
 For SquirrelCalc there is a very simplistic built-in parser
 
@@ -686,31 +685,31 @@ For SquirrelCalc there is a very simplistic built-in parser
 The data is returned as an array reference:
 
   $ref = [
- 	# Entry 0 is the overall control hash
- 	{ sheets  => 2,
-	  sheet   => {
-	    "Sheet 1"	=> 1,
-	    "Sheet 2"	=> 2,
-	    },
-	  type    => "xls",
-	  parser  => "Spreadsheet::ParseExcel",
-	  version => 0.26,
-	  },
- 	# Entry 1 is the first sheet
- 	{ label  => "Sheet 1",
- 	  maxrow => 2,
- 	  maxcol => 4,
- 	  cell   => [ undef,
-	    [ undef, 1 ],
-	    [ undef, undef, undef, undef, undef, "Nugget" ],
-	    ],
- 	  A1     => 1,
- 	  B5     => "Nugget",
- 	  },
- 	# Entry 2 is the second sheet
- 	{ label => "Sheet 2",
- 	  :
- 	:
+      # Entry 0 is the overall control hash
+      { sheets  => 2,
+        sheet   => {
+          "Sheet 1"  => 1,
+          "Sheet 2"  => 2,
+          },
+        type    => "xls",
+        parser  => "Spreadsheet::ParseExcel",
+        version => 0.26,
+        },
+      # Entry 1 is the first sheet
+      { label   => "Sheet 1",
+        maxrow  => 2,
+        maxcol  => 4,
+        cell    => [ undef,
+          [ undef, 1 ],
+          [ undef, undef, undef, undef, undef, "Nugget" ],
+          ],
+        A1      => 1,
+        B5      => "Nugget",
+        },
+      # Entry 2 is the second sheet
+      { label   => "Sheet 2",
+        :
+        :
 
 To keep as close contact to spreadsheet users, row and column 1 have
 index 1 too in the C<cell> element of the sheet hash, so cell "A1" is
@@ -750,7 +749,7 @@ Tries to convert the given file, string, or stream to the data
 structure described above.
 
 Processing Excel data from a stream or content is supported through
-a File::Temp temporary file or IO::Scalar when available.  
+a File::Temp temporary file or IO::Scalar when available.
 
 ReadSXC does preserve sheet order as of version 0.20.
 
