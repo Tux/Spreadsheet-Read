@@ -59,7 +59,7 @@ test_requires:
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.014002
+  perl:                 5.016000
   IO::Scalar:           0
   Test::More:           0.98
 resources:
