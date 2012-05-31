@@ -250,12 +250,12 @@ sub ReadData
 	elsif (@_ % 2 == 0)          { %opt = @_          }
 	}
 
-    defined $opt{rc}	or $opt{rc}	= $def_opts{rc};
-    defined $opt{cells}	or $opt{cells}	= $def_opts{cells};
-    defined $opt{attr}	or $opt{attr}	= $def_opts{attr};
-    defined $opt{clip}	or $opt{clip}	= $opt{cells};
-    defined $opt{strip}	or $opt{strip}	= $def_opts{strip};
-    defined $opt{dtfmt} or $opt{dtfmt}	= $def_opts{dtfmt};
+    exists $opt{rc}	or $opt{rc}	= $def_opts{rc};
+    exists $opt{cells}	or $opt{cells}	= $def_opts{cells};
+    exists $opt{attr}	or $opt{attr}	= $def_opts{attr};
+    exists $opt{clip}	or $opt{clip}	= $opt{cells};
+    exists $opt{strip}	or $opt{strip}	= $def_opts{strip};
+    exists $opt{dtfmt}	or $opt{dtfmt}	= $def_opts{dtfmt};
 
     # $debug = $opt{debug} // 0;
     $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
