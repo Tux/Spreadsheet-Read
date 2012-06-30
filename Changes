@@ -1,8 +1,9 @@
-0.47	- 31 May 2012, H.Merijn Brand
+0.47	- 30 Jun 2012, H.Merijn Brand
     * Note that empty sheets are skipped when clip is true (RT#75277)
     * Allow undef as valid value for the options (Max Maischein)
     * Don't generate warnings when stripping whitespace and only
       generating one of cells or rc. (Max Maschein)
+    * Fix test warning under perl-5.17.x
 
 0.46	- 14 Feb 2012, H.Merijn Brand
     * Updated copyright to 2012

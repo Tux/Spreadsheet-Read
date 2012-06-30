@@ -570,7 +570,7 @@ sub ReadData
 		}
 	    s/^r([0-9]+)c([0-9]+)\s*=\s*// or next;
 	    my ($c, $r) = map { $_ + 1 } $2, $1;
-	    if (m/.* {(.*)}$/ or m/"(.*)"/) {
+	    if (m/.* \{(.*)}$/ or m/"(.*)"/) {
 		my $cell = cr2cell ($c, $r);
 		$opt{rc}    and $data[1]{cell}[$c][$r] = $1;
 		$opt{cells} and $data[1]{$cell} = $1;
