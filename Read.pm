@@ -102,6 +102,7 @@ sub _parser
     $type eq "oo"		and return "sxc";
     $type eq "ods"		and return "sxc";
     $type eq "openoffice"	and return "sxc";
+    $type eq "libreoffice"	and return "sxc";
     $type eq "perl"		and return "prl";
     $type eq "squirelcalc"	and return "sc";
     return exists $can{$type} ? $type : "";
@@ -674,7 +675,7 @@ Spreadsheet::Read tries to transparently read *any* spreadsheet and
 return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 
-For OpenOffice this module uses Spreadsheet::ReadSXC
+For OpenOffice and/or LibreOffice this module uses Spreadsheet::ReadSXC
 
 For Microsoft Excel this module uses Spreadsheet::ParseExcel or
 Spreadsheet::XLSX
@@ -764,7 +765,8 @@ Currently supported options are:
 
 Force the data to be parsed by a specific format. Possible values are
 C<csv>, C<prl> (or C<perl>), C<sc> (or C<squirelcalc>), C<sxc> (or C<oo>,
-C<ods>, C<openoffice>) C<xls> (or C<excel>), and C<xlsx> (or C<excel2007>).
+C<ods>, C<openoffice>, C<libreoffice>) C<xls> (or C<excel>), and C<xlsx>
+(or C<excel2007>).
 
 When parsing streams, instead of files, it is highly recommended to pass
 this option.
