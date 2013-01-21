@@ -9,14 +9,16 @@ package Spreadsheet::Read;
 =head1 SYNOPSIS
 
  use Spreadsheet::Read;
- my $ref = ReadData ("test.csv", sep => ";");
- my $ref = ReadData ("test.sxc");
- my $ref = ReadData ("test.ods");
- my $ref = ReadData ("test.xls");
- my $ref = ReadData ("test.xlsx");
- my $ref = ReadData ($fh, parser => "xls");
+ my $book  = ReadData ("test.csv", sep => ";");
+ my $book  = ReadData ("test.sxc");
+ my $book  = ReadData ("test.ods");
+ my $book  = ReadData ("test.xls");
+ my $book  = ReadData ("test.xlsx");
+ my $book  = ReadData ($fh, parser => "xls");
 
- my $a3 = $ref->[1]{A3}, "\n"; # content of field A3 of sheet 1
+ my $sheet = $book->[1];             # first datasheet
+ my $cell  = $book->[1]{A3};         # content of field A3 of sheet 1
+ my $cell  = $book->[1]{cell}[1][3]; # same, unformatted
 
 =cut
 
@@ -139,7 +141,7 @@ sub cell2cr
     ($c, $r);
     } # cell2cr
 
-# my @row = cellrow ($ss->[1], 1);
+# my @row = cellrow ($book->[1], 1);
 sub cellrow
 {
     my $sheet = shift or return;
@@ -151,7 +153,7 @@ sub cellrow
     map { $s->[$_][$row] } 1..$sheet->{maxcol};
     } # cellrow
 
-# my @row = row ($ss->[1], 1);
+# my @row = row ($book->[1], 1);
 sub row
 {
     my $sheet = shift or return;
@@ -163,7 +165,7 @@ sub row
     } # row
 
 # Convert {cell}'s [column][row] to a [row][column] list
-# my @rows = rows ($ss->[1]);
+# my @rows = rows ($book->[1]);
 sub rows
 {
     my $sheet = shift or return;
@@ -685,7 +687,7 @@ For SquirrelCalc there is a very simplistic built-in parser
 
 The data is returned as an array reference:
 
-  $ref = [
+  $book = [
       # Entry 0 is the overall control hash
       { sheets  => 2,
         sheet   => {
@@ -724,27 +726,27 @@ The control hash (the first entry in the returned array ref), contains
 some spreadsheet meta-data. The entry C<sheet> is there to be able to find
 the sheets when accessing them by name:
 
-  my %sheet2 = %{$ref->[$ref->[0]{sheet}{"Sheet 2"}]};
+  my %sheet2 = %{$book->[$book->[0]{sheet}{"Sheet 2"}]};
 
 =head2 Functions
 
 =over 2
 
-=item my $ref = ReadData ($source [, option => value [, ... ]]);
+=item my $book = ReadData ($source [, option => value [, ... ]]);
 
-=item my $ref = ReadData ("file.csv", sep => ',', quote => '"');
+=item my $book = ReadData ("file.csv", sep => ',', quote => '"');
 
-=item my $ref = ReadData ("file.xls", dtfmt => "yyyy-mm-dd");
+=item my $book = ReadData ("file.xls", dtfmt => "yyyy-mm-dd");
 
-=item my $ref = ReadData ("file.ods");
+=item my $book = ReadData ("file.ods");
 
-=item my $ref = ReadData ("file.sxc");
+=item my $book = ReadData ("file.sxc");
 
-=item my $ref = ReadData ("content.xml");
+=item my $book = ReadData ("content.xml");
 
-=item my $ref = ReadData ($content);
+=item my $book = ReadData ($content);
 
-=item my $ref = ReadData ($fh, parser => "xls");
+=item my $book = ReadData ($fh, parser => "xls");
 
 Tries to convert the given file, string, or stream to the data
 structure described above.
@@ -867,31 +869,31 @@ pair (1 based):
   my ($col, $row) = cell2cr ("D14"); # returns ( 4, 14)
   my ($col, $row) = cell2cr ("AB4"); # returns (28,  4)
 
-=item my @row = row ($ref, $row)
+=item my @row = row ($sheet, $row)
 
-=item my @row = Spreadsheet::Read::row ($ss->[1], 3)
+=item my @row = Spreadsheet::Read::row ($book->[1], 3)
 
-Get full row of formatted values (like C<< $ss->{A3} .. $ss->{G3} >>)
+Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
 Note that the indexes in the returned list are 0-based.
 
 C<row ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @row = cellrow ($ref, $row)
+=item my @row = cellrow ($book, $row)
 
-=item my @row = Spreadsheet::Read::cellrow ($ss->[1], 3)
+=item my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
 
-Get full row of unformatted values (like C<< $ss->{cell}[1][3] .. $ss->{cell}[7][3] >>)
+Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
 Note that the indexes in the returned list are 0-based.
 
 C<cellrow ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @rows = rows ($ref)
+=item my @rows = rows ($book)
 
-=item my @rows = Spreadsheet::Read::rows ($ss->[1])
+=item my @rows = Spreadsheet::Read::rows ($book->[1])
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
