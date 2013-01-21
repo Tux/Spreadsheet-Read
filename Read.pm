@@ -694,7 +694,7 @@ The data is returned as an array reference:
           },
         type    => "xls",
         parser  => "Spreadsheet::ParseExcel",
-        version => 0.26,
+        version => 0.59,
         },
       # Entry 1 is the first sheet
       { label   => "Sheet 1",
