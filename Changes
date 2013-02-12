@@ -1,8 +1,8 @@
 0.48	- 12 Feb 2013, H.Merijn Brand
-0.48	- 21 Jan 2013, H.Merijn Brand
     * Improve documentation consistency (RT#80409)
     * Updated copyright to 2013
     * Force old(er) tar format (ustar) - assumes GNU tar on release box
+    * Fix yml/json optional_features
 
 0.47	- 30 Jun 2012, H.Merijn Brand
     * Note that empty sheets are skipped when clip is true (RT#75277)

@@ -292,20 +292,48 @@ sub fix_meta
 		$jsn->{prereqs}{$x}{$_} = delete $jsn->{"$sct$_"};
 	    }
 	}
-       $jsn = CPAN::Meta::Converter->new ($jsn)->convert (version => "2");
-    my $yml = CPAN::Meta::Converter->new ($jsn)->convert (version => "1.4");
-    $_->{generated_by} = "Author" for $jsn, $yml;
+
+    # optional features do not yet know about requires and/or recommends diirectly
+    if (my $of = $jsn->{optional_features}) {
+	foreach my $f (keys %$of) {
+	    if (my $r = delete $of->{$f}{requires}) {
+		#$jsn->{prereqs}{runtime}{recommends}{$_} //= $r->{$_} for keys %$r;
+		$of->{$f}{prereqs}{runtime}{requires} = $r;
+		}
+	    if (my $r = delete $of->{$f}{recommends}) {
+		#$jsn->{prereqs}{runtime}{recommends}{$_} //= $r->{$_} for keys %$r;
+		$of->{$f}{prereqs}{runtime}{recommends} = $r;
+		}
+	    }
+	}
+
+    $jsn = CPAN::Meta::Converter->new ($jsn)->convert (version => "2");
+    $jsn->{generated_by} = "Author";
 
     my @my = glob <*/META.yml> or croak "No META files";
     my $yf = $my[0];
+    (my $jf = $yf) =~ s/yml$/json/;
+    open my $jh, ">", $jf or croak "Cannot update $jf\n";
+    print   $jh JSON::PP->new->utf8 (1)->pretty (1)->encode ($jsn);
+    close   $jh;
+
+    # Now that 2.0 JSON is corrrect, create a 1.4 YAML back from the modified stuff
+    my $yml = $jsn;
+    # 1.4 does not know about test_*, move them to *
+    if (my $tp = delete $yml->{prereqs}{test}) {
+	foreach my $phase (keys %{$tp}) {
+	    my $p = $tp->{$phase};
+	    $yml->{runtime}{$phase}{$_} //= $p->{$_} for keys %{$p};
+	    }
+	}
+    #DDumper $yml;
+    # This does NOT create a correct YAML id the source does not comply!
+    $yml = CPAN::Meta::Converter->new ($yml)->convert (version => "1.4");
+    #DDumper $yml;
+    exit;
+
     @my == 1 && open my $my, ">", $yf or croak "Cannot update $yf\n";
     print $my Dump $yml; # @{$self->{yml}};
-    close $my;
-
-    $yf =~ s/yml$/json/;
-    open $my, ">", $yf or croak "Cannot update $yf\n";
-    #rint     JSON::PP->new->utf8 (1)->pretty (1)->encode ($jsn);
-    print $my JSON::PP->new->utf8 (1)->pretty (1)->encode ($jsn);
     close $my;
 
     chmod 0644, glob "*/META.*";
