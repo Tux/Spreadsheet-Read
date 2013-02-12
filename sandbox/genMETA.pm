@@ -2,7 +2,7 @@
 
 package genMETA;
 
-our $VERSION = "1.03-20110907";
+our $VERSION = "1.04-20130212";
 
 use strict;
 use warnings;
@@ -10,6 +10,7 @@ use Carp;
 
 use List::Util qw( first );
 use Encode qw( encode decode );
+use Term::ANSIColor qw(:constants);
 use Test::CPAN::Meta::YAML::Version;
 use CPAN::Meta::Converter;
 use Test::MinimumVersion;
@@ -38,7 +39,7 @@ sub version_from
 	if ($mf =~ m{\b NAME         \s*=>\s* ["'] (\S+) ['"]}x) {
 	    $self->{name} = $1;
 	    $self->{name} =~ m/-/ and
-		warn "NAME in Makefile.PL contains a -\n";
+		warn RED, "NAME in Makefile.PL contains a -", RESET, "\n";
 	    $self->{name} =~ s/::/-/g;
 	    }
 	if ($mf =~ m{\b DISTNAME     \s*=>\s* ["'] (\S+) ['"]}x) {
@@ -56,6 +57,9 @@ sub version_from
 	    my @pr = split m/\n/ => $1;
 	    $self->{mfpr} = { map { (m{ \b ["']? (\S+?) ['"]? \s*=>\s* ["']? ([-0-9._]+) ['"]? }x) } grep !m/^\s*#/ => @pr };
 	    }
+
+	$mf =~ m{--format=ustar} or
+	    warn RED, "TARFLAGS macro is missing", RESET, "\n";
 	}
 
     $src //= $self->{from} or croak "No file to extract version from";
@@ -104,7 +108,7 @@ sub check_encoding
 		eval { decode ("utf-8", $_, 1) };
 		$@ or next;
 		$@ =~ s{ at /\S+ line \d+.*}{};
-		print "$tf:$n\t$_\t$@";
+		print BLUE, "$tf:$n\t$_\t$@", RESET;
 		}
 	    croak "$tf is not valid UTF-8\n";
 	    }
@@ -124,7 +128,7 @@ sub check_required
     
     my $yml = $self->{h} or croak "No YAML to check";
 
-    print STDERR "Check required and recommended module versions ...\n";
+    warn "Check required and recommended module versions ...\n";
     BEGIN { $V::NO_EXIT = $V::NO_EXIT = 1 } require V;
     my %req = map { %{$yml->{$_}} } grep m/requires/   => keys %{$yml};
     my %rec = map { %{$yml->{$_}} } grep m/recommends/ => keys %{$yml};
@@ -146,7 +150,7 @@ sub check_required
 	$vsn{$_} eq "0" and next;
 	my $v = V::get_version ($_);
 	$v eq $vsn{$_} and next;
-	printf STDERR "%-35s %-6s => %s\n", $_, $vsn{$_}, $v;
+	printf STDERR "%s%-35s %-6s => %s%s%s\n", BLUE, $_, $vsn{$_}, GREEN, $v, RESET;
 	}
     if (my @mfpr = sort keys %{$self->{mfpr}}) {
 	die "Makefile.PL requires @mfpr, YAML does not\n";
@@ -156,12 +160,12 @@ sub check_required
 	$File::Find::dir  =~ m{^blib\b}			and return;
 	$File::Find::name =~ m{(?:^|/)Bundle/.*\.pm}	or  return;
 	if (open my $bh, "<", $_) {
-	    print STDERR "Check bundle module versions $File::Find::name ...\n";
+	    warn "Check bundle module versions $File::Find::name ...\n";
 	    while (<$bh>) {
 		my ($m, $dv) = m/^([A-Za-z_:]+)\s+([0-9.]+)\s*$/ or next;
 		my $v = $m eq $self->{name} ? $self->{version} : V::get_version ($m);
 		$v eq $dv and next;
-		printf STDERR "%-35s %-6s => %s\n", $m, $dv, $v;
+		printf STDERR "%s%-35s %-6s => %s%s%s\n", BLUE, $m, $dv, GREEN, $v, RESET;
 		}
 	    }
 	}, glob "*");
@@ -178,7 +182,7 @@ sub check_required
 		while (<$fh>) {
 		    m/\bVERSION\s*=\s*["']?([-0-9.]+)/ or next;
 		    $fv = $1;
-		    print $fv eq $ev ? "ok\n" : " mismatch, module has $1\n";
+		    print $fv eq $ev ? "ok\n" : RED." mismatch, module has $1".RESET."\n";
 		    last;
 		    }
 		defined $fv or print " .. no version defined\n";
@@ -196,7 +200,7 @@ sub check_yaml
 
     my @yml = @{$self->{yml}} or croak "No YAML to check";
 
-    print STDERR "Checking generated YAML ...\n";
+    warn "Checking generated YAML ...\n";
     my $h;
     my $yml = join "", @yml;
     eval { $h = Load ($yml) };
@@ -204,7 +208,7 @@ sub check_yaml
     $self->{name} //= $h->{name};
     $self->{name} eq  $h->{name} or die "NAME mismatch Makefile.PL / YAML\n";
     $self->{name} =~ s/-/::/g;
-    print STDERR "Checking for $self->{name}-$self->{version}\n";
+    warn "Checking for $self->{name}-$self->{version}\n";
 
     $self->{verbose} and print Dump $h;
 

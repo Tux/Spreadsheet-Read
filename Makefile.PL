@@ -48,6 +48,7 @@ my %wm = (
 #	"Tk::NoteBook"			=> 4.009,
 #	"Tk::TableMatrix::Spreadsheet"	=> 1.2,
 	},
+    macro        => { TARFLAGS   => "--format=ustar -c -v -f", },
     );
 $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
 
