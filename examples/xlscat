@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2cat: show XLS/SXC file as Text
-#	  (m)'11 [03-02-2011] Copyright H.M.Brand 2005-2013
+#	  (m)'13 [12-02-2013] Copyright H.M.Brand 2005-2013
 
 use strict;
 use warnings;
 
-our $VERSION = "2.1";
+our $VERSION = "2.2";
 
 sub usage
 {
@@ -51,7 +51,7 @@ sub usage
     exit $err;
     } # usage
 
-use Getopt::Long qw(:config bundling nopermute noignorecase);
+use Getopt::Long qw(:config bundling noignorecase);
 my $opt_c;		# Generate CSV
 my $opt_s;		# Text separator
 my $opt_S;		# Sheets to print
