@@ -247,7 +247,7 @@ sub check_minimum
     # All other minimum version checks done in xt
     Test::More::subtest "Minimum perl version $reqv" => sub {
 	all_minimum_version_ok ($reqv, $locs);
-	};
+	} or warn RED, "\n### Use 'perlver --blame' on the failing file(s)\n\n", RESET;
     } # check_minimum
 
 sub print_yaml
