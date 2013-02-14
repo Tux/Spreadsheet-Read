@@ -4,7 +4,7 @@ package genMETA;
 
 our $VERSION = "1.04-20130212";
 
-use strict;
+use 5.014;
 use warnings;
 use Carp;
 
@@ -48,9 +48,11 @@ sub version_from
 
 	if ($mf =~ m{\b VERSION_FROM \s*=>\s* ["'] (\S+) ['"]}x) {
 	    my $from = $1;
-	    -f $from or die "Makefile wants version from nonexisten $from\n";
+	    -f $from or
+		die RED, "Makefile wants version from nonexisten $from", RESET, "\n";
 	    $self->{from} //= $from;
-	    $from eq $self->{from} or die "VERSION_FROM mismatch Makefile.PL / YAML\n";
+	    $from eq $self->{from} or
+		die RED, "VERSION_FROM mismatch Makefile.PL / YAML", RESET, "\n";
 	    }
 
 	if ($mf =~ m[\b PREREQ_PM    \s*=>\s* \{ ( [^}]+ ) \}]x) {
@@ -145,7 +147,7 @@ sub check_required
     for (sort keys %vsn) {
 	if (my $mfv = delete $self->{mfpr}{$_}) {
 	    $req{$_} eq $mfv or
-		die "PREREQ mismatch for $_ Makefile.PL ($mfv) / YAML ($req{$_})\n";
+		die RED, "PREREQ mismatch for $_ Makefile.PL ($mfv) / YAML ($req{$_})", RESET, "\n";
 	    }
 	$vsn{$_} eq "0" and next;
 	my $v = V::get_version ($_);
@@ -153,7 +155,7 @@ sub check_required
 	printf STDERR "%s%-35s %-6s => %s%s%s\n", BLUE, $_, $vsn{$_}, GREEN, $v, RESET;
 	}
     if (my @mfpr = sort keys %{$self->{mfpr}}) {
-	die "Makefile.PL requires @mfpr, YAML does not\n";
+	die RED, "Makefile.PL requires @mfpr, YAML does not", RESET, "\n";
 	}
 
     find (sub {
@@ -206,7 +208,8 @@ sub check_yaml
     eval { $h = Load ($yml) };
     $@ and croak "$@\n";
     $self->{name} //= $h->{name};
-    $self->{name} eq  $h->{name} or die "NAME mismatch Makefile.PL / YAML\n";
+    $self->{name} eq  $h->{name} or
+	die RED, "NAME mismatch Makefile.PL / YAML", RESET, "\n";
     $self->{name} =~ s/-/::/g;
     warn "Checking for $self->{name}-$self->{version}\n";
 

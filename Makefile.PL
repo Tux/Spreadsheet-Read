@@ -10,7 +10,7 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
 	  [ "xls2csv",	"Wrapper around xlscat for easy XLS => CSV"	],
 	  ) {
-	prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "n") =~ m/[Yy]/ and
+	prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "y") =~ m/[Yy]/ and
 	    push @exe, "examples/$_->[0]";
 	}
     }
