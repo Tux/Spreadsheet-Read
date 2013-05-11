@@ -89,10 +89,13 @@ for (undef, "", " ", 0, 1, [], {}) {
     my $arg = defined $_ ? $_ : "-- undef --";
     is ($ref, undef, "Illegal ReadData ([ $arg ])");
     }
-for (undef, "", " ", 0, 1, [], {}) {
-    my $ref = ReadData ("/dev/null", separator => $_);
-    my $arg = defined $_ ? $_ : "-- undef --";
-    is ($ref, undef, "Illegal ReadData ({ $arg })");
+SKIP: {
+    -c "/dev/null" or skip "/dev/null cannot be used for tests", 7;
+    for (undef, "", " ", 0, 1, [], {}) {
+	my $ref = ReadData ("/dev/null", separator => $_);
+	my $arg = defined $_ ? $_ : "-- undef --";
+	is ($ref, undef, "Illegal ReadData ({ $arg })");
+	}
     }
 for (undef, "", " ", 0, 1, [], {}) {
     my $ref;

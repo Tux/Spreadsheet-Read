@@ -1,4 +1,5 @@
 0.49	- 11 May 2013, H.Merijn Brand
+    * /dev/null cannot be used for tests on Windows
 
 0.48	- 14 Mar 2013, H.Merijn Brand
     * Improve documentation consistency (RT#80409)
