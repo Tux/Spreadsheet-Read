@@ -64,7 +64,7 @@ test_requires:
 recommends:
   perl:                 5.016003
   IO::Scalar:           0
-  File::Temp:           0.23
+  File::Temp:           0.2301
 test_recommends:
   Test::More:           0.98
 resources:
