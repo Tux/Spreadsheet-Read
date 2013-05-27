@@ -23,10 +23,10 @@ $meta->from_data (<DATA>);
 if ($check) {
     $meta->check_encoding ();
     $meta->check_required ();
-    my @ef = grep { !m/xlscat/ } glob "examples/*";
+    my @ef = grep { !m/xls(cat|grep)/ } glob "examples/*";
     $meta->check_minimum ([ "t", @ef, "Read.pm", "Makefile.PL" ]);
     $meta->{h}{requires}{perl} = "5.008004";
-    $meta->check_minimum ([ "examples/xlscat" ]);
+    $meta->check_minimum ([ "examples/xlscat", "examples/xlsgrep" ]);
     }
 elsif ($opt_v) {
     $meta->print_yaml ();

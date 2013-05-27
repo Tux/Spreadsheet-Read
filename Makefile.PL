@@ -7,6 +7,7 @@ use ExtUtils::MakeMaker;
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
+	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
 	  [ "xls2csv",	"Wrapper around xlscat for easy XLS => CSV"	],
 	  ) {
