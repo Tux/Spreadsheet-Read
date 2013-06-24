@@ -32,12 +32,13 @@ my %wm = (
 	"IO::Scalar"			=> 0,	# Optional
 
 	# Backend parsers, all optional
-#	"Text::CSV"			=> 1.15,
-#	"Text::CSV_XS"			=> 0.69,
-#	"Text::CSV_PP"			=> 1.23,
+#	"Text::CSV"			=> 1.32,
+#	"Text::CSV_PP"			=> 1.31,
+#	"Text::CSV_XS"			=> 1.01,
 #	"Spreadsheet::ReadSXC"		=> 0.20,
 #	"Spreadsheet::ParseExcel"	=> 0.26,
 #	"Spreadsheet::ParseExcel::FmtDefault" => 0,
+#	"Spreadsheet::XLSX"		=> 0.13,
 #	"Spreadsheet::Perl"		=> 0,	# Not yet
 
 	# For testing
@@ -45,7 +46,7 @@ my %wm = (
 	"Test::NoWarnings"		=> 0,
 
 	# for ss2tk
-#	"Tk"				=> 804.027,
+#	"Tk"				=> 804.031,
 #	"Tk::NoteBook"			=> 4.009,
 #	"Tk::TableMatrix::Spreadsheet"	=> 1.2,
 	},
