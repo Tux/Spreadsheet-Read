@@ -180,7 +180,7 @@ sub rows
 	} 1..$sheet->{maxrow};
     } # rows
 
-# If option "clip" is set, remove the trailing lines and
+# If option "clip" is set, remove the trailing rows and
 # columns in each sheet that contain no visible data
 sub _clipsheets
 {
@@ -219,7 +219,7 @@ sub _clipsheets
 	    }
 	$ss->{maxcol} or $ss->{maxrow} = 0;
 
-	# Remove trailing empty lines
+	# Remove trailing empty rows
 	while ($ss->{maxrow} and not (
 		grep { defined && m/\S/ }
 		map  { $ss->{cell}[$_][$ss->{maxrow}] }
@@ -786,7 +786,7 @@ See L<Cell Attributes> below.
 
 =item clip
 
-If set, C<ReadData ()> will remove all trailing lines and columns per
+If set, C<ReadData ()> will remove all trailing rows and columns per
 sheet that have no visual data. If a sheet has no data at all, the
 sheet will be skipped entirely when this attribute is true.
 
