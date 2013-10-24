@@ -27,6 +27,7 @@ if ($check) {
     $meta->check_minimum ([ "t", @ef, "Read.pm", "Makefile.PL" ]);
     $meta->{h}{requires}{perl} = "5.008004";
     $meta->check_minimum ([ "examples/xlscat", "examples/xlsgrep" ]);
+    $meta->done_testing ();
     }
 elsif ($opt_v) {
     $meta->print_yaml ();
@@ -62,11 +63,11 @@ test_requires:
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.016003
+  perl:                 5.018001
   IO::Scalar:           0
-  File::Temp:           0.2301
+  File::Temp:           0.2304
 test_recommends:
-  Test::More:           0.98
+  Test::More:           0.99
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           http://repo.or.cz/w/Spreadsheet-Read.git
