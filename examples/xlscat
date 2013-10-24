@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'13 [27-05-2013] Copyright H.M.Brand 2005-2013
+#	   (m)'13 [24-10-2013] Copyright H.M.Brand 2005-2013
 
 use strict;
 use warnings;
 
-our $VERSION = "2.3";
+our $VERSION = "2.4";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -26,9 +26,9 @@ sub usage
 	"       -u          Use unformatted values\n",
 	"       --noclip    Do not strip empty sheets and\n",
 	"                   trailing empty rows and columns\n",
-	"	-e <enc>    Set encoding for input and output\n",
-	"	-b <enc>    Set encoding for input\n",
-	"	-a <enc>    Set encoding for output\n",
+	"       -e <enc>    Set encoding for input and output\n",
+	"       -b <enc>    Set encoding for input\n",
+	"       -a <enc>    Set encoding for output\n",
 	"    Input CSV:\n",
 	"       --in-sep=c  Set input sep_char for CSV\n",
 	"    Input XLS:\n",
@@ -337,6 +337,13 @@ foreach my $si (1 .. $sc) {
 	}
     if (my $cols = $opt_C) {
 	$cols eq "all" and $cols = "1..$nc";	# all
+	if ($cols =~ m/[A-Za-z]/) {		# -C B,D => -C 2,4
+	    my %ct = map {
+		my ($cc, $rr) = cell2cr (uc "$_".1);
+		($_ => $cc)
+		} ($cols =~ m/([a-zA-Z]+)/g);
+	    $cols =~ s/([A-Za-z]+)/$ct{$1}/g;
+	    }
 	$cols =~ s/-$/-$nc/;			# 3,6-
 	$cols =~ s/-/../g;
 	eval "\$print{col} = [ map { \$_ - 1  } $cols ]";
