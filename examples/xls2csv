@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'08 [10-03-2008] Copyright H.M.Brand 2008-2013
+#	   (m)'13 [24-10-2013] Copyright H.M.Brand 2008-2013
 
 use strict;
 use warnings;
@@ -18,7 +18,7 @@ use Getopt::Long qw( :config bundling nopermute passthrough );
 my $csv;
 my $opt_f;
 GetOptions (
-    "help|?"	=> sub { usage 1; },
+    "help|?"	=> sub { usage 0; },
     "o|c=s"	=> \$csv,
     "f"		=> \$opt_f,
     ) or usage 1;
