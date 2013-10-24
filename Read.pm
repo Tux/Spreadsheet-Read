@@ -982,6 +982,109 @@ is made to analyze and store field attributes like this:
 This has now been partially implemented, mainly for Excel, as the other
 parsers do not (yet) support all of that. YMMV.
 
+=head1 TOOLS
+
+This modules comes with a few tools that perform tasks from the FAQ, like
+"How do I select only column D through F from sheet 2 into a CSV file?"
+
+If the module was installed without the tools, you can find them here:
+  http://repo.or.cz/w/Spreadsheet-Read.git/tree/HEAD:/examples
+
+=head2 C<xlscat>
+
+Show (parts of) a spreadsheet in plain text, CSV, or HTML
+
+ usage: xlscat   [-s <sep>] [-L] [-n] [-A] [-u] [Selection] file.xls
+                 [-c | -m]                 [-u] [Selection] file.xls
+                  -i                            [-S sheets] file.xls
+     Generic options:
+        -v[#]       Set verbose level (xlscat/xlsgrep)
+        -d[#]       Set debug   level (Spreadsheet::Read)
+        -u          Use unformatted values
+        --noclip    Do not strip empty sheets and
+                    trailing empty rows and columns
+        -e <enc>    Set encoding for input and output
+        -b <enc>    Set encoding for input
+        -a <enc>    Set encoding for output
+     Input CSV:
+        --in-sep=c  Set input sep_char for CSV
+     Input XLS:
+        --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                    the default replacement is 'yyyy-mm-dd'
+     Output Text (default):
+        -s <sep>    Use separator <sep>. Default '|', \n allowed
+        -L          Line up the columns
+        -n          Number lines (prefix with column number)
+        -A          Show field attributes in ANSI escapes
+     Output Index only:
+        -i          Show sheet names and size only
+     Output CSV:
+        -c          Output CSV, separator = ','
+        -m          Output CSV, separator = ';'
+     Output HTML:
+        -H          Output HTML
+     Selection:
+        -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                    Default only prints the first sheet
+        -R <rows>   Only print rows    <rows>. Default is 'all'
+        -C <cols>   Only print columns <cols>. Default is 'all'
+        -F <flds>   Only fields <flds> e.g. -FA3,B16
+
+=head2 C<xlsgrep>
+
+Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
+
+ usage: xlsgrep  [-s <sep>] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
+                 [-c | -m]                 [-u] [Selection] pattern file.xls
+                  -i                            [-S sheets] pattern file.xls
+     Generic options:
+        -v[#]       Set verbose level (xlscat/xlsgrep)
+        -d[#]       Set debug   level (Spreadsheet::Read)
+        -u          Use unformatted values
+        --noclip    Do not strip empty sheets and
+                    trailing empty rows and columns
+        -e <enc>    Set encoding for input and output
+        -b <enc>    Set encoding for input
+        -a <enc>    Set encoding for output
+     Input CSV:
+        --in-sep=c  Set input sep_char for CSV
+     Input XLS:
+        --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                    the default replacement is 'yyyy-mm-dd'
+     Output Text (default):
+        -s <sep>    Use separator <sep>. Default '|', \n allowed
+        -L          Line up the columns
+        -n          Number lines (prefix with column number)
+        -A          Show field attributes in ANSI escapes
+     Grep options:
+        -i          Ignore case
+        -w          Match whole words only
+        -h[#]       Show # header lines
+     Output CSV:
+        -c          Output CSV, separator = ','
+        -m          Output CSV, separator = ';'
+     Output HTML:
+        -H          Output HTML
+     Selection:
+        -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                    Default only prints the first sheet
+        -R <rows>   Only print rows    <rows>. Default is 'all'
+        -C <cols>   Only print columns <cols>. Default is 'all'
+        -F <flds>   Only fields <flds> e.g. -FA3,B16
+
+=head2 C<ss2tk>
+
+Show a spreadsheet in a perl/Tk spreadsheet widget
+
+ usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]
+        -w <width> use <width> as default column width (4)
+
+=head2 C<xls2csv>
+
+Convert a spreadsheet to CSV. This is just a small wrapper over C<xlscat>.
+
+ usage: xls2csv [ -o file.csv ] file.xls
+
 =head1 TODO
 
 =over 4
