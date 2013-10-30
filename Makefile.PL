@@ -6,6 +6,7 @@ use ExtUtils::MakeMaker;
 
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
+    -f "examples/xlsgrep" or link "examples/xlscat", "examples/xlsgrep";
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],

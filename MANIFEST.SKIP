@@ -15,5 +15,6 @@ pprove
 Rsync
 Spreadsheet/
 sandbox/
+examples/xlsgrep
 test/
 \.aspell\.local\.pws

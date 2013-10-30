@@ -1,7 +1,10 @@
+0.51	- 30 Oct 2013, H.Merijn Brand
+    * Link xlsgrep during install
+
 0.50	- 24 Oct 2013, H.Merijn Brand
-    - Added xlsgrep to examples
-    - Allow -C B,D for xlscat
-    - More prominent reference to xlscat in docs
+    * Added xlsgrep to examples
+    * Allow -C B,D for xlscat
+    * More prominent reference to xlscat in docs
 
 0.49	- 11 May 2013, H.Merijn Brand
     * /dev/null cannot be used for tests on Windows
