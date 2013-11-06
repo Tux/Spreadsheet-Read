@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-our $VERSION = "2.4";
+our $VERSION = "2.5";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -107,14 +107,14 @@ GetOptions (
     "R|rows=s"		=> \$opt_R,
     "C|columns=s"	=> \$opt_C,
     "F|fields=s"	=> \$opt_F,
-    "L|fit|align"	=> \$opt_L,
-    "n|number"		=> \$opt_n,
-    "A|ansi"		=> \$opt_A,
-    "u|unformatted"	=> \$opt_u,
+    "L|fit|align!"	=> \$opt_L,
+    "n|number!"		=> \$opt_n,
+    "A|ansi|color!"	=> \$opt_A,
+    "u|unformatted!"	=> \$opt_u,
     "v|verbose:1"	=> \$opt_v,
     "d|debug:1"		=> \$opt_d,
     "H|html:1"		=> \$opt_H,
-    "noclip"		=> sub { $clip = 0 },
+      "noclip"		=> sub { $clip = 0 },
 
     # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
