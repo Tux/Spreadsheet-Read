@@ -67,7 +67,7 @@ recommends:
   IO::Scalar:           0
   File::Temp:           0.2304
 test_recommends:
-  Test::More:           0.99
+  Test::More:           0.1001002
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           http://repo.or.cz/w/Spreadsheet-Read.git
@@ -78,11 +78,11 @@ optional_features:
   opt_csv:
     description:        Provides parsing of CSV streams
     requires:
-      Text::CSV_XS:                        0.69
+      Text::CSV_XS:                        0.71
     recommends:
       Text::CSV:                           1.32
       Text::CSV_PP:                        1.31
-      Text::CSV_XS:                        1.01
+      Text::CSV_XS:                        1.02
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:

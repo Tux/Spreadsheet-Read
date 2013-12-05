@@ -35,7 +35,7 @@ my %wm = (
 	# Backend parsers, all optional
 #	"Text::CSV"			=> 1.32,
 #	"Text::CSV_PP"			=> 1.31,
-#	"Text::CSV_XS"			=> 1.01,
+#	"Text::CSV_XS"			=> 1.02,
 #	"Spreadsheet::ReadSXC"		=> 0.20,
 #	"Spreadsheet::ParseExcel"	=> 0.26,
 #	"Spreadsheet::ParseExcel::FmtDefault" => 0,

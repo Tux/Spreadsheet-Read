@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.51";
+our $VERSION = "0.52";
 sub  Version { $VERSION }
 
 use Carp;
@@ -284,11 +284,11 @@ sub ReadData
 
 	$debug and print STDERR "Opening CSV $label\n";
 
-	my $csv;
 	my @data = (
 	    {	type	=> "csv",
 		parser  => $can{csv},
 		version	=> $can{csv}->VERSION,
+		error	=> undef,
 		quote   => '"',
 		sepchar => ',',
 		sheets	=> 1,
@@ -331,13 +331,14 @@ sub ReadData
 	    $in = $txt;	# Now pray ...
 	    }
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
-	$csv = $can{csv}->new ({
+	my $csv = $can{csv}->new ({
 	    %parser_opts,
 
 	    sep_char       => ($data[0]{sepchar} = $sep),
 	    quote_char     => ($data[0]{quote}   = $quo),
 	    keep_meta_info => 1,
 	    binary         => 1,
+	    auto_diag      => 1,
 	    }) or croak "Cannot create a csv ('$sep', '$quo') parser!";
 
 	while (my $row = $csv->getline ($in)) {
@@ -353,7 +354,7 @@ sub ReadData
 		$opt{attr}  and $data[1]{attr}[$c + 1][$r] = { @def_attr };
 		}
 	    }
-	$csv->eof () or $csv->error_diag;
+	$csv->eof () or $data[0]{error} = [ $csv->error_diag ];
 	close $in;
 
 	for (@{$data[1]{cell}}) {
@@ -406,6 +407,7 @@ sub ReadData
 	    version	=> $parse_type eq "XLSX"
 			 ? $Spreadsheet::XLSX::VERSION
 			 : $Spreadsheet::ParseExcel::VERSION,
+	    error	=> undef,
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
 	    } );
@@ -555,6 +557,7 @@ sub ReadData
 	    {	type	=> "sc",
 		parser	=> "Spreadsheet::Read",
 		version	=> $VERSION,
+		error	=> undef,
 		sheets	=> 1,
 		sheet	=> { sheet => 1 },
 		},
@@ -619,6 +622,7 @@ sub ReadData
 		type	=> "sxc",
 		parser	=> "Spreadsheet::ReadSXC",
 		version	=> $Spreadsheet::ReadSXC::VERSION,
+		error	=> undef,
 		sheets	=> 0,
 		sheet	=> {},
 		} );
@@ -698,6 +702,7 @@ The data is returned as an array reference:
         type    => "xls",
         parser  => "Spreadsheet::ParseExcel",
         version => 0.59,
+	error	=> undef,
         },
       # Entry 1 is the first sheet
       { label   => "Sheet 1",
@@ -850,6 +855,10 @@ Text::CSV_PP) is able to automatically detect and use C<\r> line endings).
 
 CSV can parse streams too, but be sure to pass C<sep> and/or C<quote> if
 these do not match the default C<,> and C<">.
+
+When an error is found in the CSV, it is automatically reported (to STDERR).
+The structure will store the error in C<< $ss->[0]{error} >> as anonymous
+list returned by C<< $csv->error_diag >>. See Text::CSV_XS for documentation.
 
 =head2 Functions
 
