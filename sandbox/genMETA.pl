@@ -67,7 +67,7 @@ recommends:
   IO::Scalar:           0
   File::Temp:           0.2304
 test_recommends:
-  Test::More:           0.1001002
+  Test::More:           1.001002
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           http://repo.or.cz/w/Spreadsheet-Read.git

@@ -860,6 +860,9 @@ When an error is found in the CSV, it is automatically reported (to STDERR).
 The structure will store the error in C<< $ss->[0]{error} >> as anonymous
 list returned by C<< $csv->error_diag >>. See Text::CSV_XS for documentation.
 
+ my $ss = ReadData ("bad.csv");
+ $ss->[0]{error} and say $ss->[0]{error}[1];
+
 =head2 Functions
 
 =over 4

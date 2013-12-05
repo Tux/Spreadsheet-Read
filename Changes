@@ -1,4 +1,4 @@
-0.52	- 30 Oct 2013, H.Merijn Brand
+0.52	- 05 Dec 2013, H.Merijn Brand
     - Store CSV parse error - if any - in $ss->[0]{error}
 
 0.51	- 30 Oct 2013, H.Merijn Brand
