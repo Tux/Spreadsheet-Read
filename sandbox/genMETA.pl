@@ -54,7 +54,7 @@ requires:
   perl:                 5.006
   Exporter:             0
   Carp:                 0
-  Data::Dumper:         0
+  Data::Peek:           0
   File::Temp:           0.22
 configure_requires:
   ExtUtils::MakeMaker:  0
@@ -66,6 +66,7 @@ recommends:
   perl:                 5.018001
   IO::Scalar:           0
   File::Temp:           0.2304
+  Data::Peek:           0.39
 test_recommends:
   Test::More:           1.001002
 resources:

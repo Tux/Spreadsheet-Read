@@ -28,7 +28,7 @@ my %wm = (
 	# Core modules
 	"Exporter"			=> 0,
 	"Carp"				=> 0,
-	"Data::Dumper"			=> 0,
+	"Data::Peek"			=> 0,
 	"File::Temp"			=> 0.22,
 	"IO::Scalar"			=> 0,	# Optional
 

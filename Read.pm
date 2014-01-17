@@ -35,7 +35,7 @@ our @EXPORT    = qw( ReadData cell2cr cr2cell );
 our @EXPORT_OK = qw( parses rows cellrow row );
 
 use File::Temp   qw( );
-use Data::Dumper;
+use Data::Peek;
 
 my @parsers = (
     [ csv	=> "Text::CSV_XS"		],
@@ -263,7 +263,7 @@ sub ReadData
 
     # $debug = $opt{debug} // 0;
     $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
-    $debug > 4 and print STDERR Data::Dumper->Dump ([\%opt],["Options"]);
+    $debug > 4 and print STDERR DDumper ({ Options => \%opt });
 
     my %parser_opts = map { $_ => $opt{$_} }
 		      grep { !exists $def_opts{$_} }
@@ -400,7 +400,7 @@ sub ReadData
 		? Spreadsheet::XLSX->new ($txt)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
 	    }
-	$debug > 8 and print STDERR Data::Dumper->Dump ([$oBook],["oBook"]);
+	$debug > 8 and print STDERR DDumper ({ oBook => $oBook });
 	my @data = ( {
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
@@ -616,7 +616,7 @@ sub ReadData
 	    }
 	!$sxc && $txt =~ m/^<\?xml/i and
 	    $sxc = Spreadsheet::ReadSXC::read_xml_string ($txt, $sxc_options);
-	$debug > 8 and print STDERR Data::Dumper->Dump ([$sxc],["sxc"]);
+	$debug > 8 and print STDERR DDumper ({ sxc => $sxc });
 	if ($sxc) {
 	    my @data = ( {
 		type	=> "sxc",
@@ -835,7 +835,7 @@ happened to be at the time the user saved the file.
 
 Enable some diagnostic messages to STDERR.
 
-The value determines how much diagnostics are dumped (using Data::Dumper).
+The value determines how much diagnostics are dumped (using Data::Peek).
 A value of 9 and higher will dump the entire structure from the back-end
 parser.
 

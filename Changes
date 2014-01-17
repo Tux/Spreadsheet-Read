@@ -1,5 +1,6 @@
-0.53	- 01 Jan 2014, H.Merijn Brand
+0.53	- 17 Jan 2014, H.Merijn Brand
     - Updated copyright to 2014
+    - Prefer Data::Peek over Data::Dumper
 
 0.52	- 05 Dec 2013, H.Merijn Brand
     * Store CSV parse error - if any - in $ss->[0]{error}
