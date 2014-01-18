@@ -17,18 +17,6 @@ my $xls;
 ok ($xls = ReadData ("files/Dates.xls",
     attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
-ok (my $ss   = $xls->[1],	"sheet");
-ok (my $attr = $ss->{attr},	"attr");
-
-my @date = (undef, 39668, 39672,      39790,        39673);
-my @fmt  = (undef, undef, "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
-foreach my $r (1 .. 4) {
-    is ($ss->{cell}[$_][$r], $date[$r],	"Date value  row $r col $_") for 1 .. 4;
-
-    is ($attr->[$_][$r]{type},   "date",   "Date type   row $r col $_")  for 1 .. 4;
-    is ($attr->[$_][$r]{format}, $fmt[$_], "Date format row $r col $_")  for 1 .. 4;
-    }
-
 my %fmt = (
     A1 => [ "8-Aug",			undef			],
     A2 => [ "12-Aug",			undef			],
@@ -57,6 +45,19 @@ my %fmt = (
     E3 => [ "08 Dec 2008",		undef			],
     E4 => [ "13 Aug 2008",		undef			],
     );
+
+ok (my $ss   = $xls->[1],	"sheet");
+ok (my $attr = $ss->{attr},	"attr");
+
+my @date = (undef, 39668, 39672,      39790,        39673);
+my @fmt  = (undef, undef, "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
+foreach my $r (1 .. 4) {
+    is ($ss->{cell}[$_][$r], $date[$r],	"Date value  row $r col $_") for 1 .. 4;
+
+    is ($attr->[$_][$r]{type},   "date",   "Date type   row $r col $_")  for 1 .. 4;
+    is ($attr->[$_][$r]{format}, $fmt[$_], "Date format row $r col $_")  for 1 .. 4;
+    }
+
 foreach my $r (1..4,6..7) {
     foreach my $c (1..5) {
 	my $cell = cr2cell ($c, $r);

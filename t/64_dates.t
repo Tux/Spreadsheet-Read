@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 71;
+my     $tests = 103;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -18,10 +18,10 @@ ok ($xls = ReadData ("files/Dates.xlsx",
     attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 my %fmt = (
-    A1 => [ "8-Aug",			undef			],
-    A2 => [ "12-Aug",			undef			],
-    A3 => [ "8-Dec",			undef			],
-    A4 => [ "13-Aug",			undef			],
+    A1 => [ "8-Aug",			"d-mmm"			],
+    A2 => [ "12-Aug",			"d-mmm"			],
+    A3 => [ "8-Dec",			"d-mmm"			],
+    A4 => [ "13-Aug",			"d-mmm"			],
     A6 => [ "Short: dd-MM-yyyy",	undef			],
     A7 => [ "2008-08-13",		"yyyy-mm-dd"		],
     B1 => [ 20080808,			"yyyymmdd"		],
@@ -53,10 +53,10 @@ SKIP: {
     defined $attr->[2][1]{format} or
 	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
 
-    my @date = (undef, 39668, 39672,      39790,        39673);
-    my @fmt  = (undef, undef, "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
+    my @date = (undef, 39668,   39672,      39790,        39673);
+    my @fmt  = (undef, "d-mmm", "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
     foreach my $r (1 .. 4) {
-	is ($ss->{cell}[$_][$r], $date[$r],	"Date value  row $r col $_") for 1 .. 4;
+	is ($ss->{cell}[$_][$r], $date[$r],    "Date value  row $r col $_") for 1 .. 4;
 
 	is ($attr->[$_][$r]{type},   "date",   "Date type   row $r col $_")  for 1 .. 4;
 	is ($attr->[$_][$r]{format}, $fmt[$_], "Date format row $r col $_")  for 1 .. 4;
