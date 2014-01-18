@@ -14,7 +14,8 @@ Spreadsheet::Read::parses ("xlsx") or
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $xls;
-ok ($xls = ReadData ("files/Dates.xlsx", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
+ok ($xls = ReadData ("files/Dates.xlsx",
+    attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 SKIP: {
     ok (my $ss   = $xls->[1],	"sheet");

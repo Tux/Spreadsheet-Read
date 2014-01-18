@@ -44,6 +44,7 @@ my @parsers = (
     [ ods	=> "Spreadsheet::ReadSXC"	],
     [ sxc	=> "Spreadsheet::ReadSXC"	],
     [ xls	=> "Spreadsheet::ParseExcel"	],
+    [ xlsx	=> "Spreadsheet::ParseXLSX"	],
     [ xlsx	=> "Spreadsheet::XLSX"		],
     [ prl	=> "Spreadsheet::Perl"		],
 
@@ -237,10 +238,13 @@ sub _clipsheets
 sub _xls_color {
     my ($clr, @clr) = @_;
     defined $clr               or  return undef;
+    @clr == 0 && $clr =~ m/^#[0-9a-fA-F]+$/ and return $clr eq "#000000" ? undef : lc $clr;
+    #print STDERR "# [ $clr @clr ]\n";
     @clr == 0 && $clr == 32767 and return undef; # Default fg color
     @clr == 2 && $clr ==     0 and return undef; # No fill bg color
     @clr == 2 && $clr ==     1 and ($clr, @clr) = ($clr[0]);
     @clr and return undef; # Don't know what to do with this
+    $clr =~ m/^#[0-9a-fA-F]+$/ and return $clr eq "#000000" ? undef : lc $clr;
     "#" . lc Spreadsheet::ParseExcel->ColorIdxToRGB ($clr);
     } # _xls_color
 
@@ -392,12 +396,16 @@ sub ReadData
 	$debug and print STDERR "Opening $parse_type \$txt\n";
 	if ($io_ref) {
 	    $oBook = $parse_type eq "XLSX"
+		? $can{xlsx} =~ m/::XLSX/
 		? Spreadsheet::XLSX->new ($io_ref)
+		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($io_ref)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($io_ref);
 	    }
 	else {
 	    $oBook = $parse_type eq "XLSX"
+		? $can{xlsx} =~ m/::XLSX/
 		? Spreadsheet::XLSX->new ($txt)
+		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($txt)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
 	    }
 	$debug > 8 and print STDERR DDumper ({ oBook => $oBook });
@@ -405,7 +413,9 @@ sub ReadData
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
 	    version	=> $parse_type eq "XLSX"
+			 ? $can{xlsx} =~ m/::XLSX/
 			 ? $Spreadsheet::XLSX::VERSION
+			 : $Spreadsheet::ParseXLSX::VERSION
 			 : $Spreadsheet::ParseExcel::VERSION,
 	    error	=> undef,
 	    sheets	=> $oBook->{SheetCount} || 0,
@@ -420,7 +430,9 @@ sub ReadData
 	    );
 	$oBook->{FormatStr}{$_} = $def_fmt{$_} for keys %def_fmt;
 	my $oFmt = $parse_type eq "XLSX"
+	    ? $can{xlsx} =~ m/::XLSX/
 	    ? Spreadsheet::XLSX::Fmt2007->new
+	    : Spreadsheet::ParseExcel::FmtDefault->new
 	    : Spreadsheet::ParseExcel::FmtDefault->new;
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
@@ -681,8 +693,8 @@ module that does the actual spreadsheet scanning.
 
 For OpenOffice and/or LibreOffice this module uses Spreadsheet::ReadSXC
 
-For Microsoft Excel this module uses Spreadsheet::ParseExcel or
-Spreadsheet::XLSX
+For Microsoft Excel this module uses Spreadsheet::ParseExcel,
+Spreadsheet::ParseXLSX, or Spreadsheet::XLSX.
 
 For CSV this module uses Text::CSV_XS or Text::CSV_PP.
 
@@ -1138,45 +1150,49 @@ OO interface.
 
 =item Text::CSV_XS, Text::CSV_PP
 
-http://search.cpan.org/dist/Text-CSV_XS ,
-http://search.cpan.org/dist/Text-CSV_PP , and
-http://search.cpan.org/dist/Text-CSV .
+http://metacpan.org/release/Text-CSV_XS ,
+http://metacpan.org/release/Text-CSV_PP , and
+http://metacpan.org/release/Text-CSV .
 
 Text::CSV is a wrapper over Text::CSV_XS (the fast XS version) and/or
 Text::CSV_PP (the pure perl version)
 
 =item Spreadsheet::ParseExcel
 
-http://search.cpan.org/dist/Spreadsheet-ParseExcel
+http://metacpan.org/release/Spreadsheet-ParseExcel
+
+=item Spreadsheet::ParseXLSX
+
+http://metacpan.org/release/Spreadsheet-ParseXLSX
 
 =item Spreadsheet::XLSX
 
-http://search.cpan.org/dist/Spreadsheet-XLSX
+http://metacpan.org/release/Spreadsheet-XLSX
 
 =item Spreadsheet::ReadSXC
 
-http://search.cpan.org/dist/Spreadsheet-ReadSXC
+http://metacpan.org/release/Spreadsheet-ReadSXC
 
 =item Spreadsheet::BasicRead
 
-http://search.cpan.org/dist/Spreadsheet-BasicRead
+http://metacpan.org/release/Spreadsheet-BasicRead
 for xlscat likewise functionality (Excel only)
 
 =item Spreadsheet::ConvertAA
 
-http://search.cpan.org/dist/Spreadsheet-ConvertAA
+http://metacpan.org/release/Spreadsheet-ConvertAA
 for an alternative set of cell2cr () / cr2cell () pair
 
 =item Spreadsheet::Perl
 
-http://search.cpan.org/dist/Spreadsheet-Perl
+http://metacpan.org/release/Spreadsheet-Perl
 offers a Pure Perl implementation of a spreadsheet engine. Users that want
 this format to be supported in Spreadsheet::Read are hereby motivated to
 offer patches. It's not high on my TODO-list.
 
 =item xls2csv
 
-http://search.cpan.org/dist/xls2csv offers an alternative for my C<xlscat -c>,
+http://metacpan.org/release/xls2csv offers an alternative for my C<xlscat -c>,
 in the xls2csv tool, but this tool focuses on character encoding
 transparency, and requires some other modules.
 

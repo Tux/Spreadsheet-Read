@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 69;
+my     $tests = 71;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -14,10 +14,11 @@ Spreadsheet::Read::parses ("xls") or
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $xls;
-ok ($xls = ReadData ("files/Dates.xls", attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
+ok ($xls = ReadData ("files/Dates.xls",
+    attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
-my $ss   = $xls->[1];
-my $attr = $ss->{attr};
+ok (my $ss   = $xls->[1],	"sheet");
+ok (my $attr = $ss->{attr},	"attr");
 
 my @date = (undef, 39668, 39672,      39790,        39673);
 my @fmt  = (undef, undef, "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
