@@ -87,7 +87,7 @@ optional_features:
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
-      Spreadsheet::ParseExcel:             0.26
+      Spreadsheet::ParseExcel:             0.34
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
       Spreadsheet::ParseExcel:             0.59
