@@ -51,7 +51,7 @@ SKIP: {
     ok (my $attr = $ss->{attr},	"attr");
 
     defined $attr->[2][1]{format} or
-	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 68;
+	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support formats", 100;
 
     my @date = (undef, 39668,   39672,      39790,        39673);
     my @fmt  = (undef, "d-mmm", "yyyymmdd", "yyyy-mm-dd", "mm/dd/yyyy");
