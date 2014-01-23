@@ -14,16 +14,22 @@ Spreadsheet::Read::parses ("xlsx") or
 my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
 
+my $parser = $xls->[0]{parser};
+
 SKIP: {
     ok (my $fmt = $xls->[$xls->[0]{sheet}{Format}],	"format");
 
     $fmt->{attr}[2][2]{merged} or
-	skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support attributes yet", 38;
+	skip "$parser $xls->[0]{version} does not reliably support attributes yet", 38;
+
+    # The return value for the invisible part of merged cells differs for
+    # the available parsers
+    my $mcrv = $parser =~ m/::XLSX/ ? undef : "";
 
     is ($fmt->{B2},		"merged",	"Merged cell left    formatted");
-    is ($fmt->{C2},		undef,		"Merged cell right   formatted");
+    is ($fmt->{C2},		$mcrv,		"Merged cell right   formatted");
     is ($fmt->{cell}[2][2],	"merged",	"Merged cell left  unformatted");
-    is ($fmt->{cell}[3][2],	undef,		"Merged cell right unformatted");
+    is ($fmt->{cell}[3][2],	$mcrv,		"Merged cell right unformatted");
     is ($fmt->{attr}[2][2]{merged}, 1,	"Merged cell left  merged");
     is ($fmt->{attr}[3][2]{merged}, 1,	"Merged cell right merged");
 
