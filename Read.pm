@@ -235,18 +235,28 @@ sub _clipsheets
     $ref;
     } # _clipsheets
 
-sub _xls_color {
-    my ($clr, @clr) = @_;
-    defined $clr               or  return undef;
-    @clr == 0 && $clr =~ m/^#[0-9a-fA-F]+$/ and return $clr eq "#000000" ? undef : lc $clr;
-    #print STDERR "# [ $clr @clr ]\n";
-    @clr == 0 && $clr == 32767 and return undef; # Default fg color
-    @clr == 2 && $clr ==     0 and return undef; # No fill bg color
-    @clr == 2 && $clr ==     1 and ($clr, @clr) = ($clr[0]);
-    @clr and return undef; # Don't know what to do with this
-    $clr =~ m/^#[0-9a-fA-F]+$/ and return $clr eq "#000000" ? undef : lc $clr;
-    "#" . lc Spreadsheet::ParseExcel->ColorIdxToRGB ($clr);
+# Convert a single color (index) to a color
+sub _xls_color
+{
+    my $clr = shift;
+    defined $clr		or  return undef;
+    $clr eq "#000000"		and return undef;
+    $clr =~ m/^#[0-9a-fA-F]+$/	and return lc $clr;
+    $clr == 0 || $clr == 32767	and return undef; # Default fg color
+    return "#" . lc Spreadsheet::ParseExcel->ColorIdxToRGB ($clr);
     } # _xls_color
+
+# Convert a fill [ $pattern, $front_color, $back_color ] to a single background
+sub _xls_fill
+{
+    my ($p, $fg, $bg) = @_;
+    defined $p			or  return undef;
+    $p == 32767			and return undef; # Default fg color
+    $p == 0 && !defined $bg	and return undef; # No fill bg color
+    $p == 1			and return _xls_color ($fg);
+    $bg < 8 || $bg > 63		and return undef; # see Workbook.pm#106
+    return _xls_color ($bg);
+    } # _xls_fill
 
 sub ReadData
 {
@@ -528,7 +538,7 @@ sub ReadData
 				italic  => $FnT->{Italic},
 				uline   => $FnT->{Underline},
 				fgcolor => _xls_color ($FnT->{Color}),
-				bgcolor => _xls_color (@{$FmT->{Fill}}),
+				bgcolor => _xls_fill  (@{$FmT->{Fill}}),
 				};
 			    }
 			}
