@@ -39,6 +39,7 @@ my %wm = (
 #	"Spreadsheet::ReadSXC"		=> 0.20,
 #	"Spreadsheet::ParseExcel"	=> 0.34,
 #	"Spreadsheet::ParseExcel::FmtDefault" => 0,
+#	"Spreadsheet::ParseXLSX"	=> 0.13,
 #	"Spreadsheet::XLSX"		=> 0.13,
 #	"Spreadsheet::Perl"		=> 0,	# Not yet
 

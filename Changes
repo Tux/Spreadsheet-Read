@@ -1,6 +1,7 @@
-0.53	- 17 Jan 2014, H.Merijn Brand
+0.53	- 29 Jan 2014, H.Merijn Brand
     - Updated copyright to 2014
     - Prefer Data::Peek over Data::Dumper
+    - Support (and prefer) Spreadsheet::ParseXLSX for .xlsx
 
 0.52	- 05 Dec 2013, H.Merijn Brand
     * Store CSV parse error - if any - in $ss->[0]{error}

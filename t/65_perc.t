@@ -26,7 +26,10 @@ foreach my $row (1 .. 19) {
 	$ss->{B18} =~ m/[.]/ and
 	    skip "$xls->[0]{parser} $xls->[0]{version} has format problems", 1;
 	my $i = int $ss->{"A$row"};
-	is ($ss->{"B$row"}, "$i%",		"Formatted values for row $row\n");
+	# Allow edge case. rounding .5 will be different in -Duselongdouble perl
+	my $f = $ss->{"B$row"};
+	$row == 11 && $f eq "1%" and $i = 1;
+	is ($f, "$i%",	"Formatted values for row $row\n");
 	}
     }
 

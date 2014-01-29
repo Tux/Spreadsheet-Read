@@ -523,8 +523,8 @@ sub ReadData
 				type    => lc $oWkC->{Type},
 				enc     => $oWkC->{Code},
 				merged  => $oWkC->{Merged} || 0,
-				hidden  => $FmT->{Hidden},
-				locked  => $FmT->{Lock},
+				hidden  => $FmT->{Hidden}  || 0,
+				locked  => $FmT->{Lock}    || 0,
 				format  => $fmi,
 				halign  => [ undef, qw( left center right
 					   fill justify ), undef,
