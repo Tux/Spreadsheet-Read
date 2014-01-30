@@ -39,8 +39,8 @@ use Data::Dumper;
 
 my @parsers = (
     [ csv  => "Text::CSV_XS",              "0.71"  ],
-    [ csv  => "Text::CSV_PP",              "1.05"  ],
-    [ csv  => "Text::CSV",                 "1.00"  ],
+    [ csv  => "Text::CSV_PP",              "1.17"  ],
+    [ csv  => "Text::CSV",                 "1.17"  ],
     [ ods  => "Spreadsheet::ReadSXC",      "0.20"  ],
     [ sxc  => "Spreadsheet::ReadSXC",      "0.20"  ],
     [ xls  => "Spreadsheet::ParseExcel",   "0.34"  ],
