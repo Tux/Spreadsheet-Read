@@ -33,6 +33,7 @@ my %wm = (
 	"IO::Scalar"			=> 0,	# Optional
 
 	# Backend parsers, all optional
+	# Versions also need to be declared inside Read.pm !
 #	"Text::CSV"			=> 1.32,
 #	"Text::CSV_PP"			=> 1.31,
 #	"Text::CSV_XS"			=> 1.04,

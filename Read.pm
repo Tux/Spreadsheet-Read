@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.53";
+our $VERSION = "0.54";
 sub  Version { $VERSION }
 
 use Carp;
@@ -38,24 +38,24 @@ use File::Temp   qw( );
 use Data::Peek;
 
 my @parsers = (
-    [ csv	=> "Text::CSV_XS"		],
-    [ csv	=> "Text::CSV_PP"		], # Version 1.05 and up
-    [ csv	=> "Text::CSV"			], # Version 1.00 and up
-    [ ods	=> "Spreadsheet::ReadSXC"	],
-    [ sxc	=> "Spreadsheet::ReadSXC"	],
-    [ xls	=> "Spreadsheet::ParseExcel"	],
-    [ xlsx	=> "Spreadsheet::ParseXLSX"	],
-    [ xlsx	=> "Spreadsheet::XLSX"		],
-    [ prl	=> "Spreadsheet::Perl"		],
+    [ csv  => "Text::CSV_XS",              "0.71"  ],
+    [ csv  => "Text::CSV_PP",              "1.05"  ],
+    [ csv  => "Text::CSV",                 "1.00"  ],
+    [ ods  => "Spreadsheet::ReadSXC",      "0.20"  ],
+    [ sxc  => "Spreadsheet::ReadSXC",      "0.20"  ],
+    [ xls  => "Spreadsheet::ParseExcel",   "0.34"  ],
+    [ xlsx => "Spreadsheet::ParseXLSX",    "0.13"  ],
+    [ xlsx => "Spreadsheet::XLSX",         "0.13"  ],
+    [ prl  => "Spreadsheet::Perl",         ""      ],
 
     # Helper modules
-    [ ios	=> "IO::Scalar"			],
+    [ ios  => "IO::Scalar",                ""      ],
     );
 my %can = map { $_->[0] => 0 } @parsers;
 for (@parsers) {
-    my ($flag, $mod) = @$_;
+    my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
-    eval "require $mod; \$can{\$flag} = '$mod'";
+    eval "require $mod; $vsn and ${mod}->VERSION ($vsn); \$can{\$flag} = '$mod'";
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
