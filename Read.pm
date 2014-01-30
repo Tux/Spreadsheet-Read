@@ -35,7 +35,7 @@ our @EXPORT    = qw( ReadData cell2cr cr2cell );
 our @EXPORT_OK = qw( parses rows cellrow row );
 
 use File::Temp   qw( );
-use Data::Peek;
+use Data::Dumper;
 
 my @parsers = (
     [ csv  => "Text::CSV_XS",              "0.71"  ],
@@ -50,6 +50,7 @@ my @parsers = (
 
     # Helper modules
     [ ios  => "IO::Scalar",                ""      ],
+    [ dmp  => "Data::Peek",                ""      ],
     );
 my %can = map { $_->[0] => 0 } @parsers;
 for (@parsers) {
@@ -92,6 +93,17 @@ my @def_attr = (
     );
 
 # Helper functions
+
+sub _dump
+{
+    my ($label, $ref) = @_;
+    if ($can{dmp}) {
+	print STDERR Data::Peek::DDumper ({ $label => $ref });
+	}
+    else {
+	print STDERR Data::Dumper->Dump ([$ref], [$label]);
+	}
+    } # _dump
 
 sub _parser
 {
@@ -277,7 +289,7 @@ sub ReadData
 
     # $debug = $opt{debug} // 0;
     $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
-    $debug > 4 and print STDERR DDumper ({ Options => \%opt });
+    $debug > 4 and _dump (Options => \%opt);
 
     my %parser_opts = map { $_ => $opt{$_} }
 		      grep { !exists $def_opts{$_} }
@@ -418,7 +430,7 @@ sub ReadData
 		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($txt)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
 	    }
-	$debug > 8 and print STDERR DDumper ({ oBook => $oBook });
+	$debug > 8 and _dump (oBook => $oBook);
 	my @data = ( {
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
@@ -638,7 +650,7 @@ sub ReadData
 	    }
 	!$sxc && $txt =~ m/^<\?xml/i and
 	    $sxc = Spreadsheet::ReadSXC::read_xml_string ($txt, $sxc_options);
-	$debug > 8 and print STDERR DDumper ({ sxc => $sxc });
+	$debug > 8 and _dump (sxc => $sxc);
 	if ($sxc) {
 	    my @data = ( {
 		type	=> "sxc",
