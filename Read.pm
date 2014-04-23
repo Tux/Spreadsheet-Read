@@ -1212,6 +1212,12 @@ offers a Pure Perl implementation of a spreadsheet engine. Users that want
 this format to be supported in Spreadsheet::Read are hereby motivated to
 offer patches. It's not high on my TODO-list.
 
+=item Spreadsheet::CSV
+
+http://metacpan.org/release/Spreadsheet-CSV
+offers the interesting approach of seeing all supported spreadsheet formats
+as if it were CSV, mimicking the Text::CSV_XS interface.
+
 =item xls2csv
 
 http://metacpan.org/release/xls2csv offers an alternative for my C<xlscat -c>,

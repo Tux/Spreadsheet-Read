@@ -1,3 +1,6 @@
+0.55	- 23 Apr 2014, H.Merijn Brand
+    * Mention Spreadsheet::CSV in documentation
+
 0.54	- 30 Jan 2014, H.Merijn Brand
     * Optional features required versions now builtin
 
