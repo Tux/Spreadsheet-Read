@@ -89,7 +89,7 @@ sub postamble
 	q{	sandbox/leaktest $(FULLPERLRUN) "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')" $(TEST_FILES)},
 	'',
 	'spellcheck:',
-	'	pod-spell-check --aspell',
+	'	pod-spell-check --aspell --ispell',
 	'',
 	'checkmeta:	spellcheck',
 	'	perl sandbox/genMETA.pl -c',
