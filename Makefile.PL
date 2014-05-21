@@ -10,6 +10,7 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
+	  [ "ssdiff",	"Show diff between two spreadsheets"		],
 	  [ "xls2csv",	"Wrapper around xlscat for easy XLS => CSV"	],
 	  ) {
 	prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "y") =~ m/[Yy]/ and

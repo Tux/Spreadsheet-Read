@@ -23,10 +23,10 @@ $meta->from_data (<DATA>);
 if ($check) {
     $meta->check_encoding ();
     $meta->check_required ();
-    my @ef = grep { !m/xls(cat|grep)/ } glob "examples/*";
+    my @ef = grep { !m/xls(cat|grep)|ssdiff/ } glob "examples/*";
     $meta->check_minimum ([ "t", @ef, "Read.pm", "Makefile.PL" ]);
     $meta->{h}{requires}{perl} = "5.008004";
-    $meta->check_minimum ([ "examples/xlscat", "examples/xlsgrep" ]);
+    $meta->check_minimum ([ map { "examples/$_" } qw( xlscat xlsgrep ssdiff )]);
     $meta->done_testing ();
     }
 elsif ($opt_v) {
@@ -84,7 +84,7 @@ optional_features:
     recommends:
       Text::CSV:                           1.32
       Text::CSV_PP:                        1.31
-      Text::CSV_XS:                        1.06
+      Text::CSV_XS:                        1.08
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
