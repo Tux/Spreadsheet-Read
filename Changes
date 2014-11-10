@@ -1,6 +1,7 @@
-0.55	- 21 May 2014, H.Merijn Brand
+0.55	- 10 Nov 2014, H.Merijn Brand
     * Mention Spreadsheet::CSV in documentation
     * Add ssdiff to examples
+    * Amend xlscat -n to also number in HTML
 
 0.54	- 30 Jan 2014, H.Merijn Brand
     * Optional features required versions now builtin
