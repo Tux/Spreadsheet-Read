@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'13 [24-10-2013] Copyright H.M.Brand 2005-2014
+#	   (m)'14 [09-11-2014] Copyright H.M.Brand 2005-2014
 
 use strict;
 use warnings;
 
-our $VERSION = "2.5";
+our $VERSION = "2.6";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -37,7 +37,8 @@ sub usage
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"       -L          Line up the columns\n",
-	"       -n          Number lines (prefix with column number)\n",
+	"       -n [skip]   Number lines (prefix with column number)\n",
+	"                   optionally skip <skip> (header) lines\n",
 	"       -A          Show field attributes in ANSI escapes\n",
 	$is_grep ? (
 	"    Grep options:\n",
@@ -71,7 +72,7 @@ my $dtfmt;		# Default date-format for Excel
 my $opt_F = "";		# Fields to print
 my $opt_i = 0;		# Index (cat) | ignore_case (grep)
 my $opt_L = 0;		# Auto-size/align columns
-my $opt_n = 0;		# Prefix lines with column number
+my $opt_n;		# Prefix lines with column number
 my $opt_u = 0;		# Show unformatted values
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
@@ -108,7 +109,7 @@ GetOptions (
     "C|columns=s"	=> \$opt_C,
     "F|fields=s"	=> \$opt_F,
     "L|fit|align!"	=> \$opt_L,
-    "n|number!"		=> \$opt_n,
+    "n|number:0"	=> \$opt_n,
     "A|ansi|color!"	=> \$opt_A,
     "u|unformatted!"	=> \$opt_u,
     "v|verbose:1"	=> \$opt_v,
@@ -381,6 +382,12 @@ foreach my $si (1 .. $sc) {
 	if ($enc_o) { $_ = encode ($enc_o, $_) for @row; }
 	if ($opt_H) {	# HTML
 	    print "  <tr>";
+	    if (defined $opt_n) {
+		my $x = $r - $opt_n;
+		$x <= 0 and $x = "";
+		my $c = $r % 2 ? qq{ class="odd"} : "";
+		print qq{<td style="text-align: right" $c>$x</td>};
+		}
 	    foreach my $c (0 .. $#row) {
 		my $css = css_color (@{$att[$c]});
 		$r % 2 and $css .= qq{ class="odd"};
@@ -394,7 +401,7 @@ foreach my $si (1 .. $sc) {
 	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
 	    next;
 	    }
-	if ($opt_n) {
+	if (defined $opt_n) {
 	    unshift @row, $r;
 	    unshift @att, [ "#ffffff", "#000000", 0, 0 ];
 	    }
@@ -417,7 +424,7 @@ foreach my $si (1 .. $sc) {
     $opt_H and print "  </table>\n\n";
     printf STDERR $v_fmt, $nc, $h, "\n";
     $opt_L or next;
-    if ($opt_n) {
+    if (defined $opt_n) {
 	unshift @w, length $data[-1][0][0];
 	unshift @align, "";
 	}
