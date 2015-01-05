@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'14 [09-11-2014] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [05-01-2015] Copyright H.M.Brand 2005-2015
 
 use strict;
 use warnings;
 
-our $VERSION = "2.6";
+our $VERSION = "2.7";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -99,7 +99,8 @@ GetOptions (
      "|date-format=s"	=> \$dtfmt,
 
     # Output
-    "i|index"		=> \$opt_i,
+    "i|index".
+     "|ignore-case"	=> \$opt_i,
     "s|separator".
      "|outsepchar".
      "|out-sep".
@@ -123,7 +124,6 @@ GetOptions (
     "a|encoding-out=s"	=> \$enc_o,
 
     # Grep
-    "i|ignore-case!"	=> \$opt_i,
     "w|word!"		=> \$opt_w,
     "h|header:1"	=> \$opt_h,
     ) or usage 1, "GetOpt: $@";
@@ -379,7 +379,6 @@ foreach my $si (1 .. $sc) {
 		$row[$c] =~ m/\D/ and $align[$c] = "-";
 		}
 	    }
-	if ($enc_o) { $_ = encode ($enc_o, $_) for @row; }
 	if ($opt_H) {	# HTML
 	    print "  <tr>";
 	    if (defined $opt_n) {
@@ -417,7 +416,7 @@ foreach my $si (1 .. $sc) {
 		    "\e[0m";
 		}
 	    }
-	print join ($opt_s => @row), "\n";
+	line ($opt_s => @row);
 	} continue {
 	    ++$h % 100 == 0 && $opt_v and printf STDERR $v_fmt, $nc, $h, "\r";
 	    }
@@ -428,18 +427,31 @@ foreach my $si (1 .. $sc) {
 	unshift @w, length $data[-1][0][0];
 	unshift @align, "";
 	}
-    my $fmt = join ($opt_s =>
-	map { my $f = "%$align[$_]$w[$_]s";
-	      $opt_A ? "%s$f%s" : $f } 0 .. $#w)."\n";
     for (@data) {
 	my ($row, $att) = @$_;
-	my @row = $opt_A
-	    ? map { (
-		ansi_color (@{$att->[$_]}),
-		$row->[$_],
-		"\e[0m" ) } 0 .. $#$row
-	    : @$row;
-	printf $fmt, @row;
+	my @row = @$row;
+	for (0 .. $#row) {
+	    my $w = " " x ($w[$_] - length $row[$_]);
+	    if ($align[$_]) {
+		$row[$_] .= $w;
+		}
+	    else {
+		substr $row[$_], 0, 0, $w;
+		}
+	    if ($opt_A) {
+		substr $row[$_], 0, 0, ansi_color (@{$att->[$_]});
+		$row[$_] .= "\e[0m";
+		}
+	    }
+	line ("|" => @row);
 	}
     }
 $opt_H and print "</body>\n</html>\n";
+
+sub line
+{
+    my $sep  = shift;
+    my $line = join $sep => @_;
+    !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
+    print "$line\n";
+    } # show_line
