@@ -67,7 +67,7 @@ recommends:
   perl:                 5.020001
   IO::Scalar:           0
   File::Temp:           0.2304
-  Data::Peek:           0.41
+  Data::Peek:           0.42
 test_recommends:
   Test::More:           1.001014
 resources:
@@ -84,7 +84,7 @@ optional_features:
     recommends:
       Text::CSV:                           1.32
       Text::CSV_PP:                        1.31
-      Text::CSV_XS:                        1.12
+      Text::CSV_XS:                        1.13
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
