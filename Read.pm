@@ -1034,7 +1034,7 @@ This modules comes with a few tools that perform tasks from the FAQ, like
 "How do I select only column D through F from sheet 2 into a CSV file?"
 
 If the module was installed without the tools, you can find them here:
-  http://repo.or.cz/w/Spreadsheet-Read.git/tree/HEAD:/examples
+  https://github.com/Tux/Spreadsheet-Read/tree/master/examples
 
 =head2 C<xlscat>
 
