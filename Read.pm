@@ -473,6 +473,19 @@ sub ReadData
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 	    if (exists $oWkS->{MinRow}) {
+		if ($opt{clip}) {
+		    my ($mr, $mc) = (-1, -1);
+		    foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
+			foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
+			    my $oWkC = $oWkS->{Cells}[$r][$c] or next;
+			    defined (my $val = $oWkC->{Val})  or next;
+			    $val =~ m/\S/ or next;
+			    $r > $mr and $mr = $r;
+			    $c > $mc and $mc = $c;
+			    }
+			}
+		    ($sheet{maxrow}, $sheet{maxcol}) = ($mr + 1, $mc + 1);
+		    }
 		foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
 		    foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
 			my $oWkC = $oWkS->{Cells}[$r][$c] or next;
