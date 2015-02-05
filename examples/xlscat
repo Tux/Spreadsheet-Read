@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [05-01-2015] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [05-02-2015] Copyright H.M.Brand 2005-2015
 
 use strict;
 use warnings;
 
-our $VERSION = "2.7";
+our $VERSION = "2.8";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -52,6 +52,13 @@ sub usage
 	"       -m          Output CSV, separator = ';'\n",
 	"    Output HTML:\n",
 	"       -H          Output HTML\n",
+	"    Ordering:\n",
+	"       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)\n",
+	"                   +#   - first # lines do not sort (header)\n",
+	"                   #    - order on column # lexical ascending\n",
+	"                   #n   - order on column # numeric ascending\n",
+	"                   #r   - order on column # lexical descending\n",
+	"                   #rn  - order on column # numeric descending\n",
 	"    Selection:\n",
 	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set\n",
 	"                   Default only prints the first sheet\n",
@@ -117,6 +124,7 @@ GetOptions (
     "d|debug:1"		=> \$opt_d,
     "H|html:1"		=> \$opt_H,
       "noclip"		=> sub { $clip = 0 },
+      "sort=s"		=> \my $sort_order,
 
     # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
@@ -404,7 +412,7 @@ foreach my $si (1 .. $sc) {
 	    unshift @row, $r;
 	    unshift @att, [ "#ffffff", "#000000", 0, 0 ];
 	    }
-	if ($opt_L) {	# Autofit / Align
+	if ($opt_L || $sort_order) {	# Autofit / Align / order
 	    push @data, [ [ @row ], [ @att ] ];
 	    next;
 	    }
@@ -422,7 +430,28 @@ foreach my $si (1 .. $sc) {
 	    }
     $opt_H and print "  </table>\n\n";
     printf STDERR $v_fmt, $nc, $h, "\n";
-    $opt_L or next;
+    if ($sort_order) {
+	my @o;
+	my @h;
+	$sort_order =~ s/\+([0-9]+)\b// and @h = splice @data, 0, $1;
+	for ($sort_order =~ m/([0-9]+[rn]*)/g) {
+	    m/^([0-9]+)(.*)/;
+	    push @o, { col => $1 - 1, map { $_ => 1 } split m// => $2 };
+	    }
+	my $sort = sub {
+	    my $d = 0;
+	    foreach my $o (@o) {
+		my ($A, $B) = map { $_->[0][$o->{col}] || 0 } $a, $b;
+		$d = $o->{n}
+		    ? $o->{r} ? $B <=> $A : $A <=> $B
+		    : $o->{r} ? $B cmp $A : $A cmp $B
+			and return $d;
+		}
+	    return $d;
+	    };
+	@data = (@h, sort $sort @data);
+	}
+    $opt_L || $sort_order or next;
     if (defined $opt_n) {
 	unshift @w, length $data[-1][0][0];
 	unshift @align, "";

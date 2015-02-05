@@ -1,5 +1,6 @@
-0.57	- 03 Feb 2015, H.Merijn Brand
+0.57	- 05 Feb 2015, H.Merijn Brand
     - Moved project to github
+    - Add --sort to xlscat
 
 0.56	- 05 Jan 2015, H.Merijn Brand
     * printf does not play nice with encoding (related to RT#98436)
