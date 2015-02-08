@@ -333,7 +333,6 @@ sub ReadData
 	defined $opt{quote} and $quo = $opt{quote};
 	if ($io_fil) {
 	    unless (defined $opt{quote} && defined $opt{sep}) {
-		local $/ = $/;
 		open $in, "<", $txt or return;
 		$_ = <$in>;
 
