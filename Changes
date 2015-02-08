@@ -1,7 +1,8 @@
-0.57	- 05 Feb 2015, H.Merijn Brand
-    - Moved project to github
-    - Add --sort to xlscat
-    - Clip before conversion
+0.57	- 08 Feb 2015, H.Merijn Brand
+    * Moved project to github
+    * Add --sort to xlscat
+    * Clip before conversion
+    * Removed an unneeded localizing of $/ (related to p5 RT#123218)
 
 0.56	- 05 Jan 2015, H.Merijn Brand
     * printf does not play nice with encoding (related to RT#98436)
