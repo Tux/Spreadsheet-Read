@@ -1,3 +1,6 @@
+0.58	- 09 Feb 2015, H.Merijn Brand
+    * Remove perl recommendation from META as it breaks cpan clients
+
 0.57	- 08 Feb 2015, H.Merijn Brand
     * Moved project to github
     * Add --sort to xlscat

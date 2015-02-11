@@ -64,7 +64,6 @@ test_requires:
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
-  perl:                 5.020001
   IO::Scalar:           0
   File::Temp:           0.2304
   Data::Peek:           0.42
