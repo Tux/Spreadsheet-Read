@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-our $VERSION = "2.8";
+our $VERSION = "2.9";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -52,19 +52,19 @@ sub usage
 	"       -m          Output CSV, separator = ';'\n",
 	"    Output HTML:\n",
 	"       -H          Output HTML\n",
-	"    Ordering:\n",
-	"       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)\n",
-	"                   +#   - first # lines do not sort (header)\n",
-	"                   #    - order on column # lexical ascending\n",
-	"                   #n   - order on column # numeric ascending\n",
-	"                   #r   - order on column # lexical descending\n",
-	"                   #rn  - order on column # numeric descending\n",
 	"    Selection:\n",
 	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set\n",
 	"                   Default only prints the first sheet\n",
 	"       -R <rows>   Only print rows    <rows>. Default is 'all'\n",
 	"       -C <cols>   Only print columns <cols>. Default is 'all'\n",
-	"       -F <flds>   Only fields <flds> e.g. -FA3,B16\n";
+	"       -F <flds>   Only fields <flds> e.g. -FA3,B16\n",
+	"    Ordering (column numbers in result set *after* selection):\n",
+	"       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)\n",
+	"                   +#   - first # lines do not sort (header)\n",
+	"                   #    - order on column # lexical ascending\n",
+	"                   #n   - order on column # numeric ascending\n",
+	"                   #r   - order on column # lexical descending\n",
+	"                   #rn  - order on column # numeric descending\n";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
