@@ -22,6 +22,9 @@ files/empty.xls
 files/empty.xlsx
 files/macosx.csv
 files/macosx.xls
+files/merged.ods
+files/merged.xls
+files/merged.xlsx
 files/misc.xls
 files/misc.xlsx
 files/misc_ws.xls
@@ -62,6 +65,7 @@ t/32_fmt.t
 t/34_dates.t
 t/35_perc.t
 t/36_xls.t
+t/37_merged.t
 t/40_sxc.t
 t/45_ods.t
 t/46_clr.t
@@ -73,3 +77,4 @@ t/62_fmt.t
 t/63_misc.t
 t/64_dates.t
 t/65_perc.t
+t/67_merged.t

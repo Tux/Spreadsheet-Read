@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.58";
+our $VERSION = "0.59";
 sub  Version { $VERSION }
 
 use Carp;
@@ -325,6 +325,7 @@ sub ReadData
 		maxcol	=> 0,
 		cell	=> [],
 		attr	=> [],
+		merged  => [],
 		},
 	    );
 
@@ -465,10 +466,17 @@ sub ReadData
 		maxcol	=> 0,
 		cell	=> [],
 		attr	=> [],
+		merged  => [],
 		);
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
 	    exists $oWkS->{MaxRow} and $sheet{maxrow} = $oWkS->{MaxRow} + 1;
 	    exists $oWkS->{MaxCol} and $sheet{maxcol} = $oWkS->{MaxCol} + 1;
+	    $oWkS->{MergedArea}    and $sheet{merged} = [
+		map  {  $_->[0] }
+		sort {  $a->[1] cmp $b->[1] }
+		map  {[ $_, pack "NNNN", @$_          ]}
+		map  {[ map { $_ + 1 } @{$_}[1,0,3,2] ]}
+		@{$oWkS->{MergedArea}} ];
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 	    if (exists $oWkS->{MinRow}) {
@@ -612,6 +620,7 @@ sub ReadData
 		maxcol	=> 0,
 		cell	=> [],
 		attr	=> [],
+		merged  => [],
 		},
 	    );
 
@@ -682,11 +691,12 @@ sub ReadData
 	    foreach my $sheet (@sheets) {
 		my @sheet = @{$sheet->{data}};
 		my %sheet = (
-		    label	=> $sheet->{label},
-		    maxrow	=> scalar @sheet,
-		    maxcol	=> 0,
-		    cell	=> [],
-		    attr	=> [],
+		    label  => $sheet->{label},
+		    maxrow => scalar @sheet,
+		    maxcol => 0,
+		    cell   => [],
+		    attr   => [],
+		    merged => [],
 		    );
 		my $sheet_idx = 1 + @data;
 		$debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} rows\n";
@@ -758,6 +768,8 @@ The data is returned as an array reference:
           [ undef, 1 ],
           [ undef, undef, undef, undef, undef, "Nugget" ],
           ],
+        attr    => [],
+        merged  => [],
         A1      => 1,
         B5      => "Nugget",
         },
@@ -1033,12 +1045,77 @@ is made to analyze and store field attributes like this:
 	  locked  => 0,
 	  enc     => "iso8859-1",
 	  }, ]
+      merged => [],
       A1     => 1,
       B5     => "Nugget",
       },
 
 This has now been partially implemented, mainly for Excel, as the other
 parsers do not (yet) support all of that. YMMV.
+
+=head3 Merged cells
+
+Note that only [Spreadsheet::ReadSXC] documents the use of merged cells,
+and not in a way useful for the spreadsheet consumer.
+
+CSV does not support merged cells (though future implementations of CSV
+for the web might).
+
+None of [Spreadsheet::XLSX], [Spreadsheet::ParseExcel], and
+[Spreadsheet::ParseXLSX] mention merged cells in the documentation at
+all.
+
+Both [Spreadsheet::ParseExcel] and [Spreadsheet::ParseXLSX] make the
+merge information available in their internal structures, but as it is
+not documented at all, these might be subject to change. This module
+just tries to return the information in a somewhat usable way.
+
+Given this spreadsheet as an example
+
+ merged.xlsx:
+ 
+     A     B     C
+  +-----+-----------+
+ 1|     | foo       |
+  +-----+           +
+ 2| bar |           |
+  |     +-----+-----+
+ 3|     | urg | orc |
+  +-----+-----+-----+
+
+the information extracted from that undocumented information is
+returned in the C<merged> entry of the sheet's hash as a list of
+top-left, bottom-right coordinate pars (col, row, col, row). For
+given example, that would be:
+
+ $ss->{merged} = [
+    [ 1, 2, 1, 3 ], # A2-A3
+    [ 2, 1, 3, 2 ], # B1-C2
+    ];
+
+When the attributes are also enabled, there is some merge information
+copied directly from the cell information, but again, that stems from
+code analysis and not from documentation:
+
+ my $ss = ReadData ("merged.xlsx", attr => 1)->[1];
+ foreach my $row (1 .. $ss->{maxrow}) {
+     foreach my $col (1 .. $ss->{maxcol}) {
+         my $cell = cr2cell ($col, $row);
+         printf "%s %-3s %d  ", $cell, $ss->{$cell},
+             $ss->{attr}[$col][$row]{merged};
+         }
+     print "\n";
+     }
+
+ A1     0  B1 foo 1  C1     1
+ A2 bar 1  B2     1  C2     1
+ A3     1  B3 urg 0  C3 orc 0
+
+In this example, there is no way to see if B2 is merged to A2 or
+to B1 without analyzing all surrounding cells. This could as well
+mean A2:A3, B1:C1, B2: C2, as A2:A3, B1:B2, C1:C2, as A2:A3, B1:C2.
+Use the C<merged> entry described above to find out what fields are
+merged to what other fields.
 
 =head1 TOOLS
 

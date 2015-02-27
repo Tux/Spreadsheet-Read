@@ -1,3 +1,6 @@
+0.59	- 27 Feb 2015, H.Merijn Brand
+    - Minimal support (+ docs) for merged cells
+
 0.58	- 11 Feb 2015, H.Merijn Brand
     * Remove perl recommendation from META as it breaks cpan clients
     * Move sort instruction to correct place in xlscat's help
