@@ -14,7 +14,6 @@ use Term::ANSIColor qw(:constants);
 use Date::Calc qw( Delta_Days );
 use Test::CPAN::Meta::YAML::Version;
 use CPAN::Meta::Converter;
-use Test::MinimumVersion;
 use Test::More ();
 use Parse::CPAN::Meta;
 use File::Find;
@@ -247,6 +246,12 @@ sub check_minimum
     my $paths = (join ", " => @{($locs // {})->{paths} // []}) || "default paths";
 
     $reqv or croak "No minimal required version for perl";
+    if ($reqv > 5.006) {
+	eval "use Test::MinimumVersion::Fast";
+	}
+    else {
+	eval "use Test::MinimumVersion";
+	}
     print "Checking if $reqv is still OK as minimal version for $paths\n";
     # All other minimum version checks done in xt
     Test::More::subtest "Minimum perl version $reqv" => sub {
@@ -265,6 +270,9 @@ sub check_changelog
     my %mnt = qw( jan 1 feb 2 mar 3 apr 4 may 5 jun 6 jul 7 aug 8 sep 9 oct 10 nov 11 dec 11 );
     open my $fh, "<", $td[0] or die "$td[0]: $!\n";
     while (<$fh>) {
+	s/\b([0-9]{4}) (?:[- ])
+	    ([0-9]{1,2}) (?:[- ])
+	    ([0-9]{1,2})\b/$3-$2-$1/x; # 2015-01-15 => 15-01-2015
 	m/\b([0-9]{1,2}) (?:[- ])
 	    ([0-9]{1,2}|[ADFJMNOSadfjmnos][acekopu][abcgilnprtv]) (?:[- ])
 	    ([0-9]{4})\b/x or next;
