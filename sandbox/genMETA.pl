@@ -83,7 +83,7 @@ optional_features:
     recommends:
       Text::CSV:                           1.32
       Text::CSV_PP:                        1.31
-      Text::CSV_XS:                        1.15
+      Text::CSV_XS:                        1.16
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -105,6 +105,6 @@ optional_features:
   opt_tools:
     description:        Spreadsheet tools
     recommends:
-      Tk:                                  804.032
+      Tk:                                  804.033
       Tk::NoteBook:                        0
       Tk::TableMatrix::Spreadsheet:        0

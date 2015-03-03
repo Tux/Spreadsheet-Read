@@ -247,10 +247,10 @@ sub check_minimum
 
     $reqv or croak "No minimal required version for perl";
     if ($reqv > 5.006) {
-	eval "use Test::MinimumVersion::Fast";
+	eval "use Test::MinimumVersion::Fast;";
 	}
     else {
-	eval "use Test::MinimumVersion";
+	eval "use Test::MinimumVersion;";
 	}
     print "Checking if $reqv is still OK as minimal version for $paths\n";
     # All other minimum version checks done in xt
