@@ -3,6 +3,7 @@
 \.tgz$
 \.git
 \.releaserc
+\.travis.yml
 blib/
 color.pl
 cover_db/
