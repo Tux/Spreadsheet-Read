@@ -10,3 +10,5 @@ perl:
   - "5.8"
 env:
   - AUTOMATED_TESTING=1
+install:
+  - cpanm --quiet Text::CSV_XS Spreadsheet::ReadSXC Spreadsheet::ParseExcel Spreadsheet::ParseXLSX
