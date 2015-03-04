@@ -11,4 +11,4 @@ perl:
 env:
   - AUTOMATED_TESTING=1
 install:
-  - cpanm --quiet Text::CSV_XS Spreadsheet::ReadSXC Spreadsheet::ParseExcel Spreadsheet::ParseXLSX
+  - cpanm --quiet Text::CSV_XS Spreadsheet::ReadSXC Spreadsheet::ParseExcel Spreadsheet::ParseXLSX || true
