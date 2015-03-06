@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [05-02-2015] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [06-03-2015] Copyright H.M.Brand 2005-2015
 
 use strict;
 use warnings;
 
-our $VERSION = "2.9";
+our $VERSION = "3.0";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -206,7 +206,8 @@ if ($opt_H) {
     eval q{
 	use HTML::Entities;
 	$opt_H = sub {
-	    encode_entities (decode ("utf-8", $_[0]));
+	    encode_entities (Encode::is_utf8 ($_[0]) ? $_[0] :
+		decode ("utf-8", $_[0]));
 	    };
 	};
     }
