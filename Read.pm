@@ -471,12 +471,12 @@ sub ReadData
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
 	    exists $oWkS->{MaxRow} and $sheet{maxrow} = $oWkS->{MaxRow} + 1;
 	    exists $oWkS->{MaxCol} and $sheet{maxcol} = $oWkS->{MaxCol} + 1;
-	    $oWkS->{MergedArea}    and $sheet{merged} = [
+	    $sheet{merged} = [
 		map  {  $_->[0] }
 		sort {  $a->[1] cmp $b->[1] }
 		map  {[ $_, pack "NNNN", @$_          ]}
 		map  {[ map { $_ + 1 } @{$_}[1,0,3,2] ]}
-		@{$oWkS->{MergedArea}} ];
+		@{$oWkS->get_merged_areas || []}];
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 	    if (exists $oWkS->{MinRow}) {
@@ -554,9 +554,9 @@ sub ReadData
 
 				type    => lc $oWkC->{Type},
 				enc     => $oWkC->{Code},
-				merged  => $oWkC->{Merged} || 0,
-				hidden  => $FmT->{Hidden}  || 0,
-				locked  => $FmT->{Lock}    || 0,
+				merged  => $oWkC->is_merged || 0,
+				hidden  => $FmT->{Hidden}   || 0,
+				locked  => $FmT->{Lock}     || 0,
 				format  => $fmi,
 				halign  => [ undef, qw( left center right
 					   fill justify ), undef,
@@ -1061,14 +1061,14 @@ and not in a way useful for the spreadsheet consumer.
 CSV does not support merged cells (though future implementations of CSV
 for the web might).
 
-None of [Spreadsheet::XLSX], [Spreadsheet::ParseExcel], and
-[Spreadsheet::ParseXLSX] mention merged cells in the documentation at
-all.
+The documentation of merged areas in [Spreadsheet::ParseExcel] and
+[Spreadsheet::ParseXLSX] can be found in [Spreadsheet::ParseExcel::Worksheet]
+and [Spreadsheet::ParseExcel::Cell].
 
-Both [Spreadsheet::ParseExcel] and [Spreadsheet::ParseXLSX] make the
-merge information available in their internal structures, but as it is
-not documented at all, these might be subject to change. This module
-just tries to return the information in a somewhat usable way.
+None of basic [Spreadsheet::XLSX], [Spreadsheet::ParseExcel], and
+[Spreadsheet::ParseXLSX] manual pages mention merged cells at all.
+
+This module just tries to return the information in a generic way.
 
 Given this spreadsheet as an example
 
