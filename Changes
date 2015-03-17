@@ -1,5 +1,6 @@
-0.59	- 27 Feb 2015, H.Merijn Brand
+0.59	- 17 Mar 2015, H.Merijn Brand
     - Minimal support (+ docs) for merged cells
+    - Make parser errors report at one level up
 
 0.58	- 11 Feb 2015, H.Merijn Brand
     * Remove perl recommendation from META as it breaks cpan clients

@@ -414,21 +414,24 @@ sub ReadData
 		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
 	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
 	$can{lc $parse_type} or croak "Parser for $parse_type is not installed";
-	my $oBook;
 	$debug and print STDERR "Opening $parse_type \$txt\n";
-	if ($io_ref) {
-	    $oBook = $parse_type eq "XLSX"
+	my $oBook = eval {
+	    $io_ref
+	      ? $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX/
 		? Spreadsheet::XLSX->new ($io_ref)
 		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($io_ref)
-		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($io_ref);
-	    }
-	else {
-	    $oBook = $parse_type eq "XLSX"
+		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($io_ref)
+	      : $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX/
 		? Spreadsheet::XLSX->new ($txt)
 		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($txt)
 		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
+	    };
+	unless ($oBook) {
+	    # cleanup will fail on folders with spaces.
+	    (my $msg = $@) =~ s/ at \S+ line \d+.*//s;
+	    croak "$parse_type parser cannot parse data: $msg";
 	    }
 	$debug > 8 and _dump (oBook => $oBook);
 	my @data = ( {
