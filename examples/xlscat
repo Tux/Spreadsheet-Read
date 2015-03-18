@@ -40,11 +40,11 @@ sub usage
 	"       -n [skip]   Number lines (prefix with column number)\n",
 	"                   optionally skip <skip> (header) lines\n",
 	"       -A          Show field attributes in ANSI escapes\n",
+	"       -h[#]       Show # header lines\n",
 	$is_grep ? (
 	"    Grep options:\n",
 	"       -i          Ignore case\n",
-	"       -w          Match whole words only\n",
-	"       -h[#]       Show # header lines\n") : (
+	"       -w          Match whole words only\n") : (
 	"    Output Index only:\n",
 	"       -i          Show sheet names and size only\n"),
 	"    Output CSV:\n",
@@ -85,7 +85,7 @@ my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_A = 0;		# Show field colors in ANSI escapes
 my $opt_H = 0;		# Output in HTML
-my $opt_h = 0;		# Number of header lines for grep
+my $opt_h = 0;		# Number of header lines for grep or -L
 my $opt_w = 0;		# Grep words
 my $clip  = 1;
 my $enc_i;		# Input  encoding
@@ -457,6 +457,7 @@ foreach my $si (1 .. $sc) {
 	unshift @w, length $data[-1][0][0];
 	unshift @align, "";
 	}
+    $opt_n = 0;
     for (@data) {
 	my ($row, $att) = @$_;
 	my @row = @$row;
@@ -474,6 +475,7 @@ foreach my $si (1 .. $sc) {
 		}
 	    }
 	line ("|" => @row);
+	++$opt_n == $opt_h and line ("+", map {"-"x$w[$_]} 0..$#row);
 	}
     }
 $opt_H and print "</body>\n</html>\n";
