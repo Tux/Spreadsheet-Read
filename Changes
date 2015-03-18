@@ -1,6 +1,7 @@
 0.59	- 18 Mar 2015, H.Merijn Brand
     - Minimal support (+ docs) for merged cells
     - Make parser errors report at one level up
+    - Don't select non-existing columns in xlscat
 
 0.58	- 11 Feb 2015, H.Merijn Brand
     * Remove perl recommendation from META as it breaks cpan clients

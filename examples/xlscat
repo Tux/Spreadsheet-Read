@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [06-03-2015] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [18-03-2015] Copyright H.M.Brand 2005-2015
 
 use strict;
 use warnings;
 
-our $VERSION = "3.0";
+our $VERSION = "3.1";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -378,7 +378,7 @@ foreach my $si (1 .. $sc) {
 		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
 	    defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
 	    } $c[0] .. $c[1];
-	exists $print{col} and @row = @row[@{$print{col}}];
+	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
 	    ! grep { defined $_ && $_ =~ $pattern } @row and next;
 	if ($opt_L) {
