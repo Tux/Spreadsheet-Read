@@ -12,6 +12,9 @@ use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("xlsx") or
     plan skip_all => "No M\$-Excel parser found";
 
+$parser eq "Spreadsheet::XLSX" and
+    plan skip_all => "No merged cell support in $parser";
+
 ok (my $ss = ReadData ("files/merged.xlsx", attr => 1)->[1], "Read merged xlsx");
 
 is ($ss->{attr}[1][1]{merged}, 0, "unmerged A1");

@@ -1,3 +1,6 @@
+0.60	- 28 Mar 2015, H.Merijn Brand
+    - No merged cell support in Spreadsheet::XLSX
+
 0.59	- 26 Mar 2015, H.Merijn Brand
     * Minimal support (+ docs) for merged cells
     * Make parser errors report at one level up
