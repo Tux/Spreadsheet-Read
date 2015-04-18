@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.60";
+our $VERSION = "0.61";
 sub  Version { $VERSION }
 
 use Carp;
@@ -742,7 +742,7 @@ module that does the actual spreadsheet scanning.
 For OpenOffice and/or LibreOffice this module uses Spreadsheet::ReadSXC
 
 For Microsoft Excel this module uses Spreadsheet::ParseExcel,
-Spreadsheet::ParseXLSX, or Spreadsheet::XLSX.
+Spreadsheet::ParseXLSX, or Spreadsheet::XLSX (not encouraged).
 
 For CSV this module uses Text::CSV_XS or Text::CSV_PP.
 
@@ -1283,6 +1283,9 @@ http://metacpan.org/release/Spreadsheet-ParseXLSX
 =item Spreadsheet::XLSX
 
 http://metacpan.org/release/Spreadsheet-XLSX
+
+This module is considered dead and deprecated. It is buggy and unmaintained.
+B<PLEASE> consider to use L</Spradsheet::ParseXLSX> instead.
 
 =item Spreadsheet::ReadSXC
 
