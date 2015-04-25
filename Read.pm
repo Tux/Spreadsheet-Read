@@ -956,7 +956,7 @@ Note that the indexes in the returned list are 0-based.
 C<row ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @row = cellrow ($book, $row)
+=item my @row = cellrow ($sheet, $row)
 
 =item my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
 
@@ -967,7 +967,7 @@ Note that the indexes in the returned list are 0-based.
 C<cellrow ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @rows = rows ($book)
+=item my @rows = rows ($sheet)
 
 =item my @rows = Spreadsheet::Read::rows ($book->[1])
 
