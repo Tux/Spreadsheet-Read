@@ -739,12 +739,12 @@ Spreadsheet::Read tries to transparently read *any* spreadsheet and
 return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 
-For OpenOffice and/or LibreOffice this module uses Spreadsheet::ReadSXC
+For OpenOffice and/or LibreOffice this module uses L<Spreadsheet::ReadSXC>
 
-For Microsoft Excel this module uses Spreadsheet::ParseExcel,
-Spreadsheet::ParseXLSX, or Spreadsheet::XLSX (not encouraged).
+For Microsoft Excel this module uses L<Spreadsheet::ParseExcel>,
+L<Spreadsheet::ParseXLSX>, or L<Spreadsheet::XLSX> (not encouraged).
 
-For CSV this module uses Text::CSV_XS or Text::CSV_PP.
+For CSV this module uses L<Text::CSV_XS> or L<Text::CSV_PP>.
 
 For SquirrelCalc there is a very simplistic built-in parser
 
