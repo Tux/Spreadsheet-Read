@@ -742,7 +742,7 @@ module that does the actual spreadsheet scanning.
 For OpenOffice and/or LibreOffice this module uses L<Spreadsheet::ReadSXC>
 
 For Microsoft Excel this module uses L<Spreadsheet::ParseExcel>,
-L<Spreadsheet::ParseXLSX>, or L<Spreadsheet::XLSX> (not encouraged).
+L<Spreadsheet::ParseXLSX>, or L<Spreadsheet::XLSX> (discouraged).
 
 For CSV this module uses L<Text::CSV_XS> or L<Text::CSV_PP>.
 
