@@ -17,7 +17,7 @@ is ($csv->[0]{sepchar},	",",			"{sepchar}");
 is ($csv->[0]{quote},	'"',			"{quote}");
 is ($csv->[1]{C3},      "C3",			"cell C3");
 
-ok ($csv = ReadData ("files/test_m.csv"),	"Read/Parse csv file (M$)");
+ok ($csv = ReadData ("files/test_m.csv"),	"Read/Parse csv file (;)");
 is ($csv->[0]{sepchar},	";",			"{sepchar}");
 is ($csv->[0]{quote},	'"',			"{quote}");
 is ($csv->[1]{C3},      "C3",			"cell C3");

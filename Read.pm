@@ -882,12 +882,12 @@ Set quote character for CSV. Default is C<">.
 
 =item dtfmt
 
-Set the format for M$Excel date fields that are set to use the default
+Set the format for MS-Excel date fields that are set to use the default
 date format. The default format in Excel is 'm-d-yy', which is both
 not year 2000 safe, nor very useful. The default is now 'yyyy-mm-dd',
 which is more ISO-like.
 
-Note that date formatting in M$Excel is not reliable at all, as it will
+Note that date formatting in MS-Excel is not reliable at all, as it will
 store/replace/change the date field separator in already stored formats
 if you change your locale settings. So the above mentioned default can
 be either "m-d-yy" OR "m/d/yy" depending on what that specific character
