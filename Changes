@@ -1,5 +1,6 @@
-0.61	- 19 Apr 2015, H.Merijn Brand
-    - Discourage Spreadsheet::XLSX
+0.61	- 13 Jun 2015, H.Merijn Brand
+    * Discourage Spreadsheet::XLSX
+    * A space is not an empty field in XLS
 
 0.60	- 30 Mar 2015, H.Merijn Brand
     * No merged cell support in Spreadsheet::XLSX

@@ -490,7 +490,7 @@ sub ReadData
 			foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
 			    my $oWkC = $oWkS->{Cells}[$r][$c] or next;
 			    defined (my $val = $oWkC->{Val})  or next;
-			    $val =~ m/\S/ or next;
+			    $val eq "" and next;
 			    $r > $mr and $mr = $r;
 			    $c > $mc and $mc = $c;
 			    }
