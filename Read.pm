@@ -56,7 +56,7 @@ my %can = map { $_->[0] => 0 } @parsers;
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
-    eval "require $mod; qq{$vsn} and ${mod}->VERSION ($vsn); \$can{\$flag} = '$mod'";
+    eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'";
     #$@ && $@ !~ m{Can't locate} and warn "$mod: $@\n";
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
