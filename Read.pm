@@ -414,20 +414,21 @@ sub ReadData
     if ($opt{parser} ? ($_parser = _parser ($opt{parser})) =~ m/^xlsx?$/
 		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
 	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
-	$can{lc $parse_type} or croak "Parser for $parse_type is not installed";
+	my $parser  = $can{lc $parse_type} or
+	    croak "Parser for $parse_type is not installed";
 	$debug and print STDERR "Opening $parse_type \$txt\n";
 	my $oBook = eval {
 	    $io_ref
 	      ? $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX/
-		? Spreadsheet::XLSX->new ($io_ref)
-		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($io_ref)
-		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($io_ref)
+		? $parser->new ($io_ref)
+		: $parser->new (%parser_opts)->parse ($io_ref)
+		: $parser->new (%parser_opts)->Parse ($io_ref)
 	      : $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX/
-		? Spreadsheet::XLSX->new ($txt)
-		: Spreadsheet::ParseXLSX->new (%parser_opts)->parse ($txt)
-		: Spreadsheet::ParseExcel->new (%parser_opts)->Parse ($txt);
+		? $parser->new ($txt)
+		: $parser->new (%parser_opts)->parse ($txt)
+		: $parser->new (%parser_opts)->Parse ($txt);
 	    };
 	unless ($oBook) {
 	    # cleanup will fail on folders with spaces.
@@ -438,11 +439,7 @@ sub ReadData
 	my @data = ( {
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
-	    version	=> $parse_type eq "XLSX"
-			 ? $can{xlsx} =~ m/::XLSX/
-			 ? $Spreadsheet::XLSX::VERSION
-			 : $Spreadsheet::ParseXLSX::VERSION
-			 : $Spreadsheet::ParseExcel::VERSION,
+	    version	=> $can{lc $parse_type}->VERSION,
 	    error	=> undef,
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
