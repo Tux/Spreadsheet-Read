@@ -52,7 +52,11 @@ my @parsers = (
     [ ios  => "IO::Scalar",                ""      ],
     [ dmp  => "Data::Peek",                ""      ],
     );
-my %can = map { $_->[0] => 0 } @parsers;
+my %can = map {
+    my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
+    $preset and eval "require $preset";
+    $_->[0] => $preset;
+    } @parsers;
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
@@ -835,6 +839,13 @@ C<ods>, C<openoffice>, C<libreoffice>) C<xls> (or C<excel>), and C<xlsx>
 
 When parsing streams, instead of files, it is highly recommended to pass
 this option.
+
+Spreadsheet::Read supoorts several underlying parsers per spreadsheet
+type. It will try those from most favored to least favored. When you
+have a good reason to freper a different parser, you can set that in
+environment variables. The other options then will not be tested for:
+
+ env SPREADSHEET_READ_CSV=Text::CSV_PP ...
 
 =item cells
 
