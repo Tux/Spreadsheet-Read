@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.61";
+our $VERSION = "0.62";
 sub  Version { $VERSION }
 
 use Carp;
@@ -385,16 +385,16 @@ sub ReadData
 	close $in;
 
 	for (@{$data[1]{cell}}) {
-	    defined $_ or $_ = [];
+	    defined or $_ = [];
 	    }
 	return _clipsheets \%opt, [ @data ];
 	}
 
     # From /etc/magic: Microsoft Office Document
     if ($io_txt && _parser ($opt{parser}) !~ m/^xlsx?$/ &&
-		    $txt =~ m/^(\376\067\0\043
+		    $txt =~ m{^(\376\067\0\043
 			       |\320\317\021\340\241\261\032\341
-			       |\333\245-\0\0\0)/x) {
+			       |\333\245-\0\0\0)}x) {
 	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
 	my $tmpfile;
 	if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
@@ -581,7 +581,7 @@ sub ReadData
 		    }
 		}
 	    for (@{$sheet{cell}}) {
-		defined $_ or $_ = [];
+		defined or $_ = [];
 		}
 	    push @data, { %sheet };
 #	    $data[0]{sheets}++;
@@ -646,7 +646,7 @@ sub ReadData
 	    # r67c7 = [P2L] 2*(1000*r67c5-60)
 	    }
 	for (@{$data[1]{cell}}) {
-	    defined $_ or $_ = [];
+	    defined or $_ = [];
 	    }
 	return _clipsheets \%opt, [ @data ];
 	}
@@ -717,7 +717,7 @@ sub ReadData
 			}
 		    }
 		for (@{$sheet{cell}}) {
-		    defined $_ or $_ = [];
+		    defined or $_ = [];
 		    }
 		$debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 		push @data, { %sheet };
@@ -733,6 +733,7 @@ sub ReadData
 
 1;
 
+__END__
 =head1 DESCRIPTION
 
 Spreadsheet::Read tries to transparently read *any* spreadsheet and
@@ -906,29 +907,6 @@ parser.
 All other attributes/options will be passed to the underlying parser if
 that parser supports attributes.
 
-=back
-
-=head2 Using CSV
-
-In case of CSV parsing, C<ReadData ()> will use the first line of the file
-to auto-detect the separation character if the first argument is a file and
-both C<sep> and C<quote> are not passed as attributes. Text::CSV_XS (or
-Text::CSV_PP) is able to automatically detect and use C<\r> line endings).
-
-CSV can parse streams too, but be sure to pass C<sep> and/or C<quote> if
-these do not match the default C<,> and C<">.
-
-When an error is found in the CSV, it is automatically reported (to STDERR).
-The structure will store the error in C<< $ss->[0]{error} >> as anonymous
-list returned by C<< $csv->error_diag >>. See Text::CSV_XS for documentation.
-
- my $ss = ReadData ("bad.csv");
- $ss->[0]{error} and say $ss->[0]{error}[1];
-
-=head2 Functions
-
-=over 4
-
 =item my $cell = cr2cell (col, row)
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
@@ -999,6 +977,23 @@ C<Version ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
 =back
+
+=head2 Using CSV
+
+In case of CSV parsing, C<ReadData ()> will use the first line of the file
+to auto-detect the separation character if the first argument is a file and
+both C<sep> and C<quote> are not passed as attributes. Text::CSV_XS (or
+Text::CSV_PP) is able to automatically detect and use C<\r> line endings.
+
+CSV can parse streams too, but be sure to pass C<sep> and/or C<quote> if
+these do not match the default C<,> and C<">.
+
+When an error is found in the CSV, it is automatically reported (to STDERR).
+The structure will store the error in C<< $ss->[0]{error} >> as anonymous
+list returned by C<< $csv->error_diag >>. See Text::CSV_XS for documentation.
+
+ my $ss = ReadData ("bad.csv");
+ $ss->[0]{error} and say $ss->[0]{error}[1];
 
 =head2 Cell Attributes
 

@@ -1,3 +1,6 @@
+0.62	- 20 Jun 2015, H.Merijn Brand
+    * Fix documentation structure
+
 0.61	- 13 Jun 2015, H.Merijn Brand
     * Discourage Spreadsheet::XLSX
     * A space is not an empty field in XLS
