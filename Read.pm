@@ -38,19 +38,20 @@ use File::Temp   qw( );
 use Data::Dumper;
 
 my @parsers = (
-    [ csv  => "Text::CSV_XS",              "0.71"  ],
-    [ csv  => "Text::CSV_PP",              "1.17"  ],
-    [ csv  => "Text::CSV",                 "1.17"  ],
-    [ ods  => "Spreadsheet::ReadSXC",      "0.20"  ],
-    [ sxc  => "Spreadsheet::ReadSXC",      "0.20"  ],
-    [ xls  => "Spreadsheet::ParseExcel",   "0.34"  ],
-    [ xlsx => "Spreadsheet::ParseXLSX",    "0.13"  ],
-    [ xlsx => "Spreadsheet::XLSX",         "0.13"  ],
-    [ prl  => "Spreadsheet::Perl",         ""      ],
+    [ csv  => "Text::CSV_XS",				"0.71"	],
+    [ csv  => "Text::CSV_PP",				"1.17"	],
+    [ csv  => "Text::CSV",				"1.17"	],
+    [ ods  => "Spreadsheet::ReadSXC",			"0.20"	],
+    [ sxc  => "Spreadsheet::ReadSXC",			"0.20"	],
+    [ xls  => "Spreadsheet::ParseExcel",		"0.34"	],
+    [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"	],
+    [ xlsx => "Spreadsheet::XLSX",			"0.13"	],
+    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v0.36"	],
+    [ prl  => "Spreadsheet::Perl",			""	],
 
     # Helper modules
-    [ ios  => "IO::Scalar",                ""      ],
-    [ dmp  => "Data::Peek",                ""      ],
+    [ ios  => "IO::Scalar",				""	],
+    [ dmp  => "Data::Peek",				""	],
     );
 my %can = map {
     my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
@@ -424,12 +425,12 @@ sub ReadData
 	my $oBook = eval {
 	    $io_ref
 	      ? $parse_type eq "XLSX"
-		? $can{xlsx} =~ m/::XLSX/
+		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($io_ref)
 		: $parser->new (%parser_opts)->parse ($io_ref)
 		: $parser->new (%parser_opts)->Parse ($io_ref)
 	      : $parse_type eq "XLSX"
-		? $can{xlsx} =~ m/::XLSX/
+		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($txt)
 		: $parser->new (%parser_opts)->parse ($txt)
 		: $parser->new (%parser_opts)->Parse ($txt);
@@ -457,8 +458,10 @@ sub ReadData
 	    );
 	$oBook->{FormatStr}{$_} = $def_fmt{$_} for keys %def_fmt;
 	my $oFmt = $parse_type eq "XLSX"
-	    ? $can{xlsx} =~ m/::XLSX/
+	    ? $can{xlsx} =~ m/::XLSX$/
 	    ? Spreadsheet::XLSX::Fmt2007->new
+	    : $can{xlsx} =~ m/::XLSX/
+	    ? Spreadsheet::XLSX::Reader::LibXML::FmtDefault->new
 	    : Spreadsheet::ParseExcel::FmtDefault->new
 	    : Spreadsheet::ParseExcel::FmtDefault->new;
 
