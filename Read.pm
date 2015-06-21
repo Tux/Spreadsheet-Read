@@ -843,9 +843,9 @@ C<ods>, C<openoffice>, C<libreoffice>) C<xls> (or C<excel>), and C<xlsx>
 When parsing streams, instead of files, it is highly recommended to pass
 this option.
 
-Spreadsheet::Read supoorts several underlying parsers per spreadsheet
+Spreadsheet::Read supports several underlying parsers per spreadsheet
 type. It will try those from most favored to least favored. When you
-have a good reason to freper a different parser, you can set that in
+have a good reason to prefer a different parser, you can set that in
 environment variables. The other options then will not be tested for:
 
  env SPREADSHEET_READ_CSV=Text::CSV_PP ...
