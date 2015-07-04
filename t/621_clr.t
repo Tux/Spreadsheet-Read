@@ -3,13 +3,15 @@
 use strict;
 use warnings;
 
+BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::XLSX"; }
+
 my     $tests = 257;
 use     Test::More;
 require Test::NoWarnings;
 
 use     Spreadsheet::Read;
 Spreadsheet::Read::parses ("xlsx") or
-    plan skip_all => "No M\$-Excel parser found";
+    plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_XLSX}";
 
 my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");

@@ -9,7 +9,7 @@ require Test::NoWarnings;
 
 use     Spreadsheet::Read;
 Spreadsheet::Read::parses ("xlsx") or
-    plan skip_all => "No M\$-Excel parser found";
+    plan skip_all => "No MS-Excel parser found";
 
 my $xls;
 ok ($xls = ReadData ("files/perc.xlsx", attr => 1), "Excel Percentage testcase");

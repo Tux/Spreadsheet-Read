@@ -55,8 +55,11 @@ my @parsers = (
     );
 my %can = map {
     my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
-    $preset and eval "require $preset";
-    $_->[0] => $preset;
+    if ($preset) {
+	eval "require $preset";
+	$@ and $preset = "!$preset";
+	}
+    $_->[0] => $preset || "";
     } @parsers;
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
@@ -131,6 +134,7 @@ sub _parser
 sub parses
 {
     my $type = _parser (shift)	or  return 0;
+    $can{$type} =~ m/^!/ and return 0;
     return $can{$type};
     } # parses
 
@@ -275,6 +279,89 @@ sub _xls_fill
     $bg < 8 || $bg > 63		and return undef; # see Workbook.pm#106
     return _xls_color ($bg);
     } # _xls_fill
+
+sub _xlsx_libxml
+{
+    my $oBook = shift;
+    my @names = @{$oBook->get_worksheet_names};
+    $oBook->{SheetCount} = scalar @names;
+    $oBook->{Worksheet}  = [ ];
+    my %mm;
+    while (my $wks = $oBook->worksheet) {
+	push @{$oBook->{Worksheet}}, $wks;
+	$wks->{Cells}  = [];
+	$wks->{Name}   = shift @names;
+	($wks->{MinRow}, $wks->{MaxRow}) = $wks->row_range;
+	($wks->{MinCol}, $wks->{MaxCol}) = $wks->col_range;
+	foreach my $r ($wks->{MinRow} .. $wks->{MaxRow}) {
+	    foreach my $c ($wks->{MinCol} .. $wks->{MaxCol}) {
+		my $cell = $wks->get_cell ($r, $c);
+		if (defined $cell) {
+		    $cell->{Val}    = $cell->unformatted;
+		    $cell->{Merged} = $cell->is_merged and
+			$mm{$cell->{cell_merge}}{"$r:$c"} = $cell;
+		    $cell->{Type}   = $cell->type;
+		    $cell->{Hidden} = 0;#$cell->is_hidden; NYI
+		    }
+		else {
+		    $cell = {
+			Val    => undef,
+			Type   => "Undef",
+			Merged => 0,
+			Hidden => 0,
+			};
+		    }
+		$wks->{Cells}[$r][$c] = $cell;
+		}
+	    }
+	# Spreadsheet::XLSX::Reader::LibXML returns all other cells in range as undef
+	foreach my $mm (values %mm) {
+	    my @mr = sort keys %$mm;
+	    foreach my $rc (@mr) {
+		defined $mm->{$rc}{Val} or $mm->{$rc}{Val} = "";
+		}
+	    }
+	}
+    *Spreadsheet::XLSX::Reader::LibXML::Cell::Value = sub {
+	my $cell = shift;
+	$cell->value;
+	};
+    *WorksheetInstance::get_merged_areas = sub {
+	my $mm = shift->_merge_map or return;
+	# [ undef,
+	#   [ undef,
+	#     undef,
+	#     'B1:C2',
+	#     'B1:C2'
+	#     ],
+	#   [ undef,
+	#     'A2:A3',
+	#     'B1:C2',
+	#     'B1:C2'
+	#     ],
+	#   [ undef,
+	#     'A2:A3'
+	#     ]
+	#   ]
+	# ->
+	# [ [ 1, 0,	# A2:
+	#     2, 0,	#  A3
+	#     ],
+	#   [ 0, 1,	# B1:
+	#     1, 2,	#  C2
+	#     ]
+	#   ]
+	my %r;
+	for (@$mm) { $_ && $r{$_}++ for @$_ };
+	keys %r or return;
+	my @r;
+	foreach my $ma (keys %r) {
+	    my ($ul, $br) = split m/:/ => $ma or return;
+	    push @r, [ reverse map { $_ - 1 } map { cell2cr ($_) } $br, $ul ];
+	    }
+	return \@r;
+	};
+    } # _xlsx_libxml
 
 sub ReadData
 {
@@ -441,6 +528,9 @@ sub ReadData
 	    croak "$parse_type parser cannot parse data: $msg";
 	    }
 	$debug > 8 and _dump (oBook => $oBook);
+
+	$parser =~ m/LibXML$/ and _xlsx_libxml ($oBook);
+
 	my @data = ( {
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
@@ -477,7 +567,9 @@ sub ReadData
 		merged  => [],
 		);
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
+	    exists $oWkS->{MinRow} and $sheet{minrow} = $oWkS->{MinRow} + 1;
 	    exists $oWkS->{MaxRow} and $sheet{maxrow} = $oWkS->{MaxRow} + 1;
+	    exists $oWkS->{MinCol} and $sheet{mincol} = $oWkS->{MinCol} + 1;
 	    exists $oWkS->{MaxCol} and $sheet{maxcol} = $oWkS->{MaxCol} + 1;
 	    $sheet{merged} = [
 		map  {  $_->[0] }
@@ -504,9 +596,10 @@ sub ReadData
 		foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
 		    foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
 			my $oWkC = $oWkS->{Cells}[$r][$c] or next;
-			defined (my $val = $oWkC->{Val})  or next;
+			#defined (my $val = $oWkC->{Val}) or next;
+			my $val = $oWkC->{Val};
 			my $cell = cr2cell ($c + 1, $r + 1);
-			$opt{rc}    and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
+			$opt{rc} and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
 
 			my $fmt;
 			my $FmT = $oWkC->{Format};
@@ -548,9 +641,9 @@ sub ReadData
 			    }
 			defined $fmt and $fmt =~ s/\\//g;
 			$opt{cells} and	# Formatted value
-			    $sheet{$cell} = $FmT && exists $def_fmt{$FmT->{FmtIdx}}
+			    $sheet{$cell} = defined $val ? $FmT && exists $def_fmt{$FmT->{FmtIdx}}
 				? $oFmt->ValFmt ($oWkC, $oBook)
-				: $oWkC->Value;
+				: $oWkC->Value : undef;
 			if ($opt{attr}) {
 			    my $FnT = $FmT->{Font};
 			    my $fmi = $FmT->{FmtIdx}
@@ -562,8 +655,8 @@ sub ReadData
 
 				type    => lc $oWkC->{Type},
 				enc     => $oWkC->{Code},
-				merged  => $oWkC->is_merged || 0,
-				hidden  => $FmT->{Hidden}   || 0,
+				merged  => (defined $oWkC->{Merged} ? $oWkC->{Merged} : $oWkC->is_merged) || 0,
+				hidden  => (defined $oWkC->{Hidden} ? $oWkC->{Hidden} : $FmT->{Hidden})   || 0,
 				locked  => $FmT->{Lock}     || 0,
 				format  => $fmi,
 				halign  => [ undef, qw( left center right
@@ -580,6 +673,7 @@ sub ReadData
 				fgcolor => _xls_color ($FnT->{Color}),
 				bgcolor => _xls_fill  (@{$FmT->{Fill}}),
 				};
+			    #_dump "cell", $sheet{attr}[$c + 1][$r + 1];
 			    }
 			}
 		    }
@@ -747,7 +841,8 @@ module that does the actual spreadsheet scanning.
 For OpenOffice and/or LibreOffice this module uses L<Spreadsheet::ReadSXC>
 
 For Microsoft Excel this module uses L<Spreadsheet::ParseExcel>,
-L<Spreadsheet::ParseXLSX>, or L<Spreadsheet::XLSX> (discouraged).
+L<Spreadsheet::ParseXLSX>, L<Spreadsheet::XLSX::Reader::LibXML>, or
+L<Spreadsheet::XLSX> (discouraged).
 
 For CSV this module uses L<Text::CSV_XS> or L<Text::CSV_PP>.
 
@@ -1285,6 +1380,12 @@ http://metacpan.org/release/Spreadsheet-ParseExcel
 =item Spreadsheet::ParseXLSX
 
 http://metacpan.org/release/Spreadsheet-ParseXLSX
+
+=item Spreadsheet::XLSX::Reader::LibXML
+
+http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML
+
+Work in progress. Much is relying on undocumented internals.
 
 =item Spreadsheet::XLSX
 

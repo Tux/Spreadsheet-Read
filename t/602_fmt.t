@@ -9,7 +9,7 @@ require Test::NoWarnings;
 
 use     Spreadsheet::Read;
 Spreadsheet::Read::parses ("xlsx") or
-    plan skip_all => "No M\$-Excel parser found";
+    plan skip_all => "No MS-Excel parser found";
 
 my $xls;
 ok ($xls = ReadData ("files/attr.xlsx", attr => 1), "Excel Attributes testcase");
@@ -24,7 +24,7 @@ SKIP: {
 
     # The return value for the invisible part of merged cells differs for
     # the available parsers
-    my $mcrv = $parser =~ m/::XLSX/ ? undef : "";
+    my $mcrv = $parser =~ m/::XLSX$/ ? undef : "";
 
     is ($fmt->{B2},		"merged",	"Merged cell left    formatted");
     is ($fmt->{C2},		$mcrv,		"Merged cell right   formatted");

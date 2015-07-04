@@ -10,7 +10,7 @@ require Test::NoWarnings;
 use     Spreadsheet::Read;
 
 my $parser = Spreadsheet::Read::parses ("xlsx") or
-    plan skip_all => "No M\$-Excel parser found";
+    plan skip_all => "No MS-Excel parser found";
 
 $parser eq "Spreadsheet::XLSX" and
     plan skip_all => "No merged cell support in $parser";
