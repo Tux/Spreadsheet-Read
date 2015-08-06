@@ -352,7 +352,7 @@ sub _xlsx_libxml
 	#     ]
 	#   ]
 	my %r;
-	for (@$mm) { $_ && $r{$_}++ for @$_ };
+	for (@$mm) { $_ && $r{$_}++ for @$_ }
 	keys %r or return;
 	my @r;
 	foreach my $ma (keys %r) {
