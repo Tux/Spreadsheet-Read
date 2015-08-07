@@ -1,7 +1,8 @@
-0.62	- 04 Jul 2015, H.Merijn Brand
+0.62	- 07 Aug 2015, H.Merijn Brand
     * Fix documentation structure
     * Test all supported parsers (not just the preferred one)
     * Basic support for Spreadsheet::XLSX::Reader::LibXML (work in progress)
+    * Copy example file if link fails (Alan Berndt)
 
 0.61	- 13 Jun 2015, H.Merijn Brand
     * Discourage Spreadsheet::XLSX
