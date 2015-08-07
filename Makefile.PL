@@ -5,11 +5,12 @@ require 5.006;
 use ExtUtils::MakeMaker;
 use File::Copy;
 
-sub link_or_copy {
-  my ($source, $dest) = @_;
+sub link_or_copy
+{
+    my ($source, $dest) = @_;
 
-  link($source, $dest) or copy($source, $dest);
-}
+    link ($source, $dest) or copy ($source, $dest);
+    } # link_or_copy
 
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
