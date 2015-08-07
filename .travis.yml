@@ -24,7 +24,6 @@ install:
   - cpanm --quiet Spreadsheet::ParseXLSX            || true
   - cpanm --quiet Spreadsheet::XLSX                 || true
   - cpanm --quiet Spreadsheet::XLSX::Reader::LibXML || true
-  - cpanm --quiet Spreadsheet::Perl                 || true
 notifications:
   irc:
     channels:
