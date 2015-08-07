@@ -3,6 +3,7 @@
     * Test all supported parsers (not just the preferred one)
     * Basic support for Spreadsheet::XLSX::Reader::LibXML (work in progress)
     * Copy example file if link fails (Alan Berndt)
+    * Add a contributing guide
 
 0.61	- 13 Jun 2015, H.Merijn Brand
     * Discourage Spreadsheet::XLSX
