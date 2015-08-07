@@ -14,6 +14,8 @@ perl:
 env:
   - AUTOMATED_TESTING=1
 install:
+  - cpanm --quiet Test::More                        || true
+  - cpanm --quiet Test::NoWarnings                  || true
   - cpanm --quiet Data::Peek                        || true
   - cpanm --quiet Text::CSV_XS                      || true
   - cpanm --quiet Text::CSV                         || true
