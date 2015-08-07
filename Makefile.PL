@@ -3,10 +3,17 @@ use strict;
 require 5.006;
 
 use ExtUtils::MakeMaker;
+use File::Copy;
+
+sub link_or_copy {
+  my ($source, $dest) = @_;
+
+  link($source, $dest) or copy($source, $dest);
+}
 
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
-    -f "examples/xlsgrep" or link "examples/xlscat", "examples/xlsgrep";
+    -f "examples/xlsgrep" or link_or_copy "examples/xlscat", "examples/xlsgrep";
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
