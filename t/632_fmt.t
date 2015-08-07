@@ -25,11 +25,7 @@ ok (my $fmt = $xls->[$xls->[0]{sheet}{Format}],	"format");
 my $mcrv = "";
 
 is ($fmt->{B2},		"merged",	"Merged cell left    formatted");
-SKIP: {
-    $parser->VERSION le "v0.38.6" && !defined $fmt->{C2} and
-	skip "$parser $xls->[0]{version} right-merged is WorkInProgress", 1;
-    is ($fmt->{C2},		$mcrv,		"Merged cell right   formatted");
-    }
+is ($fmt->{C2},		$mcrv,		"Merged cell right   formatted");
 is ($fmt->{cell}[2][2],	"merged",	"Merged cell left  unformatted");
 is ($fmt->{cell}[3][2],	$mcrv,		"Merged cell right unformatted");
 is ($fmt->{attr}[2][2]{merged}, 1,	"Merged cell left  merged");
@@ -42,8 +38,9 @@ is ($fmt->{attr}[2][3]{hidden}, 0,	"Unlocked cell not hidden");
 
 is ($fmt->{B4},		"hidden",	"Hidden cell");
 SKIP: {
-    $parser->VERSION le "v0.38.6" and
-	skip "$parser $xls->[0]{version} does not support 'hidden' attributes", 1;
+    my $hidden = $fmt->{attr}[2][4]{hidden};
+    $hidden or
+	skip "$parser $xls->[0]{version} does not yet support 'hidden' attributes", 1;
     is ($fmt->{attr}[2][4]{hidden}, 1,	"Hidden cell hidden");
     }
 is ($fmt->{attr}[2][4]{merged}, 0,	"Hidden cell not merged");
@@ -56,8 +53,8 @@ is ($fmt->{cell}[1][1],  $fmt->{A1},	"Formatted valued A1");
 is ($fmt->{cell}[1][10], $fmt->{A10},	"Formatted valued A10"); # String
 foreach my $r (2 .. 9, 11, 12) {
     SKIP: {
-	$parser->VERSION le "v0.38.6" && $fmt->{"A$r"} eq "12345" and
-	    skip "$parser $xls->[0]{version} format # ?/? is WorkInProgress", 1;
+	$fmt->{"A$r"} eq "12345" and
+	    skip "$parser $xls->[0]{version} does not yet support format # ?/?", 1;
 	isnt ($fmt->{cell}[1][$r], $fmt->{"A$r"},	"Unformatted valued A$r");
 	}
     }

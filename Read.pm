@@ -38,20 +38,20 @@ use File::Temp   qw( );
 use Data::Dumper;
 
 my @parsers = (
-    [ csv  => "Text::CSV_XS",				"0.71"	],
-    [ csv  => "Text::CSV_PP",				"1.17"	],
-    [ csv  => "Text::CSV",				"1.17"	],
-    [ ods  => "Spreadsheet::ReadSXC",			"0.20"	],
-    [ sxc  => "Spreadsheet::ReadSXC",			"0.20"	],
-    [ xls  => "Spreadsheet::ParseExcel",		"0.34"	],
-    [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"	],
-    [ xlsx => "Spreadsheet::XLSX",			"0.13"	],
-    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v0.36"	],
-    [ prl  => "Spreadsheet::Perl",			""	],
+    [ csv  => "Text::CSV_XS",				"0.71"		],
+    [ csv  => "Text::CSV_PP",				"1.17"		],
+    [ csv  => "Text::CSV",				"1.17"		],
+    [ ods  => "Spreadsheet::ReadSXC",			"0.20"		],
+    [ sxc  => "Spreadsheet::ReadSXC",			"0.20"		],
+    [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
+    [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"		],
+    [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
+    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v0.38.8"	],
+    [ prl  => "Spreadsheet::Perl",			""		],
 
     # Helper modules
-    [ ios  => "IO::Scalar",				""	],
-    [ dmp  => "Data::Peek",				""	],
+    [ ios  => "IO::Scalar",				""		],
+    [ dmp  => "Data::Peek",				""		],
     );
 my %can = map {
     my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
