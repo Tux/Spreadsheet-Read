@@ -14,9 +14,15 @@ perl:
 env:
   - AUTOMATED_TESTING=1
 install:
-  - cpanm --quiet Text::CSV_XS            || true
-  - cpanm --quiet Spreadsheet::ReadSXC    || true
-  - cpanm --quiet Spreadsheet::ParseExcel || true
+  - cpanm --quiet Data::Peek                        || true
+  - cpanm --quiet Text::CSV_XS                      || true
+  - cpanm --quiet Text::CSV                         || true
+  - cpanm --quiet Spreadsheet::ReadSXC              || true
+  - cpanm --quiet Spreadsheet::ParseExcel           || true
+  - cpanm --quiet Spreadsheet::ParseXLSX            || true
+  - cpanm --quiet Spreadsheet::XLSX                 || true
+  - cpanm --quiet Spreadsheet::XLSX::Reader::LibXML || true
+  - cpanm --quiet Spreadsheet::Perl                 || true
 notifications:
   irc:
     channels:
