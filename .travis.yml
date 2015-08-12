@@ -14,7 +14,7 @@ perl:
 env:
   - AUTOMATED_TESTING=1
 before_install:
-  - brew install cpanm
+  - brew install cpanm                              || true
 install:
   - cpanm --quiet Test::More                        || true
   - cpanm --quiet Test::NoWarnings                  || true
