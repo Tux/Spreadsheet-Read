@@ -506,8 +506,9 @@ sub ReadData
     if ($opt{parser} ? ($_parser = _parser ($opt{parser})) =~ m/^xlsx?$/
 		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
 	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
-	my $parser  = $can{lc $parse_type} or
+	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
+	my $xlsx_libxml = $parser =~ m/LibXML$/;
 	$debug and print STDERR "Opening $parse_type \$txt\n";
 	my $oBook = eval {
 	    $io_ref
@@ -529,7 +530,7 @@ sub ReadData
 	    }
 	$debug > 8 and _dump (oBook => $oBook);
 
-	$parser =~ m/LibXML$/ and _xlsx_libxml ($oBook);
+	$xlsx_libxml and _xlsx_libxml ($oBook);
 
 	my @data = ( {
 	    type	=> lc $parse_type,
@@ -618,6 +619,14 @@ sub ReadData
 			    }
 			exists $FmT->{Fill} or $FmT->{Fill} = [ 0 ];
 			exists $FmT->{Font} or $FmT->{Font} = undef;
+			if ($xlsx_libxml and
+			     ref $oWkC eq "Spreadsheet::XLSX::Reader::LibXML::Cell" and
+			     my $style = $oWkC->get_fill) {
+			    if (my $pf = $style->{patternFill}) {
+				#defined $pf->{fgColor}{indexed} and $FmT->{Font}{Color} =   $pf->{fgColor}{indexed};
+				#defined $pf->{bgColor}{indexed} and $FmT->{Fill}        = [ $pf->{bgColor}{indexed} ];
+				}
+			    }
 
 			unless (defined $fmt) {
 			    $fmt = $FmT->{FmtIdx}
