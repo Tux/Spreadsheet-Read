@@ -1,3 +1,6 @@
+0.63	- 21 Aug 2015, H.Merijn Brand
+    * Guard against negative MinRow in XLSX
+
 0.62	- 16 Aug 2015, H.Merijn Brand
     * Fix documentation structure
     * Test all supported parsers (not just the preferred one)

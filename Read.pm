@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.62";
+our $VERSION = "0.63";
 sub  Version { $VERSION }
 
 use Carp;
@@ -293,6 +293,8 @@ sub _xlsx_libxml
 	$wks->{Name}   = shift @names;
 	($wks->{MinRow}, $wks->{MaxRow}) = $wks->row_range;
 	($wks->{MinCol}, $wks->{MaxCol}) = $wks->col_range;
+	$wks->{MinRow} < 0 and $wks->{MinRow} = 0;
+	$wks->{MinCol} < 0 and $wks->{MinCol} = 0;
 	foreach my $r ($wks->{MinRow} .. $wks->{MaxRow}) {
 	    foreach my $c ($wks->{MinCol} .. $wks->{MaxCol}) {
 		my $cell = $wks->get_cell ($r, $c);
