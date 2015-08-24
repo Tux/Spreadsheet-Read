@@ -330,8 +330,8 @@ sub _xlsx_libxml
 	};
     *WorksheetInstance::get_merged_areas = sub {
 	my $wi = shift or return;
-	$wi->can ("_merge_map") or return;
-	my $mm = $wi->_merge_map or return;
+	my $mm = eval { $wi->_get_merge_map } ||
+		 eval { $wi->_merge_map     } or return;
 	# [ undef,
 	#   [ undef,
 	#     undef,

@@ -13,9 +13,10 @@ use     Spreadsheet::Read;
 
 my $parser = Spreadsheet::Read::parses ("xlsx") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_XLSX}";
+my $pv = $parser->VERSION;
 
-$parser eq "Spreadsheet::XLSX" and
-    plan skip_all => "No merged cell support in $parser";
+$pv le "v0.38.12" and
+    plan skip_all => "No reliable merged cell support in version $parser";
 
 ok (my $ss = ReadData ("files/merged.xlsx", attr => 1)->[1], "Read merged xlsx");
 
