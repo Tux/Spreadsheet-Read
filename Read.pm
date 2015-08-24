@@ -913,37 +913,40 @@ the sheets when accessing them by name:
 
 =head2 Functions
 
-=over 2
+=head3 ReadData
 
-=item my $book = ReadData ($source [, option => value [, ... ]]);
+ my $book = ReadData ($source [, option => value [, ... ]]);
 
-=item my $book = ReadData ("file.csv", sep => ',', quote => '"');
+ my $book = ReadData ("file.csv", sep => ',', quote => '"');
 
-=item my $book = ReadData ("file.xls", dtfmt => "yyyy-mm-dd");
+ my $book = ReadData ("file.xls", dtfmt => "yyyy-mm-dd");
 
-=item my $book = ReadData ("file.ods");
+ my $book = ReadData ("file.ods");
 
-=item my $book = ReadData ("file.sxc");
+ my $book = ReadData ("file.sxc");
 
-=item my $book = ReadData ("content.xml");
+ my $book = ReadData ("content.xml");
 
-=item my $book = ReadData ($content);
+ my $book = ReadData ($content);
 
-=item my $book = ReadData ($fh, parser => "xls");
+ my $book = ReadData ($fh, parser => "xls");
 
 Tries to convert the given file, string, or stream to the data
 structure described above.
 
 Processing Excel data from a stream or content is supported through
-a File::Temp temporary file or IO::Scalar when available.
+a L<File::Temp|https://metacpan.org/release/File-Temp> temporary file or
+L<IO::Scalar|https://metacpan.org/release/IO-Scalar> when available.
 
-ReadSXC does preserve sheet order as of version 0.20.
+L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>
+does preserve sheet order as of version 0.20.
 
 Currently supported options are:
 
 =over 2
 
 =item parser
+X<parser>
 
 Force the data to be parsed by a specific format. Possible values are
 C<csv>, C<prl> (or C<perl>), C<sc> (or C<squirelcalc>), C<sxc> (or C<oo>,
@@ -961,8 +964,9 @@ environment variables. The other options then will not be tested for:
  env SPREADSHEET_READ_CSV=Text::CSV_PP ...
 
 =item cells
+X<cells>
 
-Control the generation of named cells ("A1" etc). Default is true.
+Control the generation of named cells ("C<A1>" etc). Default is true.
 
 =item rc
 
@@ -971,21 +975,21 @@ Control the generation of the {cell}[c][r] entries. Default is true.
 =item attr
 
 Control the generation of the {attr}[c][r] entries. Default is false.
-See L<Cell Attributes> below.
+See L</Cell Attributes> below.
 
 =item clip
 
-If set, C<ReadData ()> will remove all trailing rows and columns per
-sheet that have no visual data. If a sheet has no data at all, the
+If set, L<C<ReadData>|/ReadData> will remove all trailing rows and columns
+per sheet that have no visual data. If a sheet has no data at all, the
 sheet will be skipped entirely when this attribute is true.
 
-This option is only valid if C<cells> is true. The default value is
-true if C<cells> is true, and false otherwise.
+This option is only valid if L<C<cells>|/cells> is true. The default value
+is true if L<C<cells>|/cells> is true, and false otherwise.
 
 =item strip
 
-If set, C<ReadData ()> will remove trailing- and/or leading-whitespace
-from every field.
+If set, L<C<ReadData>|/ReadData> will remove trailing- and/or
+leading-whitespace from every field.
 
   strip  leading  strailing
   -----  -------  ---------
@@ -1005,31 +1009,32 @@ Set quote character for CSV. Default is C<">.
 =item dtfmt
 
 Set the format for MS-Excel date fields that are set to use the default
-date format. The default format in Excel is 'm-d-yy', which is both
-not year 2000 safe, nor very useful. The default is now 'yyyy-mm-dd',
+date format. The default format in Excel is "C<m-d-yy>", which is both
+not year 2000 safe, nor very useful. The default is now "C<yyyy-mm-dd>",
 which is more ISO-like.
 
 Note that date formatting in MS-Excel is not reliable at all, as it will
 store/replace/change the date field separator in already stored formats
 if you change your locale settings. So the above mentioned default can
-be either "m-d-yy" OR "m/d/yy" depending on what that specific character
-happened to be at the time the user saved the file.
+be either "C<m-d-yy>" OR "C<m/d/yy>" depending on what that specific
+character happened to be at the time the user saved the file.
 
 =item debug
 
 Enable some diagnostic messages to STDERR.
 
-The value determines how much diagnostics are dumped (using Data::Peek).
-A value of 9 and higher will dump the entire structure from the back-end
-parser.
+The value determines how much diagnostics are dumped (using
+L<Data::Peek|https://metacpan.org/release/Data-Peek>).  A value of C<9>
+and higher will dump the entire structure from the back-end parser.
 
 =back
 
 All other attributes/options will be passed to the underlying parser if
 that parser supports attributes.
 
-=item my $cell = cr2cell (col, row)
-X<cr2cell>
+=head3 cr2cell
+
+ my $cell = cr2cell (col, row)
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
 traditional cell notation:
@@ -1037,8 +1042,9 @@ traditional cell notation:
   my $cell = cr2cell ( 4, 14); # $cell now "D14"
   my $cell = cr2cell (28,  4); # $cell now "AB4"
 
-=item my ($col, $row) = cell2cr ($cell)
-X<cell2cr>
+=head3 cell2cr
+
+ my ($col, $row) = cell2cr ($cell)
 
 C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
 pair (1 based):
@@ -1046,10 +1052,11 @@ pair (1 based):
   my ($col, $row) = cell2cr ("D14"); # returns ( 4, 14)
   my ($col, $row) = cell2cr ("AB4"); # returns (28,  4)
 
-=item my @row = row ($sheet, $row)
+=head3 row
 
-=item my @row = Spreadsheet::Read::row ($book->[1], 3)
-X<row>
+ my @row = row ($sheet, $row)
+
+ my @row = Spreadsheet::Read::row ($book->[1], 3)
 
 Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
@@ -1058,10 +1065,11 @@ Note that the indexes in the returned list are 0-based.
 C<row ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @row = cellrow ($sheet, $row)
+=head3 cellrow
 
-=item my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
-X<cellrow>
+ my @row = cellrow ($sheet, $row)
+
+ my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
 
 Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
@@ -1070,10 +1078,11 @@ Note that the indexes in the returned list are 0-based.
 C<cellrow ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my @rows = rows ($sheet)
+=head3 rows
 
-=item my @rows = Spreadsheet::Read::rows ($book->[1])
-<X<rows>
+ my @rows = rows ($sheet)
+
+ my @rows = Spreadsheet::Read::rows ($book->[1])
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
@@ -1083,47 +1092,58 @@ index in the C<{cell}> entry is 1-based.
 C<rows ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item parses ($format)
+=head3 parses
 
-=item Spreadsheet::Read::parses ("CSV")
-X<parses>
+ parses ($format)
+
+ Spreadsheet::Read::parses ("CSV")
 
 C<parses ()> returns Spreadsheet::Read's capability to parse the
-required format.
+required format. L<C<ReadData>|/ReadData> will pick its prefered parser
+for that format unless overruled. See L<C<parser>|/parser>.
 
 C<parses ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=item my $rs_version = Version ()
+=head3 Version
 
-=item my $v = Spreadsheet::Read::Version ()
-X<Version>
+ my $v = Version ()
+
+ my $v = Spreadsheet::Read::Version ()
+
+ my $v = Spreadsheet::Read->VERSION;
 
 Returns the current version of Spreadsheet::Read.
 
 C<Version ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
-=back
+This function returns exactly the same as C<< Spreadsheet::Read->VERSION >>
+returns and is only kept for backward compatibility reasons.
 
 =head2 Using CSV
 
-In case of CSV parsing, C<ReadData ()> will use the first line of the file
-to auto-detect the separation character if the first argument is a file and
-both C<sep> and C<quote> are not passed as attributes. Text::CSV_XS (or
-Text::CSV_PP) is able to automatically detect and use C<\r> line endings.
+In case of CSV parsing, L<C<ReadData>|/ReadData> will use the first line of
+the file to auto-detect the separation character if the first argument is a
+file and both C<sep> and C<quote> are not passed as attributes.
+L<Text::CSV_XS|https://metacpan.org/release/Text-CSV_XS> (or
+L<Text::CSV_PP|https://metacpan.org/release/Text-CSV_PP>) is able to
+automatically detect and use C<\r> line endings.
 
 CSV can parse streams too, but be sure to pass C<sep> and/or C<quote> if
 these do not match the default C<,> and C<">.
 
 When an error is found in the CSV, it is automatically reported (to STDERR).
 The structure will store the error in C<< $ss->[0]{error} >> as anonymous
-list returned by C<< $csv->error_diag >>. See Text::CSV_XS for documentation.
+list returned by
+L<C<< $csv->error_diag >>|https://metacpan.org/pod/Text::CSV_XS#error_diag>.
+See L<Text::CSV_XS|https://metacpan.org/pod/Text-CSV_XS> for documentation.
 
  my $ss = ReadData ("bad.csv");
  $ss->[0]{error} and say $ss->[0]{error}[1];
 
 =head2 Cell Attributes
+X<merged>
 
 If the constructor was called with C<attr> having a true value, effort
 is made to analyze and store field attributes like this:
@@ -1207,7 +1227,7 @@ This module just tries to return the information in a generic way.
 Given this spreadsheet as an example
 
  merged.xlsx:
- 
+
      A     B     C
   +-----+-----------+
  1|     | foo       |
@@ -1245,11 +1265,12 @@ code analysis and not from documentation:
  A2 bar 1  B2     1  C2     1
  A3     1  B3 urg 0  C3 orc 0
 
-In this example, there is no way to see if B2 is merged to A2 or
-to B1 without analyzing all surrounding cells. This could as well
-mean A2:A3, B1:C1, B2: C2, as A2:A3, B1:B2, C1:C2, as A2:A3, B1:C2.
-Use the C<merged> entry described above to find out what fields are
-merged to what other fields.
+In this example, there is no way to see if C<B2> is merged to C<A2> or
+to C<B1> without analyzing all surrounding cells. This could as well
+mean C<A2:A3>, C<B1:C1>, C<B2:C2>, as C<A2:A3>, C<B1:B2>, C<C1:C2>, as
+C<A2:A3>, C<B1:C2>.
+Use the L<C<merged>|/merged> entry described above to find out what
+fields are merged to what other fields.
 
 =head1 TOOLS
 
@@ -1266,38 +1287,47 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
  usage: xlscat   [-s <sep>] [-L] [-n] [-A] [-u] [Selection] file.xls
                  [-c | -m]                 [-u] [Selection] file.xls
                   -i                            [-S sheets] file.xls
-     Generic options:
-        -v[#]       Set verbose level (xlscat/xlsgrep)
-        -d[#]       Set debug   level (Spreadsheet::Read)
-        -u          Use unformatted values
-        --noclip    Do not strip empty sheets and
-                    trailing empty rows and columns
-        -e <enc>    Set encoding for input and output
-        -b <enc>    Set encoding for input
-        -a <enc>    Set encoding for output
-     Input CSV:
-        --in-sep=c  Set input sep_char for CSV
-     Input XLS:
-        --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
-                    the default replacement is 'yyyy-mm-dd'
-     Output Text (default):
-        -s <sep>    Use separator <sep>. Default '|', \n allowed
-        -L          Line up the columns
-        -n          Number lines (prefix with column number)
-        -A          Show field attributes in ANSI escapes
-     Output Index only:
-        -i          Show sheet names and size only
-     Output CSV:
-        -c          Output CSV, separator = ','
-        -m          Output CSV, separator = ';'
-     Output HTML:
-        -H          Output HTML
-     Selection:
-        -S <sheets> Only print sheets <sheets>. 'all' is a valid set
-                    Default only prints the first sheet
-        -R <rows>   Only print rows    <rows>. Default is 'all'
-        -C <cols>   Only print columns <cols>. Default is 'all'
-        -F <flds>   Only fields <flds> e.g. -FA3,B16
+    Generic options:
+       -v[#]       Set verbose level (xlscat/xlsgrep)
+       -d[#]       Set debug   level (Spreadsheet::Read)
+       -u          Use unformatted values
+       --noclip    Do not strip empty sheets and
+                   trailing empty rows and columns
+       -e <enc>    Set encoding for input and output
+       -b <enc>    Set encoding for input
+       -a <enc>    Set encoding for output
+    Input CSV:
+       --in-sep=c  Set input sep_char for CSV
+    Input XLS:
+       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                   the default replacement is 'yyyy-mm-dd'
+    Output Text (default):
+       -s <sep>    Use separator <sep>. Default '|', \n allowed
+       -L          Line up the columns
+       -n [skip]   Number lines (prefix with column number)
+                   optionally skip <skip> (header) lines
+       -A          Show field attributes in ANSI escapes
+       -h[#]       Show # header lines
+    Output Index only:
+       -i          Show sheet names and size only
+    Output CSV:
+       -c          Output CSV, separator = ','
+       -m          Output CSV, separator = ';'
+    Output HTML:
+       -H          Output HTML
+    Selection:
+       -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                   Default only prints the first sheet
+       -R <rows>   Only print rows    <rows>. Default is 'all'
+       -C <cols>   Only print columns <cols>. Default is 'all'
+       -F <flds>   Only fields <flds> e.g. -FA3,B16
+    Ordering (column numbers in result set *after* selection):
+       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                   +#   - first # lines do not sort (header)
+                   #    - order on column # lexical ascending
+                   #n   - order on column # numeric ascending
+                   #r   - order on column # lexical descending
+                   #rn  - order on column # numeric descending
 
 =head2 C<xlsgrep>
 
@@ -1306,40 +1336,54 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
  usage: xlsgrep  [-s <sep>] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
                  [-c | -m]                 [-u] [Selection] pattern file.xls
                   -i                            [-S sheets] pattern file.xls
-     Generic options:
-        -v[#]       Set verbose level (xlscat/xlsgrep)
-        -d[#]       Set debug   level (Spreadsheet::Read)
-        -u          Use unformatted values
-        --noclip    Do not strip empty sheets and
-                    trailing empty rows and columns
-        -e <enc>    Set encoding for input and output
-        -b <enc>    Set encoding for input
-        -a <enc>    Set encoding for output
-     Input CSV:
-        --in-sep=c  Set input sep_char for CSV
-     Input XLS:
-        --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
-                    the default replacement is 'yyyy-mm-dd'
-     Output Text (default):
-        -s <sep>    Use separator <sep>. Default '|', \n allowed
-        -L          Line up the columns
-        -n          Number lines (prefix with column number)
-        -A          Show field attributes in ANSI escapes
-     Grep options:
-        -i          Ignore case
-        -w          Match whole words only
-        -h[#]       Show # header lines
-     Output CSV:
-        -c          Output CSV, separator = ','
-        -m          Output CSV, separator = ';'
-     Output HTML:
-        -H          Output HTML
-     Selection:
-        -S <sheets> Only print sheets <sheets>. 'all' is a valid set
-                    Default only prints the first sheet
-        -R <rows>   Only print rows    <rows>. Default is 'all'
-        -C <cols>   Only print columns <cols>. Default is 'all'
-        -F <flds>   Only fields <flds> e.g. -FA3,B16
+    Generic options:
+       -v[#]       Set verbose level (xlscat/xlsgrep)
+       -d[#]       Set debug   level (Spreadsheet::Read)
+       -u          Use unformatted values
+       --noclip    Do not strip empty sheets and
+                   trailing empty rows and columns
+       -e <enc>    Set encoding for input and output
+       -b <enc>    Set encoding for input
+       -a <enc>    Set encoding for output
+    Input CSV:
+       --in-sep=c  Set input sep_char for CSV
+    Input XLS:
+       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                   the default replacement is 'yyyy-mm-dd'
+    Output Text (default):
+       -s <sep>    Use separator <sep>. Default '|', \n allowed
+       -L          Line up the columns
+       -n [skip]   Number lines (prefix with column number)
+                   optionally skip <skip> (header) lines
+       -A          Show field attributes in ANSI escapes
+       -h[#]       Show # header lines
+    Grep options:
+       -i          Ignore case
+       -w          Match whole words only
+    Output CSV:
+       -c          Output CSV, separator = ','
+       -m          Output CSV, separator = ';'
+    Output HTML:
+       -H          Output HTML
+    Selection:
+       -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                   Default only prints the first sheet
+       -R <rows>   Only print rows    <rows>. Default is 'all'
+       -C <cols>   Only print columns <cols>. Default is 'all'
+       -F <flds>   Only fields <flds> e.g. -FA3,B16
+    Ordering (column numbers in result set *after* selection):
+       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                   +#   - first # lines do not sort (header)
+                   #    - order on column # lexical ascending
+                   #n   - order on column # numeric ascending
+                   #r   - order on column # lexical descending
+                   #rn  - order on column # numeric descending
+
+=head2 C<xls2csv>
+
+Convert a spreadsheet to CSV. This is just a small wrapper over C<xlscat>.
+
+ usage: xls2csv [ -o file.csv ] file.xls
 
 =head2 C<ss2tk>
 
@@ -1348,11 +1392,11 @@ Show a spreadsheet in a perl/Tk spreadsheet widget
  usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]
         -w <width> use <width> as default column width (4)
 
-=head2 C<xls2csv>
+=head2 C<ssdiff>
 
-Convert a spreadsheet to CSV. This is just a small wrapper over C<xlscat>.
+Show the differences between two spreadsheets.
 
- usage: xls2csv [ -o file.csv ] file.xls
+ usage: examples/ssdiff [--verbose[=1]] file.xls file.xlsx
 
 =head1 TODO
 
@@ -1380,6 +1424,13 @@ names C<meta>, or just be new values in the C<attr> hashes.
 =item Other spreadsheet formats
 
 I consider adding any spreadsheet interface that offers a usable API.
+
+=item Alternative parsers for existing formats
+
+As long as the alternative has a good reason for its exitence, and the
+API of that parser reasonable fits in my approach, I will consider to
+implement the glue layer, or apply patches to do so as long as these
+match what F<CONTRIBUTING.md> describes.
 
 =item Add an OO interface
 
@@ -1418,7 +1469,7 @@ internal XML.
 
 =item Spreadsheet::XLSX::Reader::LibXML
 
-L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML> 
+L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML>
 is an alternative Microsoft 2007+ parser that uses
 L<XML::LibXML|http://metacpan.org/release/XML-LibXML> to parse the internal XML.
 

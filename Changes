@@ -1,5 +1,6 @@
-0.63	- 21 Aug 2015, H.Merijn Brand
+0.63	- 24 Aug 2015, H.Merijn Brand
     * Guard against negative MinRow in XLSX
+    * Documentation updated
 
 0.62	- 16 Aug 2015, H.Merijn Brand
     * Fix documentation structure
