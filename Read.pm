@@ -849,13 +849,17 @@ Spreadsheet::Read tries to transparently read *any* spreadsheet and
 return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 
-For OpenOffice and/or LibreOffice this module uses L<Spreadsheet::ReadSXC>
+For OpenOffice and/or LibreOffice this module uses
+L<Spreadsheet::ReadSXC|http://metacpan.org/release/Spreadsheet-ReadSXC>
 
-For Microsoft Excel this module uses L<Spreadsheet::ParseExcel>,
-L<Spreadsheet::ParseXLSX>, L<Spreadsheet::XLSX::Reader::LibXML>, or
-L<Spreadsheet::XLSX> (discouraged).
+For Microsoft Excel this module uses
+L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel>,
+L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX>,
+L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML>, or
+L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX> (discouraged).
 
-For CSV this module uses L<Text::CSV_XS> or L<Text::CSV_PP>.
+For CSV this module uses L<Text::CSV_XS|http://metacpan.org/release/Text-CSV_XS>
+or L<Text::CSV_PP|http://metacpan.org/release/Text-CSV_PP>.
 
 For SquirrelCalc there is a very simplistic built-in parser
 
@@ -1025,6 +1029,7 @@ All other attributes/options will be passed to the underlying parser if
 that parser supports attributes.
 
 =item my $cell = cr2cell (col, row)
+X<cr2cell>
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
 traditional cell notation:
@@ -1033,6 +1038,7 @@ traditional cell notation:
   my $cell = cr2cell (28,  4); # $cell now "AB4"
 
 =item my ($col, $row) = cell2cr ($cell)
+X<cell2cr>
 
 C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
 pair (1 based):
@@ -1043,6 +1049,7 @@ pair (1 based):
 =item my @row = row ($sheet, $row)
 
 =item my @row = Spreadsheet::Read::row ($book->[1], 3)
+X<row>
 
 Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
@@ -1054,6 +1061,7 @@ use argument list, or call it fully qualified.
 =item my @row = cellrow ($sheet, $row)
 
 =item my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
+X<cellrow>
 
 Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
@@ -1065,6 +1073,7 @@ use argument list, or call it fully qualified.
 =item my @rows = rows ($sheet)
 
 =item my @rows = Spreadsheet::Read::rows ($book->[1])
+<X<rows>
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
@@ -1077,6 +1086,7 @@ use argument list, or call it fully qualified.
 =item parses ($format)
 
 =item Spreadsheet::Read::parses ("CSV")
+X<parses>
 
 C<parses ()> returns Spreadsheet::Read's capability to parse the
 required format.
@@ -1087,6 +1097,7 @@ use argument list, or call it fully qualified.
 =item my $rs_version = Version ()
 
 =item my $v = Spreadsheet::Read::Version ()
+X<Version>
 
 Returns the current version of Spreadsheet::Read.
 
@@ -1171,18 +1182,25 @@ parsers do not (yet) support all of that. YMMV.
 
 =head3 Merged cells
 
-Note that only [Spreadsheet::ReadSXC] documents the use of merged cells,
-and not in a way useful for the spreadsheet consumer.
+Note that only
+L<Spreadsheet::ReadSXC|http://metacpan.org/release/Spreadsheet-ReadSXC>
+documents the use of merged cells, and not in a way useful for the spreadsheet
+consumer.
 
 CSV does not support merged cells (though future implementations of CSV
 for the web might).
 
-The documentation of merged areas in [Spreadsheet::ParseExcel] and
-[Spreadsheet::ParseXLSX] can be found in [Spreadsheet::ParseExcel::Worksheet]
-and [Spreadsheet::ParseExcel::Cell].
+The documentation of merged areas in
+L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel> and
+L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX> can
+be found in
+L<Spreadsheet::ParseExcel::Worksheet|http://metacpan.org/release/Spreadsheet-ParseExcel-Worksheet>
+and L<Spreadsheet::ParseExcel::Cell|http://metacpan.org/release/Spreadsheet-ParseExcel-Cell>.
 
-None of basic [Spreadsheet::XLSX], [Spreadsheet::ParseExcel], and
-[Spreadsheet::ParseXLSX] manual pages mention merged cells at all.
+None of basic L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX>,
+L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel>, and
+L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX> manual
+pages mention merged cells at all.
 
 This module just tries to return the information in a generic way.
 
@@ -1377,65 +1395,77 @@ OO interface.
 
 =item Text::CSV_XS, Text::CSV_PP
 
-http://metacpan.org/release/Text-CSV_XS ,
-http://metacpan.org/release/Text-CSV_PP , and
-http://metacpan.org/release/Text-CSV .
+See L<Text::CSV_XS|http://metacpan.org/release/Text-CSV_XS> ,
+L<Text::CSV_PP|http://metacpan.org/release/Text-CSV_PP> , and
+L<Text::CSV|http://metacpan.org/release/Text-CSV> documentation.
 
-Text::CSV is a wrapper over Text::CSV_XS (the fast XS version) and/or
-Text::CSV_PP (the pure perl version)
+L<Text::CSV|http://metacpan.org/release/Text-CSV> is a wrapper over Text::CSV_XS (the fast XS version) and/or
+L<Text::CSV_PP|http://metacpan.org/release/Text-CSV_PP> (the pure perl version).
 
 =item Spreadsheet::ParseExcel
 
-http://metacpan.org/release/Spreadsheet-ParseExcel
+L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel> is
+the best parser for old-style Microsoft Excel (.xls) files.
 
 =item Spreadsheet::ParseXLSX
 
-http://metacpan.org/release/Spreadsheet-ParseXLSX
+L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX> is
+like L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel>,
+but for new Microsoft Excel 2007+ files (.xlsx). They have the same API.
+
+This module uses L<XML::Twig|http://metacpan.org/release/XML-Twig> to parse the
+internal XML.
 
 =item Spreadsheet::XLSX::Reader::LibXML
 
-http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML
+L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML> 
+is an alternative Microsoft 2007+ parser that uses
+L<XML::LibXML|http://metacpan.org/release/XML-LibXML> to parse the internal XML.
 
 Work in progress. Much is relying on undocumented internals.
 
 =item Spreadsheet::XLSX
 
-http://metacpan.org/release/Spreadsheet-XLSX
+See L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX>
+documentation.
 
-This module is considered dead and deprecated. It is buggy and unmaintained.
-B<PLEASE> consider to use L</Spradsheet::ParseXLSX> instead.
+This module is dead and deprecated. It is B<buggy and unmaintained>.  I<Please>
+use L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX>
+instead.
 
 =item Spreadsheet::ReadSXC
 
-http://metacpan.org/release/Spreadsheet-ReadSXC
+L<Spreadsheet::ReadSXC|http://metacpan.org/release/Spreadsheet-ReadSXC> is a
+parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files.
 
 =item Spreadsheet::BasicRead
 
-http://metacpan.org/release/Spreadsheet-BasicRead
-for xlscat likewise functionality (Excel only)
+See L<Spreadsheet::BasicRead|http://metacpan.org/release/Spreadsheet-BasicRead>
+for xlscat-like functionality (Excel only)
 
 =item Spreadsheet::ConvertAA
 
-http://metacpan.org/release/Spreadsheet-ConvertAA
-for an alternative set of cell2cr () / cr2cell () pair
+See L<Spreadsheet::ConvertAA|http://metacpan.org/release/Spreadsheet-ConvertAA>
+for an alternative set of L</cell2cr>/L</cr2cell> pair.
 
 =item Spreadsheet::Perl
 
-http://metacpan.org/release/Spreadsheet-Perl
-offers a Pure Perl implementation of a spreadsheet engine. Users that want
-this format to be supported in Spreadsheet::Read are hereby motivated to
-offer patches. It's not high on my TODO-list.
+L<Spreadsheet::Perl|http://metacpan.org/release/Spreadsheet-Perl> offers a Pure
+Perl implementation of a spreadsheet engine.  Users that want this format to be
+supported in Spreadsheet::Read are hereby motivated to offer patches. It is
+not high on my TODO-list.
 
 =item Spreadsheet::CSV
 
-http://metacpan.org/release/Spreadsheet-CSV
-offers the interesting approach of seeing all supported spreadsheet formats
-as if it were CSV, mimicking the Text::CSV_XS interface.
+L<Spreadsheet::CSV|http://metacpan.org/release/Spreadsheet-CSV> offers the
+interesting approach of seeing all supported spreadsheet formats as if it were
+CSV, mimicking the L<Text::CSV_XS|http://metacpan.org/release/Text-CSV_XS>
+interface.
 
 =item xls2csv
 
-http://metacpan.org/release/xls2csv offers an alternative for my C<xlscat -c>,
-in the xls2csv tool, but this tool focuses on character encoding
+L<xls2csv|http://metacpan.org/release/xls2csv> offers an alternative for my
+C<xlscat -c>, in the xls2csv tool, but this tool focuses on character encoding
 transparency, and requires some other modules.
 
 =back
