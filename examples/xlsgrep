@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [18-03-2015] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [24-08-2015] Copyright H.M.Brand 2005-2015
 
 use strict;
 use warnings;
 
-our $VERSION = "3.1";
+our $VERSION = "3.2";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -430,7 +430,7 @@ foreach my $si (1 .. $sc) {
 	    ++$h % 100 == 0 && $opt_v and printf STDERR $v_fmt, $nc, $h, "\r";
 	    }
     $opt_H and print "  </table>\n\n";
-    printf STDERR $v_fmt, $nc, $h, "\n";
+    $v_fmt and printf STDERR $v_fmt, $nc, $h, "\n";
     if ($sort_order) {
 	my @o;
 	my @h;
