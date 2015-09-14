@@ -57,7 +57,26 @@ my %can = map {
     my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
     if ($preset) {
 	eval "require $preset";
-	$@ and $preset = "!$preset";
+	if ($@) {
+	    $preset = "!$preset";
+	    }
+	else { # forcing a parser should still check the version
+	    for (grep { $_->[1] eq $preset and $_->[2] } @parsers) {
+		my $ok;
+		if ($_->[2] =~ m/^v([0-9.]+)/) {	# clumsy versions
+		    my @min = split m/\./ => $1;
+		    my $has = $preset->VERSION;
+		    $has =~ s/^v//;
+		    my @has = split m/\./ => $has;
+		    $ok = (($has[0] * 1000 + $has[1]) * 1000 + $has[2]) >=
+			  (($min[0] * 1000 + $min[1]) * 1000 + $min[2]);
+		    }
+		else {	# normal versions
+		    $ok = $preset->VERSION >= $_->[2];
+		    }
+		$ok or $preset = "!$preset";
+		}
+	    }
 	}
     $_->[0] => $preset || "";
     } @parsers;
