@@ -43,7 +43,7 @@ foreach my $base ( [ "files/test.xlsx",	"Read/Parse xlsx file"	],
     is (ref $xls->[0]{sheet},	"HASH",		"Sheet list");
     is (scalar keys %{$xls->[0]{sheet}},
 				2,		"Sheet list count");
-    cmp_ok ($xls->[0]{version}, ">=",	0.07,	"Parser version");
+    like ($xls->[0]{version},	qr{[0-9]},	"Has version with digit");
 
     ok (1, "Defined fields");
     foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
