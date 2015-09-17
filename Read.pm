@@ -88,6 +88,9 @@ for (@parsers) {
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
+$can{xlsx} =~ m/LibXML/ && $] < 5.012 and
+    substr $can{xlsx}, 0, 0, "!"; # This parser requires perl 5.12 or newer
+
 my $debug = 0;
 my %def_opts = (
     rc      => 1,
