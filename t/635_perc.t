@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-
+use Spreadsheet::XLSX::Reader::LibXML v0.38.18;
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::XLSX::Reader::LibXML"; }
 
 my     $tests = 77;
@@ -23,11 +23,11 @@ ok ($xls, "Excel Percentage testcase");
 my $ss   = $xls->[1];
 my $attr = $ss->{attr};
 
-my $type = $pv le "v0.38.8" ? "numeric" : "percentage";
+#~ my $type = $pv le "v0.38.8" ? "numeric" : "percentage";
 foreach my $row (1 .. 19) {
     is ($ss->{attr}[1][$row]{type}, "numeric",	"Type A$row numeric");
-    is ($ss->{attr}[2][$row]{type}, $type,	"Type B$row percentage");
-    is ($ss->{attr}[3][$row]{type}, $type,	"Type C$row percentage");
+    is ($ss->{attr}[2][$row]{type}, "percentage",	"Type B$row percentage");# not $type
+    is ($ss->{attr}[3][$row]{type}, "percentage",	"Type C$row percentage");# not $type
 
     SKIP: {
 	$ss->{B18} =~ m/[.]/ and

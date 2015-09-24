@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-
+use Spreadsheet::XLSX::Reader::LibXML v0.38.18;
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::XLSX::Reader::LibXML"; }
 
 my     $tests = 5;
