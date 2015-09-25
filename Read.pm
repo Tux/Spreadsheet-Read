@@ -320,7 +320,7 @@ sub _xlsx_libxml
 	foreach my $r ($wks->{MinRow} .. $wks->{MaxRow}) {
 	    foreach my $c ($wks->{MinCol} .. $wks->{MaxCol}) {
 		my $cell = $wks->get_cell ($r, $c);
-		if (defined $cell) {
+		if (defined $cell and ref $cell) {
 		    $cell->{Val}    = $cell->unformatted;
 		    $cell->{Merged} = $cell->is_merged and
 			$mm{$cell->{cell_merge}}{"$r:$c"} = $cell;
