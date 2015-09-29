@@ -52,6 +52,7 @@ my %wm = (
 #	"Spreadsheet::ParseXLSX"	=> 0.13,
 #	"Spreadsheet::XLSX"		=> 0.13,
 #	"Spreadsheet::Perl"		=> 0,	# Not yet
+#	"Spreadsheet::XLSX::Reader::LibXML"	=> v0.38.18,	# Not yet
 
 	# For testing
 	"Test::More"			=> 0.88,
