@@ -46,7 +46,7 @@ my @parsers = (
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
-    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v0.38.18"	],
+    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v9.99.99"	],
     [ prl  => "Spreadsheet::Perl",			""		],
 
     # Helper modules
