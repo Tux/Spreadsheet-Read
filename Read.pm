@@ -878,8 +878,7 @@ L<Spreadsheet::ReadSXC|http://metacpan.org/release/Spreadsheet-ReadSXC>
 
 For Microsoft Excel this module uses
 L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel>,
-L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX>,
-L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML>, or
+L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX>, or
 L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX> (discouraged).
 
 For CSV this module uses L<Text::CSV_XS|http://metacpan.org/release/Text-CSV_XS>
@@ -1497,7 +1496,9 @@ L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX
 is an alternative Microsoft 2007+ parser that uses
 L<XML::LibXML|http://metacpan.org/release/XML-LibXML> to parse the internal XML.
 
-Work in progress. Much is relying on undocumented internals.
+Work in progress. Much is relying on undocumented internals. The author gave up
+on making this work, so it is not enabled by default. Feel free submit patches
+to make it work.
 
 =item Spreadsheet::XLSX
 
