@@ -1,7 +1,9 @@
-0.63	- 30 Sep 2015, H.Merijn Brand
+0.63	- 10 Oct 2015, H.Merijn Brand
     * Guard against negative MinRow in XLSX
     * Documentation updated
     * Support Spreadsheet::XLSX::Reader::LibXML disabled on author request
+    * Fix warning in utilities
+    * Check minimum parser version for pre-selected parser
 
 0.62	- 16 Aug 2015, H.Merijn Brand
     * Fix documentation structure

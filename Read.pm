@@ -1122,7 +1122,7 @@ use argument list, or call it fully qualified.
  Spreadsheet::Read::parses ("CSV")
 
 C<parses ()> returns Spreadsheet::Read's capability to parse the
-required format. L<C<ReadData>|/ReadData> will pick its prefered parser
+required format. L<C<ReadData>|/ReadData> will pick its preferred parser
 for that format unless overruled. See L<C<parser>|/parser>.
 
 C<parses ()> is not imported by default, so either specify it in the
@@ -1450,7 +1450,7 @@ I consider adding any spreadsheet interface that offers a usable API.
 
 =item Alternative parsers for existing formats
 
-As long as the alternative has a good reason for its exitence, and the
+As long as the alternative has a good reason for its existence, and the
 API of that parser reasonable fits in my approach, I will consider to
 implement the glue layer, or apply patches to do so as long as these
 match what F<CONTRIBUTING.md> describes.
