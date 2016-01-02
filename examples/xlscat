@@ -2,7 +2,7 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [24-08-2015] Copyright H.M.Brand 2005-2015
+#	   (m)'15 [24-08-2015] Copyright H.M.Brand 2005-2016
 
 use strict;
 use warnings;

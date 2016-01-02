@@ -1,3 +1,6 @@
+0.64	- 02 Jan 2016, H.Merijn Brand
+    * It's 2016
+
 0.63	- 10 Oct 2015, H.Merijn Brand
     * Guard against negative MinRow in XLSX
     * Documentation updated
