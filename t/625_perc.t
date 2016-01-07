@@ -20,9 +20,10 @@ my $ss   = $xls->[1];
 my $attr = $ss->{attr};
 
 foreach my $row (1 .. 19) {
-    is ($ss->{attr}[1][$row]{type}, "numeric",		"Type A$row numeric");
-    is ($ss->{attr}[2][$row]{type}, "percentage",	"Type B$row percentage");
-    is ($ss->{attr}[3][$row]{type}, "percentage",	"Type C$row percentage");
+    is ($ss->{attr}[1][$row]{type},   "numeric",	"Type A$row numeric");
+    ok ($ss->{attr}[2][$row]{type} eq "numeric" ||
+	$ss->{attr}[2][$row]{type} eq "percentage",	"Type B$row percentage");
+    is ($ss->{attr}[3][$row]{type},   "percentage",	"Type C$row percentage");
 
     SKIP: {
 	$ss->{B18} =~ m/[.]/ and
