@@ -56,6 +56,7 @@ requires:
   Carp:                 0
   Data::Dumper:         0
   Data::Peek:           0
+  Encode:               0
   File::Temp:           0.22
 configure_requires:
   ExtUtils::MakeMaker:  0

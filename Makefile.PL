@@ -36,6 +36,7 @@ my %wm = (
     PREREQ_PM    => {
 	# Core modules
 	"Exporter"			=> 0,
+	"Encode"			=> 0,
 	"Carp"				=> 0,
 	"Data::Dumper"			=> 0,
 	"File::Temp"			=> 0.22,

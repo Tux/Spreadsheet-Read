@@ -34,6 +34,7 @@ our @ISA       = qw( Exporter );
 our @EXPORT    = qw( ReadData cell2cr cr2cell );
 our @EXPORT_OK = qw( parses rows cellrow row );
 
+use Encode       qw( decode );
 use File::Temp   qw( );
 use Data::Dumper;
 
@@ -625,6 +626,9 @@ sub ReadData
 			my $oWkC = $oWkS->{Cells}[$r][$c] or next;
 			#defined (my $val = $oWkC->{Val}) or next;
 			my $val = $oWkC->{Val};
+			if (defined $val and my $enc = $oWkC->{Code}) {
+			    $enc eq "ucs2" and $val = decode ("utf-16be", $val);
+			    }
 			my $cell = cr2cell ($c + 1, $r + 1);
 			$opt{rc} and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
 
