@@ -64,7 +64,11 @@ sub usage
 	"                   #    - order on column # lexical ascending\n",
 	"                   #n   - order on column # numeric ascending\n",
 	"                   #r   - order on column # lexical descending\n",
-	"                   #rn  - order on column # numeric descending\n";
+	"                   #rn  - order on column # numeric descending\n",
+	"\n",
+	"Examples:\n",
+	"    xlscat -i foo.xls\n",
+	"    xlscat --in-sep=: --sort=3n -L /etc/passwd\n";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
