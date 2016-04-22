@@ -1,5 +1,6 @@
-0.64	- 17 Mar 2016, H.Merijn Brand
+0.64	- 22 Apr 2016, H.Merijn Brand
     * It's 2016
+    * Allow inconsistent Spreadsheet::XLSX releases on Debian (tests)
     * Decode utf-16be entries in Excel when appropriate
     * Two examples in xlscat
 
