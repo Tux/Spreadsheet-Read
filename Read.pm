@@ -428,7 +428,7 @@ sub ReadData
 
 	my $label = $io_fil ? $txt : "IO";
 
-	$debug and print STDERR "Opening CSV $label\n";
+	$debug and print STDERR "Opening CSV $label using $can{csv}-", $can{csv}->VERSION, "\n";
 
 	my @data = (
 	    {	type	=> "csv",
@@ -536,7 +536,7 @@ sub ReadData
 	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
 	my $xlsx_libxml = $parser =~ m/LibXML$/;
-	$debug and print STDERR "Opening $parse_type \$txt\n";
+	$debug and print STDERR "Opening $parse_type \$txt using $parser-", $can{lc $parse_type}->VERSION, "\n";
 	my $oBook = eval {
 	    $io_ref
 	      ? $parse_type eq "XLSX"
@@ -791,20 +791,21 @@ sub ReadData
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
 	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
+	my $using = "using $can{sxc}-" . $can{sxc}->VERSION;
 	my $sxc_options = { %parser_opts, OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
 	   if ($txt =~ m/\.(sxc|ods)$/i) {
-	    $debug and print STDERR "Opening \U$1\E $txt\n";
+	    $debug and print STDERR "Opening \U$1\E $txt $using\n";
 	    $sxc = Spreadsheet::ReadSXC::read_sxc      ($txt, $sxc_options)	or  return;
 	    }
 	elsif ($txt =~ m/\.xml$/i) {
-	    $debug and print STDERR "Opening XML $txt\n";
+	    $debug and print STDERR "Opening XML $txt $using\n";
 	    $sxc = Spreadsheet::ReadSXC::read_xml_file ($txt, $sxc_options)	or  return;
 	    }
 	# need to test on pattern to prevent stat warning
 	# on filename with newline
 	elsif ($txt !~ m/^<\?xml/i and -f $txt) {
-	    $debug and print STDERR "Opening XML $txt\n";
+	    $debug and print STDERR "Opening XML $txt $using\n";
 	    open my $f, "<", $txt	or  return;
 	    local $/;
 	    $txt = <$f>;
