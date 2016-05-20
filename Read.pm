@@ -47,7 +47,6 @@ my @parsers = (
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
-    [ xlsx => "Spreadsheet::XLSX::Reader::LibXML",	"v9.99.99"	],
     [ prl  => "Spreadsheet::Perl",			""		],
 
     # Helper modules
@@ -339,7 +338,7 @@ sub _xlsx_libxml
 		$wks->{Cells}[$r][$c] = $cell;
 		}
 	    }
-	# Spreadsheet::XLSX::Reader::LibXML returns all other cells in range as undef
+	# Spreadsheet::XLSX::Reader::LibXML returned all other cells in range as undef
 	foreach my $mm (values %mm) {
 	    my @mr = sort keys %$mm;
 	    foreach my $rc (@mr) {
@@ -347,10 +346,6 @@ sub _xlsx_libxml
 		}
 	    }
 	}
-    *Spreadsheet::XLSX::Reader::LibXML::Cell::Value = sub {
-	my $cell = shift;
-	$cell->value;
-	};
     *WorksheetInstance::get_merged_areas = sub {
 	my $wi = shift or return;
 	my $mm = eval { $wi->_get_merge_map } ||
@@ -577,11 +572,9 @@ sub ReadData
 	$oBook->{FormatStr}{$_} = $def_fmt{$_} for keys %def_fmt;
 	my $oFmt = $parse_type eq "XLSX"
 	    ? $can{xlsx} =~ m/::XLSX$/
-	    ? Spreadsheet::XLSX::Fmt2007->new
-	    : $can{xlsx} =~ m/::XLSX/
-	    ? Spreadsheet::XLSX::Reader::LibXML::FmtDefault->new
-	    : Spreadsheet::ParseExcel::FmtDefault->new
-	    : Spreadsheet::ParseExcel::FmtDefault->new;
+		? Spreadsheet::XLSX::Fmt2007->new
+		: Spreadsheet::ParseExcel::FmtDefault->new
+	    :     Spreadsheet::ParseExcel::FmtDefault->new;
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
 	foreach my $oWkS (@{$oBook->{Worksheet}}) {
@@ -649,14 +642,6 @@ sub ReadData
 			    }
 			exists $FmT->{Fill} or $FmT->{Fill} = [ 0 ];
 			exists $FmT->{Font} or $FmT->{Font} = undef;
-			if ($xlsx_libxml and
-			     ref $oWkC eq "Spreadsheet::XLSX::Reader::LibXML::Cell" and
-			     my $style = $oWkC->get_fill) {
-			    if (my $pf = $style->{patternFill}) {
-				#defined $pf->{fgColor}{indexed} and $FmT->{Font}{Color} =   $pf->{fgColor}{indexed};
-				#defined $pf->{bgColor}{indexed} and $FmT->{Fill}        = [ $pf->{bgColor}{indexed} ];
-				}
-			    }
 
 			unless (defined $fmt) {
 			    $fmt = $FmT->{FmtIdx}
@@ -1494,16 +1479,6 @@ but for new Microsoft Excel 2007+ files (.xlsx). They have the same API.
 
 This module uses L<XML::Twig|http://metacpan.org/release/XML-Twig> to parse the
 internal XML.
-
-=item Spreadsheet::XLSX::Reader::LibXML
-
-L<Spreadsheet::XLSX::Reader::LibXML|http://metacpan.org/release/Spreadsheet-XLSX-Reader-LibXML>
-is an alternative Microsoft 2007+ parser that uses
-L<XML::LibXML|http://metacpan.org/release/XML-LibXML> to parse the internal XML.
-
-Work in progress. Much is relying on undocumented internals. The author gave up
-on making this work, so it is not enabled by default. Feel free submit patches
-to make it work.
 
 =item Spreadsheet::XLSX
 

@@ -1,6 +1,7 @@
 0.65	- 20 May 2016, H.Merijn Brand
     * Test with perl-5.24.0
     * Show parser-version used under debug
+    * No more Spreadsheet::XLSX::Reader::LibXML
 
 0.64	- 22 Apr 2016, H.Merijn Brand
     * It's 2016
