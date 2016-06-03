@@ -531,7 +531,7 @@ sub ReadData
 	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
 	my $xlsx_libxml = $parser =~ m/LibXML$/;
-	$debug and print STDERR "Opening $parse_type \$txt using $parser-", $can{lc $parse_type}->VERSION, "\n";
+	$debug and print STDERR "Opening $parse_type $txt using $parser-", $can{lc $parse_type}->VERSION, "\n";
 	my $oBook = eval {
 	    $io_ref
 	      ? $parse_type eq "XLSX"
