@@ -1,7 +1,8 @@
-0.65	- 20 May 2016, H.Merijn Brand
+0.65	- 15 Jun 2016, H.Merijn Brand
     * Test with perl-5.24.0
     * Show parser-version used under debug
     * No more Spreadsheet::XLSX::Reader::LibXML
+    * Cells will inherit hidden state from hidden rows and columns
 
 0.64	- 22 Apr 2016, H.Merijn Brand
     * It's 2016

@@ -552,6 +552,14 @@ sub ReadData
 	    }
 	$debug > 8 and _dump (oBook => $oBook);
 
+	# WorkBook keys:
+	# aColor         _CurSheet      Format         SheetCount
+	# ActiveSheet    _CurSheet_     FormatStr      _skip_chart
+	# Author         File           NotSetCell     _string_contin
+	# BIFFVersion    Flg1904        Object         Version
+	# _buffer        FmtClass       PkgStr         Worksheet
+	# CellHandler    Font           _previous_info
+
 	$xlsx_libxml and _xlsx_libxml ($oBook);
 
 	my @data = ( {
@@ -562,6 +570,7 @@ sub ReadData
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
 	    } );
+	# $debug and $data[0]{_parser} = $oBook;
 	# Overrule the default date format strings
 	my %def_fmt = (
 	    0x0E	=> lc $opt{dtfmt},	# m-d-yy
@@ -587,6 +596,7 @@ sub ReadData
 		attr	=> [],
 		merged  => [],
 		);
+	    # $debug and $sheet{_parser} = $oWkS;
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
 	    exists $oWkS->{MinRow} and $sheet{minrow} = $oWkS->{MinRow} + 1;
 	    exists $oWkS->{MaxRow} and $sheet{maxrow} = $oWkS->{MaxRow} + 1;
@@ -600,7 +610,24 @@ sub ReadData
 		@{$oWkS->get_merged_areas || []}];
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
+	    # Sheet keys:
+	    # _Book          FooterMargin   MinCol         RightMargin
+	    # BottomMargin   FooterMergin   MinRow         RightMergin
+	    # BottomMergin   HCenter        Name           RowHeight
+	    # Cells          Header         NoColor        RowHidden
+	    # ColFmtNo       HeaderMargin   NoOrient       Scale
+	    # ColHidden      HeaderMergin   NoPls          SheetHidden
+	    # ColWidth       Kind           Notes          _SheetNo
+	    # Copis          Landscape      PageFit        SheetType
+	    # DefColWidth    LeftMargin     PageStart      SheetVersion
+	    # DefRowHeight   LeftMergin     PaperSize      TopMargin
+	    # Draft          LeftToRight    _Pos           TopMergin
+	    # FitHeight      MaxCol         PrintGrid      UsePage
+	    # FitWidth       MaxRow         PrintHeaders   VCenter
+	    # Footer         MergedArea     Res            VRes
 	    if (exists $oWkS->{MinRow}) {
+		my $hiddenRows = $oWkS->{RowHidden} || [];
+		my $hiddenCols = $oWkS->{ColHidden} || [];
 		if ($opt{clip}) {
 		    my ($mr, $mc) = (-1, -1);
 		    foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
@@ -680,7 +707,8 @@ sub ReadData
 				type    => lc $oWkC->{Type},
 				enc     => $oWkC->{Code},
 				merged  => (defined $oWkC->{Merged} ? $oWkC->{Merged} : $oWkC->is_merged) || 0,
-				hidden  => (defined $oWkC->{Hidden} ? $oWkC->{Hidden} : $FmT->{Hidden})   || 0,
+				hidden  => ($hiddenRows->[$r] || $hiddenCols->[$c] ? 1 :
+					    defined $oWkC->{Hidden} ? $oWkC->{Hidden} : $FmT->{Hidden})   || 0,
 				locked  => $FmT->{Lock}     || 0,
 				format  => $fmi,
 				halign  => [ undef, qw( left center right
@@ -1212,6 +1240,10 @@ is made to analyze and store field attributes like this:
 
 This has now been partially implemented, mainly for Excel, as the other
 parsers do not (yet) support all of that. YMMV.
+
+If a cell itself is not hidden, but the parser holds the information that
+either the row or the column (or both) the field is in is hidden, the flag
+is inherited into the cell attributes.
 
 =head3 Merged cells
 
