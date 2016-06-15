@@ -3,6 +3,7 @@
     * Show parser-version used under debug
     * No more Spreadsheet::XLSX::Reader::LibXML
     * Cells will inherit hidden state from hidden rows and columns
+    * Require 5.8.0 as 5.6.x does not include required Encode
 
 0.64	- 22 Apr 2016, H.Merijn Brand
     * It's 2016

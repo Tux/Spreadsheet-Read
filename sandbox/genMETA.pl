@@ -51,7 +51,7 @@ provides:
     file:               Read.pm
     version:            VERSION
 requires:                       
-  perl:                 5.006
+  perl:                 5.008
   Exporter:             0
   Carp:                 0
   Data::Dumper:         0
@@ -69,7 +69,7 @@ recommends:
   File::Temp:           0.2304
   Data::Peek:           0.46
 test_recommends:
-  Test::More:           1.302019
+  Test::More:           1.302026
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -98,7 +98,7 @@ optional_features:
       Spreadsheet::ParseXLSX:              0.13
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseXLSX:              0.20
+      Spreadsheet::ParseXLSX:              0.23
   opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:

@@ -31,7 +31,8 @@ If the C<make test> warns you in the xls tests, read the message and
 apply the generated patch. Spreadsheet::ParseExcel has a small bug in
 the parsing of the default format regarding UTF-8.
 
-This module requires perl-5.6.x or newer.
+This module requires perl-5.8.x or newer. It might still work under
+perl-5.6.x, but only if Encode is also available.
 
 Recent changes can be (re)viewed in the public GIT repository at
 https://github.com/Tux/Spreadsheet-Read
