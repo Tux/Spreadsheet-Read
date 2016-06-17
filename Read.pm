@@ -25,7 +25,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.66";
+our $VERSION = "0.67";
 sub  Version { $VERSION }
 
 use Carp;

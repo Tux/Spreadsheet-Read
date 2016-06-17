@@ -1,5 +1,9 @@
+0.67	- 17 Jun 2016, H.Merijn Brand
+    * CPANTESTERS showed that some versions really messed op numeric/percentage
+
 0.66	- 16 Jun 2016, H.Merijn Brand
     * Remove Spreadsheet::XLSX::Reader::LibXML test files from distribution
+    * Allow old versions of Spreadsheet::ParseXLSX to "fail" on percentage tests
 
 0.65	- 15 Jun 2016, H.Merijn Brand
     * Test with perl-5.24.0

@@ -21,14 +21,12 @@ my $attr = $ss->{attr};
 
 foreach my $row (1 .. 19) {
     my @type = map { $ss->{attr}[$_][$row]{type} } 0 .. 3;
-    is ($ss->{attr}[1][$row]{type}, "numeric",		"Type A$row numeric");
-    if ($xls->[0]{version} < 0.23 && $type[2] eq "numeric") {
-	is ($type[2], "numeric",	"Type B$row percentage");
-	is ($type[3], "numeric",	"Type C$row percentage");
-	}
-    else {
-	is ($type[2], "percentage",	"Type B$row percentage");
-	is ($type[3], "percentage",	"Type C$row percentage");
+    is ($ss->{attr}[1][$row]{type}, "numeric", "Type A$row numeric");
+    foreach my $col (2, 3) {
+	my $cell = ("A".."C")[$col - 1].$row;
+	my $expect = $xls->[0]{version} < 0.23 && $type[$col] eq "numeric"
+	    ? "numeric" : "percentage";
+	is ($type[$col], $expect, "Type $cell percentage");
 	}
 
     SKIP: {

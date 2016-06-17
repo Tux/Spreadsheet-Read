@@ -20,13 +20,10 @@ my $attr = $ss->{attr};
 foreach my $row (1 .. 19) {
     my @type = map { $ss->{attr}[$_][$row]{type} } 0 .. 3;
     is ($type[1], "numeric",	"Type A$row numeric");
-    if ($type[2] eq "numeric") { # some versions return it wrong
-	is ($type[2], "numeric",	"Type B$row percentage");
-	is ($type[3], "numeric",	"Type C$row percentage");
-	}
-    else { # This is correct. The dedicated tests will check on version
-	is ($type[2], "percentage",	"Type B$row percentage");
-	is ($type[3], "percentage",	"Type C$row percentage");
+    foreach my $col (2, 3) {	# Allow numeric for percentage in main test
+	my $cell   = ("A".."C")[$col - 1].$row;
+	my $expect = $type[$col] eq "numeric" ? "numeric" : "percentage";
+	is ($type[$col], $expect, "Type B$row percentage");
 	}
 
     SKIP: {
