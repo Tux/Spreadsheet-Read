@@ -69,7 +69,7 @@ recommends:
   File::Temp:           0.2304
   Data::Peek:           0.46
 test_recommends:
-  Test::More:           1.302026
+  Test::More:           1.302035
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -98,7 +98,7 @@ optional_features:
       Spreadsheet::ParseXLSX:              0.13
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseXLSX:              0.23
+      Spreadsheet::ParseXLSX:              0.24
   opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
