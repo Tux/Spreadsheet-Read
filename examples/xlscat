@@ -2,17 +2,16 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'15 [24-08-2015] Copyright H.M.Brand 2005-2016
+#	   (m)'16 [01-08-2016] Copyright H.M.Brand 2005-2016
 
 use strict;
 use warnings;
 
-our $VERSION = "3.2";
+our $VERSION = "3.3";
 
 my $is_grep = $0 =~ m/grep$/;
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     (my $scrpt = $0) =~ s{.*[\/]}{};
     my $p = $is_grep ? " pattern" : "";
@@ -176,8 +175,7 @@ if ($opt_c) {
 	use Data::Peek;
 	$dp = 1;
 	};
-    sub ddumper
-    {
+    sub ddumper {
 	$dp ? DDumper (@_)
 	    : print STDERR Dumper (@_);
 	} # ddumper
@@ -243,8 +241,7 @@ my $v_fmt = $opt_C || $opt_R || $opt_F ? "" : "%6d x %6d%s";
 # 35 Magenta
 # 36 Cyan
 # 37 White
-sub color_reduce
-{
+sub color_reduce {
     my ($rgb, $base) = @_;
     defined $rgb or return "";
     my ($r, $g, $b) = map { hex >> 7 }
@@ -252,8 +249,7 @@ sub color_reduce
     $base + 4 * $b + 2 * $g + $r;
     } # color_reduce
 
-sub ansi_color
-{
+sub ansi_color {
     my ($fg, $bg, $bold, $ul) = @_;
 
     # warn "$fg on $bg $bold $ul\n";
@@ -266,8 +262,7 @@ sub ansi_color
     "\e[${attr}m";
     } # ansi_color
 
-sub css_color
-{
+sub css_color {
     my ($fg, $bg, $bold, $ul, $ha) = @_;
 
     my @css;
@@ -484,10 +479,26 @@ foreach my $si (1 .. $sc) {
     }
 $opt_H and print "</body>\n</html>\n";
 
-sub line
-{
+sub line {
     my $sep  = shift;
     my $line = join $sep => @_;
     !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
     print "$line\n";
     } # show_line
+
+END {
+    if ($opt_v >= 7) {
+	my %seen;
+	print "\nNon-CORE modules loaded:\n", "-" x 25, " ", "--------\n";
+	foreach my $mod (sort keys %INC) {
+	    my $path = $INC{$mod};
+	    $mod =~ s{\.pm$}{} or next;
+	    $mod =~ s{/}{::}g;
+	    $path =~ s{.*/site_perl/}{} or next;
+	    grep { $mod =~ m/^${_}::/ } keys %seen and next;
+	    $seen{$mod}++;
+	    my $v = $mod->VERSION () || eval "\$${mod}::VERSION" || "?";
+	    printf "%-25s %s\n", $mod, $v;
+	    }
+	}
+    }
