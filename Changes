@@ -1,5 +1,6 @@
-0.68	- 17 Jun 2016, H.Merijn Brand
-    * 
+0.68	- 30 Aug 2016, H.Merijn Brand
+    * List non-core modules/version used on very verbose in xlscat
+    * Option to export all sheets in a spreadsheet to CSV (UTF-8 only)
 
 0.67	- 17 Jun 2016, H.Merijn Brand
     * CPANTESTERS showed that some versions really messed op numeric/percentage
