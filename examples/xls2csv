@@ -1,38 +1,64 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'13 [24-10-2013] Copyright H.M.Brand 2008-2016
+#	   (m)'16 [30-08-2016] Copyright H.M.Brand 2008-2016
 
 use strict;
 use warnings;
 
-sub usage
-{
+our $VERSION = "3.1";
+(my $cmd = $0) =~ s{.*/}{};
+
+use Text::CSV_XS;
+use Spreadsheet::Read qw( ReadData row );
+
+sub usage {
     my $err = shift and select STDERR;
-    print "usage: $0 [ -o file.csv ] file.xls\n";
+    print "usage: $cmd [ --all | -o file.csv ] file.xls\n";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
 
-use Getopt::Long qw( :config bundling nopermute passthrough );
-my $csv;
-my $opt_f;
+use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
-    "help|?"	=> sub { usage 0; },
-    "o|c=s"	=> \$csv,
-    "f"		=> \$opt_f,
+    "help|?"    => sub { usage 0; },
+    "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
+
+    "o|c|out=s" => \my $csv,
+    "f|force!"  => \my $opt_f,
+    "A|all!"    => \my $opt_a,
     ) or usage 1;
 
 my $xls = shift or usage 1, "No input file";
 -r $xls         or usage 1, "Input file unreadable";
 -s $xls         or usage 1, "Input file empty";
 
-$csv or ($csv = $xls) =~ s/\.xls$/.csv/i;
+if ($opt_a) {
+    my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
+    $csv and $xls = $csv;
+    $xls =~ s/\.(csv|xlsx?)$//i;
+    $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1, eol => "\r\n" });
+    foreach my $si (1 .. $ss->[0]{sheets}) {
+	my $s  = $ss->[$si]   or next;
+	my $mc = $s->{maxcol} or next;
+	my $mr = $s->{maxrow} or next;
+	my $sn = $s->{label}  or next;
+	my $fn = "$xls-$sn.csv";
+	-f $fn && !$opt_f and die "$fn already exists\n";
+	warn "Saving sheet to $fn ...\n";
+	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
+	$csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
+	close $fh;
+	}
+    exit;
+    }
+
+$csv or ($csv = $xls) =~ s/\.xlsx?$/.csv/i;
 if (-f $csv) {
     $opt_f or die "$csv already exists\n";
     unlink $csv;
     }
 
-print STDERR "Converting $xls to $csv ...\n";
-open STDOUT, ">", $csv;
+warn "Converting $xls to $csv ...\n";
+open STDOUT, ">", $csv or die "$csv: $!\n";
 exec "xlscat", "-c", $xls;
