@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'16 [01-08-2016] Copyright H.M.Brand 2005-2016
+#	   (m)'16 [27-09-2016] Copyright H.M.Brand 2005-2016
 
 use strict;
 use warnings;
 
-our $VERSION = "3.3";
+our $VERSION = "3.4";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -286,6 +286,7 @@ if ($opt_H) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
   <title>$file</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="Author" content="xlscat $VERSION" />
   <style type="text/css">
     body, h2,
