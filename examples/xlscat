@@ -85,6 +85,7 @@ my $opt_i = 0;		# Index (cat) | ignore_case (grep)
 my $opt_L = 0;		# Auto-size/align columns
 my $opt_n;		# Prefix lines with column number
 my $opt_u = 0;		# Show unformatted values
+my $opt_f = 0;		# Show the formula instead of the value
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_A = 0;		# Show field colors in ANSI escapes
@@ -108,6 +109,7 @@ GetOptions (
     # Input XLS
     "dtfmt".
      "|date-format=s"	=> \$dtfmt,
+    "f|formulas!"	=> \$opt_f,
 
     # Output
     "i|index".
@@ -159,6 +161,7 @@ $opt_s && $opt_H and usage 1, "Options s and H are mutually exclusive";
 defined $opt_s or $opt_s = "|"; eval "\$opt_s = qq{$opt_s}";
 defined $opt_S or $opt_S = $opt_i || $is_grep ? "all" : "1";
 $opt_i && !$is_grep && $opt_v < 1 and $opt_v = 1;
+$opt_f and $opt_A++;
 
 if ($opt_c) {
     $opt_L = 0;	# Cannot align CSV
@@ -379,7 +382,9 @@ foreach my $si (1 .. $sc) {
 	    $opt_v > 2 and warn "$_:$r '$uval' / '$fval'\n";
 	    $opt_A and 
 		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
-	    defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
+	    $opt_f && $s->{attr}[$_][$r]{formula}
+		? "=".$s->{attr}[$_][$r]{formula}
+		: defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
 	    } $c[0] .. $c[1];
 	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
