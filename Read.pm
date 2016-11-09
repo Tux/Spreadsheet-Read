@@ -121,6 +121,7 @@ my @def_attr = (
     hidden  => 0,
     locked  => 0,
     enc     => "utf-8", # $ENV{LC_ALL} // $ENV{LANG} // ...
+    formula => undef,
     );
 
 # Helper functions
@@ -724,6 +725,7 @@ sub ReadData
 				uline   => $FnT->{Underline},
 				fgcolor => _xls_color ($FnT->{Color}),
 				bgcolor => _xls_fill  (@{$FmT->{Fill}}),
+				formula => $oWkC->{Formula},
 				};
 			    #_dump "cell", $sheet{attr}[$c + 1][$r + 1];
 			    }
