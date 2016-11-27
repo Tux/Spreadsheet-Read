@@ -13,8 +13,7 @@ use     Spreadsheet::Read qw( ReadData cell2cr row cellrow );
 my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_CSV}";
 
-sub ReadDataCSV
-{
+sub ReadDataCSV {
     ReadData (@_, parser => "csv");
     } # ReadDataCSV
 

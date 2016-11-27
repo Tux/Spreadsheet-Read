@@ -3,8 +3,7 @@
 use 5.16.2;
 use warnings;
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     say "usage: $0 [--list]";
     exit $err;
@@ -120,8 +119,7 @@ my %add = (
 
 my $ua  = LWP::UserAgent->new (agent => "Opera/12.15");
 
-sub get_from_cpantesters
-{
+sub get_from_cpantesters {
     my $m = shift // $tm;
     warn "Get from cpantesters ...\n";
     my $url = "http://deps.cpantesters.org/depended-on-by.pl?dist=$m";
@@ -140,8 +138,7 @@ sub get_from_cpantesters
     return @h;
     } # get_from_cpantesters
 
-sub get_from_cpants
-{
+sub get_from_cpants {
     my $m = shift // $tm;
     warn "Get from cpants ...\n";
     my $url = "http://cpants.cpanauthors.org/dist/$m/used_by";
@@ -162,8 +159,7 @@ sub get_from_cpants
     return @h;
     } # get_from_cpants
 
-sub get_from_meta
-{
+sub get_from_meta {
     my $m = shift // $tm;
     warn "Get from meta ...\n";
     my $url = "https://metacpan.org/requires/distribution/$m";

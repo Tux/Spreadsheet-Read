@@ -6,8 +6,7 @@
 use strict;
 use warnings;
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     print
 	"usage: $0 [-t] [-S <sheets>] [-R <rows>] [-C columns] [-F <fields>]\n",
@@ -50,8 +49,7 @@ use Tk::ROText;
 my $file = shift || (sort { -M $b <=> -M $a } glob "*.xls")[0];
 my ($mw, $is, $ss, $dt) = (MainWindow->new, "1.0");
 
-sub ReadFile
-{
+sub ReadFile {
     $file or return;
 
     $dt->delete ("1.0", "end");
@@ -180,8 +178,7 @@ $bf->Checkbutton (
 	)->pack (qw(-side left -expand 1 -fill both));
     }
 
-sub ranges (@)
-{
+sub ranges (@) {
     my @g;
     foreach my $arg (@_) {
 	for (split m/,/, $arg) {
@@ -199,8 +196,7 @@ sub ranges (@)
     @g;
     } # ranges
 
-sub Detect
-{
+sub Detect {
     $ss or ReadFile ();
 
     $dt->delete ($is, "end");
@@ -242,8 +238,7 @@ sub Detect
 	}
     } # Detect
 
-sub Show
-{
+sub Show {
     $ss or ReadFile ();
 
     $dt->delete ($is, "end");

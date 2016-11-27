@@ -5,8 +5,7 @@ require 5.008;
 use ExtUtils::MakeMaker;
 use File::Copy;
 
-sub link_or_copy
-{
+sub link_or_copy {
     my ($source, $dest) = @_;
 
     link ($source, $dest) or copy ($source, $dest);
@@ -71,8 +70,7 @@ my $rv = WriteMakefile (%wm);
 
 package MY;
 
-sub postamble
-{
+sub postamble {
     my $valgrind = join " ", qw(
 	PERL_DESTRUCT_LEVEL=2 PERL_DL_NONLAZY=1
 	    valgrind

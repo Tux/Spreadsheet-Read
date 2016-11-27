@@ -126,8 +126,7 @@ my @def_attr = (
 
 # Helper functions
 
-sub _dump
-{
+sub _dump {
     my ($label, $ref) = @_;
     if ($can{dmp}) {
 	print STDERR Data::Peek::DDumper ({ $label => $ref });
@@ -137,8 +136,7 @@ sub _dump
 	}
     } # _dump
 
-sub _parser
-{
+sub _parser {
     my $type = shift		or  return "";
     $type = lc $type;
     # Aliases and fullnames
@@ -154,8 +152,7 @@ sub _parser
     } # _parser
 
 # Spreadsheet::Read::parses ("csv") or die "Cannot parse CSV"
-sub parses
-{
+sub parses {
     my $type = _parser (shift)	or  return 0;
     $can{$type} =~ m/^!/ and return 0;
     return $can{$type};
@@ -163,8 +160,7 @@ sub parses
 
 # cr2cell (4, 18) => "D18"
 # No prototype to allow 'cr2cell (@rowcol)'
-sub cr2cell
-{
+sub cr2cell {
     my ($c, $r) = @_;
     defined $c && defined $r && $c > 0 && $r > 0 or return "";
     my $cell = "";
@@ -178,8 +174,7 @@ sub cr2cell
     } # cr2cell
 
 # cell2cr ("D18") => (4, 18)
-sub cell2cr
-{
+sub cell2cr {
     my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
     my $c = 0;
     while ($cc =~ s/^([A-Z])//) {
@@ -189,8 +184,7 @@ sub cell2cr
     } # cell2cr
 
 # my @row = cellrow ($book->[1], 1);
-sub cellrow
-{
+sub cellrow {
     my $sheet = shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
@@ -201,8 +195,7 @@ sub cellrow
     } # cellrow
 
 # my @row = row ($book->[1], 1);
-sub row
-{
+sub row {
     my $sheet = shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
@@ -213,8 +206,7 @@ sub row
 
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = rows ($book->[1]);
-sub rows
-{
+sub rows {
     my $sheet = shift or return;
     ref    $sheet eq "HASH" && exists $sheet->{cell}   or return;
     exists $sheet->{maxcol} && exists $sheet->{maxrow} or return;
@@ -228,8 +220,7 @@ sub rows
 
 # If option "clip" is set, remove the trailing rows and
 # columns in each sheet that contain no visible data
-sub _clipsheets
-{
+sub _clipsheets {
     my ($opt, $ref) = @_;
 
     if (my $s = $opt->{strip} and $ref->[0]{sheets}) {
@@ -281,8 +272,7 @@ sub _clipsheets
     } # _clipsheets
 
 # Convert a single color (index) to a color
-sub _xls_color
-{
+sub _xls_color {
     my $clr = shift;
     defined $clr		or  return undef;
     $clr eq "#000000"		and return undef;
@@ -292,8 +282,7 @@ sub _xls_color
     } # _xls_color
 
 # Convert a fill [ $pattern, $front_color, $back_color ] to a single background
-sub _xls_fill
-{
+sub _xls_fill {
     my ($p, $fg, $bg) = @_;
     defined $p			or  return undef;
     $p == 32767			and return undef; # Default fg color
@@ -303,8 +292,7 @@ sub _xls_fill
     return _xls_color ($bg);
     } # _xls_fill
 
-sub _xlsx_libxml
-{
+sub _xlsx_libxml {
     my $oBook = shift;
     my @names = @{$oBook->get_worksheet_names};
     $oBook->{SheetCount} = scalar @names;
@@ -386,8 +374,7 @@ sub _xlsx_libxml
 	};
     } # _xlsx_libxml
 
-sub ReadData
-{
+sub ReadData {
     my $txt = shift	or  return;
 
     my %opt;

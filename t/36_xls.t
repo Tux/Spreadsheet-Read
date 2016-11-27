@@ -16,8 +16,7 @@ else {
     plan skip_all => "No M\$-Excel parser found";
     }
 
-sub ReadDataStream
-{
+sub ReadDataStream {
     my $file = shift;
     open my $fh, "<", $file or return undef;
     ReadData ($fh, parser => "xls", @_);

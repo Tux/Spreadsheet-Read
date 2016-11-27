@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     print "usage: $0 [--verbose[=1]] file.xls file.xlsx\n";
     exit $err;

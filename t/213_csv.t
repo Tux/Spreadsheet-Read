@@ -13,8 +13,7 @@ use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_CSV}";
 
-sub ReadDataStream
-{
+sub ReadDataStream {
     my $file = shift;
     open my $fh, "<", $file or return undef;
     ReadData ($fh, parser => "csv", @_);

@@ -11,8 +11,7 @@ use     Spreadsheet::Read qw( ReadData cell2cr row cellrow );
 my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
 
-sub ReadDataCSV
-{
+sub ReadDataCSV {
     ReadData (@_, parser => "csv");
     } # ReadDataCSV
 

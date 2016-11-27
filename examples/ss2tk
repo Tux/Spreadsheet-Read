@@ -8,8 +8,7 @@ use warnings;
 
 our $VERSION = "2.1";
 
-sub usage
-{
+sub usage {
     my $err = shift and select STDERR;
     print
 	"usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]\n",

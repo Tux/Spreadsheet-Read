@@ -33,16 +33,14 @@ use warnings;
 use App::Prove 3.13;
 use base "App::Prove";
 
-sub test_rules
-{
+sub test_rules {
     my $self = shift;
 
     @_ and $self->{test_rules} = shift;
     return $self->{test_rules};
     } # test_rules
 
-sub _get_args
-{
+sub _get_args {
     my $self = shift;
 
     my ($args, $class) = $self->SUPER::_get_args (@_);
