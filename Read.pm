@@ -16,9 +16,15 @@ package Spreadsheet::Read;
  my $book  = ReadData ("test.xlsx");
  my $book  = ReadData ($fh, parser => "xls");
 
+ Spreadsheet::Read::add ($book, "sheet.csv");
+
  my $sheet = $book->[1];             # first datasheet
  my $cell  = $book->[1]{A3};         # content of field A3 of sheet 1
  my $cell  = $book->[1]{cell}[1][3]; # same, unformatted
+
+ # OO API
+ my $book = Spreadsheet::Read->new ("file.csv");
+ $book->add ("test.xls");
 
 =cut
 
@@ -32,7 +38,7 @@ use Carp;
 use Exporter;
 our @ISA       = qw( Exporter );
 our @EXPORT    = qw( ReadData cell2cr cr2cell );
-our @EXPORT_OK = qw( parses rows cellrow row );
+our @EXPORT_OK = qw( parses rows cellrow row add );
 
 use Encode       qw( decode );
 use File::Temp   qw( );
@@ -151,8 +157,20 @@ sub _parser {
     return exists $can{$type} ? $type : "";
     } # _parser
 
+sub new {
+    my $class = shift;
+    my $r = ReadData (@_) // [{
+	parsers	=> [],
+	error	=> undef,
+	sheets	=> 0,
+	sheet	=> { },
+	}];
+    bless $r => $class;
+    } # new
+
 # Spreadsheet::Read::parses ("csv") or die "Cannot parse CSV"
 sub parses {
+    ref $_[0] eq __PACKAGE__ and shift;
     my $type = _parser (shift)	or  return 0;
     $can{$type} =~ m/^!/ and return 0;
     return $can{$type};
@@ -161,6 +179,7 @@ sub parses {
 # cr2cell (4, 18) => "D18"
 # No prototype to allow 'cr2cell (@rowcol)'
 sub cr2cell {
+    ref $_[0] eq __PACKAGE__ and shift;
     my ($c, $r) = @_;
     defined $c && defined $r && $c > 0 && $r > 0 or return "";
     my $cell = "";
@@ -175,6 +194,7 @@ sub cr2cell {
 
 # cell2cr ("D18") => (4, 18)
 sub cell2cr {
+    ref $_[0] eq __PACKAGE__ and shift;
     my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
     my $c = 0;
     while ($cc =~ s/^([A-Z])//) {
@@ -184,8 +204,9 @@ sub cell2cr {
     } # cell2cr
 
 # my @row = cellrow ($book->[1], 1);
+# my @row = $book->cellrow (1, 1);
 sub cellrow {
-    my $sheet = shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
     my $row   = shift or return;
@@ -196,7 +217,7 @@ sub cellrow {
 
 # my @row = row ($book->[1], 1);
 sub row {
-    my $sheet = shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
     my $row   = shift or return;
@@ -207,7 +228,7 @@ sub row {
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = rows ($book->[1]);
 sub rows {
-    my $sheet = shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
     ref    $sheet eq "HASH" && exists $sheet->{cell}   or return;
     exists $sheet->{maxcol} && exists $sheet->{maxrow} or return;
     my $s = $sheet->{cell};
@@ -415,20 +436,26 @@ sub ReadData {
 
 	my @data = (
 	    {	type	=> "csv",
-		parser  => $can{csv},
+		parser	=> $can{csv},
 		version	=> $can{csv}->VERSION,
+		parsers	=> [ {
+		    type	=> "csv",
+		    parser	=> $can{csv},
+		    version	=> $can{csv}->VERSION,
+		    }],
 		error	=> undef,
-		quote   => '"',
-		sepchar => ',',
+		quote	=> '"',
+		sepchar	=> ',',
 		sheets	=> 1,
 		sheet	=> { $label => 1 },
 		},
-	    {	label	=> $label,
+	    {	parser	=> 0,
+		label	=> $label,
 		maxrow	=> 0,
 		maxcol	=> 0,
 		cell	=> [],
 		attr	=> [],
-		merged  => [],
+		merged	=> [],
 		},
 	    );
 
@@ -554,6 +581,11 @@ sub ReadData {
 	    type	=> lc $parse_type,
 	    parser	=> $can{lc $parse_type},
 	    version	=> $can{lc $parse_type}->VERSION,
+	    parsers	=> [{
+		type	=> lc $parse_type,
+		parser	=> $can{lc $parse_type},
+		version	=> $can{lc $parse_type}->VERSION,
+		}],
 	    error	=> undef,
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
@@ -577,6 +609,7 @@ sub ReadData {
 	foreach my $oWkS (@{$oBook->{Worksheet}}) {
 	    $opt{clip} and !defined $oWkS->{Cells} and next; # Skip empty sheets
 	    my %sheet = (
+		parser	=> 0,
 		label	=> $oWkS->{Name},
 		maxrow	=> 0,
 		maxcol	=> 0,
@@ -754,11 +787,17 @@ sub ReadData {
 	    {	type	=> "sc",
 		parser	=> "Spreadsheet::Read",
 		version	=> $VERSION,
+		parsers	=> [{
+		    type	=> "sc",
+		    parser	=> "Spreadsheet::Read",
+		    version	=> $VERSION,
+		    }],
 		error	=> undef,
 		sheets	=> 1,
 		sheet	=> { sheet => 1 },
 		},
-	    {	label	=> "sheet",
+	    {	parser	=> 0,
+		label	=> "sheet",
 		maxrow	=> 0,
 		maxcol	=> 0,
 		cell	=> [],
@@ -821,6 +860,11 @@ sub ReadData {
 		type	=> "sxc",
 		parser	=> "Spreadsheet::ReadSXC",
 		version	=> $Spreadsheet::ReadSXC::VERSION,
+		parsers	=> [{
+		    type	=> "sxc",
+		    parser	=> "Spreadsheet::ReadSXC",
+		    version	=> $Spreadsheet::ReadSXC::VERSION,
+		    }],
 		error	=> undef,
 		sheets	=> 0,
 		sheet	=> {},
@@ -835,6 +879,7 @@ sub ReadData {
 	    foreach my $sheet (@sheets) {
 		my @sheet = @{$sheet->{data}};
 		my %sheet = (
+		    parser => 0,
 		    label  => $sheet->{label},
 		    maxrow => scalar @sheet,
 		    maxcol => 0,
@@ -871,6 +916,42 @@ sub ReadData {
     return;
     } # ReadData
 
+sub add {
+    my $book = shift;
+    my $r = ReadData (@_) or return;
+    $book && (ref $book eq "ARRAY" || ref $book eq __PACKAGE__) && $book->[0]{sheets} or return $r;
+
+    my $c1 = $book->[0];
+    my $c2 = $r->[0];
+
+    unless ($c1->{parsers}) {
+	$c1->{parsers}[0]{$_} = $c1->{$_} for qw( type parser version );
+	$book->[$_]{parser} = 0 for 1 .. $c1->{sheets};
+	}
+    my ($pidx) = (grep { my $p = $c1->{parsers}[$_];
+	$p->{type}    eq $c2->{type}   &&
+	$p->{parser}  eq $c2->{parser} &&
+	$p->{version} eq $c2->{version} } 0 .. $#{$c1->{parsers}});
+    unless (defined $pidx) {
+	$pidx = scalar @{$c1->{parsers}};
+	$c1->{parsers}[$pidx]{$_} = $c2->{$_} for qw( type parser version );
+	}
+
+    foreach my $sn (sort { $c2->{sheet}{$a} <=> $c2->{sheet}{$b} } keys %{$c2->{sheet}}) {
+	my $s = $sn;
+	my $v = 2;
+	while (exists $c1->{sheet}{$s}) {
+	    $s = join "/" => $sn, $v++;
+	    }
+	$c1->{sheet}{$s} = $c1->{sheets} + $c2->{sheet}{$sn};
+	$r->[$c2->{sheet}{$sn}]{parser} = $pidx;
+	push @$book, $r->[$c2->{sheet}{$sn}];
+	}
+    $c1->{sheets} += $c2->{sheets};
+
+    return $book;
+    } # add
+
 1;
 
 __END__
@@ -904,13 +985,16 @@ The data is returned as an array reference:
           "Sheet 1"  => 1,
           "Sheet 2"  => 2,
           },
-        type    => "xls",
-        parser  => "Spreadsheet::ParseExcel",
-        version => 0.59,
-	error	=> undef,
+        parsers => [ {
+            type    => "xls",
+            parser  => "Spreadsheet::ParseExcel",
+            version => 0.59,
+            }],
+        error   => undef,
         },
       # Entry 1 is the first sheet
-      { label   => "Sheet 1",
+      { parser  => 0,
+        label   => "Sheet 1",
         maxrow  => 2,
         maxcol  => 4,
         cell    => [ undef,
@@ -923,7 +1007,8 @@ The data is returned as an array reference:
         B5      => "Nugget",
         },
       # Entry 2 is the second sheet
-      { label   => "Sheet 2",
+      { parser  => 0,
+        label   => "Sheet 2",
         :
         :
 
@@ -941,7 +1026,13 @@ the sheets when accessing them by name:
 
   my %sheet2 = %{$book->[$book->[0]{sheet}{"Sheet 2"}]};
 
-=head2 Functions
+=head2 Functions and methods
+
+=head3 new
+
+ my $book = Spreadsheet::Read->new (...);
+
+All options accepted by ReadData are accepted by new.
 
 =head3 ReadData
 
@@ -1064,7 +1155,9 @@ that parser supports attributes.
 
 =head3 cr2cell
 
- my $cell = cr2cell (col, row)
+ my $cell = cr2cell (col, row);
+
+ my $cell = $book->cr2cell (col, row); # OO
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
 traditional cell notation:
@@ -1074,7 +1167,9 @@ traditional cell notation:
 
 =head3 cell2cr
 
- my ($col, $row) = cell2cr ($cell)
+ my ($col, $row) = cell2cr ($cell);
+
+ my ($col, $row) = $book->cell2cr ($cell); # OO
 
 C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
 pair (1 based):
@@ -1086,7 +1181,9 @@ pair (1 based):
 
  my @row = row ($sheet, $row)
 
- my @row = Spreadsheet::Read::row ($book->[1], 3)
+ my @row = Spreadsheet::Read::row ($book->[1], 3);
+
+ my @row = $book->row (1, 3); # OO
 
 Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
@@ -1097,9 +1194,11 @@ use argument list, or call it fully qualified.
 
 =head3 cellrow
 
- my @row = cellrow ($sheet, $row)
+ my @row = cellrow ($sheet, $row);
 
- my @row = Spreadsheet::Read::cellrow ($book->[1], 3)
+ my @row = Spreadsheet::Read::cellrow ($book->[1], 3);
+
+ my @row = $book->cellrow (1, 3); # OO
 
 Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
@@ -1110,9 +1209,11 @@ use argument list, or call it fully qualified.
 
 =head3 rows
 
- my @rows = rows ($sheet)
+ my @rows = rows ($sheet);
 
- my @rows = Spreadsheet::Read::rows ($book->[1])
+ my @rows = Spreadsheet::Read::rows ($book->[1]);
+
+ my @rows = $book->rows (1); # OO
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
@@ -1124,9 +1225,11 @@ use argument list, or call it fully qualified.
 
 =head3 parses
 
- parses ($format)
+ parses ($format);
 
- Spreadsheet::Read::parses ("CSV")
+ Spreadsheet::Read::parses ("CSV");
+
+ $book->parses ("CSV"); # OO
 
 C<parses ()> returns Spreadsheet::Read's capability to parse the
 required format. L<C<ReadData>|/ReadData> will pick its preferred parser
@@ -1143,6 +1246,8 @@ use argument list, or call it fully qualified.
 
  my $v = Spreadsheet::Read->VERSION;
 
+ my $v = $book->Version (); # OO
+
 Returns the current version of Spreadsheet::Read.
 
 C<Version ()> is not imported by default, so either specify it in the
@@ -1150,6 +1255,14 @@ use argument list, or call it fully qualified.
 
 This function returns exactly the same as C<< Spreadsheet::Read->VERSION >>
 returns and is only kept for backward compatibility reasons.
+
+=head3 add
+
+ my $book = ReadData ("file.csv");
+ Spreadsheet::Read::add ($book, "file.xlsx");
+
+ my $book = Spreadsheet::Read->new ("file.csv");
+ $book->add ("file.xlsx"); # OO
 
 =head2 Using CSV
 
@@ -1465,12 +1578,6 @@ As long as the alternative has a good reason for its existence, and the
 API of that parser reasonable fits in my approach, I will consider to
 implement the glue layer, or apply patches to do so as long as these
 match what F<CONTRIBUTING.md> describes.
-
-=item Add an OO interface
-
-Consider making the ref an object, though I currently don't see the big
-advantage (yet). Maybe I'll make it so that it is a hybrid functional /
-OO interface.
 
 =back
 
