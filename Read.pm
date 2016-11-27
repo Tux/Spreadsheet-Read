@@ -159,7 +159,7 @@ sub _parser {
 
 sub new {
     my $class = shift;
-    my $r = ReadData (@_) // [{
+    my $r = ReadData (@_) || [{
 	parsers	=> [],
 	error	=> undef,
 	sheets	=> 0,
