@@ -239,6 +239,16 @@ sub rows {
 	} 1..$sheet->{maxrow};
     } # rows
 
+sub sheet {
+    my ($book, $sheet) = @_;
+    $book && $sheet or return;
+    my $class = "Spreadsheet::Read::Sheet";
+    $sheet =~ m/^[0-9]+$/ && $sheet >= 1 && $sheet <= $book->[0]{sheets} and
+	return bless $book->[$sheet]                 => $class;
+    exists $book->{sheet}{$sheet} and
+	return bless $book->[$book->{sheet}{$sheet}] => $class;
+    } # sheet
+
 # If option "clip" is set, remove the trailing rows and
 # columns in each sheet that contain no visible data
 sub _clipsheets {
@@ -952,6 +962,44 @@ sub add {
     return $book;
     } # add
 
+package Spreadsheet::Read::Sheet;
+
+sub cell {
+    my ($sheet, @id) = @_;
+    @id == 2 && $id[0] =~ m/^[0-9]+$/ && $id[1] =~ m/^[0-9]+$/ and
+	return $sheet->{cell}[$id[0]][$id[1]];
+    @id && $id[0] && exists $sheet->{$id[0]} and
+	return $sheet->{$id[0]};
+    } # cell
+
+sub maxrow {
+    my $sheet = shift;
+    return $sheet->{maxrow};
+    } # maxrow
+
+sub maxcol {
+    my $sheet = shift;
+    return $sheet->{maxcol};
+    } # maxrow
+
+sub cr2cell {
+    my $class = shift;
+    return Spreadsheet::Read::cr2cell (@_);
+    } # cr2cell
+
+sub cell2cr {
+    my $class = shift;
+    return Spreadsheet::Read::cell2cr (@_);
+    } # cell2cr
+
+# my @row = $sheet->cellrow (1);
+sub cellrow {
+    my ($sheet, $row) = @_;
+    defined $row && $row > 0 && $row <= $sheet->{maxrow} or return;
+    my $s = $sheet->{cell};
+    map { $s->[$_][$row] } 1..$sheet->{maxcol};
+    } # cellrow
+
 1;
 
 __END__
@@ -1157,7 +1205,8 @@ that parser supports attributes.
 
  my $cell = cr2cell (col, row);
 
- my $cell = $book->cr2cell (col, row); # OO
+ my $cell = $book->cr2cell (col, row);  # OO
+ my $cell = $sheet->cr2cell (col, row); # OO
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
 traditional cell notation:
@@ -1169,7 +1218,8 @@ traditional cell notation:
 
  my ($col, $row) = cell2cr ($cell);
 
- my ($col, $row) = $book->cell2cr ($cell); # OO
+ my ($col, $row) = $book->cell2cr ($cell);  # OO
+ my ($col, $row) = $sheet->cell2cr ($cell); # OO
 
 C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
 pair (1 based):
@@ -1198,14 +1248,15 @@ use argument list, or call it fully qualified.
 
  my @row = Spreadsheet::Read::cellrow ($book->[1], 3);
 
- my @row = $book->cellrow (1, 3); # OO
+ my @row = $book->cellrow ($sheet, $row); # OO
+ my @row = $sheet->cellrow ($row);        # OO
 
 Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
 Note that the indexes in the returned list are 0-based.
 
 C<cellrow ()> is not imported by default, so either specify it in the
-use argument list, or call it fully qualified.
+use argument list, or call it fully qualified or as method call.
 
 =head3 rows
 
@@ -1256,6 +1307,15 @@ use argument list, or call it fully qualified.
 This function returns exactly the same as C<< Spreadsheet::Read->VERSION >>
 returns and is only kept for backward compatibility reasons.
 
+=head3 sheet
+
+ my $sheet = $book->sheet (1);     # OO
+ my $sheet = $book->sheet ("Foo"); # OO
+
+Return the numbered or named sheet out of the book. Will return C<undef> if
+there is no match. Will not work for sheets I<named> with a number between 1
+and the number of sheets in the book.
+
 =head3 add
 
  my $book = ReadData ("file.csv");
@@ -1263,6 +1323,28 @@ returns and is only kept for backward compatibility reasons.
 
  my $book = Spreadsheet::Read->new ("file.csv");
  $book->add ("file.xlsx"); # OO
+
+=head2 Methods on sheets
+
+=head3 maxcol
+
+ my $col = $sheet->maxcol;
+
+Return the index of the last in-use column in the sheet.
+
+=head3 maxrow
+
+ my $row = $sheet->maxrow;
+
+Return the index of the last in-use row in the sheet.
+
+=head3 cell
+
+ my $cell = $sheet->cell ("A3");
+ my $cell = $sheet->cell (1, 3);
+
+Return the value for a cell. Using tags will return the formatted value,
+using column and row will return unformatted value.
 
 =head2 Using CSV
 
