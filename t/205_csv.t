@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 169;
+my     $tests = 174;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -114,6 +114,13 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
     }
+
+ok ($csv = Spreadsheet::Read->new ("files/test.csv"),	"Read/Parse csv file");
+ok ($csv->add ("files/test.csv"), "Add the same file");
+is ($csv->sheets, 2, "Two sheets");
+is_deeply ([ $csv->sheets ], [qw( files/test.csv files/test.csv[2] )], "Sheet names");
+
+is_deeply ($csv->sheet ("files/test.csv"), $csv->sheet (2), "Compare sheets");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

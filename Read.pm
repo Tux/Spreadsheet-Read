@@ -176,6 +176,12 @@ sub parses {
     return $can{$type};
     } # parses
 
+sub sheets {
+    my $ctrl = shift->[0];
+    my %s = %{$ctrl->{sheet}};
+    wantarray ? sort { $s{$a} <=> $s{$b} } keys %s : $ctrl->{sheets};
+    } # sheets
+
 # cr2cell (4, 18) => "D18"
 # No prototype to allow 'cr2cell (@rowcol)'
 sub cr2cell {
@@ -244,9 +250,9 @@ sub sheet {
     $book && $sheet or return;
     my $class = "Spreadsheet::Read::Sheet";
     $sheet =~ m/^[0-9]+$/ && $sheet >= 1 && $sheet <= $book->[0]{sheets} and
-	return bless $book->[$sheet]                 => $class;
-    exists $book->{sheet}{$sheet} and
-	return bless $book->[$book->{sheet}{$sheet}] => $class;
+	return bless $book->[$sheet]			=> $class;
+    exists $book->[0]{sheet}{$sheet} and
+	return bless $book->[$book->[0]{sheet}{$sheet}]	=> $class;
     } # sheet
 
 # If option "clip" is set, remove the trailing rows and
@@ -951,7 +957,7 @@ sub add {
 	my $s = $sn;
 	my $v = 2;
 	while (exists $c1->{sheet}{$s}) {
-	    $s = join "/" => $sn, $v++;
+	    $s = $sn."[".$v++."]";
 	    }
 	$c1->{sheet}{$s} = $c1->{sheets} + $c2->{sheet}{$sn};
 	$r->[$c2->{sheet}{$sn}]{parser} = $pidx;
@@ -999,6 +1005,26 @@ sub cellrow {
     my $s = $sheet->{cell};
     map { $s->[$_][$row] } 1..$sheet->{maxcol};
     } # cellrow
+
+# my @row = $sheet->row (1);
+sub row {
+    my $sheet = shift;
+    my $row   = shift or return;
+    $row > 0 && $row <= $sheet->{maxrow} or return;
+    map { $sheet->{cr2cell ($_, $row)} } 1..$sheet->{maxcol};
+    } # row
+
+# Convert {cell}'s [column][row] to a [row][column] list
+# my @rows = $sheet->rows ();
+sub rows {
+    my $sheet = shift;
+    my $s = $sheet->{cell};
+
+    map {
+	my $r = $_;
+	[ map { $s->[$_][$r] } 1..$sheet->{maxcol} ];
+	} 1..$sheet->{maxrow};
+    } # rows
 
 1;
 
@@ -1233,7 +1259,8 @@ pair (1 based):
 
  my @row = Spreadsheet::Read::row ($book->[1], 3);
 
- my @row = $book->row (1, 3); # OO
+ my @row = $book->row ($sheet, $row); # OO
+ my @row = $sheet->row ($row);        # OO
 
 Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
@@ -1265,6 +1292,7 @@ use argument list, or call it fully qualified or as method call.
  my @rows = Spreadsheet::Read::rows ($book->[1]);
 
  my @rows = $book->rows (1); # OO
+ my @rows = $sheet->rows (); # OO
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
@@ -1307,6 +1335,14 @@ use argument list, or call it fully qualified.
 This function returns exactly the same as C<< Spreadsheet::Read->VERSION >>
 returns and is only kept for backward compatibility reasons.
 
+=head3 sheets
+
+ my $sheets = $book->sheets; # OO
+ my @sheets = $book->sheets; # OO
+
+In scalar context return the number of sheets in the book.
+In list context return the labels of the sheets in the book.
+
 =head3 sheet
 
  my $sheet = $book->sheet (1);     # OO
@@ -1315,6 +1351,8 @@ returns and is only kept for backward compatibility reasons.
 Return the numbered or named sheet out of the book. Will return C<undef> if
 there is no match. Will not work for sheets I<named> with a number between 1
 and the number of sheets in the book.
+
+If defined, the returned sheet will be of class C<Spreadsheet::Read::Sheet>.
 
 =head3 add
 
