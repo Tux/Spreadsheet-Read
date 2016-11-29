@@ -59,6 +59,7 @@ t/201_csv.t
 t/202_csv.t
 t/203_csv.t
 t/204_csv.t
+t/205_csv.t
 t/210_csv.t
 t/211_csv.t
 t/212_csv.t

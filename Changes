@@ -1,3 +1,6 @@
+0.69	- 29 Nov 2016, H.Merijn Brand
+    * 
+
 0.68	- 29 Nov 2016, H.Merijn Brand
     * List non-core modules/version used on very verbose in xlscat
     * Option to export all sheets in a spreadsheet to CSV (UTF-8 only)
