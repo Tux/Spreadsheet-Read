@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 174;
+my     $tests = 206;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -22,6 +22,8 @@ my $parser = Spreadsheet::Read::parses ("csv") or
 
 my $csv;
 ok ($csv = Spreadsheet::Read->new ("files/test.csv"),	"Read/Parse csv file");
+ok ($csv->parses ("CSV"),		"Parses CSV");
+is ($csv->cr2cell (1, 1),	"A1",	"method cr2cell");
 
 ok (1, "Base values");
 is (ref $csv,			"Spreadsheet::Read",	"Return type");
@@ -31,11 +33,45 @@ is (ref $csv->[0]{sheet},	"HASH",			"Sheet list");
 is (scalar keys %{$csv->[0]{sheet}}, 1,			"Sheet list count");
 cmp_ok ($csv->[0]{version},	">=",	0.01,		"Parser version");
 
+is_deeply ([$csv->cellrow (1, 1)], ["A1","B1","","D1",(undef) x 15], "row 1");
+is ($csv->cellrow (1, 255), undef, "No such row   255");
+is ($csv->cellrow (1, -55), undef, "No such row   -55");
+is ($csv->cellrow (1,   0), undef, "No such row     0");
+is ($csv->cellrow (0,   1), undef, "No such sheet   0");
+is ($csv->cellrow (-2,  1), undef, "Wrong   sheet  -2");
+is ($csv->cellrow (-20, 1), undef, "No such sheet -20");
+is_deeply ([$csv->row     (1, 1)], ["A1","B1","","D1",(undef) x 15], "row 1");
+is ($csv->row     (1, 255), undef, "No such row   255");
+is ($csv->row     (1, -55), undef, "No such row   -55");
+is ($csv->row     (1,   0), undef, "No such row     0");
+is ($csv->row     (0,   1), undef, "No such sheet   0");
+is ($csv->row     (-2,  1), undef, "Wrong   sheet  -2");
+is ($csv->row     (-20, 1), undef, "No such sheet -20");
+
+is ($csv->sheet (  0),	undef,				"Sheet   0");
+is ($csv->sheet (255),	undef,				"Sheet 255");
+is ($csv->sheet (-55),	undef,				"Sheet -55");
+is ($csv->sheet ("="),	undef,				"Sheet '='");
+
+is (Spreadsheet::Read::sheet (undef, 1), undef,	"Don't be silly");
+is (Spreadsheet::Read::sheet ($csv, -9), undef,	"Don't be silly");
+
 ok (my $sheet = $csv->sheet (1),			"Sheet 1");
 is ($sheet->maxrow,		5,			"Last row");
 is ($sheet->maxcol,		19,			"Last column");
 is ($sheet->cell ($sheet->maxcol, $sheet->maxrow),
 				"LASTFIELD",		"Last field");
+is_deeply ([$sheet->cellrow (1)], ["A1","B1","","D1",(undef) x 15], "row 1");
+is ($sheet->cellrow (255), undef, "No such row 255");
+is ($sheet->cellrow (-55), undef, "No such row -55");
+is ($sheet->cellrow (  0), undef, "No such row   0");
+is_deeply ([$sheet->row     (1)], ["A1","B1","","D1",(undef) x 15], "row 1");
+is ($sheet->row     (255), undef, "No such row 255");
+is ($sheet->row     (-55), undef, "No such row -55");
+is ($sheet->row     (  0), undef, "No such row   0");
+
+ok (my @rows = $sheet->rows, "All rows");
+is ($rows[0][0], "A1", "A1");
 
 ok (1, "Defined fields");
 foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {

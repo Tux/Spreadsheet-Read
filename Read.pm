@@ -212,7 +212,7 @@ sub cell2cr {
 # my @row = cellrow ($book->[1], 1);
 # my @row = $book->cellrow (1, 1);
 sub cellrow {
-    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? (shift)->[shift] : shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
     my $row   = shift or return;
@@ -223,7 +223,7 @@ sub cellrow {
 
 # my @row = row ($book->[1], 1);
 sub row {
-    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? (shift)->[shift] : shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
     exists  $sheet->{maxcol} && exists  $sheet->{maxrow} or return;
     my $row   = shift or return;
@@ -234,7 +234,7 @@ sub row {
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = rows ($book->[1]);
 sub rows {
-    my $sheet = ref $_[0] eq __PACKAGE__ ? $_[0]->[shift] : shift or return;
+    my $sheet = ref $_[0] eq __PACKAGE__ ? (shift)->[shift] : shift or return;
     ref    $sheet eq "HASH" && exists $sheet->{cell}   or return;
     exists $sheet->{maxcol} && exists $sheet->{maxrow} or return;
     my $s = $sheet->{cell};
@@ -253,6 +253,7 @@ sub sheet {
 	return bless $book->[$sheet]			=> $class;
     exists $book->[0]{sheet}{$sheet} and
 	return bless $book->[$book->[0]{sheet}{$sheet}]	=> $class;
+    return;
     } # sheet
 
 # If option "clip" is set, remove the trailing rows and
@@ -1008,10 +1009,9 @@ sub cellrow {
 
 # my @row = $sheet->row (1);
 sub row {
-    my $sheet = shift;
-    my $row   = shift or return;
-    $row > 0 && $row <= $sheet->{maxrow} or return;
-    map { $sheet->{cr2cell ($_, $row)} } 1..$sheet->{maxcol};
+    my ($sheet, $row) = @_;
+    defined $row && $row > 0 && $row <= $sheet->{maxrow} or return;
+    map { $sheet->{$sheet->cr2cell ($_, $row)} } 1..$sheet->{maxcol};
     } # row
 
 # Convert {cell}'s [column][row] to a [row][column] list
