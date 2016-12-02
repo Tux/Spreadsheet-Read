@@ -1232,7 +1232,6 @@ that parser supports attributes.
  my $cell = cr2cell (col, row);
 
  my $cell = $book->cr2cell (col, row);  # OO
- my $cell = $sheet->cr2cell (col, row); # OO
 
 C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
 traditional cell notation:
@@ -1245,7 +1244,6 @@ traditional cell notation:
  my ($col, $row) = cell2cr ($cell);
 
  my ($col, $row) = $book->cell2cr ($cell);  # OO
- my ($col, $row) = $sheet->cell2cr ($cell); # OO
 
 C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
 pair (1 based):
@@ -1260,7 +1258,6 @@ pair (1 based):
  my @row = Spreadsheet::Read::row ($book->[1], 3);
 
  my @row = $book->row ($sheet, $row); # OO
- my @row = $sheet->row ($row);        # OO
 
 Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
 
@@ -1276,7 +1273,6 @@ use argument list, or call it fully qualified.
  my @row = Spreadsheet::Read::cellrow ($book->[1], 3);
 
  my @row = $book->cellrow ($sheet, $row); # OO
- my @row = $sheet->cellrow ($row);        # OO
 
 Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
 
@@ -1292,7 +1288,6 @@ use argument list, or call it fully qualified or as method call.
  my @rows = Spreadsheet::Read::rows ($book->[1]);
 
  my @rows = $book->rows (1); # OO
- my @rows = $sheet->rows (); # OO
 
 Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
@@ -1383,6 +1378,51 @@ Return the index of the last in-use row in the sheet.
 
 Return the value for a cell. Using tags will return the formatted value,
 using column and row will return unformatted value.
+
+=head3 cr2cell
+
+ my $cell = $sheet->cr2cell (col, row);
+
+C<cr2cell ()> converts a C<(column, row)> pair (1 based) to the
+traditional cell notation:
+
+  my $cell = $sheet->cr2cell ( 4, 14); # $cell now "D14"
+  my $cell = $sheet->cr2cell (28,  4); # $cell now "AB4"
+
+=head3 cell2cr
+
+ my ($col, $row) = $sheet->cell2cr ($cell);
+
+C<cell2cr ()> converts traditional cell notation to a C<(column, row)>
+pair (1 based):
+
+  my ($col, $row) = $sheet->cell2cr ("D14"); # returns ( 4, 14)
+  my ($col, $row) = $sheet->cell2cr ("AB4"); # returns (28,  4)
+
+=head3 row
+
+ my @row = $sheet->row ($row);
+
+Get full row of formatted values (like C<< $sheet->{A3} .. $sheet->{G3} >>)
+
+Note that the indexes in the returned list are 0-based.
+
+=head3 cellrow
+
+ my @row = $sheet->cellrow ($row);
+
+Get full row of unformatted values (like C<< $sheet->{cell}[1][3] .. $sheet->{cell}[7][3] >>)
+
+Note that the indexes in the returned list are 0-based.
+
+=head3 rows
+
+ my @rows = $sheet->rows ();
+
+Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
+
+Note that the indexes in the returned list are 0-based, where the
+index in the C<{cell}> entry is 1-based.
 
 =head2 Using CSV
 

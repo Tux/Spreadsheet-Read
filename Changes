@@ -1,5 +1,5 @@
-0.69	- 29 Nov 2016, H.Merijn Brand
-    * 
+0.69	- 02 Dec 2016, H.Merijn Brand
+    * Several OO fixes, more tests, more docs
 
 0.68	- 29 Nov 2016, H.Merijn Brand
     * List non-core modules/version used on very verbose in xlscat
