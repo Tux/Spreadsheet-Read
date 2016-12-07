@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 213;
+my     $tests = 221;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -61,6 +61,7 @@ is ($sheet->maxrow,		5,			"Last row");
 is ($sheet->maxcol,		19,			"Last column");
 is ($sheet->cell ($sheet->maxcol, $sheet->maxrow),
 				"LASTFIELD",		"Last field");
+
 is_deeply ([$sheet->cellrow (1)], ["A1","B1","","D1",(undef) x 15], "row 1");
 is ($sheet->cellrow (255), undef, "No such row 255");
 is ($sheet->cellrow (-55), undef, "No such row -55");
@@ -69,6 +70,15 @@ is_deeply ([$sheet->row     (1)], ["A1","B1","","D1",(undef) x 15], "row 1");
 is ($sheet->row     (255), undef, "No such row 255");
 is ($sheet->row     (-55), undef, "No such row -55");
 is ($sheet->row     (  0), undef, "No such row   0");
+
+is_deeply ([$sheet->cellcolumn (1)], ["A1","A2","A3","A4",""], "col 1");
+is ($sheet->cellcolumn (255), undef, "No such col 255");
+is ($sheet->cellcolumn (-55), undef, "No such col -55");
+is ($sheet->cellcolumn (  0), undef, "No such col   0");
+is_deeply ([$sheet->column     (1)], ["A1","A2","A3","A4",""], "col 1");
+is ($sheet->column     (255), undef, "No such col 255");
+is ($sheet->column     (-55), undef, "No such col -55");
+is ($sheet->column     (  0), undef, "No such col   0");
 
 ok (my @rows = $sheet->rows, "All rows");
 is ($rows[0][0], "A1", "A1");

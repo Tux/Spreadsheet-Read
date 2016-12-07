@@ -1028,6 +1028,21 @@ sub row {
     map { $sheet->{$sheet->cr2cell ($_, $row)} } 1..$sheet->{maxcol};
     } # row
 
+# my @col = $sheet->cellcolumn (1);
+sub cellcolumn {
+    my ($sheet, $col) = @_;
+    defined $col && $col > 0 && $col <= $sheet->{maxcol} or return;
+    my $s = $sheet->{cell};
+    map { $s->[$col][$_] } 1..$sheet->{maxrow};
+    } # cellcolumn
+
+# my @col = $sheet->column (1);
+sub column {
+    my ($sheet, $col) = @_;
+    defined $col && $col > 0 && $col <= $sheet->{maxcol} or return;
+    map { $sheet->{$sheet->cr2cell ($col, $_)} } 1..$sheet->{maxrow};
+    } # column
+
 # Convert {cell}'s [column][row] to a [row][column] list
 # my @rows = $sheet->rows ();
 sub rows {
@@ -1416,6 +1431,22 @@ pair (1 based):
 
   my ($col, $row) = $sheet->cell2cr ("D14"); # returns ( 4, 14)
   my ($col, $row) = $sheet->cell2cr ("AB4"); # returns (28,  4)
+
+=head3 col
+
+ my @col = $sheet->column ($col);
+
+Get full column of formatted values (like C<< $sheet->{C1} .. $sheet->{C9} >>)
+
+Note that the indexes in the returned list are 0-based.
+
+=head3 cellcolumn
+
+ my @col = $sheet->cellcolumn ($col);
+
+Get full column of unformatted values (like C<< $sheet->{cell}[3][1] .. $sheet->{cell}[3][9] >>)
+
+Note that the indexes in the returned list are 0-based.
 
 =head3 row
 
