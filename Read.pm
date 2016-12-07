@@ -1361,7 +1361,7 @@ Return the numbered or named sheet out of the book. Will return C<undef> if
 there is no match. Will not work for sheets I<named> with a number between 1
 and the number of sheets in the book.
 
-With named sheets will first try to use the list of sheetnames as stored in
+With named sheets will first try to use the list of sheet-labels as stored in
 the control structure. If no match is found, it will scan the actual labels
 of the sheets. In that case, it will return the fist matching sheet.
 
@@ -1471,7 +1471,7 @@ See L<Text::CSV_XS|https://metacpan.org/pod/Text-CSV_XS> for documentation.
  my $ss = ReadData ("bad.csv");
  $ss->[0]{error} and say $ss->[0]{error}[1];
 
-As CSV has no sheet labels, the default label foor a CSV sheet is its filename.
+As CSV has no sheet labels, the default label for a CSV sheet is its filename.
 For CSV, this can be overruled using the I<label> attribute:
 
  my $ss = Spreadsheet::Read->new ("/some/place/test.csv", label => "Test");
