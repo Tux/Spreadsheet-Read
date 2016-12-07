@@ -31,7 +31,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.69";
+our $VERSION = "0.70";
 sub  Version { $VERSION }
 
 use Carp;
@@ -253,6 +253,10 @@ sub sheet {
 	return bless $book->[$sheet]			=> $class;
     exists $book->[0]{sheet}{$sheet} and
 	return bless $book->[$book->[0]{sheet}{$sheet}]	=> $class;
+    foreach my $idx (1 .. $book->[0]{sheets}) {
+	$book->[$idx]{label} eq $sheet and
+	    return bless $book->[$idx]			=> $class;
+	}
     return;
     } # sheet
 
@@ -261,8 +265,9 @@ sub sheet {
 sub _clipsheets {
     my ($opt, $ref) = @_;
 
-    if (my $s = $opt->{strip} and $ref->[0]{sheets}) {
-	foreach my $sheet (1 .. $ref->[0]{sheets}) {
+    foreach my $sheet (1 .. $ref->[0]{sheets}) {
+	$ref->[$sheet]{indx} = $sheet;
+	if (my $s = $opt->{strip} and $ref->[0]{sheets}) {
 	    my $ss = $ref->[$sheet];
 	    $ss->{maxrow} && $ss->{maxcol} or next;
 	    foreach my $row (1 .. $ss->{maxrow}) {
@@ -936,7 +941,8 @@ sub ReadData {
 sub add {
     my $book = shift;
     my $r = ReadData (@_) or return;
-    $book && (ref $book eq "ARRAY" || ref $book eq __PACKAGE__) && $book->[0]{sheets} or return $r;
+    $book && (ref $book eq "ARRAY" ||
+	      ref $book eq __PACKAGE__) && $book->[0]{sheets} or return $r;
 
     my $c1 = $book->[0];
     my $c2 = $r->[0];
@@ -998,6 +1004,12 @@ sub cell2cr {
     my $class = shift;
     return Spreadsheet::Read::cell2cr (@_);
     } # cell2cr
+
+sub label {
+    my ($sheet, $label) = @_;
+    defined $label and $sheet->{label} = $label;
+    return $sheet->{label};
+    } # label
 
 # my @row = $sheet->cellrow (1);
 sub cellrow {
@@ -1347,6 +1359,10 @@ Return the numbered or named sheet out of the book. Will return C<undef> if
 there is no match. Will not work for sheets I<named> with a number between 1
 and the number of sheets in the book.
 
+With named sheets will first try to use the list of sheetnames as stored in
+the control structure. If no match is found, it will scan the actual labels
+of the sheets. In that case, it will return the fist matching sheet.
+
 If defined, the returned sheet will be of class C<Spreadsheet::Read::Sheet>.
 
 =head3 add
@@ -1423,6 +1439,14 @@ Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 
 Note that the indexes in the returned list are 0-based, where the
 index in the C<{cell}> entry is 1-based.
+
+=head3 label
+
+ my $label = $sheet->label;
+ $sheet->label ("New sheet label");
+
+Set a new label to a sheet. Not that the index in the control structure will
+I<NOT> be updated.
 
 =head2 Using CSV
 
