@@ -1447,7 +1447,7 @@ index in the C<{cell}> entry is 1-based.
  my $label = $sheet->label;
  $sheet->label ("New sheet label");
 
-Set a new label to a sheet. Not that the index in the control structure will
+Set a new label to a sheet. Note that the index in the control structure will
 I<NOT> be updated.
 
 =head2 Using CSV
