@@ -109,6 +109,7 @@ my %def_opts = (
     parser  => undef,
     sep     => undef,
     quote   => undef,
+    label   => undef,
     );
 my @def_attr = (
     type    => "text",
@@ -452,7 +453,7 @@ sub ReadData {
 		     : ($io_fil && $txt =~ m/\.(csv)$/i)) {
 	$can{csv} or croak "CSV parser not installed";
 
-	my $label = $io_fil ? $txt : "IO";
+	my $label = defined $opt{label} ? $opt{label} : $io_fil ? $txt : "IO";
 
 	$debug and print STDERR "Opening CSV $label using $can{csv}-", $can{csv}->VERSION, "\n";
 
@@ -805,6 +806,7 @@ sub ReadData {
 	    close   $sc;
 	    }
 	$txt =~ m/\S/ or return;
+	my $label = defined $opt{label} ? $opt{label} : "sheet";
 	my @data = (
 	    {	type	=> "sc",
 		parser	=> "Spreadsheet::Read",
@@ -816,10 +818,10 @@ sub ReadData {
 		    }],
 		error	=> undef,
 		sheets	=> 1,
-		sheet	=> { sheet => 1 },
+		sheet	=> { $label => 1 },
 		},
 	    {	parser	=> 0,
-		label	=> "sheet",
+		label	=> $label,
 		maxrow	=> 0,
 		maxcol	=> 0,
 		cell	=> [],
@@ -1468,6 +1470,11 @@ See L<Text::CSV_XS|https://metacpan.org/pod/Text-CSV_XS> for documentation.
 
  my $ss = ReadData ("bad.csv");
  $ss->[0]{error} and say $ss->[0]{error}[1];
+
+As CSV has no sheet labels, the default label foor a CSV sheet is its filename.
+For CSV, this can be overruled using the I<label> attribute:
+
+ my $ss = Spreadsheet::Read->new ("/some/place/test.csv", label => "Test");
 
 =head2 Cell Attributes
 X<merged>

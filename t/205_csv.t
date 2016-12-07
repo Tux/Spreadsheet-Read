@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 211;
+my     $tests = 213;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -163,6 +163,9 @@ is ($sheet2->label, "files/test.csv",	"Original label");
 is ($sheet2->label ("Hello"), "Hello",	"New label");
 ok (my $sheet3 = $csv->sheet ("Hello"),	"Found by new label");
 is_deeply ($sheet2, $sheet3, "Compare sheets");
+
+ok ($csv->add ("files/test.csv", label => "Test"), "Add with label");
+is_deeply ([ $csv->sheets ], [qw( files/test.csv files/test.csv[2] Test )], "Sheet names");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
