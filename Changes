@@ -1,6 +1,7 @@
-0.70	- 07 Dec 2016, H.Merijn Brand
+0.70	- 05 Jan 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
     * Add ->column and ->cellcolumn for ::Sheet
+    * Add col2id sub/method
 
 0.69	- 02 Dec 2016, H.Merijn Brand
     * Several OO fixes, more tests, more docs
