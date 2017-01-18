@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-our $VERSION = "3.1";
+our $VERSION = "3.2";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -14,7 +14,7 @@ use Spreadsheet::Read qw( ReadData row );
 
 sub usage {
     my $err = shift and select STDERR;
-    print "usage: $cmd [ --all | -o file.csv ] file.xls\n";
+    print "usage: $cmd [ --all [ --no-pfx ] | -o file.csv ] file.xls\n";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
@@ -26,7 +26,9 @@ GetOptions (
 
     "o|c|out=s" => \my $csv,
     "f|force!"  => \my $opt_f,
+
     "A|all!"    => \my $opt_a,
+    "N|no-pfx!" => \my $opt_N,
     ) or usage 1;
 
 my $xls = shift or usage 1, "No input file";
@@ -42,8 +44,11 @@ if ($opt_a) {
 	my $s  = $ss->[$si]   or next;
 	my $mc = $s->{maxcol} or next;
 	my $mr = $s->{maxrow} or next;
-	my $sn = $s->{label}  or next;
-	my $fn = "$xls-$sn.csv";
+	my $sn = $s->{label} || "sheet-$si";
+	   $sn =~ s/\s+$//;
+	   $sn =~ s/^\s+//;
+	my $fn = $opt_N ? "$sn.csv" : "$xls-$sn.csv";
+	   $fn =~ s/[^-\w.]+/_/g;
 	-f $fn && !$opt_f and die "$fn already exists\n";
 	warn "Saving sheet to $fn ...\n";
 	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
