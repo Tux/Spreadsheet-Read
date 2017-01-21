@@ -177,8 +177,8 @@ is_deeply ($sheet2, $sheet3, "Compare sheets");
 ok ($csv->add ("files/test.csv", label => "Test"), "Add with label");
 is_deeply ([ $csv->sheets ], [qw( files/test.csv files/test.csv[2] Test )], "Sheet names");
 
-is ($csv->col2id (4),             "D",  "col2id as book  method");
-is ($csv->sheet (1)->col2id (27), "AA", "col2id as sheet method");
+is ($csv->col2label (4),             "D",  "col2label as book  method");
+is ($csv->sheet (1)->col2label (27), "AA", "col2label as sheet method");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

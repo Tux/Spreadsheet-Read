@@ -183,8 +183,8 @@ sub sheets {
     wantarray ? sort { $s{$a} <=> $s{$b} } keys %s : $ctrl->{sheets};
     } # sheets
 
-# col2id (4) => "D"
-sub col2id {
+# col2label (4) => "D"
+sub col2label {
     ref $_[0] eq __PACKAGE__ and shift;
     my $c = shift;
     defined $c && $c > 0 or return "";
@@ -196,7 +196,7 @@ sub col2id {
 	$c /= 26;
 	}
     $cell;
-    } # col2id
+    } # col2label
 
 # cr2cell (4, 18) => "D18"
 # No prototype to allow 'cr2cell (@rowcol)'
@@ -204,7 +204,7 @@ sub cr2cell {
     ref $_[0] eq __PACKAGE__ and shift;
     my ($c, $r) = @_;
     defined $c && defined $r && $c > 0 && $r > 0 or return "";
-    col2id ($c) . $r;
+    col2label ($c) . $r;
     } # cr2cell
 
 # cell2cr ("D18") => (4, 18)
@@ -1005,10 +1005,10 @@ sub maxcol {
     return $sheet->{maxcol};
     } # maxrow
 
-sub col2id {
+sub col2label {
     my $class = shift;
-    return Spreadsheet::Read::col2id (@_);
-    } # col2id
+    return Spreadsheet::Read::col2label (@_);
+    } # col2label
 
 sub cr2cell {
     my $class = shift;
@@ -1132,7 +1132,7 @@ To keep as close contact to spreadsheet users, row and column 1 have
 index 1 too in the C<cell> element of the sheet hash, so cell "A1" is
 the same as C<cell> [1, 1] (column first). To switch between the two,
 there are helper functions available: C<cell2cr ()>, C<cr2cell ()>,
-and C<col2id ()>.
+and C<col2label ()>.
 
 The C<cell> hash entry contains unformatted data, while the hash entries
 with the traditional labels contain the formatted values (if applicable).
@@ -1270,17 +1270,17 @@ and higher will dump the entire structure from the back-end parser.
 All other attributes/options will be passed to the underlying parser if
 that parser supports attributes.
 
-=head3 col2id
+=head3 col2label
 
- my $col_id = col2id (col);
+ my $col_id = col2label (col);
 
- my $col_id = $book->col2id (col);  # OO
+ my $col_id = $book->col2label (col);  # OO
 
-C<col2id ()> converts a C<(column)> (1 based) to the letters used in the
+C<col2label ()> converts a C<(column)> (1 based) to the letters used in the
 traditional cell notation:
 
-  my $id = col2id ( 4); # $id now "D"
-  my $id = col2id (28); # $id now "AB"
+  my $id = col2label ( 4); # $id now "D"
+  my $id = col2label (28); # $id now "AB"
 
 =head3 cr2cell
 
@@ -1438,15 +1438,15 @@ Return the index of the last in-use row in the sheet.
 Return the value for a cell. Using tags will return the formatted value,
 using column and row will return unformatted value.
 
-=head3 col2id
+=head3 col2label
 
- my $col_id = $sheet->col2id (col);
+ my $col_id = $sheet->col2label (col);
 
-C<col2id ()> converts a C<(column)> (1 based) to the letters used in the
+C<col2label ()> converts a C<(column)> (1 based) to the letters used in the
 traditional cell notation:
 
-  my $id = $sheet->col2id ( 4); # $id now "D"
-  my $id = $sheet->col2id (28); # $id now "AB"
+  my $id = $sheet->col2label ( 4); # $id now "D"
+  my $id = $sheet->col2label (28); # $id now "AB"
 
 =head3 cr2cell
 

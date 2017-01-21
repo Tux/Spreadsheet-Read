@@ -55,7 +55,7 @@ foreach my $x ([         1,      1, "A",      "A1"      ],
     my ($c, $r) = map { defined $_ ? $_ : "--undef--" } $x->[0], $x->[1];
     is ($cell, $x->[3], "Cell for ($c, $r)");
 
-    is (Spreadsheet::Read::col2id ($x->[0]), $x->[2], "Col $c eq $x->[2]");
+    is (Spreadsheet::Read::col2label ($x->[0]), $x->[2], "Col $c eq $x->[2]");
     }
 
 # Some illegal rows () calls
