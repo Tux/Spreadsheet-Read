@@ -1,8 +1,9 @@
-0.70	- 18 Jan 2017, H.Merijn Brand
+0.70	- 02 Feb 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
     * Add ->column and ->cellcolumn for ::Sheet
     * Add col2label sub/method
     * Sanitize xls2csv export filenames
+    * Fix sorting in xlscat for un-aligned columns
 
 0.69	- 02 Dec 2016, H.Merijn Brand
     * Several OO fixes, more tests, more docs
