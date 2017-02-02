@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'07 [26-06-2007] Copyright H.M.Brand 2005-2016
+#	  (m)'17 [2017-01-27] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.1";
+our $VERSION = "2.2";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -16,16 +16,15 @@ sub usage {
     exit $err;
     } # usage
 
-use Getopt::Long qw(:config bundling nopermute passthrough);
+use Getopt::Long qw(:config bundling passthrough);
 my $wdt = 4;	# Default minimal column width
-my $unq = 0;	# Uniq columns only
 
 GetOptions (
     "help|?"	=> sub { usage (0); },
-    "w=i"	=> \$wdt,
-    "u"		=> \$unq,
+    "w|width=i"	=> \$wdt,
     ) or usage (1);
 
+use Spreadsheet::Read;
 use Tk;
 use Tk::NoteBook;
 use Tk::TableMatrix::Spreadsheet;
@@ -38,9 +37,7 @@ Tk::CmdLine->SetArguments ();
 
 @ARGV && -f $ARGV[0] or usage (1);
 my $title = $ARGV[0];
-my %unq;
 
-use Spreadsheet::Read;
 my $ref = ReadData (shift)	or die "Cannot read $title\n";
 $ref->[0]{sheets}		or die "No sheets in $title\n";
 
@@ -88,7 +85,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-justify	=> "left",
 	-anchor		=> "w",
 
-	-variable		=> $data,
+	-variable	=> $data,
 	)->pack (-expand => 1, -fill => "both", -side => "top", -anchor => "nw");
     $ss->Subwidget ("${_}scrollbar")->configure (-width => 6) for qw( x y );
     $ss->tagConfigure ("title",  -bg => "#ffffe0", -justify => "left");
@@ -96,8 +93,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     $ss->tagConfigure ("sel",    -bg => "gray95",  -justify => "left");
 
     my ($pv, $sv, $si) = ("", "", 0);
-    sub search
-    {
+    sub search {
 	$sv or return;
 	$sv eq $pv && !$_[0] and return;
 	$ss->selectionClear ("all");
