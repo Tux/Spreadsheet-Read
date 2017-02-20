@@ -1,4 +1,4 @@
-0.70	- 02 Feb 2017, H.Merijn Brand
+0.70	- 20 Feb 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
     * Add ->column and ->cellcolumn for ::Sheet
     * Add col2label sub/method
