@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-01-27] Copyright H.M.Brand 2005-2017
+#	  (m)'17 [2017-02-20] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.2";
+our $VERSION = "2.3";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -22,6 +22,7 @@ my $wdt = 4;	# Default minimal column width
 GetOptions (
     "help|?"	=> sub { usage (0); },
     "w|width=i"	=> \$wdt,
+    "L|labels!"	=> \my $opt_L,
     ) or usage (1);
 
 use Spreadsheet::Read;
@@ -38,8 +39,8 @@ Tk::CmdLine->SetArguments ();
 @ARGV && -f $ARGV[0] or usage (1);
 my $title = $ARGV[0];
 
-my $ref = ReadData (shift)	or die "Cannot read $title\n";
-$ref->[0]{sheets}		or die "No sheets in $title\n";
+my $ref = Spreadsheet::Read->new (shift)	or die "Cannot read $title\n";
+$ref->[0]{sheets}				or die "No sheets in $title\n";
 
 my $mw = MainWindow->new (-title => $title);
 my $nb = $mw->NoteBook ()->pack (qw(-side top -expand 1 -fill both ));
@@ -53,6 +54,13 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my ($data, @data);
     my @c = (1, $s->{maxcol});
     my ($h, $w, @w) = (0, 1, 0, (0) x $c[1]); # data height, -width, and default column widths
+    if ($opt_L) {
+	foreach my $c (0 .. ($s->{maxcol} - 1)) {
+	    $data->{"$h,$c"} = $ref->col2label ($c + 1);
+	    push @data, "$h,$c";
+	    }
+	$h++;
+	}
     foreach my $r (1 .. $s->{maxrow}) {
 	my @row = map {
 	    defined $s->{cell}[$_][$r] ? $s->{cell}[$_][$r] : "";
@@ -77,7 +85,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my $ss = $nb[$sht]->Scrolled ('Spreadsheet',
 	-rows		=> $h,	-cols		=> $w,
 	-width		=> 10,	-height		=> 20,
-	-titlerows	=>  1,	-titlecols	=>  0,
+	-titlecols	=>  0,	-titlerows	=> $opt_L ? 2 : 1,
 
 	-selectmode	=> "extended",
 	-resizeborders	=> "both",
