@@ -55,8 +55,8 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my @c = (1, $s->{maxcol});
     my ($h, $w, @w) = (0, 1, 0, (0) x $c[1]); # data height, -width, and default column widths
     if ($opt_L) {
-	foreach my $c (0 .. ($s->{maxcol} - 1)) {
-	    $data->{"$h,$c"} = $ref->col2label ($c + 1);
+	foreach my $c (0 .. $s->{maxcol}) {
+	    $data->{"$h,$c"} = $c ? $ref->col2label ($c) : "";
 	    push @data, "$h,$c";
 	    }
 	$h++;
@@ -66,6 +66,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	    defined $s->{cell}[$_][$r] ? $s->{cell}[$_][$r] : "";
 	    } 1 .. $s->{maxcol};
 	$pat and "@row" =~ $pat || next;
+	$opt_L and unshift @row, $r;
 	foreach my $c (0 .. $#row) {
 	    $row[$c] or next;
 	    $c >= $w and $w = $c + 1;
@@ -85,7 +86,8 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my $ss = $nb[$sht]->Scrolled ('Spreadsheet',
 	-rows		=> $h,	-cols		=> $w,
 	-width		=> 10,	-height		=> 20,
-	-titlecols	=>  0,	-titlerows	=> $opt_L ? 2 : 1,
+	-titlecols	=> $opt_L ? 1 : 0,
+	-titlerows	=> $opt_L ? 2 : 1,
 
 	-selectmode	=> "extended",
 	-resizeborders	=> "both",
