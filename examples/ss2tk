@@ -20,9 +20,10 @@ use Getopt::Long qw(:config bundling passthrough);
 my $wdt = 4;	# Default minimal column width
 
 GetOptions (
-    "help|?"	=> sub { usage (0); },
-    "w|width=i"	=> \$wdt,
-    "L|labels!"	=> \my $opt_L,
+    "help|?"		=> sub { usage (0); },
+    "w|width=i"		=> \$wdt,
+    "L|ss|labels!"	=> \my $opt_L,
+    "a|align!"		=> \my $opt_a,
     ) or usage (1);
 
 use Spreadsheet::Read;
