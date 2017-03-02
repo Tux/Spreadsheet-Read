@@ -24,6 +24,10 @@ package Spreadsheet::Read;
 
  # OO API
  my $book = Spreadsheet::Read->new ("file.csv");
+ my $sheet = $book->sheet (1);
+ my $cell  = $sheet->cell ("A3");
+ my $cell  = $sheet->cell (1, 3);
+
  $book->add ("test.xls");
 
 =cut
@@ -1422,13 +1426,13 @@ If defined, the returned sheet will be of class C<Spreadsheet::Read::Sheet>.
 
  my $col = $sheet->maxcol;
 
-Return the index of the last in-use column in the sheet.
+Return the index of the last in-use column in the sheet. This index is 1-based.
 
 =head3 maxrow
 
  my $row = $sheet->maxrow;
 
-Return the index of the last in-use row in the sheet.
+Return the index of the last in-use row in the sheet. This index is 1-based.
 
 =head3 cell
 
@@ -1604,6 +1608,8 @@ parsers do not (yet) support all of that. YMMV.
 If a cell itself is not hidden, but the parser holds the information that
 either the row or the column (or both) the field is in is hidden, the flag
 is inherited into the cell attributes.
+
+The entries C<maxrow> and C<maxcol> are 1-based.
 
 =head3 Merged cells
 
