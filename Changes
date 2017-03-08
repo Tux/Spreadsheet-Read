@@ -1,3 +1,6 @@
+0.71	- 08 Mar 2017, H.Merijn Brand
+    * Use -w as intended
+
 0.70	- 02 Mar 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
     * Add ->column and ->cellcolumn for ::Sheet

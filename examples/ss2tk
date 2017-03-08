@@ -1,31 +1,30 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-02-20] Copyright H.M.Brand 2005-2017
+#	  (m)'17 [2017-03-08] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.3";
+our $VERSION = "2.5";
 
 sub usage {
     my $err = shift and select STDERR;
     print
 	"usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]\n",
-	"       -w <width> use <width> as default column width (4)\n";
+	"       -w <width> use <width> as column width\n";
     exit $err;
     } # usage
 
 use Getopt::Long qw(:config bundling passthrough);
-my $wdt = 4;	# Default minimal column width
-
 GetOptions (
     "help|?"		=> sub { usage (0); },
-    "w|width=i"		=> \$wdt,
+    "w|width=i"		=> \my $opt_w,
     "L|ss|labels!"	=> \my $opt_L,
     "a|align!"		=> \my $opt_a,
     ) or usage (1);
 
+use Data::Peek;
 use Spreadsheet::Read;
 use Tk;
 use Tk::NoteBook;
@@ -42,6 +41,8 @@ my $title = $ARGV[0];
 
 my $ref = Spreadsheet::Read->new (shift)	or die "Cannot read $title\n";
 $ref->[0]{sheets}				or die "No sheets in $title\n";
+
+fork and exit;
 
 my $mw = MainWindow->new (-title => $title);
 my $nb = $mw->NoteBook ()->pack (qw(-side top -expand 1 -fill both ));
@@ -140,8 +141,18 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-command  => \&exit,
 	)->pack (-side => "right", -anchor => "se");
 
+    my $swss = $ss->Subwidget ("spreadsheet");
+
     # autosize columns on data (not on headers)
-    $ss->colWidth (map { $_ => $w[$_] } 0 .. $#w);
+    $swss->colWidth (map { $_ => $opt_w || $w[$_] || 4 } 0 .. $#w);
+
+    $opt_a or next;
+    $swss->tagConfigure ("numeric", -justify => "right");
+    foreach my $rc (keys %$data) {
+	$data->{$rc} && $data->{$rc} =~ m/^\d+$/ or next;
+	$swss->tagCell ("numeric", $rc);
+	}
+    DDumper $swss;
     }
 
 MainLoop;
