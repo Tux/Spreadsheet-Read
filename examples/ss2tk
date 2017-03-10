@@ -144,7 +144,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my $swss = $ss->Subwidget ("spreadsheet");
 
     # autosize columns on data (not on headers)
-    $swss->colWidth (map { $_ => $opt_w || $w[$_] || 4 } 0 .. $#w);
+    $swss->colWidth (map { $_ => ($opt_w || $w[$_] || 4) } 0 .. $#w);
 
     $opt_a or next;
     $swss->tagConfigure ("numeric", -justify => "right");
