@@ -1,5 +1,6 @@
-0.71	- 08 Mar 2017, H.Merijn Brand
+0.71	- 22 Mar 2017, H.Merijn Brand
     * Use -w as intended
+    * No trailing spaces on xlscat -L
 
 0.70	- 02 Mar 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
