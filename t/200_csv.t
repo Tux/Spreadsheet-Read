@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 133;
+my     $tests = 168;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -108,6 +108,23 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     ok ($ref, "strip cells 0 rc 0");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
+    }
+
+ok ($csv = ReadData ("files/test.csv", pivot => 1),	"Read/Parse csv file");
+ok (1, "Defined fields");
+foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
+    my ($c, $r) = cell2cr ($cell);
+    is ($csv->[1]{cell}[$r][$c],	$cell,	"Unformatted cell $cell");
+    my $llec = cr2cell ($r, $c);
+    is ($csv->[1]{$llec},		$cell,	"Formatted   cell $cell");
+    }
+
+ok (1, "Undefined fields");
+foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
+    my ($c, $r) = cell2cr ($cell);
+    is ($csv->[1]{cell}[$r][$c],	"",   	"Unformatted cell $cell");
+    my $llec = cr2cell ($r, $c);
+    is ($csv->[1]{$llec},		"",   	"Formatted   cell $cell");
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {

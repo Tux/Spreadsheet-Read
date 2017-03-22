@@ -116,6 +116,7 @@ GetOptions (
     "C|columns=s"	=> \my $opt_C,	# Columns to print
     "F|fields=s"	=> \$opt_F,
     "L|fit|align!"	=> \$opt_L,
+    "P|pivot!"		=> \my $pivot,
     "n|number:0"	=> \my $opt_n,	# Prefix lines with column number
     "A|ansi|color!"	=> \$opt_A,
     "u|unformatted!"	=> \$opt_u,
@@ -217,6 +218,7 @@ $opt_A         and push @RDarg, attr  => 1;
 defined $sep   and push @RDarg, sep   => $sep, parser => "csv";
 defined $dtfmt and push @RDarg, dtfmt => $dtfmt;
 $strip         and push @RDarg, strip => $strip;
+$pivot         and push @RDarg, pivot => $pivot;
 $opt_v > 4 and warn "ReadData ($file, @RDarg);\n";
 my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
 $opt_v > 7 and ddumper ($xls);

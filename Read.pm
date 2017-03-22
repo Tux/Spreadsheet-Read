@@ -108,6 +108,7 @@ my %def_opts = (
     attr    => 0,
     clip    => undef, # $opt{cells};
     strip   => 0,
+    pivot   => 0,
     dtfmt   => "yyyy-mm-dd", # Format 14
     debug   => 0,
     parser  => undef,
@@ -293,6 +294,25 @@ sub _clipsheets {
 			}
 		    }
 		}
+	    }
+	}
+
+    if ($opt->{pivot}) {
+	foreach my $sheet (1 .. $ref->[0]{sheets}) {
+	    my $ss = $ref->[$sheet];
+	    $ss->{maxrow} || $ss->{maxcol} or next;
+	    my $mx = $ss->{maxrow} > $ss->{maxcol} ? $ss->{maxrow} : $ss->{maxcol};
+	    foreach my $row (2 .. $mx) {
+		foreach my $col (1 .. ($row - 1)) {
+		    $opt->{rc}    and
+			($ss->{cell}[$col][$row], $ss->{cell}[$row][$col]) =
+			($ss->{cell}[$row][$col], $ss->{cell}[$col][$row]);
+		    $opt->{cells} and
+		        ($ss->{cr2cell ($col, $row)}, $ss->{cr2cell ($row, $col)}) =
+		        ($ss->{cr2cell ($row, $col)}, $ss->{cr2cell ($col, $row)});
+		    }
+		}
+	    ($ss->{maxcol}, $ss->{maxrow}) = ($ss->{maxrow}, $ss->{maxcol});
 	    }
 	}
 
@@ -1239,6 +1259,24 @@ leading-whitespace from every field.
     1     strip     n/a
     2      n/a     strip
     3     strip    strip
+
+=item pivot
+
+Swap all rows and columns.
+
+When a sheet contains data like
+
+  A1  B1  C1      E1
+  A2      C2  D2
+  A3  B3  C3  D3  E3
+
+using C<pivot> will return the sheet data as
+
+  A1  A2  A3
+  B1      B3
+  C1  C2  C3
+      D2  D3
+  E1      E3
 
 =item sep
 
