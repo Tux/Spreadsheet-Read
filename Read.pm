@@ -520,7 +520,7 @@ sub ReadData {
 	if ($io_fil) {
 	    unless (defined $opt{quote} && defined $opt{sep}) {
 		open $in, "<", $txt or return;
-		$_ = <$in>;
+		local $_ = <$in>;
 
 		$quo = defined $opt{quote} ? $opt{quote} : '"';
 		$sep = # If explicitly set, use it
