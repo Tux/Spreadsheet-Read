@@ -520,20 +520,20 @@ sub ReadData {
 	if ($io_fil) {
 	    unless (defined $opt{quote} && defined $opt{sep}) {
 		open $in, "<", $txt or return;
-		$_ = <$in>;
+		my $l1 = <$in>;
 
 		$quo = defined $opt{quote} ? $opt{quote} : '"';
 		$sep = # If explicitly set, use it
 		   defined $opt{sep} ? $opt{sep} :
 		       # otherwise start auto-detect with quoted strings
-		       m/["0-9];["0-9;]/	? ";"  :
-		       m/["0-9],["0-9,]/	? ","  :
-		       m/["0-9]\t["0-9,]/	? "\t" :
+		       $l1 =~ m/["0-9];["0-9;]/  ? ";"  :
+		       $l1 =~ m/["0-9],["0-9,]/  ? ","  :
+		       $l1 =~ m/["0-9]\t["0-9,]/ ? "\t" :
 		       # If neither, then for unquoted strings
-		       m/\w;[\w;]/		? ";"  :
-		       m/\w,[\w,]/		? ","  :
-		       m/\w\t[\w,]/		? "\t" :
-					      ","  ;
+		       $l1 =~ m/\w;[\w;]/        ? ";"  :
+		       $l1 =~ m/\w,[\w,]/        ? ","  :
+		       $l1 =~ m/\w\t[\w,]/       ? "\t" :
+						   ","  ;
 		close $in;
 		}
 	    open $in, "<", $txt or return;
