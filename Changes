@@ -1,8 +1,9 @@
-0.71	- 10 Apr 2017, H.Merijn Brand
+0.71	- 19 Apr 2017, H.Merijn Brand
     * Use -w as intended
     * Add option pivot
     * No trailing spaces on xlscat -L
     * Lexicalize code snippet (issue#12)
+    * Add attr method
 
 0.70	- 02 Mar 2017, H.Merijn Brand
     * Add label functionality to ::Sheet

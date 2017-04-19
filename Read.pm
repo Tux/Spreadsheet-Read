@@ -1019,6 +1019,16 @@ sub cell {
 	return $sheet->{$id[0]};
     } # cell
 
+sub attr {
+    my ($sheet, @id) = @_;
+    @id == 2 && $id[0] =~ m/^[0-9]+$/ && $id[1] =~ m/^[0-9]+$/ and
+	return $sheet->{attr}[$id[0]][$id[1]];
+    if (@id && $id[0] && exists $sheet->{$id[0]}) {
+	my ($c, $r) = $sheet->cell2cr ($id[0]);
+	return $sheet->{attr}[$c][$r];
+	}
+    } # attr
+
 sub maxrow {
     my $sheet = shift;
     return $sheet->{maxrow};
@@ -1479,6 +1489,14 @@ Return the index of the last in-use row in the sheet. This index is 1-based.
 
 Return the value for a cell. Using tags will return the formatted value,
 using column and row will return unformatted value.
+
+=head3 attr
+
+ my $cell = $sheet->attr ("A3");
+ my $cell = $sheet->attr (1, 3);
+
+Return the attributes of a cell. Only valid if attributes are enabled through
+option C<attr>.
 
 =head3 col2label
 
