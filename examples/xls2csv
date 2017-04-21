@@ -47,8 +47,8 @@ if ($opt_a) {
 	my $sn = $s->{label} || "sheet-$si";
 	   $sn =~ s/\s+$//;
 	   $sn =~ s/^\s+//;
+	   $sn =~ s/[^-\w.]+/_/g; # remove any special chars from worksheet name
 	my $fn = $opt_N ? "$sn.csv" : "$xls-$sn.csv";
-	   $fn =~ s/[^-\w.]+/_/g;
 	-f $fn && !$opt_f and die "$fn already exists\n";
 	warn "Saving sheet to $fn ...\n";
 	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
