@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-03-08] Copyright H.M.Brand 2005-2017
+#	  (m)'17 [2017-05-04] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.5";
+our $VERSION = "2.6";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -39,10 +39,13 @@ Tk::CmdLine->SetArguments ();
 @ARGV && -f $ARGV[0] or usage (1);
 my $title = $ARGV[0];
 
-my $ref = Spreadsheet::Read->new (shift)	or die "Cannot read $title\n";
-$ref->[0]{sheets}				or die "No sheets in $title\n";
+my $sfn = shift;
+my $ref = Spreadsheet::Read->new ($sfn)	or die "Cannot read $sfn\n";
+$ref->[0]{sheets}			or die "No sheets in $title\n";
 
 fork and exit;
+
+my $pat = @ARGV ? qr/$ARGV[0]/i : undef;
 
 my $mw = MainWindow->new (-title => $title);
 my $nb = $mw->NoteBook ()->pack (qw(-side top -expand 1 -fill both ));
@@ -51,35 +54,8 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
     my $s = $ref->[$sht];
     $title .= " [ " . $s->{label} . " ]";
 
-    my $pat = @ARGV ? qr/$ARGV[0]/i : undef;
-
-    my ($data, @data);
-    my @c = (1, $s->{maxcol});
-    my ($h, $w, @w) = (0, 1, 0, (0) x $c[1]); # data height, -width, and default column widths
-    if ($opt_L) {
-	foreach my $c (0 .. $s->{maxcol}) {
-	    $data->{"$h,$c"} = $c ? $ref->col2label ($c) : "";
-	    push @data, "$h,$c";
-	    }
-	$h++;
-	}
-    foreach my $r (1 .. $s->{maxrow}) {
-	my @row = map {
-	    defined $s->{cell}[$_][$r] ? $s->{cell}[$_][$r] : "";
-	    } 1 .. $s->{maxcol};
-	$pat and "@row" =~ $pat || next;
-	$opt_L and unshift @row, $r;
-	foreach my $c (0 .. $#row) {
-	    $row[$c] or next;
-	    $c >= $w and $w = $c + 1;
-	    $data->{"$h,$c"} = $row[$c];
-	    push @data, "$h,$c";
-	    my $l = length $row[$c];
-	    $l > $w[$c] and $w[$c] = $l;
-	    }
-	++$h % 100 or printf STDERR "%6d x %6d\r", $w, $h;
-	}
-    printf STDERR "%6d x %6d\n", $w, $h;
+    my ($data, @data) = ({});
+    my ($h, $w, @w) = get_data ($data, $s, \@data);
 
     $nb[$sht] = $nb->add ($sht,
 	-label	=> $s->{label},
@@ -120,6 +96,15 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	    }
 	} # search
 
+    my $reload = sub {
+	$ss->clearCache;
+	$data->{$_} = "" for @data;
+	@data = ();
+	$ref = Spreadsheet::Read->new ($sfn) or die "Cannot read $sfn\n";
+	$s = $ref->[$sht];
+	get_data ($data, $s, \@data);
+	}; # reload
+
     # Search frame
     my $sf = $nb[$sht]->Frame ()->pack (-side => "left", -expand => 1, -fill => "both");
     my $sl = $sf->Label (
@@ -140,6 +125,10 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-text     => "Exit",
 	-command  => \&exit,
 	)->pack (-side => "right", -anchor => "se");
+    my $rf = $cf->Button (
+	-text     => "Reload",
+	-command  => $reload,
+	)->pack (-side => "right", -anchor => "se");
 
     my $swss = $ss->Subwidget ("spreadsheet");
 
@@ -154,5 +143,38 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	}
     DDumper $swss;
     }
+
+sub get_data {
+    my ($dta, $s, $adta) = @_;
+
+    my @c = (1, $s->{maxcol});
+    my ($h, $w, @w) = (0, 1, 0, (0) x $c[1]); # data height, -width, and default column widths
+    if ($opt_L) {
+	foreach my $c (0 .. $s->{maxcol}) {
+	    $dta->{"$h,$c"} = $c ? $ref->col2label ($c) : "";
+	    push @$adta, "$h,$c";
+	    }
+	$h++;
+	}
+    foreach my $r (1 .. $s->{maxrow}) {
+	my @row = map {
+	    defined $s->{cell}[$_][$r] ? $s->{cell}[$_][$r] : "";
+	    } 1 .. $s->{maxcol};
+	$pat and "@row" =~ $pat || next;
+	$opt_L and unshift @row, $r;
+	foreach my $c (0 .. $#row) {
+	    length $row[$c] or next;
+	    $c >= $w and $w = $c + 1;
+	    $dta->{"$h,$c"} = $row[$c];
+	    push @$adta, "$h,$c";
+	    my $l = length $row[$c];
+	    $l > $w[$c] and $w[$c] = $l;
+	    }
+	++$h % 100 or printf STDERR "%6d x %6d\r", $w, $h;
+	}
+    printf STDERR "%6d x %6d\n", $w, $h;
+    #use DP;DDumper { S => $dta, A => $adta };
+    ($h, $w, @w);
+    } # get_data
 
 MainLoop;
