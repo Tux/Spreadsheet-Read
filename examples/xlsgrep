@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-03-22] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-04-25] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.7";
+our $VERSION = "3.8";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -29,6 +29,7 @@ sub usage {
 	"       -e <enc>    Set encoding for input and output\n",
 	"       -b <enc>    Set encoding for input\n",
 	"       -a <enc>    Set encoding for output\n",
+	"       -U          Set encoding for output to utf-8 (short for -a utf-8)\n",
 	"    Input CSV:\n",
 	"       --in-sep=c  Set input sep_char for CSV\n",
 	"    Input XLS:\n",
@@ -131,6 +132,7 @@ GetOptions (
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
     "b|encoding-in=s"	=> \$enc_i,
     "a|encoding-out=s"	=> \$enc_o,
+    "U|utf-8|utf8"	=> sub { $enc_o = "utf-8" },
 
     # Grep
     "w|word!"		=> \$opt_w,

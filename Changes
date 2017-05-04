@@ -6,6 +6,7 @@
     * Add attr method
     * Remove special chars from worksheet name component (Windows, PR#13)
     * Add refresh to ss2tk / csv2tk
+    * Add shortcut for UTF-8 output to xlscat
 
 0.70	- 02 Mar 2017, H.Merijn Brand
     * Add label functionality to ::Sheet
