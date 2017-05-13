@@ -511,6 +511,7 @@ sub ReadData {
 		cell	=> [],
 		attr	=> [],
 		merged	=> [],
+		active  => 1,
 		},
 	    );
 
@@ -661,7 +662,12 @@ sub ReadData {
 	    :     Spreadsheet::ParseExcel::FmtDefault->new;
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
+	my $active_sheet = $oBook->get_active_sheet
+			|| $oBook->{ActiveSheet}
+			|| $oBook->{SelectedSheet};
+	my $current_sheet = 0;
 	foreach my $oWkS (@{$oBook->{Worksheet}}) {
+	    $current_sheet++;
 	    $opt{clip} and !defined $oWkS->{Cells} and next; # Skip empty sheets
 	    my %sheet = (
 		parser	=> 0,
@@ -671,6 +677,7 @@ sub ReadData {
 		cell	=> [],
 		attr	=> [],
 		merged  => [],
+		active	=> 0,
 		);
 	    # $debug and $sheet{_parser} = $oWkS;
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
@@ -686,6 +693,10 @@ sub ReadData {
 		@{$oWkS->get_merged_areas || []}];
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
+	    if (defined $active_sheet) {
+		my $sheet_no = $oWkS->{_SheetNo} || $current_sheet;
+		$sheet_no eq $active_sheet and $sheet{active} = 1;
+		}
 	    # Sheet keys:
 	    # _Book          FooterMargin   MinCol         RightMargin
 	    # BottomMargin   FooterMergin   MinRow         RightMergin
@@ -859,6 +870,7 @@ sub ReadData {
 		cell	=> [],
 		attr	=> [],
 		merged  => [],
+		active  => 1,
 		},
 	    );
 
@@ -942,6 +954,7 @@ sub ReadData {
 		    cell   => [],
 		    attr   => [],
 		    merged => [],
+		    active => 0,
 		    );
 		my $sheet_idx = 1 + @data;
 		$debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} rows\n";
@@ -1153,6 +1166,7 @@ The data is returned as an array reference:
           ],
         attr    => [],
         merged  => [],
+        active  => 1,
         A1      => 1,
         B5      => "Nugget",
         },
