@@ -41,17 +41,6 @@ my %wm = (
 	"File::Temp"			=> 0.22,
 	"IO::Scalar"			=> 0,	# Optional
 
-	# Backend parsers, all optional
-	# Versions also need to be declared inside Read.pm !
-#	"Text::CSV"			=> 1.32,
-#	"Text::CSV_PP"			=> 1.31,
-#	"Text::CSV_XS"			=> 1.04,
-#	"Spreadsheet::ReadSXC"		=> 0.20,
-#	"Spreadsheet::ParseExcel"	=> 0.34,
-#	"Spreadsheet::ParseExcel::FmtDefault" => 0,
-#	"Spreadsheet::ParseXLSX"	=> 0.13,
-#	"Spreadsheet::XLSX"		=> 0.13,
-#	"Spreadsheet::Perl"		=> 0,	# Not yet
 
 	# For testing
 	"Test::More"			=> 0.88,
@@ -65,6 +54,18 @@ my %wm = (
     macro        => { TARFLAGS   => "--format=ustar -c -v -f", },
     );
 $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
+
+if ($ENV{EXTENDED_TESTING}) { # for CpanCover and masochists
+    # Backend parsers, all optional
+    # Versions also need to be declared inside Read.pm !
+    $wm{PREREQ_PM}{"Text::CSV_PP"}		= "1.95";
+    $wm{PREREQ_PM}{"Text::CSV_XS"}		= "1.29";
+    $wm{PREREQ_PM}{"Spreadsheet::ReadSXC"}	= "0.20";
+    $wm{PREREQ_PM}{"Spreadsheet::ParseExcel"}	= "0.65";
+    $wm{PREREQ_PM}{"Spreadsheet::ParseXLSX"}	= "0.27";
+    $wm{PREREQ_PM}{"Spreadsheet::XLSX"}		= "0.15";
+    $wm{PREREQ_PM}{"Spreadsheet::Perl"}		= "0";
+    }
 
 my $rv = WriteMakefile (%wm);
 
