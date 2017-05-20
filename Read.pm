@@ -35,7 +35,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.71";
+our $VERSION = "0.72";
 sub  Version { $VERSION }
 
 use Carp;
@@ -98,8 +98,10 @@ for (@parsers) {
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
-$can{xlsx} =~ m/LibXML/ && $] < 5.012 and
+$can{xlsx} =~ m/LibXML/     && $] < 5.012 and
     substr $can{xlsx}, 0, 0, "!"; # This parser requires perl 5.12 or newer
+defined $Spreadsheet::ParseExcel::VERSION && $Spreadsheet::ParseExcel::VERSION < 0.61 and
+    *Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
 
 my $debug = 0;
 my %def_opts = (
