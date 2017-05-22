@@ -1,6 +1,7 @@
-0.72	- 20 May 2017, H.Merijn Brand
+0.72	- 22 May 2017, H.Merijn Brand
     ===== Please finish active ====
     * get_active_sheet is only available as of Spreadsheet::ParseExcel 0.61
+    * Support password protected spreadsheets (implementation just for Excel)
 
 0.71	- 13 May 2017, H.Merijn Brand
     * Use -w as intended

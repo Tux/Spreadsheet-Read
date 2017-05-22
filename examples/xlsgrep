@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-04-25] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-05-22] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.8";
+our $VERSION = "3.9";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -35,6 +35,9 @@ sub usage {
 	"    Input XLS:\n",
 	"       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'\n",
 	"                   the default replacement is 'yyyy-mm-dd'\n",
+	"       --passwd=pw Specify the password for workbook\n",
+	"                   if pw = -, read password from keyboard\n",
+	"       --formulas  Show the formula instead of the value\n",
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"       -L          Line up the columns\n",
@@ -104,6 +107,7 @@ GetOptions (
     "dtfmt".
      "|date-format=s"	=> \my $dtfmt,	# Default date-format for Excel
     "f|formulas!"	=> \$opt_f,
+      "password=s"	=> \my $passwd,	# For encrypted spreadsheets
 
     # Output
     "i|index".
@@ -221,6 +225,16 @@ defined $sep   and push @RDarg, sep   => $sep, parser => "csv";
 defined $dtfmt and push @RDarg, dtfmt => $dtfmt;
 $strip         and push @RDarg, strip => $strip;
 $pivot         and push @RDarg, pivot => $pivot;
+if ($passwd) {
+    if ($passwd eq "-") {
+	print STDERR "Password: ";
+	eval "use Term::ReadKey;";
+	eval { ReadMode ("noecho"); };
+	chomp ($passwd = <STDIN>);
+	eval { ReadMode ("echo");   };
+	}
+    push @RDarg, passwd => $passwd;
+    }
 $opt_v > 4 and warn "ReadData ($file, @RDarg);\n";
 my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
 $opt_v > 7 and ddumper ($xls);

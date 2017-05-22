@@ -113,6 +113,7 @@ my %def_opts = (
     pivot   => 0,
     dtfmt   => "yyyy-mm-dd", # Format 14
     debug   => 0,
+    passwd  => undef,
     parser  => undef,
     sep     => undef,
     quote   => undef,
@@ -605,6 +606,7 @@ sub ReadData {
 	    croak "Parser for $parse_type is not installed";
 	my $xlsx_libxml = $parser =~ m/LibXML$/;
 	$debug and print STDERR "Opening $parse_type $txt using $parser-", $can{lc $parse_type}->VERSION, "\n";
+	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
 	my $oBook = eval {
 	    $io_ref
 	      ? $parse_type eq "XLSX"
@@ -1332,6 +1334,12 @@ Enable some diagnostic messages to STDERR.
 The value determines how much diagnostics are dumped (using
 L<Data::Peek|https://metacpan.org/release/Data-Peek>).  A value of C<9>
 and higher will dump the entire structure from the back-end parser.
+
+=item passwd
+
+Use this password to decrypt password protected spreadsheet.
+
+Currently only supports Excel.
 
 =back
 
