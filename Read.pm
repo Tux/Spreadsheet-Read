@@ -73,16 +73,17 @@ my %can = map {
 	else { # forcing a parser should still check the version
 	    for (grep { $_->[1] eq $preset and $_->[2] } @parsers) {
 		my $ok;
+		my $has = $preset->VERSION;
+		$has =~ s/_[0-9]+$//;			# Remove beta-part
 		if ($_->[2] =~ m/^v([0-9.]+)/) {	# clumsy versions
 		    my @min = split m/\./ => $1;
-		    my $has = $preset->VERSION;
 		    $has =~ s/^v//;
 		    my @has = split m/\./ => $has;
 		    $ok = (($has[0] * 1000 + $has[1]) * 1000 + $has[2]) >=
 			  (($min[0] * 1000 + $min[1]) * 1000 + $min[2]);
 		    }
 		else {	# normal versions
-		    $ok = $preset->VERSION >= $_->[2];
+		    $ok = $has >= $_->[2];
 		    }
 		$ok or $preset = "!$preset";
 		}
