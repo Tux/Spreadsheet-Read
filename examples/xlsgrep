@@ -345,6 +345,9 @@ foreach my $si (1 .. $sc) {
     my @r = (1, $s->{maxrow});
     my @c = (1, $s->{maxcol});
     my ($sn, $nr, $nc) = ($s->{label}, $r[-1], $c[-1]);
+    defined $nr or next;
+    defined $nc or next;
+    defined $sn or $sn = "";
     $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows\n",
 	$file, $si, $name_len, $sn, $nc, $nr;
     $opt_i && !$is_grep and next;
