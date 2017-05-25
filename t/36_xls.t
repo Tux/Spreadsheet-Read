@@ -9,7 +9,7 @@ require Test::NoWarnings;
 use Spreadsheet::Read;
 my $parser;
 if ($parser = Spreadsheet::Read::parses ("xls")) {
-    plan tests => 172;
+    plan tests => 177;
     Test::NoWarnings->import;
     }
 else {
@@ -145,6 +145,13 @@ is ($ss->{C1},		undef, "formatted empty");
 is ($ss->{D1},		"0",   "formatted numeric 0");
 is ($ss->{E1},		"1",   "formatted numeric 1");
 is ($ss->{F1},		"",    "formatted a single '");
+
+# Test extended attributes (active)
+ok ($xls = Spreadsheet::Read->new ("files/Active2.xls"), "Active sheet");
+is ($xls->sheets,		3,	"Book has 3 sheets");
+is ($xls->sheet (1)->{active},	0,	"Sheet 1 is not active");
+is ($xls->[2]{active},		1,	"Sheet 2 is active");
+is ($xls->sheet (3)->active,	0,	"Sheet 3 is not active");
 
 __END__
 --- PM    2005-09-15 14:16:36.163623616 +0200

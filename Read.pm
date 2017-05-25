@@ -699,7 +699,8 @@ sub ReadData {
 	    my $sheet_idx = 1 + @data;
 	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
 	    if (defined $active_sheet) {
-		my $sheet_no = $oWkS->{_SheetNo} || $current_sheet;
+		# _SheetNo is 0-based
+		my $sheet_no = defined $oWkS->{_SheetNo} ? $oWkS->{_SheetNo} : $current_sheet - 1;
 		$sheet_no eq $active_sheet and $sheet{active} = 1;
 		}
 	    # Sheet keys:
@@ -1076,6 +1077,11 @@ sub label {
     my ($sheet, $label) = @_;
     defined $label and $sheet->{label} = $label;
     return $sheet->{label};
+    } # label
+
+sub active {
+    my $sheet = shift;
+    return $sheet->{active};
     } # label
 
 # my @row = $sheet->cellrow (1);
@@ -1601,6 +1607,14 @@ index in the C<{cell}> entry is 1-based.
 
 Set a new label to a sheet. Note that the index in the control structure will
 I<NOT> be updated.
+
+=head3 active
+
+ my $sheet_is_active = $sheet->active;
+
+Returns 1 if the selected sheet is active, otherwise returns 0.
+
+Currently only works on XLS. CSV is always active.
 
 =head2 Using CSV
 

@@ -348,8 +348,9 @@ foreach my $si (1 .. $sc) {
     defined $nr or next;
     defined $nc or next;
     defined $sn or $sn = "";
-    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows\n",
-	$file, $si, $name_len, $sn, $nc, $nr;
+    my $active = $s->{active} ? " (Active)" : "";
+    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows%s\n",
+	$file, $si, $name_len, $sn, $nc, $nr, $active;
     $opt_i && !$is_grep and next;
 
     if (@opt_F) {
