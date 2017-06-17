@@ -3,6 +3,7 @@
     * Support password protected spreadsheets (implementation just for Excel)
     * Do not warn on undefined labels (xlscat)
     * Spreadsheet::XLSX::Reader::LibXML support completely dropped
+    * New options for ss2tk (font specs and SS labels)
 
 0.71	- 13 May 2017, H.Merijn Brand
     * Use -w as intended

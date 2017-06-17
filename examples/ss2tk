@@ -1,18 +1,23 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-05-04] Copyright H.M.Brand 2005-2017
+#	  (m)'17 [2017-05-28] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.6";
+our $VERSION = "2.7";
 
 sub usage {
     my $err = shift and select STDERR;
     print
-	"usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]\n",
-	"       -w <width> use <width> as column width\n";
+	"usage: ss2tk [options] [X11 options] file.xls [<pattern>]\n",
+	"       -w <width> use <width> as column width\n",
+	"       -L         Add spreadsheet tags to top (A, B, ..Z, AB, ...)\n",
+	"                  and left (1, 2, ...)\n",
+	"       --fs[=7]   Set font size (default 7 if no value)\n",
+	"       --fn=name  Set font Face name (default is DejaVu Sans Mono\n",
+	"                  if font size is given\n";
     exit $err;
     } # usage
 
@@ -22,6 +27,9 @@ GetOptions (
     "w|width=i"		=> \my $opt_w,
     "L|ss|labels!"	=> \my $opt_L,
     "a|align!"		=> \my $opt_a,
+
+      "fs|font-size:7"	=> \my $opt_fs,
+      "fn|font-name=s"	=> \my $opt_fn,
     ) or usage (1);
 
 use Data::Peek;
@@ -45,6 +53,8 @@ $ref->[0]{sheets}			or die "No sheets in $title\n";
 
 fork and exit;
 
+$opt_fn || $opt_fs and $opt_fn = "{".($opt_fn|| "DejaVu Sans Mono")."} ".($opt_fs||7);
+
 my $pat = @ARGV ? qr/$ARGV[0]/i : undef;
 
 my $mw = MainWindow->new (-title => $title);
@@ -61,6 +71,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-label	=> $s->{label},
 	-state	=> "normal",
 	-anchor	=> "nw");
+    my @ff = $opt_fn ? (-font => $opt_fn) : ();
     my $ss = $nb[$sht]->Scrolled ('Spreadsheet',
 	-rows		=> $h,	-cols		=> $w,
 	-width		=> 10,	-height		=> 20,
@@ -74,6 +85,7 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-anchor		=> "w",
 
 	-variable	=> $data,
+	@ff,
 	)->pack (-expand => 1, -fill => "both", -side => "top", -anchor => "nw");
     $ss->Subwidget ("${_}scrollbar")->configure (-width => 6) for qw( x y );
     $ss->tagConfigure ("title",  -bg => "#ffffe0", -justify => "left");
