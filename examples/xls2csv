@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'16 [30-08-2016] Copyright H.M.Brand 2008-2017
+#	   (m)'17 [07-06-2017] Copyright H.M.Brand 2008-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.2";
+our $VERSION = "3.3";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -31,9 +31,16 @@ GetOptions (
     "N|no-pfx!" => \my $opt_N,
     ) or usage 1;
 
-my $xls = shift or usage 1, "No input file";
--r $xls         or usage 1, "Input file unreadable";
--s $xls         or usage 1, "Input file empty";
+my $xls;
+foreach my $i (reverse 0 .. $#ARGV) {
+    -f $ARGV[$i] or next;
+    $xls = splice @ARGV, $i, 1;
+    last;
+    }
+
+   $xls or usage 1, "No input file";
+-r $xls or usage 1, "Input file unreadable";
+-s $xls or usage 1, "Input file empty";
 
 if ($opt_a) {
     my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
@@ -66,4 +73,4 @@ if (-f $csv) {
 
 warn "Converting $xls to $csv ...\n";
 open STDOUT, ">", $csv or die "$csv: $!\n";
-exec "xlscat", "-c", $xls;
+exec "xlscat", "-c", @ARGV, $xls;
