@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-05-22] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-07-06] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.9";
+our $VERSION = "3.10";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -499,7 +499,7 @@ foreach my $si (1 .. $sc) {
 		$row[$_] .= "\e[0m";
 		}
 	    }
-	line ("|" => @row);
+	line ($opt_s => @row);
 	++$opt_n == $opt_h and line ("+", map {"-"x$w[$_]} 0..$#row);
 	}
     }
