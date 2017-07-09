@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-07-06] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-07-09] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.10";
+our $VERSION = "3.11";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -429,16 +429,16 @@ foreach my $si (1 .. $sc) {
 	    print "</tr>\n";
 	    next;
 	    }
-	if ($opt_c) {	# CSV
-	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
-	    next;
-	    }
 	if (defined $opt_n) {
 	    unshift @row, $r;
 	    unshift @att, [ "#ffffff", "#000000", 0, 0 ];
 	    }
 	if ($opt_L || $sort_order) {	# Autofit / Align / order
 	    push @data, [ [ @row ], [ @att ] ];
+	    next;
+	    }
+	if ($opt_c) {	# CSV
+	    $opt_c->print (*STDOUT, \@row) or die $opt_c->error_diag;
 	    next;
 	    }
 	if ($opt_A) {
@@ -475,6 +475,10 @@ foreach my $si (1 .. $sc) {
 	    return $d;
 	    };
 	@data = (@h, sort $sort @data);
+	}
+    if ($opt_c && @data) {	# CSV
+	$opt_c->print (*STDOUT, $_->[0]) for @data;
+	next;
 	}
     $opt_L || $sort_order or next;
     if (defined $opt_n) {
