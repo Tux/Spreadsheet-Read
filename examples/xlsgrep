@@ -2,7 +2,7 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-07-09] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-07-29] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
@@ -77,7 +77,7 @@ sub usage {
     exit $err;
     } # usage
 
-use Getopt::Long qw(:config bundling noignorecase);
+use Getopt::Long qw(:config bundling noignorecase passthrough);
 my $opt_c;		# Generate CSV
 my $opt_F = "";		# Fields to print
 my $opt_i = 0;		# Index (cat) | ignore_case (grep)
@@ -186,6 +186,14 @@ if ($opt_c) {
 	} # ddumper
     }
 
+my @RDarg;
+for (reverse 0 .. $#ARGV) {
+    $ARGV[$_] =~ m/^--([-\w]+)(?:=(.*))?$/ or next;
+    push @RDarg, $1, defined $2 ? $2 : 1;
+    $RDarg[-2] =~ tr/-/_/;
+    splice @ARGV, $_, 1;
+    }
+
 my $pattern;
 if ($is_grep) {
     $pattern = shift or usage 1;
@@ -219,7 +227,7 @@ if ($opt_H) {
 	};
     }
 
-my @RDarg = (debug => $opt_d, clip => $clip);
+push @RDarg, debug => $opt_d, clip => $clip;
 $opt_A         and push @RDarg, attr  => 1;
 defined $sep   and push @RDarg, sep   => $sep, parser => "csv";
 defined $dtfmt and push @RDarg, dtfmt => $dtfmt;
