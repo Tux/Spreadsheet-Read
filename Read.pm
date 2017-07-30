@@ -461,6 +461,9 @@ sub ReadData {
 		}
 	    open $in, "<", $txt or return;
 	    }
+	elsif (ref $txt eq "SCALAR") {
+	    open $in, "<", $txt;
+	    }
 	elsif ($txt =~ m/[\r\n,;]/) {
 	    open $in, "<", \$txt;
 	    }

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 117;
+my     $tests = 123;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -87,6 +87,15 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
     is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
     }
+
+my $data = "a,b,c\n1,2,3\n";
+ok ($csv = ReadData ( $data, parser => "csv"), "Parse from plain string");
+is ($csv->[1]{C2}, 3, "C2 = 3");
+ok ($csv = ReadData (\$data, parser => "csv"), "Parse from ref to plain string");
+is ($csv->[1]{C2}, 3, "C2 = 3");
+open my $rh, "<", \$data;
+ok ($csv = ReadData ($rh,    parser => "csv"), "Parse from data-ref");
+is ($csv->[1]{C2}, 3, "C2 = 3");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
