@@ -51,7 +51,7 @@ provides:
     file:               Read.pm
     version:            VERSION
 requires:                       
-  perl:                 5.008
+  perl:                 5.008001
   Exporter:             0
   Carp:                 0
   Data::Dumper:         0

@@ -1,6 +1,6 @@
 use strict;
 
-require 5.008;
+require 5.008001;
 
 use ExtUtils::MakeMaker;
 use File::Copy;

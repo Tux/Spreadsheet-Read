@@ -32,7 +32,7 @@ package Spreadsheet::Read;
 
 =cut
 
-use 5.8.0;
+use 5.8.1;
 use strict;
 use warnings;
 
