@@ -461,6 +461,9 @@ sub ReadData {
 		}
 	    open $in, "<", $txt or return;
 	    }
+	elsif ($io_ref) {
+	    $in = $txt;
+	    }
 	elsif (ref $txt eq "SCALAR") {
 	    open $in, "<", $txt;
 	    }
@@ -468,6 +471,8 @@ sub ReadData {
 	    open $in, "<", \$txt;
 	    }
 	else {
+	    warn "Input type ", ref $txt,
+		" might not be supported. Please file a ticket\n";
 	    $in = $txt;	# Now pray ...
 	    }
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
