@@ -1,11 +1,14 @@
-0.72	- 29 Jul 2017, H.Merijn Brand
-    * get_active_sheet is only available as of Spreadsheet::ParseExcel 0.61
-    * Support password protected spreadsheets (implementation just for Excel)
-    * Do not warn on undefined labels (xlscat)
+0.73	- 30 Jul 2017, H.Merijn Brand
     * Spreadsheet::XLSX::Reader::LibXML support completely dropped
     * New options for ss2tk (font specs and SS labels)
     * Safer xls2csv option parsing/passing
     * Pass unknown command-line options to the parser
+    * Fix ReadData ("a,b,c\n1,2,3\n", parser => "csv")
+
+0.72	- 25 May 2017, H.Merijn Brand
+    * get_active_sheet is only available as of Spreadsheet::ParseExcel 0.61
+    * Support password protected spreadsheets (implementation just for Excel)
+    * Do not warn on undefined labels (xlscat)
 
 0.71	- 13 May 2017, H.Merijn Brand
     * Use -w as intended

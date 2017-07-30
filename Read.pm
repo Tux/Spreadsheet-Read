@@ -35,7 +35,7 @@ package Spreadsheet::Read;
 use strict;
 use warnings;
 
-our $VERSION = "0.72";
+our $VERSION = "0.73";
 sub  Version { $VERSION }
 
 use Carp;
@@ -395,7 +395,7 @@ sub ReadData {
 		      keys %opt;
 
     my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? $txt : undef;
-    my $io_fil = $io_ref ? 0 : do { no warnings "newline"; -f $txt ? 1 : 0 };
+    my $io_fil = $io_ref ? 0 : $txt !~ m/[\n\r,;]/ && -f $txt ? 1 : 0;
     my $io_txt = $io_ref || $io_fil ? 0 : 1;
 
     $io_fil && ! -s $txt  and return;
@@ -438,6 +438,8 @@ sub ReadData {
 	my ($sep, $quo, $in) = (",", '"');
 	defined $opt{sep}   and $sep = $opt{sep};
 	defined $opt{quote} and $quo = $opt{quote};
+	$debug > 8 and _dump (debug => {
+	    data => \@data, txt => $txt, io_ref => $io_ref, io_fil => $io_fil });
 	if ($io_fil) {
 	    unless (defined $opt{quote} && defined $opt{sep}) {
 		open $in, "<", $txt or return;
@@ -458,6 +460,9 @@ sub ReadData {
 		close $in;
 		}
 	    open $in, "<", $txt or return;
+	    }
+	elsif ($txt =~ m/[\r\n,;]/) {
+	    open $in, "<", \$txt;
 	    }
 	else {
 	    $in = $txt;	# Now pray ...
