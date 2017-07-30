@@ -84,7 +84,7 @@ if (-f ".perlcriticrc" && -s "$ENV{HOME}/.perlcriticrc") {
 	"[-Modules::ProhibitMultiplePackages]",
 	"[-Subroutines::ProhibitExplicitReturnUndef]",
 	"[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]", # False positive
-	"[-ValuesAndExpressions::ProhibitVersionStrings]",	# use 5.8.0
+	"[-ValuesAndExpressions::ProhibitVersionStrings]",	# use 5.8.1
 	"";
     close $fh;
     }
@@ -105,7 +105,7 @@ sub postamble {
 		    "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')"
 		    $(TEST_FILES) 3>valgrind.log
 		    );
-    my @pc = -f ".perlcriticrc" ? ("\tperlcritic -1 Unify.pm") : ();
+    my @pc = -f ".perlcriticrc" ? ("\tperlcritic -1 Read.pm") : ();
     join "\n" =>
 	'cover test_cover:',
 	'	ccache -C',
