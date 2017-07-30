@@ -19,6 +19,7 @@ sandbox/
 examples/xlsgrep
 test/
 \.aspell\.local\.pws
+\.perlcriticrc
 t/630_xlsx.t
 t/631_clr.t
 t/632_fmt.t

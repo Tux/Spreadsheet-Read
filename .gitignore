@@ -11,3 +11,4 @@ test
 *.tar.gz
 *.tgz
 *.old
+.perlcriticrc

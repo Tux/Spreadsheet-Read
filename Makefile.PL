@@ -69,6 +69,26 @@ if ($ENV{EXTENDED_TESTING}) { # for CpanCover and masochists
 
 my $rv = WriteMakefile (%wm);
 
+# perlcriticrc uses Config::Tiny, which does not support nesting
+if (-f ".perlcriticrc" && -s "$ENV{HOME}/.perlcriticrc") {
+    open my $fh, ">", ".perlcriticrc";
+    print $fh do {
+	local (@ARGV, $/) = ("$ENV{HOME}/.perlcriticrc"); <> };
+    print $fh join "\n" => "",
+	"[-Bangs::ProhibitDebuggingModules]",
+	"[-BuiltinFunctions::ProhibitBooleanGrep]",
+	"[-BuiltinFunctions::ProhibitStringyEval]",	# Guarded
+	"[-Compatibility::PodMinimumVersion]", # L<File::Temp|https://...] requires 5.12
+	"[-Documentation::ProhibitDuplicateSeeAlso]",
+	"[-Documentation::RequireLinkedURLs]", # L<File::Temp|https://...] requires 5.12
+	"[-Modules::ProhibitMultiplePackages]",
+	"[-Subroutines::ProhibitExplicitReturnUndef]",
+	"[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]", # False positive
+	"[-ValuesAndExpressions::ProhibitVersionStrings]",	# use 5.8.0
+	"";
+    close $fh;
+    }
+
 package MY;
 
 sub postamble {

@@ -32,6 +32,7 @@ package Spreadsheet::Read;
 
 =cut
 
+use 5.8.0;
 use strict;
 use warnings;
 
@@ -65,12 +66,9 @@ my @parsers = (
     );
 my %can = map {
     my $preset = $ENV{"SPREADSHEET_READ_\U$_->[0]"};
-    if ($preset) {
-	eval "require $preset";
-	if ($@) {
-	    $preset = "!$preset";
-	    }
-	else { # forcing a parser should still check the version
+    if ($preset and $preset =~ m/^[\w:]+$/) {
+	if (eval "require $preset" and not $@) {
+	    # forcing a parser should still check the version
 	    for (grep { $_->[1] eq $preset and $_->[2] } @parsers) {
 		my $ok;
 		my $has = $preset->VERSION;
@@ -88,14 +86,17 @@ my %can = map {
 		$ok or $preset = "!$preset";
 		}
 	    }
+	else {
+	    $preset = "!$preset";
+	    }
 	}
     $_->[0] => $preset || "";
     } @parsers;
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
-    eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'";
-    #$@ && $@ !~ m{Can't locate} and warn "$mod: $@\n";
+    eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" or
+	$_->[0] = "! Cannot use $mod version $vsn: $@";
     }
 $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
@@ -324,8 +325,8 @@ sub _clipsheets {
 	my $ss = $ref->[$sheet];
 
 	# Remove trailing empty columns
-	while ($ss->{maxcol} and not (
-		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]})
+	while ($ss->{maxcol} and not
+		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
 		) {
 	    (my $col = cr2cell ($ss->{maxcol}, 1)) =~ s/1$//;
 	    my $recol = qr{^$col(?=[0-9]+)$};
@@ -465,10 +466,10 @@ sub ReadData {
 	    $in = $txt;
 	    }
 	elsif (ref $txt eq "SCALAR") {
-	    open $in, "<", $txt;
+	    open $in, "<", $txt  or croak "Cannot open input: $!";
 	    }
 	elsif ($txt =~ m/[\r\n,;]/) {
-	    open $in, "<", \$txt;
+	    open $in, "<", \$txt or croak "Cannot open input: $!";
 	    }
 	else {
 	    warn "Input type ", ref $txt,
@@ -972,6 +973,7 @@ sub attr {
 	my ($c, $r) = $sheet->cell2cr ($id[0]);
 	return $sheet->{attr}[$c][$r];
 	}
+    undef;
     } # attr
 
 sub maxrow {
@@ -985,17 +987,17 @@ sub maxcol {
     } # maxrow
 
 sub col2label {
-    my $class = shift;
+    $_[0] =~ m/::/ and shift; # class unused
     return Spreadsheet::Read::col2label (@_);
     } # col2label
 
 sub cr2cell {
-    my $class = shift;
+    $_[0] =~ m/::/ and shift; # class unused
     return Spreadsheet::Read::cr2cell (@_);
     } # cr2cell
 
 sub cell2cr {
-    my $class = shift;
+    $_[0] =~ m/::/ and shift; # class unused
     return Spreadsheet::Read::cell2cr (@_);
     } # cell2cr
 
