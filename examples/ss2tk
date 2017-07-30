@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-05-28] Copyright H.M.Brand 2005-2017
+#	  (m)'17 [2017-07-03] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "2.7";
+our $VERSION = "2.8";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -22,14 +22,25 @@ sub usage {
     } # usage
 
 use Getopt::Long qw(:config bundling passthrough);
+my $opt_fs;
 GetOptions (
     "help|?"		=> sub { usage (0); },
     "w|width=i"		=> \my $opt_w,
     "L|ss|labels!"	=> \my $opt_L,
     "a|align!"		=> \my $opt_a,
 
-      "fs|font-size:7"	=> \my $opt_fs,
       "fn|font-name=s"	=> \my $opt_fn,
+      "fs|font-size:7"	=> \   $opt_fs,
+      "fs-4"		=> sub { $opt_fs = 4; },
+      "fs-5"		=> sub { $opt_fs = 5; },
+      "fs-6"		=> sub { $opt_fs = 6; },
+      "fs-7"		=> sub { $opt_fs = 7; },
+      "fs-8"		=> sub { $opt_fs = 8; },
+      "fs-9"		=> sub { $opt_fs = 9; },
+
+    # For restarts
+    "G|geometry=s"	=> \my $geometry,
+    "W|column-widths=s"	=> \my $col_widths,
     ) or usage (1);
 
 use Data::Peek;
@@ -58,6 +69,7 @@ $opt_fn || $opt_fs and $opt_fn = "{".($opt_fn|| "DejaVu Sans Mono")."} ".($opt_f
 my $pat = @ARGV ? qr/$ARGV[0]/i : undef;
 
 my $mw = MainWindow->new (-title => $title);
+$geometry and $mw->geometry ($geometry);
 my $nb = $mw->NoteBook ()->pack (qw(-side top -expand 1 -fill both ));
 my @nb;
 foreach my $sht (1 .. $ref->[0]{sheets}) {
@@ -133,13 +145,24 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 
     # Control frame
     my $cf = $nb[$sht]->Frame ()->pack (-side => "right", -expand => 1, -fill => "both");
-    my $ce = $cf->Button (
-	-text     => "Exit",
-	-command  => \&exit,
+    $cf->Button (
+	-text       => "\x{2718}",
+	-foreground => "#8b0000",
+	-command    => \&exit,
 	)->pack (-side => "right", -anchor => "se");
-    my $rf = $cf->Button (
-	-text     => "Reload",
-	-command  => $reload,
+    $cf->Button (
+	-text       => "\x{21f5}",
+	-foreground => "#ffa500",
+	-command    => sub {
+	    my $geo = $mw->geometry;
+	    # Add column widths here
+	    exec $0, "--geometry=$geo";
+	    },
+	)->pack (-side => "right", -anchor => "se");
+    $cf->Button (
+	-text       => "\x{21bb}",
+	-foreground => "#008b00",
+	-command    => $reload,
 	)->pack (-side => "right", -anchor => "se");
 
     my $swss = $ss->Subwidget ("spreadsheet");
