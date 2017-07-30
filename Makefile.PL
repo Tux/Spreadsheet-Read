@@ -105,6 +105,7 @@ sub postamble {
 		    "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')"
 		    $(TEST_FILES) 3>valgrind.log
 		    );
+    my @pc = -f ".perlcriticrc" ? ("\tperlcritic -1 Unify.pm") : ();
     join "\n" =>
 	'cover test_cover:',
 	'	ccache -C',
@@ -131,6 +132,7 @@ sub postamble {
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'	-@cpants_lint.pl $(DISTVNAME).tgz',
 	'	-@rm -f Debian_CPANTS.txt',
+	@pc,
 	'';
     } # postamble
 
