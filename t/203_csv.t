@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 123;
+my     $tests = 125;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -96,6 +96,18 @@ is ($csv->[1]{C2}, 3, "C2 = 3");
 open my $rh, "<", \$data;
 ok ($csv = ReadData ($rh,    parser => "csv"), "Parse from data-ref");
 is ($csv->[1]{C2}, 3, "C2 = 3");
+
+if (open my $dh, ">", $data) {
+    print $dh $data;
+    close $dh;
+    ok ($csv = ReadData ($data, parser => "csv"), "Parse from file with bad name");
+    is ($csv->[1]{C2}, 3, "C2 = 3");
+    unlink $data;
+    }
+else {
+    ok (1, "Using a badly named file not allowed: GOOD!");
+    ok (1, "Using a badly named file not allowed: GOOD!");
+    }
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

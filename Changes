@@ -1,3 +1,6 @@
+0.74	- 15 Aug 2017, H.Merijn Brand
+    * Re-enable opening CSV files with bad characters in the filename (issue#14)
+
 0.73	- 30 Jul 2017, H.Merijn Brand
     * Spreadsheet::XLSX::Reader::LibXML support completely dropped
     * New options for ss2tk (font specs and SS labels)

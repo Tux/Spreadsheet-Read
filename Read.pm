@@ -36,7 +36,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.73";
+our $VERSION = "0.74";
 sub  Version { $VERSION }
 
 use Carp;
@@ -395,15 +395,16 @@ sub ReadData {
 		      grep { !exists $def_opts{$_} }
 		      keys %opt;
 
+    my $_parser = _parser ($opt{parser});
+
     my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? $txt : undef;
-    my $io_fil = $io_ref ? 0 : $txt !~ m/[\n\r,;]/ && -f $txt ? 1 : 0;
+    my $io_fil = $io_ref ? 0 : do { no warnings "newline"; -f $txt };
     my $io_txt = $io_ref || $io_fil ? 0 : 1;
 
     $io_fil && ! -s $txt  and return;
     $io_ref && eof ($txt) and return;
 
-    if ($opt{parser} ? _parser ($opt{parser}) eq "csv"
-		     : ($io_fil && $txt =~ m/\.(csv)$/i)) {
+    if ($opt{parser} ? $_parser eq "csv" : ($io_fil && $txt =~ m/\.(csv)$/i)) {
 	$can{csv} or croak "CSV parser not installed";
 
 	my $label = defined $opt{label} ? $opt{label} : $io_fil ? $txt : "IO";
@@ -510,7 +511,7 @@ sub ReadData {
 	}
 
     # From /etc/magic: Microsoft Office Document
-    if ($io_txt && _parser ($opt{parser}) !~ m/^xlsx?$/ &&
+    if ($io_txt && $_parser !~ m/^xlsx?$/ &&
 		    $txt =~ m{^(\376\067\0\043
 			       |\320\317\021\340\241\261\032\341
 			       |\333\245-\0\0\0)}x) {
@@ -527,10 +528,9 @@ sub ReadData {
 	    }
 	open $io_ref, "<", $tmpfile or return;
 	$io_txt = 0;
-	$opt{parser} = "xls";
+	$_parser = _parser ($opt{parser} = "xls");
 	}
-    my $_parser;
-    if ($opt{parser} ? ($_parser = _parser ($opt{parser})) =~ m/^xlsx?$/
+    if ($opt{parser} ? $_parser =~ m/^xlsx?$/
 		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
 	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
 	my $parser = $can{lc $parse_type} or
