@@ -106,6 +106,6 @@ optional_features:
   opt_tools:
     description:        Spreadsheet tools
     recommends:
-      Tk:                                  804.033
+      Tk:                                  804.034
       Tk::NoteBook:                        0
       Tk::TableMatrix::Spreadsheet:        0
