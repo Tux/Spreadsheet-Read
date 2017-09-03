@@ -73,4 +73,9 @@ if (-f $csv) {
 
 warn "Converting $xls to $csv ...\n";
 open STDOUT, ">", $csv or die "$csv: $!\n";
-exec "xlscat", "-c", @ARGV, $xls;
+{   package XLSCAT;
+    require File::Spec;
+    local @INC = File::Spec->path;
+    local @ARGV = ('-c', @ARGV, $xls);
+    do 'xlscat';
+    }
