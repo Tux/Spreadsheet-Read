@@ -328,7 +328,9 @@ sub _clipsheets {
 	while ($ss->{maxcol} and not
 		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
 		) {
-	    delete $ss->{cr2cell($ss->{maxcol}, $_)} foreach 1..$ss->{maxrow};
+	    if($opt->{cells}) {
+		delete $ss->{cr2cell($ss->{maxcol}, $_)} foreach 1..$ss->{maxrow};
+		}
 	    $ss->{maxcol}--;
 	    }
 	$ss->{maxcol} or $ss->{maxrow} = 0;
@@ -339,7 +341,9 @@ sub _clipsheets {
 		map  { $ss->{cell}[$_][$ss->{maxrow}] }
 		1 .. $ss->{maxcol}
 		)) {
-	    delete $ss->{cr2cell($_, $ss->{maxrow})} foreach 1..$ss->{maxcol};
+	    if($opt->{cells}) {
+		delete $ss->{cr2cell($_, $ss->{maxrow})} foreach 1..$ss->{maxcol};
+		}
 	    $ss->{maxrow}--;
 	    }
 	$ss->{maxrow} or $ss->{maxcol} = 0;
