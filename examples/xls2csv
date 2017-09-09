@@ -73,4 +73,5 @@ if (-f $csv) {
 
 warn "Converting $xls to $csv ...\n";
 open STDOUT, ">", $csv or die "$csv: $!\n";
-exec "xlscat", "-c", @ARGV, $xls;
+$^O eq "MSWin32" and $xls = qq{"$xls"};
+exec { "xlscat" } "xlscat", "-c", @ARGV, $xls;

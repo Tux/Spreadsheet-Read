@@ -1,3 +1,6 @@
+0.75	- 09 Sep 2017, H.Merijn Brand
+    * Windows does not like an exec with arguments that have spaces (PR#15)
+
 0.74	- 27 Aug 2017, H.Merijn Brand
     * Re-enable opening files with bad characters in the filename (issue#14)
 
