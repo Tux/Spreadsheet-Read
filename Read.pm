@@ -328,9 +328,9 @@ sub _clipsheets {
 	while ($ss->{maxcol} and not
 		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
 		) {
-	    (my $col = cr2cell ($ss->{maxcol}, 1)) =~ s/1$//;
-	    my $recol = qr{^$col(?=[0-9]+)$};
-	    delete $ss->{$_} for grep m/$recol/, keys %{$ss};
+	    if ($opt->{cells}) {
+		delete $ss->{cr2cell ($ss->{maxcol}, $_)} foreach 1..$ss->{maxrow};
+		}
 	    $ss->{maxcol}--;
 	    }
 	$ss->{maxcol} or $ss->{maxrow} = 0;
@@ -341,8 +341,9 @@ sub _clipsheets {
 		map  { $ss->{cell}[$_][$ss->{maxrow}] }
 		1 .. $ss->{maxcol}
 		)) {
-	    my $rerow = qr{^[A-Z]+$ss->{maxrow}$};
-	    delete $ss->{$_} for grep m/$rerow/, keys %{$ss};
+	    if ($opt->{cells}) {
+		delete $ss->{cr2cell ($_, $ss->{maxrow})} foreach 1..$ss->{maxcol};
+		}
 	    $ss->{maxrow}--;
 	    }
 	$ss->{maxrow} or $ss->{maxcol} = 0;
