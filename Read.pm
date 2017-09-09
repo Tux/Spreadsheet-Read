@@ -329,7 +329,7 @@ sub _clipsheets {
 		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
 		) {
 	    (my $col = cr2cell ($ss->{maxcol}, 1)) =~ s/1$//;
-	    my $recol = qr{^$col(?=[0-9]+)$};
+	    my $recol = qr{^${col}[0-9]+$};
 	    delete $ss->{$_} for grep m/$recol/, keys %{$ss};
 	    $ss->{maxcol}--;
 	    }

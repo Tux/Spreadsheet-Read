@@ -95,7 +95,7 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my  $ref = ReadData ("files/blank.csv", strip => 1);
     ok ($ref, "strip cells 1 rc 1");
     is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
-    is ($ref->[1]{A1},         "",    "blank A1");
+    is ($ref->[1]{A1},         undef, "undef A1");
 	$ref = ReadData ("files/blank.csv", strip => 1, cells => 0);
     ok ($ref, "strip cells 0 rc 1");
     is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
@@ -103,7 +103,7 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
 	$ref = ReadData ("files/blank.csv", strip => 1,             rc => 0);
     ok ($ref, "strip cells 1 rc 0");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},          "",    "blank A1");
+    is ($ref->[1]{A1},         undef, "undef A1");
 	$ref = ReadData ("files/blank.csv", strip => 1, cells => 0, rc => 0);
     ok ($ref, "strip cells 0 rc 0");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
