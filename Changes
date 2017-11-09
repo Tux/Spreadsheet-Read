@@ -1,9 +1,10 @@
-0.75	- 09 Sep 2017, H.Merijn Brand
+0.75	- 09 Nov 2017, H.Merijn Brand
     * Windows does not like an exec with arguments that have spaces (PR#15)
       Three fixes by Andrew Gregory <andrew.gregory.8@gmail.com>). Thanks!
     * Fix column clipping
     * Manually generate cells to delete when clipping
     * Skip cell deletion if they were never generated
+    * File names cannot have \0 in newer perls
 
 0.74	- 27 Aug 2017, H.Merijn Brand
     * Re-enable opening files with bad characters in the filename (issue#14)

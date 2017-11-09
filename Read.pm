@@ -329,7 +329,7 @@ sub _clipsheets {
 		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
 		) {
 	    if ($opt->{cells}) {
-		delete $ss->{cr2cell ($ss->{maxcol}, $_)} foreach 1..$ss->{maxrow};
+		delete $ss->{cr2cell ($ss->{maxcol}, $_)} for 1..$ss->{maxrow};
 		}
 	    $ss->{maxcol}--;
 	    }
@@ -342,7 +342,7 @@ sub _clipsheets {
 		1 .. $ss->{maxcol}
 		)) {
 	    if ($opt->{cells}) {
-		delete $ss->{cr2cell ($_, $ss->{maxrow})} foreach 1..$ss->{maxcol};
+		delete $ss->{cr2cell ($_, $ss->{maxrow})} for 1..$ss->{maxcol};
 		}
 	    $ss->{maxrow}--;
 	    }
@@ -399,7 +399,8 @@ sub ReadData {
     my $_parser = _parser ($opt{parser});
 
     my $io_ref = ref ($txt) =~ m/GLOB|IO/ ? $txt : undef;
-    my $io_fil = $io_ref ? 0 : do { no warnings "newline"; -f $txt };
+    my $io_fil = $io_ref ? 0 : $txt =~ m/\0/ ? 0
+			     : do { no warnings "newline"; -f $txt };
     my $io_txt = $io_ref || $io_fil ? 0 : 1;
 
     $io_fil && ! -s $txt  and return;
