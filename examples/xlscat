@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-07-29] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-11-13] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
 
-our $VERSION = "3.11";
+our $VERSION = "3.12";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -203,10 +203,16 @@ if ($is_grep) {
     $opt_v > 1 and warn "Matching on $pattern\n";
     }
 
-@ARGV or usage 1;
 my $file = shift;
--f $file or usage 1, "the file argument is not a regular file";
--s $file or usage 1, "the file is empty";
+if (defined $file and $file ne "-") {
+    $opt_v > 1 and warn "Using $file as input\n";
+    -f $file or usage 1, "the file argument is not a regular file";
+    -s $file or usage 1, "the file is empty";
+    }
+else {
+    $opt_v > 1 and warn "Working as a pipe\n";
+    $file = *ARGV;
+    }
 
 use Encode qw( encode decode );
 use Spreadsheet::Read;

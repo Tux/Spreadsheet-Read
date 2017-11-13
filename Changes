@@ -1,3 +1,6 @@
+0.76	- 13 Nov 2017, H.Merijn Brand
+    * Allow streaming in xlscat
+
 0.75	- 09 Nov 2017, H.Merijn Brand
     * Windows does not like an exec with arguments that have spaces (PR#15)
       Three fixes by Andrew Gregory <andrew.gregory.8@gmail.com>). Thanks!
