@@ -2,7 +2,7 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-11-13] Copyright H.M.Brand 2005-2017
+#	   (m)'17 [2017-11-30] Copyright H.M.Brand 2005-2017
 
 use strict;
 use warnings;
@@ -45,6 +45,7 @@ sub usage {
 	"                   optionally skip <skip> (header) lines\n",
 	"       -A          Show field attributes in ANSI escapes\n",
 	"       -h[#]       Show # header lines\n",
+	"       -D          Dump each record with Data::Peek or Data::Dumper\n",
 	$is_grep ? (
 	"    Grep options:\n",
 	"       -i          Ignore case\n",
@@ -80,16 +81,9 @@ sub usage {
 use Getopt::Long qw(:config bundling noignorecase passthrough);
 my $opt_c;		# Generate CSV
 my $opt_F = "";		# Fields to print
-my $opt_i = 0;		# Index (cat) | ignore_case (grep)
-my $opt_L = 0;		# Auto-size/align columns
-my $opt_u = 0;		# Show unformatted values
-my $opt_f = 0;		# Show the formula instead of the value
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
-my $opt_A = 0;		# Show field colors in ANSI escapes
-my $opt_H = 0;		# Output in HTML
 my $opt_h = 0;		# Number of header lines for grep or -L
-my $opt_w = 0;		# Grep words
 my $clip  = 1;
 my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
@@ -106,12 +100,12 @@ GetOptions (
     # Input XLS
     "dtfmt".
      "|date-format=s"	=> \my $dtfmt,	# Default date-format for Excel
-    "f|formulas!"	=> \$opt_f,
+    "f|formulas!"	=> \my $opt_f,	# Show the formula instead of the value
       "password=s"	=> \my $passwd,	# For encrypted spreadsheets
 
     # Output
     "i|index".
-     "|ignore-case"	=> \$opt_i,
+     "|ignore-case!"	=> \my $opt_i,	# Index (cat) | ignore_case (grep) 
     "s|separator".
      "|outsepchar".
      "|out-sep".
@@ -119,15 +113,16 @@ GetOptions (
     "S|sheets=s"	=> \my $opt_S,	# Sheets to print
     "R|rows=s"		=> \my $opt_R,	# Rows to print
     "C|columns=s"	=> \my $opt_C,	# Columns to print
-    "F|fields=s"	=> \$opt_F,
-    "L|fit|align!"	=> \$opt_L,
+    "F|fields=s"	=> \   $opt_F,
+    "L|fit|align!"	=> \my $opt_L,	# Auto-size/align columns
     "P|pivot!"		=> \my $pivot,
     "n|number:0"	=> \my $opt_n,	# Prefix lines with column number
-    "A|ansi|color!"	=> \$opt_A,
-    "u|unformatted!"	=> \$opt_u,
+    "A|ansi|color!"	=> \my $opt_A,	# Show field colors in ANSI escapes
+    "u|unformatted!"	=> \my $opt_u,	# Show unformatted values
     "v|verbose:1"	=> \$opt_v,
     "d|debug:1"		=> \$opt_d,
-    "H|html:1"		=> \$opt_H,
+    "D|dump!"		=> \my $opt_D,	# Use Data::Peek or Data::Dumper
+    "H|html:1"		=> \my $opt_H,	# Output in HTML
       "noclip"		=> sub { $clip = 0 },
       "strip:3"		=> \my $strip,
       "sort=s"		=> \my $sort_order,
@@ -139,7 +134,7 @@ GetOptions (
     "U|utf-8|utf8"	=> sub { $enc_o = "utf-8" },
 
     # Grep
-    "w|word!"		=> \$opt_w,
+    "w|word!"		=> \my $opt_w,	# Grep words
     "h|header:1"	=> \$opt_h,
     ) or usage 1, "GetOpt: $@";
 
@@ -161,7 +156,7 @@ $opt_s && $opt_H and usage 1, "Options s and H are mutually exclusive";
 defined $opt_s or $opt_s = "|"; eval "\$opt_s = qq{$opt_s}";
 defined $opt_S or $opt_S = $opt_i || $is_grep ? "all" : "1";
 $opt_i && !$is_grep && $opt_v < 1 and $opt_v = 1;
-$opt_f and $opt_A++;
+$opt_f and $opt_A = 1;
 
 if ($opt_c) {
     $opt_L = 0;	# Cannot align CSV
@@ -419,6 +414,10 @@ foreach my $si (1 .. $sc) {
 	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
 	    ! grep { defined $_ && $_ =~ $pattern } @row and next;
+	if ($opt_D) {
+	    ddumper \@row;
+	    next;
+	    }
 	if ($opt_L) {
 	    foreach my $c (0 .. $#row) {
 		my $l = length $row[$c];

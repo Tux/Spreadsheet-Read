@@ -1,5 +1,6 @@
-0.76	- 13 Nov 2017, H.Merijn Brand
+0.76	- 30 Nov 2017, H.Merijn Brand
     * Allow streaming in xlscat
+    * Add --dump to xlscat
 
 0.75	- 09 Nov 2017, H.Merijn Brand
     * Windows does not like an exec with arguments that have spaces (PR#15)
