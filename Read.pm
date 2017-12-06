@@ -835,6 +835,9 @@ sub ReadData {
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
 	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
+	ref $txt and
+	    croak ("Sorry, references as input are not (yet) supported by Spreadsheet::ReadSXC");
+
 	my $using = "using $can{sxc}-" . $can{sxc}->VERSION;
 	my $sxc_options = { %parser_opts, OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
