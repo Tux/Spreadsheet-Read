@@ -8,5 +8,5 @@ use Spreadsheet::Read;
 
 my $dir = -d "files" ? "files" : "../files";
 open my $fh, "<", "$dir/test.ods";
-DDumper ReadData ($fh, parser => "ods", verbose => 9, debug => 9);
+DDumper ReadData ($fh, parser => "ods");
 close $fh;
