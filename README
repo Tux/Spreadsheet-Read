@@ -47,6 +47,16 @@ or get it as a tgz:
  $ wget --output-document=Spreadsheet-Read-git.tgz \
 	   'https://github.com/Tux/Spreadsheet-Read/archive/master.tar.gz'
 
+=head1 TOOLS
+
+Installing this module will optionally (default is yes) also install some
+useful tools that use Spreadsheet::Read. At least two are know to cause a
+possible name clash:
+
+ * xls2csv also exists as https://metacpan.org/release/KEN/xls2csv-1.06
+   Mine existed before that script, and this version dates from 2005
+ * ssdiff also exists in the gnumeric package with similar functionality
+
 =head1 TODO
 
   * Make tests for examples/xlscat

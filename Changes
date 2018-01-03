@@ -1,3 +1,6 @@
+0.77	- 03 Jan 2018, H.Merijn Brand
+    * Note possible name clashes with example/tool files
+
 0.76	- 01 Jan 2018, H.Merijn Brand
     * Allow streaming in xlscat
     * Add --dump to xlscat
