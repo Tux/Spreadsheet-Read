@@ -1864,6 +1864,26 @@ names C<meta>, or just be new values in the C<attr> hashes.
 
 I consider adding any spreadsheet interface that offers a usable API.
 
+Under investigation:
+
+=over 2
+
+=item Gnumeric (.gnumeric)
+
+I've seen no existing CPAN module yet.
+
+It is gzip'ed XML
+
+=item Kspread (.ksp)
+
+Now knows as Calligra Sheets.
+
+I've seen no existing CPAN module yet.
+
+It is XML in ZIP
+
+=back
+
 =item Alternative parsers for existing formats
 
 As long as the alternative has a good reason for its existence, and the
