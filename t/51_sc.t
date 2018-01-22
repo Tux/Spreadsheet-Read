@@ -36,7 +36,7 @@ my $content;
 
 foreach my $clip (0, 2) {
     my $sc;
-    ok ($sc = ReadDataStream ("files/test.sc", clip => $clip),
+    ok ($sc = ReadDataStream ("files/test.sc", clip => $clip, strip => 2),
 	"Read/Parse sc file ".($clip?"clipped":"unclipped"));
 
     ok (1, "Base values");

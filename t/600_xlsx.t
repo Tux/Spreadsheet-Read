@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 78;
+my     $tests = 116;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -88,21 +88,67 @@ is ($ss->{F1},		"",    "formatted a single '");
 	}
     }
 
-{   # RT#105197 - Strip wrong selection
-    my  $ref = ReadData ("files/blank.xlsx", strip => 1);
-    ok ($ref, "strip cells 1 rc 1");
+# blank.xlsx has only one sheet with A1 filled with ' '
+{   my  $ref = ReadData ("files/blank.xlsx", clip => 0, strip => 0);
+    ok ($ref, "!clip strip 0");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+    is ($ref->[1]{A1},         " ",   "A1     = ' '");
+        $ref = ReadData ("files/blank.xlsx", clip => 0, strip => 1);
+    ok ($ref, "!clip strip 1");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
+    is ($ref->[1]{A1},         "",    "undef A1");
+	$ref = ReadData ("files/blank.xlsx", clip => 0, strip => 1, cells => 0);
+    ok ($ref, "!clip strip 1");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
     is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.xlsx", strip => 1, cells => 0);
-    ok ($ref, "strip cells 0 rc 1");
-    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.xlsx", strip => 1,             rc => 0);
-    ok ($ref, "strip cells 1 rc 0");
+	$ref = ReadData ("files/blank.xlsx", clip => 0, strip => 2,             rc => 0);
+    ok ($ref, "!clip strip 2");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         "",    "blank A1");
+	$ref = ReadData ("files/blank.xlsx", clip => 0, strip => 3, cells => 0, rc => 0);
+    ok ($ref, "!clip strip 3");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.xlsx", strip => 1, cells => 0, rc => 0);
-    ok ($ref, "strip cells 0 rc 0");
+
+	$ref = ReadData ("files/blank.xlsx", clip => 1, strip => 0);
+    ok ($ref, " clip strip 0");
+    is ($ref->[1]{maxrow},     1,     "maxrow 1");
+    is ($ref->[1]{maxcol},     1,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+    is ($ref->[1]{A1},         " ",   "A1     = ' '");
+
+	$ref = ReadData ("files/blank.xlsx", clip => 1, strip => 1);
+    ok ($ref, " clip strip 1");
+    is ($ref->[1]{maxrow},     0,     "maxrow 1");
+    is ($ref->[1]{maxcol},     0,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.xlsx", clip => 1, strip => 1, cells => 0);
+    ok ($ref, " clip strip 1");
+    is ($ref->[1]{maxrow},     0,     "maxrow 1");
+    is ($ref->[1]{maxcol},     0,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.xlsx", clip => 1, strip => 2,             rc => 0);
+    ok ($ref, " clip strip 2");
+    is ($ref->[1]{maxrow},     0,     "maxrow 1");
+    is ($ref->[1]{maxcol},     0,     "maxcol 1");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.xlsx", clip => 1, strip => 3, cells => 0, rc => 0);
+    ok ($ref, " clip strip 3");
+    is ($ref->[1]{maxrow},     0,     "maxrow 1");
+    is ($ref->[1]{maxcol},     0,     "maxcol 1");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
     }

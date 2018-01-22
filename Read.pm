@@ -282,21 +282,63 @@ sub sheet {
 sub _clipsheets {
     my ($opt, $ref) = @_;
 
-    foreach my $sheet (1 .. $ref->[0]{sheets}) {
-	$ref->[$sheet]{indx} = $sheet;
-	if (my $s = $opt->{strip} and $ref->[0]{sheets}) {
+    $ref->[0]{sheets} or return $ref;
+
+    my ($rc, $cl)      = ($opt->{rc},   $opt->{cells});
+    my ($oc, $os, $oa) = ($opt->{clip}, $opt->{strip}, $opt->{attr});
+
+    # Strip leading/trailing spaces
+    if ($os || $oc) {
+	foreach my $sheet (1 .. $ref->[0]{sheets}) {
+	    $ref->[$sheet]{indx} = $sheet;
 	    my $ss = $ref->[$sheet];
 	    $ss->{maxrow} && $ss->{maxcol} or next;
+	    my ($mc, $mr) = (0, 0);
 	    foreach my $row (1 .. $ss->{maxrow}) {
 		foreach my $col (1 .. $ss->{maxcol}) {
-		    for (($opt->{rc}    ? $ss->{cell}   [$col][$row]  : ()),
-		         ($opt->{cells} ? $ss->{cr2cell ($col, $row)} : ())) {
-			defined or next;
-		        $s & 2 and s/\s+$//;
-			$s & 1 and s/^\s+//;
+		    if ($rc) {
+			defined $ss->{cell}[$col][$row] or next;
+			$os & 2 and $ss->{cell}[$col][$row] =~ s/\s+$//;
+			$os & 1 and $ss->{cell}[$col][$row] =~ s/^\s+//;
+			if (length $ss->{cell}[$col][$row]) {
+			    $col > $mc and $mc = $col;
+			    $row > $mr and $mr = $row;
+			    }
+			}
+		    if ($cl) {
+			my $cell = cr2cell ($col, $row);
+			defined $ss->{$cell} or next;
+			$os & 2 and $ss->{$cell} =~ s/\s+$//;
+			$os & 1 and $ss->{$cell} =~ s/^\s+//;
+			if (length $ss->{$cell}) {
+			    $col > $mc and $mc = $col;
+			    $row > $mr and $mr = $row;
+			    }
 			}
 		    }
 		}
+
+	    $oc && ($mc < $ss->{maxcol} || $mr < $ss->{maxrow}) or next;
+
+	    # Remove trailing empty columns
+	    foreach my $col (($mc + 1) .. $ss->{maxcol}) {
+		$rc and undef $ss->{cell}[$col];
+		$oa and undef $ss->{attr}[$col];
+		$cl or next;
+		my $c = col2label ($col);
+		delete $ss->{"$c$_"} for 1 .. $ss->{maxrow};
+		}
+
+	    # Remove trailing empty rows
+	    foreach my $row (($mr + 1) .. $ss->{maxrow}) {
+		foreach my $col (1 .. $mc) {
+		    $cl and delete $ss->{cr2cell ($col, $row)};
+		    $rc and undef  $ss->{cell}   [$col][$row];
+		    $oa and undef  $ss->{attr}   [$col][$row];
+		    }
+		}
+
+	    ($ss->{maxrow}, $ss->{maxcol}) = ($mr, $mc);
 	    }
 	}
 
@@ -319,35 +361,6 @@ sub _clipsheets {
 	    }
 	}
 
-    $opt->{clip} or return $ref;
-
-    foreach my $sheet (1 .. $ref->[0]{sheets}) {
-	my $ss = $ref->[$sheet];
-
-	# Remove trailing empty columns
-	while ($ss->{maxcol} and not
-		grep { defined && m/\S/ } @{$ss->{cell}[$ss->{maxcol}]}
-		) {
-	    if ($opt->{cells}) {
-		delete $ss->{cr2cell ($ss->{maxcol}, $_)} for 1..$ss->{maxrow};
-		}
-	    $ss->{maxcol}--;
-	    }
-	$ss->{maxcol} or $ss->{maxrow} = 0;
-
-	# Remove trailing empty rows
-	while ($ss->{maxrow} and not (
-		grep { defined && m/\S/ }
-		map  { $ss->{cell}[$_][$ss->{maxrow}] }
-		1 .. $ss->{maxcol}
-		)) {
-	    if ($opt->{cells}) {
-		delete $ss->{cr2cell ($_, $ss->{maxrow})} for 1..$ss->{maxcol};
-		}
-	    $ss->{maxrow}--;
-	    }
-	$ss->{maxrow} or $ss->{maxcol} = 0;
-	}
     $ref;
     } # _clipsheets
 
@@ -1210,11 +1223,9 @@ See L</Cell Attributes> below.
 =item clip
 
 If set, L<C<ReadData>|/ReadData> will remove all trailing rows and columns
-per sheet that have no visual data. If a sheet has no data at all, the
-sheet will be skipped entirely when this attribute is true.
-
-This option is only valid if L<C<cells>|/cells> is true. The default value
-is true if L<C<cells>|/cells> is true, and false otherwise.
+per sheet that have no data, where no data means only undefined or empty
+cells (after optional stripping). If a sheet has no data at all, the sheet
+will be skipped entirely when this attribute is true.
 
 =item strip
 

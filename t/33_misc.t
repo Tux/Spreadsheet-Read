@@ -39,7 +39,7 @@ is ($xls->[0]{sheets}, 3,		"Sheet Count");
 	);
     }
 ok ($xls,				"Open with options");
-is (0+@{ $xls->[1]{cell}[1]}, 0,	"undef works as option value for 'rc'");
+is ($xls->[1]{cell}[1], undef,		"undef works as option value for 'rc'");
 ok (!exists $xls->[1]{A1},		"undef works as option value for 'cells'");
 
 {   local *STDERR;	# We want the debug activated, but not shown

@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 223;
+my     $tests = 261;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -142,21 +142,67 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
 	}
     }
 
-{   # RT#105197 - Strip wrong selection
-    my  $ref = Spreadsheet::Read->new ("files/blank.csv", strip => 1);
-    ok ($ref, "strip cells 1 rc 1");
+# blank.csv has only one sheet with A1 filled with ' '
+{   my  $ref = ReadData ("files/blank.csv", clip => 0, strip => 0);
+    ok ($ref, "!clip strip 0");
+    is ($ref->[1]{maxrow},     3,     "maxrow 3");
+    is ($ref->[1]{maxcol},     4,     "maxcol 4");
+    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+    is ($ref->[1]{A1},         " ",   "A1     = ' '");
+        $ref = ReadData ("files/blank.csv", clip => 0, strip => 1);
+    ok ($ref, "!clip strip 1");
+    is ($ref->[1]{maxrow},     3,     "maxrow 3");
+    is ($ref->[1]{maxcol},     4,     "maxcol 4");
+    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
+    is ($ref->[1]{A1},         "",    "undef A1");
+	$ref = ReadData ("files/blank.csv", clip => 0, strip => 1, cells => 0);
+    ok ($ref, "!clip strip 1");
+    is ($ref->[1]{maxrow},     3,     "maxrow 3");
+    is ($ref->[1]{maxcol},     4,     "maxcol 4");
     is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = Spreadsheet::Read->new ("files/blank.csv", strip => 1, cells => 0);
-    ok ($ref, "strip cells 0 rc 1");
-    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = Spreadsheet::Read->new ("files/blank.csv", strip => 1,             rc => 0);
-    ok ($ref, "strip cells 1 rc 0");
+	$ref = ReadData ("files/blank.csv", clip => 0, strip => 2,             rc => 0);
+    ok ($ref, "!clip strip 2");
+    is ($ref->[1]{maxrow},     3,     "maxrow 3");
+    is ($ref->[1]{maxcol},     4,     "maxcol 4");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         "",    "blank A1");
+	$ref = ReadData ("files/blank.csv", clip => 0, strip => 3, cells => 0, rc => 0);
+    ok ($ref, "!clip strip 3");
+    is ($ref->[1]{maxrow},     3,     "maxrow 3");
+    is ($ref->[1]{maxcol},     4,     "maxcol 4");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = Spreadsheet::Read->new ("files/blank.csv", strip => 1, cells => 0, rc => 0);
-    ok ($ref, "strip cells 0 rc 0");
+
+	$ref = ReadData ("files/blank.csv", clip => 1, strip => 0);
+    ok ($ref, " clip strip 0");
+    is ($ref->[1]{maxrow},     1,     "maxrow 3");
+    is ($ref->[1]{maxcol},     1,     "maxcol 4");
+    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+    is ($ref->[1]{A1},         " ",   "A1     = ' '");
+
+	$ref = ReadData ("files/blank.csv", clip => 1, strip => 1);
+    ok ($ref, " clip strip 1");
+    is ($ref->[1]{maxrow},     0,     "maxrow 0");
+    is ($ref->[1]{maxcol},     0,     "maxcol 0");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.csv", clip => 1, strip => 1, cells => 0);
+    ok ($ref, " clip strip 1");
+    is ($ref->[1]{maxrow},     0,     "maxrow 0");
+    is ($ref->[1]{maxcol},     0,     "maxcol 0");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.csv", clip => 1, strip => 2,             rc => 0);
+    ok ($ref, " clip strip 2");
+    is ($ref->[1]{maxrow},     0,     "maxrow 0");
+    is ($ref->[1]{maxcol},     0,     "maxcol 0");
+    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    is ($ref->[1]{A1},         undef, "undef A1");
+	$ref = ReadData ("files/blank.csv", clip => 1, strip => 3, cells => 0, rc => 0);
+    ok ($ref, " clip strip 3");
+    is ($ref->[1]{maxrow},     0,     "maxrow 0");
+    is ($ref->[1]{maxcol},     0,     "maxcol 0");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
     }

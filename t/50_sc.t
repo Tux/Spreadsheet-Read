@@ -33,7 +33,7 @@ my $content;
 foreach my $txt ("files/test.sc", $content) {
     foreach my $clip (0, 2) {
 	my $sc;
-	ok ($sc = ReadData ($txt, clip => $clip),
+	ok ($sc = ReadData ($txt, clip => $clip, strip => 2),
 	    "Read/Parse sc file ".($clip?"clipped":"unclipped"));
 
 	ok (1, "Base values");

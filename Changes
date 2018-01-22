@@ -1,5 +1,6 @@
-0.77	- 03 Jan 2018, H.Merijn Brand
+0.77	- 22 Jan 2018, H.Merijn Brand
     * Note possible name clashes with example/tool files
+    * Clipping and stripping more efficient
 
 0.76	- 01 Jan 2018, H.Merijn Brand
     * Allow streaming in xlscat
