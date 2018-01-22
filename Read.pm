@@ -1881,7 +1881,7 @@ Under investigation:
 
 =item Gnumeric (.gnumeric)
 
-I've seen no existing CPAN module yet.
+I have seen no existing CPAN module yet.
 
 It is gzip'ed XML
 
@@ -1889,7 +1889,7 @@ It is gzip'ed XML
 
 Now knows as Calligra Sheets.
 
-I've seen no existing CPAN module yet.
+I have seen no existing CPAN module yet.
 
 It is XML in ZIP
 
