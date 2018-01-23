@@ -149,9 +149,13 @@ is ($ss->{F1},		"",    "formatted a single '");
 # Test extended attributes (active)
 ok ($xls = Spreadsheet::Read->new ("files/Active2.xls", attr => 1), "Active sheet");
 is ($xls->sheets,		3,	"Book has 3 sheets");
-is ($xls->sheet (1)->{active},	0,	"Sheet 1 is not active");
-is ($xls->[2]{active},		1,	"Sheet 2 is active");
-is ($xls->sheet (3)->active,	0,	"Sheet 3 is not active");
+SKIP: {
+    my $v = $xls->[0]{version};
+    $v < 0.61 and skip "$xls->[0]{parser}-$v does not support the active flag", 3;
+    is ($xls->sheet (1)->{active},	0, "Sheet 1 is not active");
+    is ($xls->[2]{active},		1, "Sheet 2 is active");
+    is ($xls->sheet (3)->active,	0, "Sheet 3 is not active");
+    }
 is ($xls->sheet (1)->attr ("A1")->{type}, "text", "Attr through method A1");
 is ($xls->sheet (1)->attr (2, 2)->{type}, "text", "Attr through method B2");
 

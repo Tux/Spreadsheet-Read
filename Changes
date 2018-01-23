@@ -1,3 +1,6 @@
+0.78	- 23 Jan 2018, H.Merijn Brand
+    * Spreadsheet::ParseExcel supports the active flag as of version 0.61
+
 0.77	- 22 Jan 2018, H.Merijn Brand
     * Note possible name clashes with example/tool files
     * Clipping and stripping more efficient

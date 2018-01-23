@@ -1558,7 +1558,8 @@ I<NOT> be updated.
 
 Returns 1 if the selected sheet is active, otherwise returns 0.
 
-Currently only works on XLS. CSV is always active.
+Currently only works on XLS (as of Spreadsheed::ParseExcel-0.61).
+CSV is always active.
 
 =head2 Using CSV
 
