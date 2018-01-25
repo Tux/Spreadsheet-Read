@@ -1432,7 +1432,7 @@ and the number of sheets in the book.
 
 With named sheets will first try to use the list of sheet-labels as stored in
 the control structure. If no match is found, it will scan the actual labels
-of the sheets. In that case, it will return the fist matching sheet.
+of the sheets. In that case, it will return the first matching sheet.
 
 If defined, the returned sheet will be of class C<Spreadsheet::Read::Sheet>.
 
