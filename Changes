@@ -1,4 +1,4 @@
-0.78	- 25 Jan 2018, H.Merijn Brand
+0.78	- 29 Jan 2018, H.Merijn Brand
     * Spreadsheet::ParseExcel supports the active flag as of version 0.61
     * Fix typo in docs (SPROUT, RT#124214)
 
