@@ -107,3 +107,4 @@ t/623_misc.t
 t/624_dates.t
 t/625_perc.t
 t/627_merged.t
+t/999_fail.t

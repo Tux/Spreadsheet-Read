@@ -36,7 +36,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.78";
+our $VERSION = "0.79";
 sub  Version { $VERSION }
 
 use Carp;
@@ -64,35 +64,41 @@ my @parsers = (
     [ ios  => "IO::Scalar",				""		],
     [ dmp  => "Data::Peek",				""		],
     );
-my %can = map {
-    my $p = $_;
-    my $preset = $ENV{"SPREADSHEET_READ_\U$p->[0]"};
-    if ($preset and $preset =~ m/^[\w:]+$/) {
-	if (eval "require $preset" and not $@) {
-	    # forcing a parser should still check the version
-	    for (grep { $p->[1] eq $preset and $p->[2] } @parsers) {
-		my $ok;
-		my $has = $preset->VERSION;
-		$has =~ s/_[0-9]+$//;			# Remove beta-part
-		if ($p->[2] =~ m/^v([0-9.]+)/) {	# clumsy versions
-		    my @min = split m/\./ => $1;
-		    $has =~ s/^v//;
-		    my @has = split m/\./ => $has;
-		    $ok = (($has[0] * 1000 + $has[1]) * 1000 + $has[2]) >=
-			  (($min[0] * 1000 + $min[1]) * 1000 + $min[2]);
-		    }
-		else {	# normal versions
-		    $ok = $has >= $p->[2];
-		    }
-		$ok or $preset = "!$preset";
-		}
-	    }
-	else {
-	    $preset = "!$preset";
-	    }
+my %can = ( supports => { map { $_->[1] => $_->[2] } @parsers });
+foreach my $p (@parsers) {
+    my $format = $p->[0];
+    $can{$format} and next;
+    $can{$format} = "";
+    my $preset = $ENV{"SPREADSHEET_READ_\U$format"} or next;
+    my $min_version = $can{supports}{$preset};
+    unless ($min_version) {
+	# Catch weirdness like $SPREADSHEET_READ_XLSX = "DBD::Oracle"
+	$can{$format} = "!$preset is not supported for the $format format";
+	next;
 	}
-    $p->[0] => $preset || "";
-    } @parsers;
+    if (eval "require $preset" and not $@) {
+	# forcing a parser should still check the version
+	my $ok;
+	my $has = $preset->VERSION;
+	$has =~ s/_[0-9]+$//;			# Remove beta-part
+	if ($min_version =~ m/^v([0-9.]+)/) {	# clumsy versions
+	    my @min = split m/\./ => $1;
+	    $has =~ s/^v//;
+	    my @has = split m/\./ => $has;
+	    $ok = (($has[0] * 1000 + $has[1]) * 1000 + $has[2]) >=
+		  (($min[0] * 1000 + $min[1]) * 1000 + $min[2]);
+	    }
+	else {	# normal versions
+	    $ok = $has >= $min_version;
+	    }
+	$ok or $preset = "!$preset";
+	}
+    else {
+	$preset = "!$preset";
+	}
+    $can{$format} = $preset;
+    }
+delete $can{supports};
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
@@ -182,7 +188,10 @@ sub new {
 sub parses {
     ref $_[0] eq __PACKAGE__ and shift;
     my $type = _parser (shift)	or  return 0;
-    $can{$type} =~ m/^!/ and return 0;
+    if ($can{$type} =~ m/^!\s*(.*)/) {
+	$@ = $1;
+	return 0;
+	}
     return $can{$type};
     } # parses
 
