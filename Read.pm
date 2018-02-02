@@ -68,7 +68,7 @@ my %can = map {
     my $p = $_;
     my $preset = $ENV{"SPREADSHEET_READ_\U$p->[0]"};
     if ($preset and $preset =~ m/^[\w:]+$/) {
-	if (eval "require $preset" and not $@) {
+	if (eval "local \$_;require $preset" and not $@) { #loading modules may modify $_ and corrupt @parsers, so use local
 	    # forcing a parser should still check the version
 	    for (grep { $p->[1] eq $preset and $p->[2] } @parsers) {
 		my $ok;
