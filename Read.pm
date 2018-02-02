@@ -76,7 +76,7 @@ foreach my $p (@parsers) {
 	$can{$format} = "!$preset is not supported for the $format format";
 	next;
 	}
-    if (eval "require $preset" and not $@) {
+    if (eval "local \$_; require $preset" and not $@) {
 	# forcing a parser should still check the version
 	my $ok;
 	my $has = $preset->VERSION;
