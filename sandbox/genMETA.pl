@@ -67,9 +67,9 @@ test_requires:
 recommends:
   IO::Scalar:           0
   File::Temp:           0.2304
-  Data::Peek:           0.47
+  Data::Peek:           0.48
 test_recommends:
-  Test::More:           1.302120
+  Test::More:           1.302133
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
