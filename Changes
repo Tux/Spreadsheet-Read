@@ -1,5 +1,7 @@
-0.79	- 31 Jan 2018, H.Merijn Brand
+0.79	- 20 Mar 2018, H.Merijn Brand
     * Environmant control hardening
+    * ReadData () docs (opening from scalar ref: issue#21)
+    * Check for XLSX content on opening from plain scalar content
 
 0.78	- 29 Jan 2018, H.Merijn Brand
     * Spreadsheet::ParseExcel supports the active flag as of version 0.61

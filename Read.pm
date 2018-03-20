@@ -535,32 +535,56 @@ sub ReadData {
 	return _clipsheets \%opt, [ @data ];
 	}
 
-    # From /etc/magic: Microsoft Office Document
-    if ($io_txt && $_parser !~ m/^xlsx?$/ &&
-		    $txt =~ m{^(\376\067\0\043
-			       |\320\317\021\340\241\261\032\341
-			       |\333\245-\0\0\0)}x) {
-	$can{xls} or croak "Spreadsheet::ParseExcel not installed";
-	my $tmpfile;
-	if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
-	    $tmpfile = \$txt;
+    if ($io_txt) { # && $_parser !~ m/^xlsx?$/) {
+	if (    # /etc/magic: Microsoft Office Document
+		$txt =~ m{\A(\376\067\0\043
+			    |\320\317\021\340\241\261\032\341
+			    |\333\245-\0\0\0)}x
+		# /usr/share/misc/magic
+	     || $txt =~ m{\A.{2080}Microsoft Excel 5.0 Worksheet}
+	     || $txt =~ m{\A\x09\x04\x06\x00\x00\x00\x10\x00}
+		) {
+	    $can{xls} or croak "Spreadsheet::ParseExcel not installed";
+	    my $tmpfile;
+	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
+		$tmpfile = \$txt;
+		}
+	    else {
+		$tmpfile = File::Temp->new (SUFFIX => ".xls", UNLINK => 1);
+		binmode $tmpfile;
+		print   $tmpfile $txt;
+		close   $tmpfile;
+		}
+	    open $io_ref, "<", $tmpfile or return;
+	    $io_txt = 0;
+	    $_parser = _parser ($opt{parser} = "xls");
 	    }
-	else {
-	    $tmpfile = File::Temp->new (SUFFIX => ".xls", UNLINK => 1);
-	    binmode $tmpfile;
-	    print   $tmpfile $txt;
-	    close   $tmpfile;
+	elsif ( # /usr/share/misc/magic
+		$txt =~ m{\APK\003\004.{4,30}(?:\[Content_Types\]\.xml|_rels/\.rels)}
+		) {
+	    $can{xlsx} or croak "XLSX parser not installed";
+	    my $tmpfile;
+	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
+		$tmpfile = \$txt;
+		}
+	    else {
+		$tmpfile = File::Temp->new (SUFFIX => ".xlsx", UNLINK => 1);
+		binmode $tmpfile;
+		print   $tmpfile $txt;
+		close   $tmpfile;
+		}
+	    open $io_ref, "<", $tmpfile or return;
+	    $io_txt = 0;
+	    $_parser = _parser ($opt{parser} = "xlsx");
 	    }
-	open $io_ref, "<", $tmpfile or return;
-	$io_txt = 0;
-	$_parser = _parser ($opt{parser} = "xls");
 	}
     if ($opt{parser} ? $_parser =~ m/^xlsx?$/
 		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
 	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
 	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
-	$debug and print STDERR "Opening $parse_type $txt using $parser-", $can{lc $parse_type}->VERSION, "\n";
+	$debug and print STDERR "Opening $parse_type ", $io_ref ? "<REF>" : $txt,
+	    " using $parser-", $can{lc $parse_type}->VERSION, "\n";
 	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
 	my $oBook = eval {
 	    $io_ref
@@ -1097,7 +1121,8 @@ L<Spreadsheet::ReadSXC|http://metacpan.org/release/Spreadsheet-ReadSXC>
 For Microsoft Excel this module uses
 L<Spreadsheet::ParseExcel|http://metacpan.org/release/Spreadsheet-ParseExcel>,
 L<Spreadsheet::ParseXLSX|http://metacpan.org/release/Spreadsheet-ParseXLSX>, or
-L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX> (discouraged).
+L<Spreadsheet::XLSX|http://metacpan.org/release/Spreadsheet-XLSX> (stronly
+discouraged).
 
 For CSV this module uses L<Text::CSV_XS|http://metacpan.org/release/Text-CSV_XS>
 or L<Text::CSV_PP|http://metacpan.org/release/Text-CSV_PP>.
@@ -1182,17 +1207,26 @@ All options accepted by ReadData are accepted by new.
 
  my $book = ReadData ($content);
 
- my $book = ReadData ($fh, parser => "xls");
+ my $book = ReadData ($content,  parser => "xlsx");
 
-Tries to convert the given file, string, or stream to the data
-structure described above.
+ my $book = ReadData ($fh,       parser => "xlsx");
 
-Processing Excel data from a stream or content is supported through
-a L<File::Temp|https://metacpan.org/release/File-Temp> temporary file or
+ my $book = ReadData (\$content, parser => "xlsx");
+
+Tries to convert the given file, string, or stream to the data structure
+described above.
+
+Processing Excel data from a stream or content is supported through a
+L<File::Temp|https://metacpan.org/release/File-Temp> temporary file or
 L<IO::Scalar|https://metacpan.org/release/IO-Scalar> when available.
 
 L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>
 does preserve sheet order as of version 0.20.
+
+Choosing between C<$content> and C<\\$content> (with or without passing
+the desired C<parser> option) may be depending on trial and terror.
+C<ReadData> does try to determine parser type on content if needed, but
+not all combinations are checked, and not all signatures are builtin.
 
 Currently supported options are:
 

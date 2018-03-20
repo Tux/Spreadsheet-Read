@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::ParseXLSX"; }
 
-my     $tests = 116;
+my     $tests = 128;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -155,6 +155,22 @@ is ($ss->{F1},		"",    "formatted a single '");
     is ($ref->[1]{maxcol},     0,     "maxcol 1");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
     is ($ref->[1]{A1},         undef, "undef A1");
+    }
+
+{   sub chk_test {
+	my ($msg, $xls) = @_;
+
+	is (ref $xls,		"ARRAY",	"Return type for $msg");
+	is ($xls->[0]{type},	"xlsx",		"Spreadsheet type XLSX");
+	is ($xls->[0]{sheets},	2,		"Sheet count");
+	} # chk_test
+
+    my $data = $content;
+    open my $fh, "<", "files/test.xlsx";
+    chk_test ( " FH    parser",    ReadData ( $fh,   parser => "xlsx")); close $fh;
+    chk_test ("\\DATA  parser",    ReadData (\$data, parser => "xlsx"));
+    chk_test ( " DATA  no parser", ReadData ( $data                  ));
+    chk_test ( " DATA  parser",    ReadData ( $data, parser => "xlsx"));
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {
