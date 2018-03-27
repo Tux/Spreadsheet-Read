@@ -76,22 +76,7 @@ foreach my $p (@parsers) {
 	$can{$format} = "!$preset is not supported for the $format format";
 	next;
 	}
-    if (eval "local \$_; require $preset" and not $@) {
-	# forcing a parser should still check the version
-	my $ok;
-	my $has = $preset->VERSION;
-	$has =~ s/_[0-9]+$//;			# Remove beta-part
-	if ($min_version =~ m/^v([0-9.]+)/) {	# clumsy versions
-	    my @min = split m/\./ => $1;
-	    $has =~ s/^v//;
-	    my @has = split m/\./ => $has;
-	    $ok = (($has[0] * 1000 + $has[1]) * 1000 + $has[2]) >=
-		  (($min[0] * 1000 + $min[1]) * 1000 + $min[2]);
-	    }
-	else {	# normal versions
-	    $ok = $has >= $min_version;
-	    }
-	$ok or $preset = "!$preset";
+    if (eval "local \$_; use $preset $min_version" and not $@) {
 	}
     else {
 	$preset = "!$preset";
