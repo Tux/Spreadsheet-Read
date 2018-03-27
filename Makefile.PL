@@ -40,6 +40,7 @@ my %wm = (
 	"Data::Dumper"			=> 0,
 	"File::Temp"			=> 0.22,
 	"IO::Scalar"			=> 0,	# Optional
+	"List::Util"			=> 0,
 
 
 	# For testing

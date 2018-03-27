@@ -11,6 +11,7 @@ our $VERSION = "3.3";
 
 use Text::CSV_XS;
 use Spreadsheet::Read qw( ReadData row );
+use List::Util qw[ first ];
 
 sub usage {
     my $err = shift and select STDERR;
@@ -25,19 +26,14 @@ GetOptions (
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
 
     "o|c|out=s" => \my $csv,
+    "i|s|in=s"  => \my $xls,
     "f|force!"  => \my $opt_f,
 
     "A|all!"    => \my $opt_a,
     "N|no-pfx!" => \my $opt_N,
     ) or usage 1;
 
-my $xls;
-foreach my $i (reverse 0 .. $#ARGV) {
-    -f $ARGV[$i] or next;
-    $xls = splice @ARGV, $i, 1;
-    last;
-    }
-
+   $xls or $xls = first { -r $_ } reverse @ARGV;
    $xls or usage 1, "No input file";
 -r $xls or usage 1, "Input file unreadable";
 -s $xls or usage 1, "Input file empty";
