@@ -26,14 +26,14 @@ GetOptions (
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
 
     "o|c|out=s" => \my $csv,
+    "i|s|in=s"  => \my $xls,
     "f|force!"  => \my $opt_f,
 
     "A|all!"    => \my $opt_a,
     "N|no-pfx!" => \my $opt_N,
     ) or usage 1;
 
-my $xls = first { -r $_ } reverse @ARGV;
-
+   $xls or $xls = first { -r $_ } reverse @ARGV;
    $xls or usage 1, "No input file";
 -r $xls or usage 1, "Input file unreadable";
 -s $xls or usage 1, "Input file empty";
