@@ -25,17 +25,19 @@ GetOptions (
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
 
     "o|c|out=s" => \my $csv,
+    "i|s|in=s"	=> \my $xls,
     "f|force!"  => \my $opt_f,
 
     "A|all!"    => \my $opt_a,
     "N|no-pfx!" => \my $opt_N,
     ) or usage 1;
 
-my $xls;
-foreach my $i (reverse 0 .. $#ARGV) {
-    -f $ARGV[$i] or next;
-    $xls = splice @ARGV, $i, 1;
-    last;
+unless ($xls) {
+    foreach my $i (reverse 0 .. $#ARGV) {
+	-f $ARGV[$i] or next;
+	$xls = splice @ARGV, $i, 1;
+	last;
+	}
     }
 
    $xls or usage 1, "No input file";

@@ -3,6 +3,7 @@
     * ReadData () docs (opening from scalar ref: issue#21)
     * Check for XLSX content on opening from plain scalar content
     * Fix typo in ss-dup-tk.pl (PRC, Branislav Zahradnik)
+    * Allow source from command line option in xls2csv (PRC, Branislav Zahradnik)
 
 0.78	- 29 Jan 2018, H.Merijn Brand
     * Spreadsheet::ParseExcel supports the active flag as of version 0.61
