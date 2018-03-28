@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # ss-dup-tk.pl: Find dups in spreadsheet
-#	  (m)'09 [23-01-2009] Copyright H.M.Brand 2005-2018
+#	  (m)'18 [28-03-2018] Copyright H.M.Brand 2005-2018
 
 use strict;
 use warnings;
@@ -11,10 +11,10 @@ sub usage {
     print
 	"usage: $0 [-t] [-S <sheets>] [-R <rows>] [-C columns] [-F <fields>]\n",
 	"\t-t          Only check on true values\n",
-	"\t-S sheets   Check sheet(s).  Defaul = 1,   1,3-5,all\n",
-	"\t-R rows     Check row(s).    Defaul = all, 6,19-66\n",
-	"\t-C columns  Check column(s). Defaul = all, 2,5-9\n",
-	"\t-F fields   Check field(s).  Defaul = all, A1,A2,B15,C23\n";
+	"\t-S sheets   Check sheet(s).  Default = 1,   1,3-5,all\n",
+	"\t-R rows     Check row(s).    Default = all, 6,19-66\n",
+	"\t-C columns  Check column(s). Default = all, 2,5-9\n",
+	"\t-F fields   Check field(s).  Default = all, A1,A2,B15,C23\n";
     exit $err;
     } # usage
 
@@ -41,7 +41,6 @@ GetOptions (
     ) or usage (1);
 
 @opt_S or @opt_S = (1);
-
 
 use Tk;
 use Tk::ROText;
