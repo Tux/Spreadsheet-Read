@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'17 [2017-11-30] Copyright H.M.Brand 2005-2018
+#	   (m)'18 [2018-03-30] Copyright H.M.Brand 2005-2018
 
 use strict;
 use warnings;
 
-our $VERSION = "3.12";
+our $VERSION = "3.13";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -31,7 +31,7 @@ sub usage {
 	"       -a <enc>    Set encoding for output\n",
 	"       -U          Set encoding for output to utf-8 (short for -a utf-8)\n",
 	"    Input CSV:\n",
-	"       --in-sep=c  Set input sep_char for CSV\n",
+	"       --in-sep=c  Set input sep_char for CSV (c can be 'TAB')\n",
 	"    Input XLS:\n",
 	"       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'\n",
 	"                   the default replacement is 'yyyy-mm-dd'\n",
@@ -226,6 +226,17 @@ if ($opt_H) {
 		decode ("utf-8", $_[0]));
 	    };
 	};
+    }
+
+if ($sep) {
+    my %sep = (
+	tab		=> "\t",
+	pipe		=> "|",
+	colon		=> ":",
+	semicolon	=> ";",
+	comma		=> ",",
+	);
+    $sep = $sep{lc $sep} || $sep;
     }
 
 push @RDarg, debug => $opt_d, clip => $clip;
