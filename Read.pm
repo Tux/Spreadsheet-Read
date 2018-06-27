@@ -1916,6 +1916,23 @@ names C<meta>, or just be new values in the C<attr> hashes.
 
 =back
 
+=item Other parsers
+
+Add support for new(er) parsers for already supported formats, like
+
+=over 2
+
+=item Data::XLSX::Parser
+
+Data::XLSX::Parser provides faster way to parse Microsoft Excel's .xlsx
+files. The implementation of this module is highly inspired from Python's
+FastXLSX library.
+
+This is SAX based parser, so you can parse very large XLSX file with
+lower memory usage.
+
+=back
+
 =item Other spreadsheet formats
 
 I consider adding any spreadsheet interface that offers a usable API.
