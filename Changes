@@ -1,10 +1,11 @@
-0.79	- 30 Mar 2018, H.Merijn Brand
+0.79	- 27 Jun 2018, H.Merijn Brand
     * Environmant control hardening
     * ReadData () docs (opening from scalar ref: issue#21)
     * Check for XLSX content on opening from plain scalar content
     * Fix typo in ss-dup-tk.pl (PRC, Branislav Zahradnik)
     * Allow source from command line option in xls2csv (PRC, Branislav Zahradnik)
-    * Allow --in-sep=tab in xlscat
+    * Allow --in-sep=tab in xlscat/xlsgrep
+    * Add --hash to xlscat/xlsgrep
 
 0.78	- 29 Jan 2018, H.Merijn Brand
     * Spreadsheet::ParseExcel supports the active flag as of version 0.61

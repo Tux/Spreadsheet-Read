@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'18 [2018-03-30] Copyright H.M.Brand 2005-2018
+#	   (m)'18 [2018-06-27] Copyright H.M.Brand 2005-2018
 
 use strict;
 use warnings;
 
-our $VERSION = "3.13";
+our $VERSION = "3.14";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -46,6 +46,7 @@ sub usage {
 	"       -A          Show field attributes in ANSI escapes\n",
 	"       -h[#]       Show # header lines\n",
 	"       -D          Dump each record with Data::Peek or Data::Dumper\n",
+	"        --hash     Like -D but as hash with first row as keys\n",
 	$is_grep ? (
 	"    Grep options:\n",
 	"       -i          Ignore case\n",
@@ -84,6 +85,7 @@ my $opt_F = "";		# Fields to print
 my $opt_v = 0;		# Verbosity for xlscat
 my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_h = 0;		# Number of header lines for grep or -L
+my $opt_D = 0;		# Dump: 0 = none, 1 = array, 2 = hash
 my $clip  = 1;
 my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
@@ -121,7 +123,8 @@ GetOptions (
     "u|unformatted!"	=> \my $opt_u,	# Show unformatted values
     "v|verbose:1"	=> \$opt_v,
     "d|debug:1"		=> \$opt_d,
-    "D|dump!"		=> \my $opt_D,	# Use Data::Peek or Data::Dumper
+    "D|dump!"		=> \   $opt_D,	# Use Data::Peek or Data::Dumper
+      "hash!"		=> sub { $opt_D = 2 },
     "H|html:1"		=> \my $opt_H,	# Output in HTML
       "noclip"		=> sub { $clip = 0 },
       "strip:3"		=> \my $strip,
@@ -426,7 +429,8 @@ foreach my $si (1 .. $sc) {
 	$is_grep && $r > $opt_h &&
 	    ! grep { defined $_ && $_ =~ $pattern } @row and next;
 	if ($opt_D) {
-	    ddumper \@row;
+	    ddumper ($opt_D == 1 ? \@row :
+		{ map { $s->{cell}[$_ + 1][1] => $row[$_] } 0 .. $#row });
 	    next;
 	    }
 	if ($opt_L) {
