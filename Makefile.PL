@@ -58,8 +58,8 @@ $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
 if ($ENV{EXTENDED_TESTING}) { # for CpanCover and masochists
     # Backend parsers, all optional
     # Versions also need to be declared inside Read.pm !
-    $wm{PREREQ_PM}{"Text::CSV_PP"}		= "1.95";
-    $wm{PREREQ_PM}{"Text::CSV_XS"}		= "1.29";
+    $wm{PREREQ_PM}{"Text::CSV_PP"}		= "1.97";
+    $wm{PREREQ_PM}{"Text::CSV_XS"}		= "1.36";
     $wm{PREREQ_PM}{"Spreadsheet::ReadSXC"}	= "0.20";
     $wm{PREREQ_PM}{"Spreadsheet::ParseExcel"}	= "0.65";
     $wm{PREREQ_PM}{"Spreadsheet::ParseXLSX"}	= "0.27";

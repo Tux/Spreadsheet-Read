@@ -36,7 +36,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.79";
+our $VERSION = "0.80";
 sub  Version { $VERSION }
 
 use Carp;
@@ -56,7 +56,7 @@ my @parsers = (
     [ ods  => "Spreadsheet::ReadSXC",			"0.20"		],
     [ sxc  => "Spreadsheet::ReadSXC",			"0.20"		],
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
-    [ xlsx => "Spreadsheet::ParseXLSX",			"0.13"		],
+    [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
     [ prl  => "Spreadsheet::Perl",			""		],
 

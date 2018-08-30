@@ -95,7 +95,7 @@ optional_features:
   opt_excelx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
-      Spreadsheet::ParseXLSX:              0.13
+      Spreadsheet::ParseXLSX:              0.24
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
       Spreadsheet::ParseXLSX:              0.27
