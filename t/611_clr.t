@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::ParseXLSX"; }
 
-my     $tests = 257;
+my     $tests = 266;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -48,6 +48,17 @@ SKIP: {
 	    }
 	}
     }
+
+ok ($xls = Spreadsheet::Read->new ("files/attr.xlsx", attr => 1), "Attributes OO");
+is ($xls->[1]{attr}[3][3]{fgcolor},		"#008000", "C3 Forground color direct");
+is ($xls->sheet (1)->attr (3, 3)->{fgcolor},	"#008000", "C3 Forground color OO rc   hash");
+is ($xls->sheet (1)->attr ("C3")->{fgcolor},	"#008000", "C3 Forground color OO cell hash");
+is ($xls->sheet (1)->attr (3, 3)->fgcolor,	"#008000", "C3 Forground color OO rc   method");
+is ($xls->sheet (1)->attr ("C3")->fgcolor,	"#008000", "C3 Forground color OO cell method");
+
+is ($xls->[1]{attr}[3][3]{bogus_attribute},	undef, "C3 bogus attribute direct");
+is ($xls->sheet (1)->attr ("C3")->{bogus_attr},	undef, "C3 bogus attribute OO hash");
+is ($xls->sheet (1)->attr ("C3")->bogus_attr,	undef, "C3 bogus attribute OO method");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

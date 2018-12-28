@@ -1007,6 +1007,17 @@ sub add {
     return $book;
     } # add
 
+package Spreadsheet::Read::Attribute;
+
+use Carp;
+use vars qw( $AUTOLOAD );
+
+sub AUTOLOAD {
+    my $self = shift;
+    (my $attr = $AUTOLOAD) =~ s/.*:://;
+    $self->{$attr};
+    } # AUTOLOAD
+
 package Spreadsheet::Read::Sheet;
 
 sub cell {
@@ -1019,11 +1030,12 @@ sub cell {
 
 sub attr {
     my ($sheet, @id) = @_;
+    my $class = "Spreadsheet::Read::Attribute";
     @id == 2 && $id[0] =~ m/^[0-9]+$/ && $id[1] =~ m/^[0-9]+$/ and
-	return $sheet->{attr}[$id[0]][$id[1]];
+	return bless $sheet->{attr}[$id[0]][$id[1]] => $class;
     if (@id && $id[0] && exists $sheet->{$id[0]}) {
 	my ($c, $r) = $sheet->cell2cr ($id[0]);
-	return $sheet->{attr}[$c][$r];
+	return bless $sheet->{attr}[$c][$r] => $class;
 	}
     undef;
     } # attr
@@ -1690,6 +1702,8 @@ effort is made to analyze and store field attributes like this:
       B5     => "Nugget",
       },
 
+The entries C<maxrow> and C<maxcol> are 1-based.
+
 This has now been partially implemented, mainly for Excel, as the other
 parsers do not (yet) support all of that. YMMV.
 
@@ -1703,7 +1717,11 @@ You can get the attributes of a cell (as a hash-ref) like this:
  my $attr = $book->sheet (1)->attr (1, 3); # Same using OO
  my $attr = $book->sheet (1)->attr ("A3"); # Same using OO
 
-The entries C<maxrow> and C<maxcol> are 1-based.
+To get to the C<font> attribute, use any of these:
+
+ my $font = $book[1]{attr}[1][3]{font};
+ my $font = $book->sheet (1)->attr (1, 3)->{font};
+ my $font = $book->sheet (1)->attr ("A3")->font;
 
 =head3 Merged cells
 X<merged>

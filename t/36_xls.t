@@ -9,7 +9,7 @@ require Test::NoWarnings;
 use Spreadsheet::Read;
 my $parser;
 if ($parser = Spreadsheet::Read::parses ("xls")) {
-    plan tests => 179;
+    plan tests => 188;
     Test::NoWarnings->import;
     }
 else {
@@ -158,6 +158,17 @@ SKIP: {
     }
 is ($xls->sheet (1)->attr ("A1")->{type}, "text", "Attr through method A1");
 is ($xls->sheet (1)->attr (2, 2)->{type}, "text", "Attr through method B2");
+
+ok ($xls = Spreadsheet::Read->new ("files/attr.xls", attr => 1), "Attributes OO");
+is ($xls->[1]{attr}[3][3]{fgcolor},		"#008000", "C3 Forground color direct");
+is ($xls->sheet (1)->attr (3, 3)->{fgcolor},	"#008000", "C3 Forground color OO rc   hash");
+is ($xls->sheet (1)->attr ("C3")->{fgcolor},	"#008000", "C3 Forground color OO cell hash");
+is ($xls->sheet (1)->attr (3, 3)->fgcolor,	"#008000", "C3 Forground color OO rc   method");
+is ($xls->sheet (1)->attr ("C3")->fgcolor,	"#008000", "C3 Forground color OO cell method");
+
+is ($xls->[1]{attr}[3][3]{bogus_attribute},	undef, "C3 bogus attribute direct");
+is ($xls->sheet (1)->attr ("C3")->{bogus_attr},	undef, "C3 bogus attribute OO hash");
+is ($xls->sheet (1)->attr ("C3")->bogus_attr,	undef, "C3 bogus attribute OO method");
 
 __END__
 --- PM    2005-09-15 14:16:36.163623616 +0200

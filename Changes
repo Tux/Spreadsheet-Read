@@ -1,6 +1,7 @@
 0.80	- 28 Dec 2018, H.Merijn Brand
     * Raise Spreadsheet::ParseXLSX minimum version to 0.24
     * Improve docs on attributes
+    * Add attribute accessors
 
 0.79	- 29 Aug 2018, H.Merijn Brand
     * Environmant control hardening
