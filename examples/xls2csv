@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'18 [29-08-2018] Copyright H.M.Brand 2008-2018
+#	   (m)'18 [29-08-2018] Copyright H.M.Brand 2008-2019
 
 use strict;
 use warnings;
