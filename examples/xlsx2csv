@@ -1,0 +1,175 @@
+#!/pro/bin/perl
+
+# xls2csv: Convert Microsoft Excel spreadsheet to CSV
+#	   (m)'19 [01-02-2019] Copyright H.M.Brand 2008-2019
+
+use strict;
+use warnings;
+
+our $VERSION = "3.4";
+(my $cmd = $0) =~ s{.*/}{};
+
+use Text::CSV_XS;
+use Spreadsheet::Read qw( ReadData row );
+
+sub usage {
+    my $err = shift and select STDERR;
+    print "usage: $cmd [-A [-N] | -o file.csv] [-s sep] [-f] [-i] file.xls\n";
+    print "       $cmd --help | --man | --info\n";
+    @_ and print join "\n", @_, "";
+    exit $err;
+    } # usage
+
+use Getopt::Long qw( :config bundling noignorecase passthrough );
+GetOptions (
+    "help|?"    => sub { usage 0; },
+    "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
+    "man"       => sub { exec "pod2man $0 | nroff -man"; },
+    "info"      => sub { require Pod::Usage;
+			 Pod::Usage::pod2usage (VERBOSE => 2);
+			 exit;
+			 },
+
+    "o|c|out=s" => \my $csv,
+    "i|s|in=s"	=> \my $xls,
+    "f|force!"  => \my $opt_f,
+
+    "s|sep=s"	=> \my $opt_s,
+
+    "A|all!"    => \my $opt_a,
+    "N|no-pfx!" => \my $opt_N,
+    ) or usage 1;
+
+unless ($xls) {
+    foreach my $i (reverse 0 .. $#ARGV) {
+	-f $ARGV[$i] or next;
+	$xls = splice @ARGV, $i, 1;
+	last;
+	}
+    }
+
+   $xls or usage 1, "No input file";
+-r $xls or usage 1, "Input file unreadable";
+-s $xls or usage 1, "Input file empty";
+
+my %e = (n => "\n", t => "\t", e => "\e", r => "\r");
+$opt_s and $opt_s =~ s/\\+([nter])/$e{$1}/g;
+
+if ($opt_a) {
+    my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
+    $csv and $xls = $csv;
+    $xls =~ s/\.(csv|xlsx?)$//i;
+    $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1, eol => "\r\n" });
+    $opt_s and $csv->sep_char ($opt_s);
+    foreach my $si (1 .. $ss->[0]{sheets}) {
+	my $s  = $ss->[$si]   or next;
+	my $mc = $s->{maxcol} or next;
+	my $mr = $s->{maxrow} or next;
+	my $sn = $s->{label} || "sheet-$si";
+	   $sn =~ s/\s+$//;
+	   $sn =~ s/^\s+//;
+	   $sn =~ s/[^-\w.]+/_/g; # remove any special chars from worksheet name
+	my $fn = $opt_N ? "$sn.csv" : "$xls-$sn.csv";
+	-f $fn && !$opt_f and die "$fn already exists\n";
+	warn "Saving sheet to $fn ...\n";
+	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
+	$csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
+	close $fh;
+	}
+    exit;
+    }
+
+$csv or ($csv = $xls) =~ s/\.xlsx?$/.csv/i;
+if (-f $csv) {
+    $opt_f or die "$csv already exists\n";
+    unlink $csv;
+    }
+
+warn "Converting $xls to $csv ...\n";
+open STDOUT, ">", $csv or die "$csv: $!\n";
+$^O eq "MSWin32" and $xls = qq{"$xls"};
+$opt_s and unshift @ARGV, "--sep=$opt_s";
+exec { "xlscat" } "xlscat", "-c", @ARGV, $xls;
+
+__END__
+
+=pod
+
+=head1 SYNOPSIS
+
+   xls2csv [ --all [ --no-pfx ] | -o file.csv ] [-f] [-i] file.xls
+   xls2csv   --help | --man | --info
+
+=head1 DESCRIPTION
+
+Convert a spreadsheet (all formats supported by L<Spreadsheet::Read>) to CSV
+(using L<Text::CSV_XS>).
+
+=head1 OPTIONS
+
+=over
+
+=item -?
+
+=item --help
+
+Print short usage and exit.
+
+=item --man
+
+Print this help using nroff and exit.
+
+=item --info
+
+Print this help and exit.
+
+=item -V
+
+=item --version
+
+Print the version and exit.
+
+=item -f
+
+=item --force
+
+Overwrite existing output file.
+
+=item -A
+
+=item --all
+
+Output data from all sheets.
+
+Each sheet will go to extra file with name built from output CSV-file and
+sheet name.
+
+=item -N
+
+=item --no-pfx
+
+If specified, dump all will not use output CSV-file but sheet name only.
+
+=item -o CSV-file
+
+=item -c CSV-file
+
+=item --out=CSV-file
+
+Output file name (used only with C<< --all >> and without C<< --no-pfx >>).
+
+Default value is derived from XLS-file.
+
+=item -i XLS-file
+
+=item -s XLS-file
+
+=item --in=XLS-file
+
+Allows to specify input xls file.
+
+Default: Last ARGUMENT file that exists.
+
+=back
+
+=cut

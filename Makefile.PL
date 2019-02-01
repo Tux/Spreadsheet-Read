@@ -18,9 +18,10 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
 	  [ "ssdiff",	"Show diff between two spreadsheets"		],
-	  [ "xls2csv",	"Wrapper around xlscat for easy XLS => CSV"	],
+	  [ "xls2csv",	"Wrapper around xlscat for easy XLS  => CSV"	],
+	  [ "xlsx2csv",	"Wrapper around xlscat for easy XLSX => CSV"	],
 	  ) {
-	prompt ("Do you want to install '$_->[0]' ($_->[1]) ? ", "y") =~ m/[Yy]/ and
+	prompt ("Do you want to install $_->[0]\t$_->[1] ?", "y") =~ m/[Yy]/ and
 	    push @exe, "examples/$_->[0]";
 	}
     }

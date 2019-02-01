@@ -5,6 +5,7 @@ examples/ssdiff
 examples/ss-dups-tk.pl
 examples/xlscat
 examples/xls2csv
+examples/xlsx2csv
 files/Active2.xls
 files/Active2.xlsx
 files/attr.ods

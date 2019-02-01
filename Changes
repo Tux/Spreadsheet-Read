@@ -2,6 +2,7 @@
     * It's 2019
     * Allow -c + --sep in xlscat
     * Add --sep= to xls2csv for -A
+    * Add xlsx2csv to distribution (xlsx2csv has -A)
 
 0.80	- 31 Dec 2018, H.Merijn Brand
     * Raise Spreadsheet::ParseXLSX minimum version to 0.24
