@@ -66,10 +66,10 @@ test_requires:
   Test::NoWarnings:     0
 recommends:
   IO::Scalar:           0
-  File::Temp:           0.2308
+  File::Temp:           0.2309
   Data::Peek:           0.48
 test_recommends:
-  Test::More:           1.302141
+  Test::More:           1.302160
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -82,8 +82,8 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.71
     recommends:
-      Text::CSV:                           1.97
-      Text::CSV_PP:                        1.97
+      Text::CSV:                           1.99
+      Text::CSV_PP:                        1.99
       Text::CSV_XS:                        1.38
   opt_excel:
     description:        Provides parsing of Microsoft Excel files
