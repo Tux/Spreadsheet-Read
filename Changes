@@ -1,5 +1,6 @@
-0.81	- 01 Jan 2019, H.Merijn Brand
+0.81	- 01 Feb 2019, H.Merijn Brand
     * It's 2019
+    * Allow -c + --sep in xlscat
 
 0.80	- 31 Dec 2018, H.Merijn Brand
     * Raise Spreadsheet::ParseXLSX minimum version to 0.24

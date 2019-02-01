@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'18 [2018-06-27] Copyright H.M.Brand 2005-2019
+#	   (m)'19 [2019-02-01] Copyright H.M.Brand 2005-2019
 
 use strict;
 use warnings;
 
-our $VERSION = "3.14";
+our $VERSION = "3.15";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -40,6 +40,7 @@ sub usage {
 	"       --formulas  Show the formula instead of the value\n",
 	"    Output Text (default):\n",
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
+	"                   Overrules ',' when used with --csv\n",
 	"       -L          Line up the columns\n",
 	"       -n [skip]   Number lines (prefix with column number)\n",
 	"                   optionally skip <skip> (header) lines\n",
@@ -108,7 +109,7 @@ GetOptions (
     # Output
     "i|index".
      "|ignore-case!"	=> \my $opt_i,	# Index (cat) | ignore_case (grep) 
-    "s|separator".
+    "s|separator|sep".
      "|outsepchar".
      "|out-sep".
      "|out-sep-char=s"	=> \my $opt_s,	# Text separator
@@ -152,17 +153,21 @@ $opt_i && $opt_C and usage 1, "Options i and C are mutually exclusive";
 $opt_i && $opt_F and usage 1, "Options i and F are mutually exclusive";
 $opt_i && $opt_H and usage 1, "Options i and H are mutually exclusive";
 }
-$opt_c && $opt_s and usage 1, "Options c and s are mutually exclusive";
 $opt_c && $opt_H and usage 1, "Options c and H are mutually exclusive";
 $opt_s && $opt_H and usage 1, "Options s and H are mutually exclusive";
 
-defined $opt_s or $opt_s = "|"; eval "\$opt_s = qq{$opt_s}";
+my %e = (a => "\a", b => "\b", e => "\e", f => "\f", n => "\n", r => "\r", t => "\t");
+$opt_s and $opt_s =~ s/\\+([abefnrt])/$e{$1}/g;
 defined $opt_S or $opt_S = $opt_i || $is_grep ? "all" : "1";
 $opt_i && !$is_grep && $opt_v < 1 and $opt_v = 1;
 $opt_f and $opt_A = 1;
 
 if ($opt_c) {
     $opt_L = 0;	# Cannot align CSV
+    if ($opt_s) {
+	$opt_c = $opt_s;
+	$opt_s = undef;
+	}
     $opt_c =~ m/^1?$/ and $opt_c = ",";
     $opt_c = Text::CSV_XS->new ({
 	binary   => 1,
