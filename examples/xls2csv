@@ -1,7 +1,9 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'19 [01-02-2019] Copyright H.M.Brand 2008-2019
+#	   (m)'19 [02-02-2019] Copyright H.M.Brand 2008-2019
+
+require 5.008001;
 
 use strict;
 use warnings;
@@ -63,7 +65,7 @@ if ($opt_a) {
     $opt_s and $csv->sep_char ($opt_s);
     foreach my $si (1 .. $ss->[0]{sheets}) {
 	my $s  = $ss->[$si]   or next;
-	my $mc = $s->{maxcol} or next;
+		 $s->{maxcol} or next;
 	my $mr = $s->{maxrow} or next;
 	my $sn = $s->{label} || "sheet-$si";
 	   $sn =~ s/\s+$//;
@@ -94,6 +96,10 @@ exec { "xlscat" } "xlscat", "-c", @ARGV, $xls;
 __END__
 
 =pod
+
+=head1 NAME
+
+   xls2csv - convert spreadsheet to CSV
 
 =head1 SYNOPSIS
 
@@ -171,5 +177,20 @@ Allows to specify input xls file.
 Default: Last ARGUMENT file that exists.
 
 =back
+
+=head1 SEE ALSO
+
+L<Spreadsheet::Read>, L<Text::CSV_XS>, L<xlsx2csv>, L<xlscat>
+
+=head1 AUTHOR
+
+H.Merijn Brand, <h.m.brand@xs4all.nl>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2008-2019 H.Merijn Brand
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
