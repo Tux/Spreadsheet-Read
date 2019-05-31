@@ -2,8 +2,10 @@ language: perl
 os:
   - linux
 perl:
+  - "5.30"
   - "5.28"
   - "5.26"
+  - "5.26-shrplib"
   - "5.24"
   - "5.22"
   - "5.20"
@@ -18,9 +20,7 @@ env:
 before_install:
   - brew install cpanm                              || true
 install:
-  - cpanm --quiet Test::More                        || true
-  - cpanm --quiet Test::NoWarnings                  || true
-  - cpanm --quiet Data::Peek                        || true
+  - cpanm --quiet --installdeps --notest .          || true
   - cpanm --quiet Text::CSV_XS                      || true
   - cpanm --quiet Text::CSV                         || true
   - cpanm --quiet Spreadsheet::ReadSXC              || true
