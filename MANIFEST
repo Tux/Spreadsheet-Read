@@ -1,5 +1,6 @@
 Changes
 CONTRIBUTING.md
+cpanfile
 examples/ss2tk
 examples/ssdiff
 examples/ss-dups-tk.pl

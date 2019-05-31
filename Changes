@@ -1,9 +1,10 @@
-0.81	- 02 Feb 2019, H.Merijn Brand
+0.81	- 31 May 2019, H.Merijn Brand
     * It's 2019
     * Allow -c + --sep in xlscat
     * Add --sep= to xls2csv for -A
     * Add xlsx2csv to distribution (xlsx2csv has -A)
     * Add -J s / --join str to xlsx2csv
+    * Add cpanfile
 
 0.80	- 31 Dec 2018, H.Merijn Brand
     * Raise Spreadsheet::ParseXLSX minimum version to 0.24
