@@ -1,4 +1,4 @@
-0.81	- 31 May 2019, H.Merijn Brand
+0.81	- 17 Jun 2019, H.Merijn Brand
     * It's 2019
     * Allow -c + --sep in xlscat
     * Add --sep= to xls2csv for -A
