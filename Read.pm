@@ -249,6 +249,7 @@ sub cellrow {
     } # cellrow
 
 # my @row = row ($book->[1], 1);
+# my @row = $book->row (1, 1);
 sub row {
     my $sheet = ref $_[0] eq __PACKAGE__ ? (shift)->[shift] : shift or return;
     ref     $sheet eq "HASH" && exists  $sheet->{cell}   or return;
@@ -1195,6 +1196,40 @@ the sheets when accessing them by name:
 
   my %sheet2 = %{$book->[$book->[0]{sheet}{"Sheet 2"}]};
 
+=head2 Formatted vs Unformatted
+
+The difference between formatted and unformatted cells is that the (optional)
+format is applied to the cell or not. This part is B<completely> implemented
+on the parser side. Spreadsheet::Read just makes both available if these are
+supported. Options provide means to disable either. If the parser does not
+provide formatted cells - like CSV - both values are equal.
+
+To show what this implies:
+
+ use Spreadsheet::Read;
+
+ my $file     = "files/example.xlsx";
+ my $workbook = Spreadsheet::Read->new ($file);
+
+ my $info     = $workbook->[0];
+ say "Parsed $file with $info->{parser}-$info->{version}";
+
+ my $sheet    = $workbook->sheet (1);
+
+ say join "\t" => "Formatted:",   $sheet->row     (1);
+ say join "\t" => "Unformatted:", $sheet->cellrow (1);
+
+Might return very different results depending one the underlying parser (and
+its version):
+
+ Parsed files/example.xlsx with Spreadsheet::ParseXLSX-0.27
+ Formatted:      8-Aug   Foo & Barr < Quux
+ Unformatted:    39668   Foo & Barr < Quux
+
+ Parsed files/example.xlsx with Spreadsheet::XLSX-0.15
+ Formatted:      39668   Foo &amp; Barr &lt; Quux
+ Unformatted:    39668   Foo &amp; Barr &lt; Quux
+
 =head2 Functions and methods
 
 =head3 new
@@ -1404,6 +1439,8 @@ Note that the indexes in the returned list are 0-based.
 C<row ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
+See also the C<row ()> method on sheets.
+
 =head3 cellrow
 
  my @row = cellrow ($sheet, $row);
@@ -1418,6 +1455,8 @@ Note that the indexes in the returned list are 0-based.
 
 C<cellrow ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified or as method call.
+
+See also the C<cellrow ()> method on sheets.
 
 =head3 rows
 
