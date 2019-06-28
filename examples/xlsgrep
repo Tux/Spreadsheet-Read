@@ -7,7 +7,7 @@
 use strict;
 use warnings;
 
-our $VERSION = "3.15";
+our $VERSION = "3.16";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -543,7 +543,7 @@ foreach my $si (1 .. $sc) {
 $opt_H and print "</body>\n</html>\n";
 
 sub line {
-    my $sep  = shift;
+    my $sep  = shift || " \x{2502} ";
     my $line = join $sep => @_;
     !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
     print "$line\n";
