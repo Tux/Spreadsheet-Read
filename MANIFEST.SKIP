@@ -5,6 +5,7 @@
 \.releaserc
 \.travis.yml
 \.whitesource
+lib/
 blib/
 color.pl
 cover_db/

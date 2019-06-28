@@ -12,3 +12,4 @@ test
 *.tgz
 *.old
 .perlcriticrc
+lib
