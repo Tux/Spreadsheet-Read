@@ -14,10 +14,10 @@ my $parser = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
 
 {   my $ref;
-    ok ($ref = Spreadsheet::Read->new ("no_such_file.csv"), "Open nonexisting file");
-    is ($ref->[0]{sheets}, 0,	"No sheets read");
-    ok ($ref = Spreadsheet::Read->new ("files/empty.csv"),  "Open empty file");
-    is ($ref->[0]{sheets}, 0,	"No sheets read");
+    is (Spreadsheet::Read->new ("no_such_file.csv"), undef, "Open nonexisting file");
+    ok ($@, "No sheets read: $@"); # No such file or directory
+    is (Spreadsheet::Read->new ("files/empty.csv"),  undef, "Open empty file");
+    is ($@, "files/empty.csv is empty",	"No sheets read");
     }
 
 my $csv;

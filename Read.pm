@@ -175,12 +175,16 @@ sub _parser {
 
 sub new {
     my $class = shift;
-    my $r = ReadData (@_) || [{
-	parsers	=> [],
-	error	=> undef,
-	sheets	=> 0,
-	sheet	=> { },
-	}];
+    my $r = ReadData (@_);
+    unless ($r) {
+	@_ and return;	# new with arguments failed to open resource
+	$r = [{
+	    parsers	=> [],
+	    error	=> undef,
+	    sheets	=> 0,
+	    sheet	=> { },
+	    }];
+	}
     bless $r => $class;
     } # new
 
@@ -427,8 +431,8 @@ sub ReadData {
 			     : do { no warnings "newline"; -f $txt };
     my $io_txt = $io_ref || $io_fil ? 0 : 1;
 
-    $io_fil && ! -s $txt  and return;
-    $io_ref && eof ($txt) and return;
+    $io_fil && ! -s $txt and do { $@ = "$txt is empty"; return };
+    $io_ref &&  eof $txt and do { $@ = "Empty stream";  return };
 
     if ($opt{parser} ? $_parser eq "csv" : ($io_fil && $txt =~ m/\.(csv)$/i)) {
 	$can{csv} or croak "CSV parser not installed";
@@ -556,7 +560,7 @@ sub ReadData {
 		print   $tmpfile $txt;
 		close   $tmpfile;
 		}
-	    open $io_ref, "<", $tmpfile or return;
+	    open $io_ref, "<", $tmpfile or do { $@ = $!; return };
 	    $io_txt = 0;
 	    $_parser = _parser ($opt{parser} = "xls");
 	    }
@@ -574,9 +578,13 @@ sub ReadData {
 		print   $tmpfile $txt;
 		close   $tmpfile;
 		}
-	    open $io_ref, "<", $tmpfile or return;
+	    open $io_ref, "<", $tmpfile or do { $@ = $!; return };
 	    $io_txt = 0;
 	    $_parser = _parser ($opt{parser} = "xlsx");
+	    }
+	elsif (!$io_ref && $txt =~ m/\.xlsx?$/i) {
+	    $@ = "Cannot open $txt as file";
+	    return;
 	    }
 	}
     if ($opt{parser} ? $_parser =~ m/^xlsx?$/
@@ -968,6 +976,14 @@ sub ReadData {
 	    }
 	}
 
+    if (!ref $txt and $txt =~ m/\.\w+$/) {
+	# Return (localized) system message
+	open my $fh, "<", $txt and
+	    croak "I can open file $txt, but I do not know how to parse it\n";
+
+	$@ = $!;
+	}
+
     return;
     } # ReadData
 
@@ -1234,9 +1250,16 @@ its version):
 
 =head3 new
 
- my $book = Spreadsheet::Read->new (...);
+ my $book = Spreadsheet::Read->new (...) or die $@;
 
 All options accepted by ReadData are accepted by new.
+
+With no arguments at all, $book will be an object where sheets can be added
+using C<add>
+
+ my $book = Spreadsheet::Read->new ();
+ $book->add ("file.csv");
+ $book->add ("file.cslx");
 
 =head3 ReadData
 
