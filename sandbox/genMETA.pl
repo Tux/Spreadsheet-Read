@@ -70,7 +70,7 @@ recommends:
   File::Temp:           0.2309
   Data::Peek:           0.48
 test_recommends:
-  Test::More:           1.302166
+  Test::More:           1.302167
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
