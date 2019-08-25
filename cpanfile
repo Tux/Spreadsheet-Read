@@ -18,7 +18,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302166";
+    recommends "Test::More"               => "1.302167";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
