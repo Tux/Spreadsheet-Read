@@ -17,7 +17,8 @@ perl:
   - "5.10"
   - "5.8"
 env:
-  - AUTOMATED_TESTING=1
+  global:
+    - AUTOMATED_TESTING=1
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
 install:
@@ -28,8 +29,6 @@ install:
   - cpanm --quiet Spreadsheet::ParseExcel           || true
   - cpanm --quiet Spreadsheet::ParseXLSX            || true
   - cpanm --quiet Spreadsheet::XLSX                 || true
-  - cpanm --quiet Spreadsheet::XLSX::Reader::LibXML || true
-  - perl Makefile.PL && make test
 notifications:
   irc:
     channels:
