@@ -1,6 +1,7 @@
 language: perl
 os:
   - linux
+dist: trusty
 perl:
   - "5.30"
   - "5.28"
@@ -18,8 +19,7 @@ perl:
 env:
   - AUTOMATED_TESTING=1
 before_install:
-  - brew install cpanm                              || true
-install:
+  - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
   - cpanm --quiet --installdeps --notest .          || true
   - cpanm --quiet Text::CSV_XS                      || true
   - cpanm --quiet Text::CSV                         || true
@@ -34,3 +34,9 @@ notifications:
       - "irc.perl.org#csv"
     on_success: always
     on_failure: always
+### __app_cisetup__
+# ---
+# force_threaded_perls: 0
+# perl_caching: 1
+
+### __app_cisetup__
