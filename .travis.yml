@@ -20,6 +20,7 @@ env:
   - AUTOMATED_TESTING=1
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto --always-upgrade-modules
+install:
   - cpanm --quiet --installdeps --notest .          || true
   - cpanm --quiet Text::CSV_XS                      || true
   - cpanm --quiet Text::CSV                         || true
