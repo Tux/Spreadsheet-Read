@@ -29,6 +29,7 @@ install:
   - cpanm --quiet Spreadsheet::ParseXLSX            || true
   - cpanm --quiet Spreadsheet::XLSX                 || true
   - cpanm --quiet Spreadsheet::XLSX::Reader::LibXML || true
+  - perl Makefile.PL && make test
 notifications:
   irc:
     channels:
