@@ -56,8 +56,6 @@ Makefile.PL
 MANIFEST
 README
 Read.pm
-t/00_pod.t
-t/01_pod.t
 t/10_basics.t
 t/11_call.t
 t/200_csv.t

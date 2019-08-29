@@ -107,6 +107,10 @@ sub postamble {
 		    $(TEST_FILES) 3>valgrind.log
 		    );
     my @pc = -f ".perlcriticrc" ? ("\tperlcritic -1 Read.pm") : ();
+    $] >= 5.010 && -d "xt" && ($ENV{AUTOMATED_TESTING} || 0) != 1 and push @pc,
+	'',
+	'test::',
+	'	-@env TEST_FILES="xt/*.t" make -e test_dynamic';
     join "\n" =>
 	'cover test_cover:',
 	'	ccache -C',

@@ -1,3 +1,7 @@
+0.82	- 29 Aug 2019, H.Merijn Brand
+    * Move pod tests to xt (and do not distribute)
+    * Fix some links in the docs
+
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019
     * Allow -c + --sep in xlscat

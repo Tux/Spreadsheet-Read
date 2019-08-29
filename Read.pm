@@ -36,7 +36,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.81";
+our $VERSION = "0.82";
 sub  Version { $VERSION }
 
 use Carp;
@@ -1156,7 +1156,7 @@ L<Spreadsheet::XLSX|https://metacpan.org/release/Spreadsheet-XLSX> (stronly
 discouraged).
 
 For CSV this module uses L<Text::CSV_XS|https://metacpan.org/release/Text-CSV_XS>
-or L<Text::CSV_PP|https://metacpan.org/release/Text-CSV_PP>.
+or L<Text::CSV_PP|https://metacpan.org/release/Text-CSV>.
 
 For SquirrelCalc there is a very simplistic built-in parser
 
@@ -1290,7 +1290,7 @@ described above.
 
 Processing Excel data from a stream or content is supported through a
 L<File::Temp|https://metacpan.org/release/File-Temp> temporary file or
-L<IO::Scalar|https://metacpan.org/release/IO-Scalar> when available.
+L<IO::Scalar|https://metacpan.org/release/IO-stringy> when available.
 
 L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>
 does preserve sheet order as of version 0.20.
@@ -1687,7 +1687,7 @@ In case of CSV parsing, L<C<ReadData>|/ReadData> will use the first line of
 the file to auto-detect the separation character if the first argument is a
 file and both C<sep> and C<quote> are not passed as attributes.
 L<Text::CSV_XS|https://metacpan.org/release/Text-CSV_XS> (or
-L<Text::CSV_PP|https://metacpan.org/release/Text-CSV_PP>) is able to
+L<Text::CSV_PP|https://metacpan.org/release/Text-CSV>) is able to
 automatically detect and use C<\r> line endings.
 
 CSV can parse streams too, but be sure to pass C<sep> and/or C<quote> if
@@ -1697,7 +1697,7 @@ When an error is found in the CSV, it is automatically reported (to STDERR).
 The structure will store the error in C<< $ss->[0]{error} >> as anonymous
 list returned by
 L<C<< $csv->error_diag >>|https://metacpan.org/pod/Text::CSV_XS#error_diag>.
-See L<Text::CSV_XS|https://metacpan.org/pod/Text-CSV_XS> for documentation.
+See L<Text::CSV_XS|https://metacpan.org/pod/Text::CSV_XS> for documentation.
 
  my $ss = ReadData ("bad.csv");
  $ss->[0]{error} and say $ss->[0]{error}[1];
@@ -1802,8 +1802,8 @@ The documentation of merged areas in
 L<Spreadsheet::ParseExcel|https://metacpan.org/release/Spreadsheet-ParseExcel> and
 L<Spreadsheet::ParseXLSX|https://metacpan.org/release/Spreadsheet-ParseXLSX> can
 be found in
-L<Spreadsheet::ParseExcel::Worksheet|https://metacpan.org/release/Spreadsheet-ParseExcel-Worksheet>
-and L<Spreadsheet::ParseExcel::Cell|https://metacpan.org/release/Spreadsheet-ParseExcel-Cell>.
+L<Spreadsheet::ParseExcel::Worksheet|https://metacpan.org/pod/Spreadsheet::ParseExcel::Worksheet>
+and L<Spreadsheet::ParseExcel::Cell|https://metacpan.org/pod/Spreadsheet::ParseExcel::Cell>.
 
 None of basic L<Spreadsheet::XLSX|https://metacpan.org/release/Spreadsheet-XLSX>,
 L<Spreadsheet::ParseExcel|https://metacpan.org/release/Spreadsheet-ParseExcel>, and
@@ -2066,11 +2066,11 @@ match what F<CONTRIBUTING.md> describes.
 =item Text::CSV_XS, Text::CSV_PP
 
 See L<Text::CSV_XS|https://metacpan.org/release/Text-CSV_XS> ,
-L<Text::CSV_PP|https://metacpan.org/release/Text-CSV_PP> , and
+L<Text::CSV_PP|https://metacpan.org/release/Text-CSV> , and
 L<Text::CSV|https://metacpan.org/release/Text-CSV> documentation.
 
 L<Text::CSV|https://metacpan.org/release/Text-CSV> is a wrapper over Text::CSV_XS (the fast XS version) and/or
-L<Text::CSV_PP|https://metacpan.org/release/Text-CSV_PP> (the pure perl version).
+L<Text::CSV_PP|https://metacpan.org/release/Text-CSV> (the pure perl version).
 
 =item Spreadsheet::ParseExcel
 
@@ -2126,9 +2126,9 @@ interface.
 
 =item xls2csv
 
-L<xls2csv|https://metacpan.org/release/xls2csv> offers an alternative for my
-C<xlscat -c>, in the xls2csv tool, but this tool focuses on character encoding
-transparency, and requires some other modules.
+L<xls2csv|https://github.com/Tux/Spreadsheet-Read/blob/master/examples/xls2csv>
+offers an alternative for my C<xlscat -c>, in the xls2csv tool, but this tool
+focuses on character encoding transparency, and requires some other modules.
 
 =back
 

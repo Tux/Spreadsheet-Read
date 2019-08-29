@@ -29,3 +29,4 @@ t/633_misc.t
 t/634_dates.t
 t/635_perc.t
 t/637_merged.t
+^xt/
