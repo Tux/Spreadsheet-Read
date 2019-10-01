@@ -1860,6 +1860,26 @@ C<A2:A3>, C<B1:C2>.
 Use the L<C<merged>|/merged> entry described above to find out what
 fields are merged to what other fields.
 
+=head2 Streams from web-resources
+
+If you want to stream a web-resource, and the underlying parser supports it,
+you could use a helper function like this (thanks Corion):
+
+ use HTTP::Tiny;
+ use Spreadsheet::Read;
+
+ # Fetch data and return a filehandle to that data
+ sub fh_from_url {
+     my $url = shift;
+     my $ua  = HTTP::Tiny->new;
+     my $res = $ua->get ($url);
+     open my $fh, "<", \$res->{content};
+     return $fh
+     } # fh_from_url
+
+ my $fh = fh_from_url ("http://example.com/example.csv");
+ my $sheet = Spreadsheet::Read->new ($fh, parser => "csv");
+
 =head1 TOOLS
 
 This modules comes with a few tools that perform tasks from the FAQ, like
