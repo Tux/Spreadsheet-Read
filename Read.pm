@@ -893,15 +893,21 @@ sub ReadData {
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
 	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
-	ref $txt and
-	    croak ("Sorry, references as input are not (yet) supported by Spreadsheet::ReadSXC");
 
+    if (ref $txt and $can{sxc}->VERSION <= 0.23) {
+	    croak ("Sorry, references as input are not supported by Spreadsheet::ReadSXC before 0.23");
+    }
 	my $using = "using $can{sxc}-" . $can{sxc}->VERSION;
 	my $sxc_options = { %parser_opts, OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
 	   if ($txt =~ m/\.(sxc|ods)$/i) {
 	    $debug and print STDERR "Opening \U$1\E $txt $using\n";
 	    $sxc = Spreadsheet::ReadSXC::read_sxc      ($txt, $sxc_options)	or  return;
+	    }
+	# treat all refs as a filehandle
+	elsif (ref $txt) {
+	    $debug and print STDERR "Opening SXC filehandle\n";
+	    $sxc = Spreadsheet::ReadSXC::read_sxc_fh($txt, $sxc_options);
 	    }
 	elsif ($txt =~ m/\.xml$/i) {
 	    $debug and print STDERR "Opening XML $txt $using\n";
