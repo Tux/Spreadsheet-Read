@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 301;
+my     $tests = 401;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -30,13 +30,26 @@ my $content;
     #like ($@, qr/too short/);
     }
 
+my $sxc_fh;
+{   open $sxc_fh, '<', "files/test.sxc" or die "files/test.sxc: $!\n";
+    }
 foreach my $base ( [ "files/test.sxc",		"Read/Parse sxc file" ],
 		   [ "files/content.xml",	"Read/Parse xml file" ],
 		   [ $content,			"Parse xml data" ],
+		   [ $sxc_fh,			"Parse FH" ],
 		   ) {
     my ($txt, $msg) = @$base;
     my $sxc;
-    ok ($sxc = ReadData ($txt), $msg);
+    my @options = ref $txt ? ( parser => "sxc"): ();
+
+    if (ref $txt and (my $v = $parser->VERSION) <= 0.23 ) {
+        SKIP: {
+            skip "$parser $v does not support filehandles", 100;
+        };
+        next;
+    };
+
+    ok ($sxc = ReadData ($txt, @options), $msg);
 
     ok (1, "Base values");
     is (ref $sxc,		"ARRAY",	"Return type");
@@ -80,7 +93,7 @@ foreach my $base ( [ "files/test.sxc",		"Read/Parse sxc file" ],
     ok (1, "Sheet 2");
     # Sheet with merged cells and notes/annotations
     # x   x   x
-    #   x   x 
+    #   x   x
     # x   x   x
 
     ok (1, "Defined fields");

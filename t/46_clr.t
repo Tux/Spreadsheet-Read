@@ -11,7 +11,7 @@ use Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "No OpenOffice ODS parser found";
 
-$parser->VERSION <= 0.20 and
+$parser->VERSION <= 0.40 and
     plan skip_all => "Spreadsheet::ReadSXC version " . $parser->VERSION .
 		    " doesn't support field attributes";
 

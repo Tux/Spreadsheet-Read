@@ -3,13 +3,14 @@
 use strict;
 use warnings;
 
-my     $tests = 301;
+my     $tests = 401;
 use     Test::More;
 require Test::NoWarnings;
 
 use     Spreadsheet::Read;
-Spreadsheet::Read::parses ("ods") or
+my $parser = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "No SXC parser found";
+print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 my $content;
 {   local $/;
@@ -28,13 +29,27 @@ my $content;
     #like ($@, qr/too short/);
     }
 
+my $ods_fh;
+{   open $ods_fh, '<', "files/test.ods" or die "files/test.ods: $!\n";
+    }
+
 foreach my $base ( [ "files/test.ods",		"Read/Parse ods file" ],
 		   [ "files/content.xml",	"Read/Parse xml file" ],
 		   [ $content,			"Parse xml data" ],
+		   [ $ods_fh,	"Read/Parse filehandle" ],
 		   ) {
     my ($txt, $msg) = @$base;
     my $sxc;
-    ok ($sxc = ReadData ($txt), $msg);
+    my @options = ref $txt ? ( parser => "ods"): ();
+
+    if (ref $txt and (my $v = $parser->VERSION) <= 0.23 ) {
+        SKIP: {
+            skip "$parser $v does not support filehandles", 100;
+        };
+        next;
+    };
+
+    ok ($sxc = ReadData ($txt, @options), $msg);
 
     ok (1, "Base values");
     is (ref $sxc,		"ARRAY",	"Return type");
@@ -78,7 +93,7 @@ foreach my $base ( [ "files/test.ods",		"Read/Parse ods file" ],
     ok (1, "Sheet 2");
     # Sheet with merged cells and notes/annotations
     # x   x   x
-    #   x   x 
+    #   x   x
     # x   x   x
 
     ok (1, "Defined fields");
