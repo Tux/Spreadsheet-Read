@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 401;
+my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -29,26 +29,21 @@ my $content;
     #like ($@, qr/too short/);
     }
 
-my $ods_fh;
-{   open $ods_fh, '<', "files/test.ods" or die "files/test.ods: $!\n";
+my @base = (
+    [ "files/test.ods",		"Read/Parse ods file"	],
+    [ "files/content.xml",	"Read/Parse xml file"	],
+    [ $content,			"Parse xml data"	],
+    );
+if ($parser->VERSION > 0.23) {
+    open my $fh, "<", "files/test.ods" or die "files/test.ods: $!\n";
+    push @base => [ $fh,	"Parse ods file handle"	];
+    $tests += 100;
     }
 
-foreach my $base ( [ "files/test.ods",		"Read/Parse ods file" ],
-		   [ "files/content.xml",	"Read/Parse xml file" ],
-		   [ $content,			"Parse xml data" ],
-		   [ $ods_fh,	"Read/Parse filehandle" ],
-		   ) {
+foreach my $base (@base) {
     my ($txt, $msg) = @$base;
     my $sxc;
-    my @options = ref $txt ? ( parser => "ods"): ();
-
-    if (ref $txt and (my $v = $parser->VERSION) <= 0.23 ) {
-        SKIP: {
-            skip "$parser $v does not support filehandles", 100;
-        };
-        next;
-    };
-
+    my @options = ref $txt ? (parser => "ods") : ();
     ok ($sxc = ReadData ($txt, @options), $msg);
 
     ok (1, "Base values");

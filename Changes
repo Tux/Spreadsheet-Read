@@ -1,6 +1,8 @@
-0.82	- 29 Aug 2019, H.Merijn Brand
+0.82	- 03 Oct 2019, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
+    * Spreadsheet::ReadSXC has a new maintainer (Corion)
+      - support file handles
 
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019
