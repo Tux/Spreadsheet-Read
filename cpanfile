@@ -18,7 +18,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302167";
+    recommends "Test::More"               => "1.302168";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -26,7 +26,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     
     recommends "Text::CSV"                => "2.00";
     recommends "Text::CSV_PP"             => "2.00";
-    recommends "Text::CSV_XS"             => "1.39";
+    recommends "Text::CSV_XS"             => "1.40";
     };
 
 feature "opt_excel", "Provides parsing of Microsoft Excel files" => sub {
@@ -44,7 +44,7 @@ feature "opt_excelx", "Provides parsing of Microsoft Excel 2007 files" => sub {
     };
 
 feature "opt_oo", "Provides parsing of OpenOffice spreadsheets" => sub {
-    requires   "Spreadsheet::ReadSXC"     => "0.20";
+    requires   "Spreadsheet::ReadSXC"     => "0.23";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
