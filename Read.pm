@@ -53,7 +53,9 @@ my @parsers = (
     [ csv  => "Text::CSV_XS",				"0.71"		],
     [ csv  => "Text::CSV_PP",				"1.17"		],
     [ csv  => "Text::CSV",				"1.17"		],
+    [ ods  => "Spreadsheet::ParseODS",			"0.24"		],
     [ ods  => "Spreadsheet::ReadSXC",			"0.20"		],
+    [ sxc  => "Spreadsheet::ParseODS",			"0.24"		],
     [ sxc  => "Spreadsheet::ReadSXC",			"0.20"		],
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
@@ -109,6 +111,8 @@ $can{sc} = __PACKAGE__;	# SquirelCalc is built-in
 
 defined $Spreadsheet::ParseExcel::VERSION && $Spreadsheet::ParseExcel::VERSION < 0.61 and
     *Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
+defined $Spreadsheet::ParseODS::VERSION   && $Spreadsheet::ParseODS::VERSION   < 0.25 and
+    *Spreadsheet::ParseODS::Workbook::get_active_sheet   = sub { undef; };
 
 my $debug = 0;
 my %def_opts = (
@@ -161,13 +165,14 @@ sub _dump {
 sub _parser {
     my $type = shift		or  return "";
     $type = lc $type;
+    my $ods = $can{ods} ? "ods" : "sxc";
     # Aliases and fullnames
     $type eq "excel"		and return "xls";
     $type eq "excel2007"	and return "xlsx";
-    $type eq "oo"		and return "sxc";
-    $type eq "ods"		and return "sxc";
-    $type eq "openoffice"	and return "sxc";
-    $type eq "libreoffice"	and return "sxc";
+    $type eq "oo"		and return $ods;
+#   $type eq "sxc"		and return $ods;
+    $type eq "openoffice"	and return $ods;
+    $type eq "libreoffice"	and return $ods;
     $type eq "perl"		and return "prl";
     $type eq "squirelcalc"	and return "sc";
     return exists $can{$type} ? $type : "";
@@ -589,22 +594,29 @@ sub ReadData {
 	    return;
 	    }
 	}
-    if ($opt{parser} ? $_parser =~ m/^xlsx?$/
-		     : ($io_fil && $txt =~ m/\.(xlsx?)$/i && ($_parser = $1))) {
-	my $parse_type = $_parser =~ m/x$/i ? "XLSX" : "XLS";
+    if ($opt{parser} ? $_parser =~ m/^(?:xlsx?|ods)$/
+		     : ($io_fil && $txt =~ m/\.(xlsx?|ods)$/i && ($_parser = $1))
+		   and ($can{$_parser} || "") !~ m/sxc/i) {
+	my $parse_type = $_parser =~ m/ods/i ? "ODS"
+		       : $_parser =~ m/x$/i  ? "XLSX" : "XLS";
 	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
+	#$debug and print STDERR __FILE__, "#", __LINE__, " | $_parser | $parser | $parse_type\n";
 	$debug and print STDERR "Opening $parse_type ", $io_ref ? "<REF>" : $txt,
 	    " using $parser-", $can{lc $parse_type}->VERSION, "\n";
 	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
 	my $oBook = eval {
 	    $io_ref
-	      ? $parse_type eq "XLSX"
+	      ? $parse_type eq "ODS"
+		? $parser->new (%parser_opts)->parse ($io_ref)
+	        : $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($io_ref)
 		: $parser->new (%parser_opts)->parse ($io_ref)
 		: $parser->new (%parser_opts)->Parse ($io_ref)
-	      : $parse_type eq "XLSX"
+	      : $parse_type eq "ODS"
+		? $parser->new (%parser_opts)->parse ($txt)
+	        : $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($txt)
 		: $parser->new (%parser_opts)->parse ($txt)
@@ -902,6 +914,7 @@ sub ReadData {
 	my $sxc;
 	   if ($txt =~ m/\.(sxc|ods)$/i) {
 	    $debug and print STDERR "Opening \U$1\E $txt $using\n";
+	    $debug and print STDERR __FILE__, "#", __LINE__, "\n";
 	    $sxc = Spreadsheet::ReadSXC::read_sxc      ($txt, $sxc_options) or return;
 	    }
 	# treat all refs as a filehandle
@@ -2120,6 +2133,12 @@ documentation.
 This module is dead and deprecated. It is B<buggy and unmaintained>.  I<Please>
 use L<Spreadsheet::ParseXLSX|https://metacpan.org/release/Spreadsheet-ParseXLSX>
 instead.
+
+=item Spreadsheet::ParseODS
+
+L<Spreadsheet::ParseODS|https://metacpan.org/release/Spreadsheet-ParseODS> is a
+parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files. It is the
+successor of  L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>.
 
 =item Spreadsheet::ReadSXC
 

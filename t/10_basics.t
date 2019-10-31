@@ -14,8 +14,8 @@ is (parses (undef),   0, "No sheet type");
 is (parses ("xyzzy"), 0, "Unknown sheet type");
 
 is (parses ("xls"), parses ("excel"),      "Excel alias type");
-is (parses ("sxc"), parses ("oo"),         "OpenOffice alias type 1");
-is (parses ("sxc"), parses ("OpenOffice"), "OpenOffice alias type 2");
+is (parses ("ods"), parses ("oo"),         "OpenOffice alias type 1");
+is (parses ("ods"), parses ("OpenOffice"), "OpenOffice alias type 2");
 is (parses ("prl"), parses ("perl"),       "Perl alias type");
 
 foreach my $x ([ "A1",              1,      1 ],

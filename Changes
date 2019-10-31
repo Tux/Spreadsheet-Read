@@ -1,9 +1,10 @@
-0.82	- 04 Oct 2019, H.Merijn Brand
+0.82	- 31 Oct 2019, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
     * Spreadsheet::ReadSXC has a new maintainer (Corion)
       - support file handles
-      - suggest version 0.23 (0.22 causes fails)
+      - suggest version 0.24 (0.22 causes fails)
+    * First attempt in supporting Spreadsheet::ParseODS (alpha code)
 
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019

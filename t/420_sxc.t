@@ -7,6 +7,8 @@ my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
+BEGIN { $ENV{SPREADSHEET_READ_SXC} = "Spreadsheet::ReadSXC"; }
+
 use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("sxc") or
     plan skip_all => "No SXC parser found";

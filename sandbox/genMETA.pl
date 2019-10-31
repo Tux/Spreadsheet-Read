@@ -103,7 +103,7 @@ optional_features:
   opt_oo:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
-      Spreadsheet::ReadSXC:                0.23
+      Spreadsheet::ReadSXC:                0.24
   opt_tools:
     description:        Spreadsheet tools
     recommends:

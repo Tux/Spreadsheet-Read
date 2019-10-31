@@ -7,6 +7,8 @@ my     $tests = 256;
 use     Test::More;
 require Test::NoWarnings;
 
+BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ReadSXC"; }
+
 use Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "No OpenOffice ODS parser found";

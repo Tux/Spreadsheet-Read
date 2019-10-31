@@ -7,6 +7,8 @@ my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
+BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ReadSXC"; }
+
 use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "No SXC parser found";
@@ -34,7 +36,7 @@ my @base = (
     [ "files/content.xml",	"Read/Parse xml file"	],
     [ $content,			"Parse xml data"	],
     );
-if ($parser->VERSION > 0.23) {
+if ($parser->VERSION > 0.24) {
     open my $fh, "<", "files/test.ods" or die "files/test.ods: $!\n";
     push @base => [ $fh,	"Parse ods file handle"	];
     $tests += 100;
