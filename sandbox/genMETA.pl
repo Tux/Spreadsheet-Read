@@ -86,22 +86,26 @@ optional_features:
       Text::CSV:                           2.00
       Text::CSV_PP:                        2.00
       Text::CSV_XS:                        1.40
-  opt_excel:
+  opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
       Spreadsheet::ParseExcel:             0.34
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
       Spreadsheet::ParseExcel:             0.65
-  opt_excelx:
+  opt_xlsx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
       Spreadsheet::ParseXLSX:              0.24
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
       Spreadsheet::ParseXLSX:              0.27
-  opt_oo:
+  opt_ods:
     description:        Provides parsing of OpenOffice spreadsheets
+    requires:
+      Spreadsheet::ParseODS:               0.24
+  opt_sxc:
+    description:        Provides parsing of OpenOffice spreadsheets old style
     requires:
       Spreadsheet::ReadSXC:                0.24
   opt_tools:

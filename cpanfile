@@ -29,26 +29,30 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     recommends "Text::CSV_XS"             => "1.40";
     };
 
-feature "opt_excel", "Provides parsing of Microsoft Excel files" => sub {
-    requires   "Spreadsheet::ParseExcel"  => "0.34";
-    requires   "Spreadsheet::ParseExcel::FmtDefault";
-    
-    recommends "Spreadsheet::ParseExcel"  => "0.65";
+feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
+    requires   "Spreadsheet::ParseODS"    => "0.24";
     };
 
-feature "opt_excelx", "Provides parsing of Microsoft Excel 2007 files" => sub {
-    requires   "Spreadsheet::ParseExcel::FmtDefault";
-    requires   "Spreadsheet::ParseXLSX"   => "0.24";
-    
-    recommends "Spreadsheet::ParseXLSX"   => "0.27";
-    };
-
-feature "opt_oo", "Provides parsing of OpenOffice spreadsheets" => sub {
-    requires   "Spreadsheet::ReadSXC"     => "0.23";
+feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
+    requires   "Spreadsheet::ReadSXC"     => "0.24";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
     recommends "Tk"                       => "804.034";
     recommends "Tk::NoteBook";
     recommends "Tk::TableMatrix::Spreadsheet";
+    };
+
+feature "opt_xls", "Provides parsing of Microsoft Excel files" => sub {
+    requires   "Spreadsheet::ParseExcel"  => "0.34";
+    requires   "Spreadsheet::ParseExcel::FmtDefault";
+    
+    recommends "Spreadsheet::ParseExcel"  => "0.65";
+    };
+
+feature "opt_xlsx", "Provides parsing of Microsoft Excel 2007 files" => sub {
+    requires   "Spreadsheet::ParseExcel::FmtDefault";
+    requires   "Spreadsheet::ParseXLSX"   => "0.24";
+    
+    recommends "Spreadsheet::ParseXLSX"   => "0.27";
     };
