@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'19 [02-02-2019] Copyright H.M.Brand 2008-2019
+#	   (m)'19 [02-02-2019] Copyright H.M.Brand 2008-2020
 
 require 5.008001;
 
@@ -188,7 +188,7 @@ H.Merijn Brand, <h.m.brand@xs4all.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2019 H.Merijn Brand
+Copyright (C) 2008-2020 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
