@@ -17,6 +17,11 @@ my $parser = Spreadsheet::Read::parses ("ods") or
 $parser eq "Spreadsheet::ODS" and
     plan skip_all => "No merged cell support in $parser";
 
+my $pv = $parser->VERSION;
+# ReadSXC is in transition to ParseODS by CORION
+$parser eq "Spreadsheet::ParseODS" && $pv le "0.24" and
+    plan skip_all => "No merged cell support in $parser-$pv";
+
 ok (my $ss = ReadData ("files/merged.ods", attr => 1)->[1], "Read merged ods");
 
 is ($ss->{attr}[1][1]{merged}, 0, "unmerged A1");
