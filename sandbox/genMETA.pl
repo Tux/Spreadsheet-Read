@@ -59,6 +59,7 @@ requires:
   Data::Peek:           0
   Encode:               0
   File::Temp:           0.22
+  List::Util:           0
 configure_requires:
   ExtUtils::MakeMaker:  0
 test_requires:

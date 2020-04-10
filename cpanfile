@@ -4,6 +4,7 @@ requires   "Data::Peek";
 requires   "Encode";
 requires   "Exporter";
 requires   "File::Temp"               => "0.22";
+requires   "List::Util";
 
 recommends "Data::Peek"               => "0.48";
 recommends "File::Temp"               => "0.2309";

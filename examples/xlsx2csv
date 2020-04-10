@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'19 [02-02-2019] Copyright H.M.Brand 2016-2020
+#	   (m)'20 [2019-04-10] Copyright H.M.Brand 2016-2020
 
 require 5.008001;
 
@@ -12,6 +12,7 @@ our $VERSION = "3.5";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
+use List::Util        qw( first );
 use Spreadsheet::Read qw( ReadData row );
 
 sub usage {
@@ -34,11 +35,8 @@ use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
     "help|?"    => sub { usage 0; },
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
-    "man"       => sub { exec "pod2man $0 | nroff -man"; },
-    "info"      => sub { require Pod::Usage;
-			 Pod::Usage::pod2usage (VERBOSE => 2);
-			 exit;
-			 },
+      "man"	=> sub { pod_nroff (); },
+      "info"	=> sub { pod_text  (); },
 
     "o|c|out=s" => \ my $csv,
     "i|s|in=s"	=> \ my $xls,
@@ -50,6 +48,28 @@ GetOptions (
     "N|no-pfx!" => \ my $opt_N,
     "J|join=s"	=> \(my $opt_J = "-"),
     ) or usage 1;
+
+sub pod_text {
+    require Pod::Text::Color;
+    my $m = $ENV{NO_COLOR} ? "Pod::Text" : "Pod::Text::Color";
+    my $p = $m->new ();
+    open my $fh, ">", \my $out;
+    $p->parse_from_file ($0, $fh);
+    close $fh;
+    print $out;
+    exit 0;
+    } # pod_text
+
+sub pod_nroff {
+    first { -x "$_/nroff" } grep { -d } split m/:+/ => $ENV{PATH} or pod_text ();
+
+    require Pod::Man;
+    my $p = Pod::Man->new ();
+    open my $fh, "|-", "nroff", "-man";
+    $p->parse_from_file ($0, $fh);
+    close $fh;
+    exit 0;
+    } # pod_nroff
 
 unless ($xls) {
     foreach my $i (reverse 0 .. $#ARGV) {
