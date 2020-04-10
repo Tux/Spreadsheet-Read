@@ -1,0 +1,1031 @@
+# NAME
+
+    Spreadsheet::Read - Read the data from a spreadsheet
+
+# SYNOPSIS
+
+    use Spreadsheet::Read;
+    my $book  = ReadData ("test.csv", sep => ";");
+    my $book  = ReadData ("test.sxc");
+    my $book  = ReadData ("test.ods");
+    my $book  = ReadData ("test.xls");
+    my $book  = ReadData ("test.xlsx");
+    my $book  = ReadData ("test.xlsm");
+    my $book  = ReadData ($fh, parser => "xls");
+
+    Spreadsheet::Read::add ($book, "sheet.csv");
+
+    my $sheet = $book->[1];             # first datasheet
+    my $cell  = $book->[1]{A3};         # content of field A3 of sheet 1
+    my $cell  = $book->[1]{cell}[1][3]; # same, unformatted
+
+    # OO API
+    my $book = Spreadsheet::Read->new ("file.csv");
+    my $sheet = $book->sheet (1);
+    my $cell  = $sheet->cell ("A3");
+    my $cell  = $sheet->cell (1, 3);
+
+    $book->add ("test.xls");
+
+# DESCRIPTION
+
+Spreadsheet::Read tries to transparently read \*any\* spreadsheet and
+return its content in a universal manner independent of the parsing
+module that does the actual spreadsheet scanning.
+
+For OpenOffice and/or LibreOffice this module uses
+[Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC)
+
+For Microsoft Excel this module uses
+[Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel),
+[Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX), or
+[Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX) (stronly
+discouraged).
+
+For CSV this module uses [Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS)
+or [Text::CSV\_PP](https://metacpan.org/release/Text-CSV).
+
+For SquirrelCalc there is a very simplistic built-in parser
+
+## Data structure
+
+The data is returned as an array reference:
+
+    $book = [
+        # Entry 0 is the overall control hash
+        { sheets  => 2,
+          sheet   => {
+            "Sheet 1"  => 1,
+            "Sheet 2"  => 2,
+            },
+          parsers => [ {
+              type    => "xls",
+              parser  => "Spreadsheet::ParseExcel",
+              version => 0.59,
+              }],
+          error   => undef,
+          },
+        # Entry 1 is the first sheet
+        { parser  => 0,
+          label   => "Sheet 1",
+          maxrow  => 2,
+          maxcol  => 4,
+          cell    => [ undef,
+            [ undef, 1 ],
+            [ undef, undef, undef, undef, undef, "Nugget" ],
+            ],
+          attr    => [],
+          merged  => [],
+          active  => 1,
+          A1      => 1,
+          B5      => "Nugget",
+          },
+        # Entry 2 is the second sheet
+        { parser  => 0,
+          label   => "Sheet 2",
+          :
+          :
+
+To keep as close contact to spreadsheet users, row and column 1 have
+index 1 too in the `cell` element of the sheet hash, so cell "A1" is
+the same as `cell` \[1, 1\] (column first). To switch between the two,
+there are helper functions available: `cell2cr ()`, `cr2cell ()`,
+and `col2label ()`.
+
+The `cell` hash entry contains unformatted data, while the hash entries
+with the traditional labels contain the formatted values (if applicable).
+
+The control hash (the first entry in the returned array ref), contains
+some spreadsheet meta-data. The entry `sheet` is there to be able to find
+the sheets when accessing them by name:
+
+    my %sheet2 = %{$book->[$book->[0]{sheet}{"Sheet 2"}]};
+
+## Formatted vs Unformatted
+
+The difference between formatted and unformatted cells is that the (optional)
+format is applied to the cell or not. This part is **completely** implemented
+on the parser side. Spreadsheet::Read just makes both available if these are
+supported. Options provide means to disable either. If the parser does not
+provide formatted cells - like CSV - both values are equal.
+
+To show what this implies:
+
+    use Spreadsheet::Read;
+
+    my $file     = "files/example.xlsx";
+    my $workbook = Spreadsheet::Read->new ($file);
+
+    my $info     = $workbook->[0];
+    say "Parsed $file with $info->{parser}-$info->{version}";
+
+    my $sheet    = $workbook->sheet (1);
+
+    say join "\t" => "Formatted:",   $sheet->row     (1);
+    say join "\t" => "Unformatted:", $sheet->cellrow (1);
+
+Might return very different results depending one the underlying parser (and
+its version):
+
+    Parsed files/example.xlsx with Spreadsheet::ParseXLSX-0.27
+    Formatted:      8-Aug   Foo & Barr < Quux
+    Unformatted:    39668   Foo & Barr < Quux
+
+    Parsed files/example.xlsx with Spreadsheet::XLSX-0.15
+    Formatted:      39668   Foo &amp; Barr &lt; Quux
+    Unformatted:    39668   Foo &amp; Barr &lt; Quux
+
+## Functions and methods
+
+### new
+
+    my $book = Spreadsheet::Read->new (...) or die $@;
+
+All options accepted by ReadData are accepted by new.
+
+With no arguments at all, $book will be an object where sheets can be added
+using `add`
+
+    my $book = Spreadsheet::Read->new ();
+    $book->add ("file.csv");
+    $book->add ("file.cslx");
+
+### ReadData
+
+    my $book = ReadData ($source [, option => value [, ... ]]);
+
+    my $book = ReadData ("file.csv", sep => ',', quote => '"');
+
+    my $book = ReadData ("file.xls", dtfmt => "yyyy-mm-dd");
+
+    my $book = ReadData ("file.ods");
+
+    my $book = ReadData ("file.sxc");
+
+    my $book = ReadData ("content.xml");
+
+    my $book = ReadData ($content);
+
+    my $book = ReadData ($content,  parser => "xlsx");
+
+    my $book = ReadData ($fh,       parser => "xlsx");
+
+    my $book = ReadData (\$content, parser => "xlsx");
+
+Tries to convert the given file, string, or stream to the data structure
+described above.
+
+Processing Excel data from a stream or content is supported through a
+[File::Temp](https://metacpan.org/release/File-Temp) temporary file or
+[IO::Scalar](https://metacpan.org/release/IO-stringy) when available.
+
+[Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC)
+does preserve sheet order as of version 0.20.
+
+Choosing between `$content` and `\\$content` (with or without passing
+the desired `parser` option) may be depending on trial and terror.
+`ReadData` does try to determine parser type on content if needed, but
+not all combinations are checked, and not all signatures are builtin.
+
+Currently supported options are:
+
+- parser
+
+
+    Force the data to be parsed by a specific format. Possible values are
+    `csv`, `prl` (or `perl`), `sc` (or `squirelcalc`), `sxc` (or `oo`,
+    `ods`, `openoffice`, `libreoffice`) `xls` (or `excel`), and `xlsx`
+    (or `excel2007`).
+
+    When parsing streams, instead of files, it is highly recommended to pass
+    this option.
+
+    Spreadsheet::Read supports several underlying parsers per spreadsheet
+    type. It will try those from most favored to least favored. When you
+    have a good reason to prefer a different parser, you can set that in
+    environment variables. The other options then will not be tested for:
+
+        env SPREADSHEET_READ_CSV=Text::CSV_PP ...
+
+- cells
+
+
+    Control the generation of named cells ("`A1`" etc). Default is true.
+
+- rc
+
+    Control the generation of the {cell}\[c\]\[r\] entries. Default is true.
+
+- attr
+
+    Control the generation of the {attr}\[c\]\[r\] entries. Default is false.
+    See ["Cell Attributes"](#cell-attributes) below.
+
+- clip
+
+    If set, [`ReadData`](#readdata) will remove all trailing rows and columns
+    per sheet that have no data, where no data means only undefined or empty
+    cells (after optional stripping). If a sheet has no data at all, the sheet
+    will be skipped entirely when this attribute is true.
+
+- strip
+
+    If set, [`ReadData`](#readdata) will remove trailing- and/or
+    leading-whitespace from every field.
+
+        strip  leading  strailing
+        -----  -------  ---------
+          0      n/a      n/a
+          1     strip     n/a
+          2      n/a     strip
+          3     strip    strip
+
+- pivot
+
+    Swap all rows and columns.
+
+    When a sheet contains data like
+
+        A1  B1  C1      E1
+        A2      C2  D2
+        A3  B3  C3  D3  E3
+
+    using `pivot` will return the sheet data as
+
+        A1  A2  A3
+        B1      B3
+        C1  C2  C3
+            D2  D3
+        E1      E3
+
+- sep
+
+    Set separator for CSV. Default is comma `,`.
+
+- quote
+
+    Set quote character for CSV. Default is `"`.
+
+- dtfmt
+
+    Set the format for MS-Excel date fields that are set to use the default
+    date format. The default format in Excel is "`m-d-yy`", which is both
+    not year 2000 safe, nor very useful. The default is now "`yyyy-mm-dd`",
+    which is more ISO-like.
+
+    Note that date formatting in MS-Excel is not reliable at all, as it will
+    store/replace/change the date field separator in already stored formats
+    if you change your locale settings. So the above mentioned default can
+    be either "`m-d-yy`" OR "`m/d/yy`" depending on what that specific
+    character happened to be at the time the user saved the file.
+
+- debug
+
+    Enable some diagnostic messages to STDERR.
+
+    The value determines how much diagnostics are dumped (using
+    [Data::Peek](https://metacpan.org/release/Data-Peek)).  A value of `9`
+    and higher will dump the entire structure from the back-end parser.
+
+- passwd
+
+    Use this password to decrypt password protected spreadsheet.
+
+    Currently only supports Excel.
+
+All other attributes/options will be passed to the underlying parser if
+that parser supports attributes.
+
+### col2label
+
+    my $col_id = col2label (col);
+
+    my $col_id = $book->col2label (col);  # OO
+
+`col2label ()` converts a `(column)` (1 based) to the letters used in the
+traditional cell notation:
+
+    my $id = col2label ( 4); # $id now "D"
+    my $id = col2label (28); # $id now "AB"
+
+### cr2cell
+
+    my $cell = cr2cell (col, row);
+
+    my $cell = $book->cr2cell (col, row);  # OO
+
+`cr2cell ()` converts a `(column, row)` pair (1 based) to the
+traditional cell notation:
+
+    my $cell = cr2cell ( 4, 14); # $cell now "D14"
+    my $cell = cr2cell (28,  4); # $cell now "AB4"
+
+### cell2cr
+
+    my ($col, $row) = cell2cr ($cell);
+
+    my ($col, $row) = $book->cell2cr ($cell);  # OO
+
+`cell2cr ()` converts traditional cell notation to a `(column, row)`
+pair (1 based):
+
+    my ($col, $row) = cell2cr ("D14"); # returns ( 4, 14)
+    my ($col, $row) = cell2cr ("AB4"); # returns (28,  4)
+
+### row
+
+    my @row = row ($sheet, $row)
+
+    my @row = Spreadsheet::Read::row ($book->[1], 3);
+
+    my @row = $book->row ($sheet, $row); # OO
+
+Get full row of formatted values (like `$sheet->{A3} .. $sheet->{G3}`)
+
+Note that the indexes in the returned list are 0-based.
+
+`row ()` is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
+
+See also the `row ()` method on sheets.
+
+### cellrow
+
+    my @row = cellrow ($sheet, $row);
+
+    my @row = Spreadsheet::Read::cellrow ($book->[1], 3);
+
+    my @row = $book->cellrow ($sheet, $row); # OO
+
+Get full row of unformatted values (like `$sheet->{cell}[1][3] .. $sheet->{cell}[7][3]`)
+
+Note that the indexes in the returned list are 0-based.
+
+`cellrow ()` is not imported by default, so either specify it in the
+use argument list, or call it fully qualified or as method call.
+
+See also the `cellrow ()` method on sheets.
+
+### rows
+
+    my @rows = rows ($sheet);
+
+    my @rows = Spreadsheet::Read::rows ($book->[1]);
+
+    my @rows = $book->rows (1); # OO
+
+Convert `{cell}`'s `[column][row]` to a `[row][column]` list.
+
+Note that the indexes in the returned list are 0-based, where the
+index in the `{cell}` entry is 1-based.
+
+`rows ()` is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
+
+### parses
+
+    parses ($format);
+
+    Spreadsheet::Read::parses ("CSV");
+
+    $book->parses ("CSV"); # OO
+
+`parses ()` returns Spreadsheet::Read's capability to parse the
+required format. [`ReadData`](#readdata) will pick its preferred parser
+for that format unless overruled. See [`parser`](#parser).
+
+`parses ()` is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
+
+### Version
+
+    my $v = Version ()
+
+    my $v = Spreadsheet::Read::Version ()
+
+    my $v = Spreadsheet::Read->VERSION;
+
+    my $v = $book->Version (); # OO
+
+Returns the current version of Spreadsheet::Read.
+
+`Version ()` is not imported by default, so either specify it in the
+use argument list, or call it fully qualified.
+
+This function returns exactly the same as `Spreadsheet::Read->VERSION`
+returns and is only kept for backward compatibility reasons.
+
+### sheets
+
+    my $sheets = $book->sheets; # OO
+    my @sheets = $book->sheets; # OO
+
+In scalar context return the number of sheets in the book.
+In list context return the labels of the sheets in the book.
+
+### sheet
+
+    my $sheet = $book->sheet (1);     # OO
+    my $sheet = $book->sheet ("Foo"); # OO
+
+Return the numbered or named sheet out of the book. Will return `undef` if
+there is no match. Will not work for sheets _named_ with a number between 1
+and the number of sheets in the book.
+
+With named sheets will first try to use the list of sheet-labels as stored in
+the control structure. If no match is found, it will scan the actual labels
+of the sheets. In that case, it will return the first matching sheet.
+
+If defined, the returned sheet will be of class `Spreadsheet::Read::Sheet`.
+
+### add
+
+    my $book = ReadData ("file.csv");
+    Spreadsheet::Read::add ($book, "file.xlsx");
+
+    my $book = Spreadsheet::Read->new ("file.csv");
+    $book->add ("file.xlsx"); # OO
+
+## Methods on sheets
+
+### maxcol
+
+    my $col = $sheet->maxcol;
+
+Return the index of the last in-use column in the sheet. This index is 1-based.
+
+### maxrow
+
+    my $row = $sheet->maxrow;
+
+Return the index of the last in-use row in the sheet. This index is 1-based.
+
+### cell
+
+    my $cell = $sheet->cell ("A3");
+    my $cell = $sheet->cell (1, 3);
+
+Return the value for a cell. Using tags will return the formatted value,
+using column and row will return unformatted value.
+
+### attr
+
+    my $cell = $sheet->attr ("A3");
+    my $cell = $sheet->attr (1, 3);
+
+Return the attributes of a cell. Only valid if attributes are enabled through
+option `attr`.
+
+### col2label
+
+    my $col_id = $sheet->col2label (col);
+
+`col2label ()` converts a `(column)` (1 based) to the letters used in the
+traditional cell notation:
+
+    my $id = $sheet->col2label ( 4); # $id now "D"
+    my $id = $sheet->col2label (28); # $id now "AB"
+
+### cr2cell
+
+    my $cell = $sheet->cr2cell (col, row);
+
+`cr2cell ()` converts a `(column, row)` pair (1 based) to the
+traditional cell notation:
+
+    my $cell = $sheet->cr2cell ( 4, 14); # $cell now "D14"
+    my $cell = $sheet->cr2cell (28,  4); # $cell now "AB4"
+
+### cell2cr
+
+    my ($col, $row) = $sheet->cell2cr ($cell);
+
+`cell2cr ()` converts traditional cell notation to a `(column, row)`
+pair (1 based):
+
+    my ($col, $row) = $sheet->cell2cr ("D14"); # returns ( 4, 14)
+    my ($col, $row) = $sheet->cell2cr ("AB4"); # returns (28,  4)
+
+### col
+
+    my @col = $sheet->column ($col);
+
+Get full column of formatted values (like `$sheet->{C1} .. $sheet->{C9}`)
+
+Note that the indexes in the returned list are 0-based.
+
+### cellcolumn
+
+    my @col = $sheet->cellcolumn ($col);
+
+Get full column of unformatted values (like `$sheet->{cell}[3][1] .. $sheet->{cell}[3][9]`)
+
+Note that the indexes in the returned list are 0-based.
+
+### row
+
+    my @row = $sheet->row ($row);
+
+Get full row of formatted values (like `$sheet->{A3} .. $sheet->{G3}`)
+
+Note that the indexes in the returned list are 0-based.
+
+### cellrow
+
+    my @row = $sheet->cellrow ($row);
+
+Get full row of unformatted values (like `$sheet->{cell}[1][3] .. $sheet->{cell}[7][3]`)
+
+Note that the indexes in the returned list are 0-based.
+
+### rows
+
+    my @rows = $sheet->rows ();
+
+Convert `{cell}`'s `[column][row]` to a `[row][column]` list.
+
+Note that the indexes in the returned list are 0-based, where the
+index in the `{cell}` entry is 1-based.
+
+### label
+
+    my $label = $sheet->label;
+    $sheet->label ("New sheet label");
+
+Set a new label to a sheet. Note that the index in the control structure will
+_NOT_ be updated.
+
+### active
+
+    my $sheet_is_active = $sheet->active;
+
+Returns 1 if the selected sheet is active, otherwise returns 0.
+
+Currently only works on XLS (as of Spreadsheed::ParseExcel-0.61).
+CSV is always active.
+
+## Using CSV
+
+In case of CSV parsing, [`ReadData`](#readdata) will use the first line of
+the file to auto-detect the separation character if the first argument is a
+file and both `sep` and `quote` are not passed as attributes.
+[Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS) (or
+[Text::CSV\_PP](https://metacpan.org/release/Text-CSV)) is able to
+automatically detect and use `\r` line endings.
+
+CSV can parse streams too, but be sure to pass `sep` and/or `quote` if
+these do not match the default `,` and `"`.
+
+When an error is found in the CSV, it is automatically reported (to STDERR).
+The structure will store the error in `$ss->[0]{error}` as anonymous
+list returned by
+[`$csv->error_diag`](https://metacpan.org/pod/Text::CSV_XS#error_diag).
+See [Text::CSV\_XS](https://metacpan.org/pod/Text::CSV_XS) for documentation.
+
+    my $ss = ReadData ("bad.csv");
+    $ss->[0]{error} and say $ss->[0]{error}[1];
+
+As CSV has no sheet labels, the default label for a CSV sheet is its filename.
+For CSV, this can be overruled using the _label_ attribute:
+
+    my $ss = Spreadsheet::Read->new ("/some/place/test.csv", label => "Test");
+
+## Cell Attributes
+
+
+If the constructor was called with `attr` having a true value,
+
+    my $book = ReadData ("book.xls", attr => 1);
+    my $book = Spreadsheet::Read->new ("book.xlsx", attr => 1);
+
+effort is made to analyze and store field attributes like this:
+
+    { label  => "Sheet 1",
+      maxrow => 5,
+      maxcol => 2,
+      cell   => [ undef,
+        [ undef, 1 ],
+        [ undef, undef, undef, undef, undef, "Nugget" ],
+        ],
+      attr   => [ undef,
+        [ undef, {
+          type    => "numeric",
+          fgcolor => "#ff0000",
+          bgcolor => undef,
+          font    => "Arial",
+          size    => undef,
+          format  => "## ##0.00",
+          halign  => "right",
+          valign  => "top",
+          uline   => 0,
+          bold    => 0,
+          italic  => 0,
+          wrap    => 0,
+          merged  => 0,
+          hidden  => 0,
+          locked  => 0,
+          enc     => "utf-8",
+          }, ]
+        [ undef, undef, undef, undef, undef, {
+          type    => "text",
+          fgcolor => "#e2e2e2",
+          bgcolor => undef,
+          font    => "Letter Gothic",
+          size    => 15,
+          format  => undef,
+          halign  => "left",
+          valign  => "top",
+          uline   => 0,
+          bold    => 0,
+          italic  => 0,
+          wrap    => 0,
+          merged  => 0,
+          hidden  => 0,
+          locked  => 0,
+          enc     => "iso8859-1",
+          }, ]
+      merged => [],
+      A1     => 1,
+      B5     => "Nugget",
+      },
+
+The entries `maxrow` and `maxcol` are 1-based.
+
+This has now been partially implemented, mainly for Excel, as the other
+parsers do not (yet) support all of that. YMMV.
+
+If a cell itself is not hidden, but the parser holds the information that
+either the row or the column (or both) the field is in is hidden, the flag
+is inherited into the cell attributes.
+
+You can get the attributes of a cell (as a hash-ref) like this:
+
+    my $attr = $book[1]{attr}[1][3];          # Direct structure
+    my $attr = $book->sheet (1)->attr (1, 3); # Same using OO
+    my $attr = $book->sheet (1)->attr ("A3"); # Same using OO
+
+To get to the `font` attribute, use any of these:
+
+    my $font = $book[1]{attr}[1][3]{font};
+    my $font = $book->sheet (1)->attr (1, 3)->{font};
+    my $font = $book->sheet (1)->attr ("A3")->font;
+
+### Merged cells
+
+
+Note that only
+[Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC)
+documents the use of merged cells, and not in a way useful for the spreadsheet
+consumer.
+
+CSV does not support merged cells (though future implementations of CSV
+for the web might).
+
+The documentation of merged areas in
+[Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel) and
+[Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX) can
+be found in
+[Spreadsheet::ParseExcel::Worksheet](https://metacpan.org/pod/Spreadsheet::ParseExcel::Worksheet)
+and [Spreadsheet::ParseExcel::Cell](https://metacpan.org/pod/Spreadsheet::ParseExcel::Cell).
+
+None of basic [Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX),
+[Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel), and
+[Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX) manual
+pages mention merged cells at all.
+
+This module just tries to return the information in a generic way.
+
+Given this spreadsheet as an example
+
+    merged.xlsx:
+
+        A     B     C
+     +-----+-----------+
+    1|     | foo       |
+     +-----+           +
+    2| bar |           |
+     |     +-----+-----+
+    3|     | urg | orc |
+     +-----+-----+-----+
+
+the information extracted from that undocumented information is
+returned in the `merged` entry of the sheet's hash as a list of
+top-left, bottom-right coordinate pars (col, row, col, row). For
+given example, that would be:
+
+    $ss->{merged} = [
+       [ 1, 2, 1, 3 ], # A2-A3
+       [ 2, 1, 3, 2 ], # B1-C2
+       ];
+
+When the attributes are also enabled, there is some merge information
+copied directly from the cell information, but again, that stems from
+code analysis and not from documentation:
+
+    my $ss = ReadData ("merged.xlsx", attr => 1)->[1];
+    foreach my $row (1 .. $ss->{maxrow}) {
+        foreach my $col (1 .. $ss->{maxcol}) {
+            my $cell = cr2cell ($col, $row);
+            printf "%s %-3s %d  ", $cell, $ss->{$cell},
+                $ss->{attr}[$col][$row]{merged};
+            }
+        print "\n";
+        }
+
+    A1     0  B1 foo 1  C1     1
+    A2 bar 1  B2     1  C2     1
+    A3     1  B3 urg 0  C3 orc 0
+
+In this example, there is no way to see if `B2` is merged to `A2` or
+to `B1` without analyzing all surrounding cells. This could as well
+mean `A2:A3`, `B1:C1`, `B2:C2`, as `A2:A3`, `B1:B2`, `C1:C2`, as
+`A2:A3`, `B1:C2`.
+Use the [`merged`](#merged) entry described above to find out what
+fields are merged to what other fields.
+
+## Streams from web-resources
+
+If you want to stream a web-resource, and the underlying parser supports it,
+you could use a helper function like this (thanks Corion):
+
+    use HTTP::Tiny;
+    use Spreadsheet::Read;
+
+    # Fetch data and return a filehandle to that data
+    sub fh_from_url {
+        my $url = shift;
+        my $ua  = HTTP::Tiny->new;
+        my $res = $ua->get ($url);
+        open my $fh, "<", \$res->{content};
+        return $fh
+        } # fh_from_url
+
+    my $fh = fh_from_url ("http://example.com/example.csv");
+    my $sheet = Spreadsheet::Read->new ($fh, parser => "csv");
+
+# TOOLS
+
+This modules comes with a few tools that perform tasks from the FAQ, like
+"How do I select only column D through F from sheet 2 into a CSV file?"
+
+If the module was installed without the tools, you can find them here:
+  https://github.com/Tux/Spreadsheet-Read/tree/master/examples
+
+## `xlscat`
+
+Show (parts of) a spreadsheet in plain text, CSV, or HTML
+
+    usage: xlscat   [-s <sep>] [-L] [-n] [-A] [-u] [Selection] file.xls
+                    [-c | -m]                 [-u] [Selection] file.xls
+                     -i                            [-S sheets] file.xls
+       Generic options:
+          -v[#]       Set verbose level (xlscat/xlsgrep)
+          -d[#]       Set debug   level (Spreadsheet::Read)
+          -u          Use unformatted values
+          --noclip    Do not strip empty sheets and
+                      trailing empty rows and columns
+          -e <enc>    Set encoding for input and output
+          -b <enc>    Set encoding for input
+          -a <enc>    Set encoding for output
+       Input CSV:
+          --in-sep=c  Set input sep_char for CSV
+       Input XLS:
+          --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                      the default replacement is 'yyyy-mm-dd'
+       Output Text (default):
+          -s <sep>    Use separator <sep>. Default '|', \n allowed
+          -L          Line up the columns
+          -n [skip]   Number lines (prefix with column number)
+                      optionally skip <skip> (header) lines
+          -A          Show field attributes in ANSI escapes
+          -h[#]       Show # header lines
+       Output Index only:
+          -i          Show sheet names and size only
+       Output CSV:
+          -c          Output CSV, separator = ','
+          -m          Output CSV, separator = ';'
+       Output HTML:
+          -H          Output HTML
+       Selection:
+          -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                      Default only prints the first sheet
+          -R <rows>   Only print rows    <rows>. Default is 'all'
+          -C <cols>   Only print columns <cols>. Default is 'all'
+          -F <flds>   Only fields <flds> e.g. -FA3,B16
+       Ordering (column numbers in result set *after* selection):
+          --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                      +#   - first # lines do not sort (header)
+                      #    - order on column # lexical ascending
+                      #n   - order on column # numeric ascending
+                      #r   - order on column # lexical descending
+                      #rn  - order on column # numeric descending
+
+## `xlsgrep`
+
+Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
+
+    usage: xlsgrep  [-s <sep>] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
+                    [-c | -m]                 [-u] [Selection] pattern file.xls
+                     -i                            [-S sheets] pattern file.xls
+       Generic options:
+          -v[#]       Set verbose level (xlscat/xlsgrep)
+          -d[#]       Set debug   level (Spreadsheet::Read)
+          -u          Use unformatted values
+          --noclip    Do not strip empty sheets and
+                      trailing empty rows and columns
+          -e <enc>    Set encoding for input and output
+          -b <enc>    Set encoding for input
+          -a <enc>    Set encoding for output
+       Input CSV:
+          --in-sep=c  Set input sep_char for CSV
+       Input XLS:
+          --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                      the default replacement is 'yyyy-mm-dd'
+       Output Text (default):
+          -s <sep>    Use separator <sep>. Default '|', \n allowed
+          -L          Line up the columns
+          -n [skip]   Number lines (prefix with column number)
+                      optionally skip <skip> (header) lines
+          -A          Show field attributes in ANSI escapes
+          -h[#]       Show # header lines
+       Grep options:
+          -i          Ignore case
+          -w          Match whole words only
+       Output CSV:
+          -c          Output CSV, separator = ','
+          -m          Output CSV, separator = ';'
+       Output HTML:
+          -H          Output HTML
+       Selection:
+          -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                      Default only prints the first sheet
+          -R <rows>   Only print rows    <rows>. Default is 'all'
+          -C <cols>   Only print columns <cols>. Default is 'all'
+          -F <flds>   Only fields <flds> e.g. -FA3,B16
+       Ordering (column numbers in result set *after* selection):
+          --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                      +#   - first # lines do not sort (header)
+                      #    - order on column # lexical ascending
+                      #n   - order on column # numeric ascending
+                      #r   - order on column # lexical descending
+                      #rn  - order on column # numeric descending
+
+## `xls2csv`
+
+Convert a spreadsheet to CSV. This is just a small wrapper over `xlscat`.
+
+    usage: xls2csv [ -o file.csv ] file.xls
+
+## `ss2tk`
+
+Show a spreadsheet in a perl/Tk spreadsheet widget
+
+    usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]
+           -w <width> use <width> as default column width (4)
+
+## `ssdiff`
+
+Show the differences between two spreadsheets.
+
+    usage: examples/ssdiff [--verbose[=1]] file.xls file.xlsx
+
+# TODO
+
+- Options
+    - Module Options
+
+        New Spreadsheet::Read options are bound to happen. I'm thinking of an
+        option that disables the reading of the data entirely to speed up an
+        index request (how many sheets/fields/columns). See `xlscat -i`.
+
+    - Parser options
+
+        Try to transparently support as many options as the encapsulated modules
+        support regarding (un)formatted values, (date) formats, hidden columns
+        rows or fields etc. These could be implemented like `attr` above but
+        names `meta`, or just be new values in the `attr` hashes.
+- Other parsers
+
+    Add support for new(er) parsers for already supported formats, like
+
+    - Data::XLSX::Parser
+
+        Data::XLSX::Parser provides faster way to parse Microsoft Excel's .xlsx
+        files. The implementation of this module is highly inspired from Python's
+        FastXLSX library.
+
+        This is SAX based parser, so you can parse very large XLSX file with
+        lower memory usage.
+
+- Other spreadsheet formats
+
+    I consider adding any spreadsheet interface that offers a usable API.
+
+    Under investigation:
+
+    - Gnumeric (.gnumeric)
+
+        I have seen no existing CPAN module yet.
+
+        It is gzip'ed XML
+
+    - Kspread (.ksp)
+
+        Now knows as Calligra Sheets.
+
+        I have seen no existing CPAN module yet.
+
+        It is XML in ZIP
+
+- Alternative parsers for existing formats
+
+    As long as the alternative has a good reason for its existence, and the
+    API of that parser reasonable fits in my approach, I will consider to
+    implement the glue layer, or apply patches to do so as long as these
+    match what `CONTRIBUTING.md` describes.
+
+# SEE ALSO
+
+- Text::CSV\_XS, Text::CSV\_PP
+
+    See [Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS) ,
+    [Text::CSV\_PP](https://metacpan.org/release/Text-CSV) , and
+    [Text::CSV](https://metacpan.org/release/Text-CSV) documentation.
+
+    [Text::CSV](https://metacpan.org/release/Text-CSV) is a wrapper over Text::CSV\_XS (the fast XS version) and/or
+    [Text::CSV\_PP](https://metacpan.org/release/Text-CSV) (the pure perl version).
+
+- Spreadsheet::ParseExcel
+
+    [Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel) is
+    the best parser for old-style Microsoft Excel (.xls) files.
+
+- Spreadsheet::ParseXLSX
+
+    [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX) is
+    like [Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel),
+    but for new Microsoft Excel 2007+ files (.xlsx). They have the same API.
+
+    This module uses [XML::Twig](https://metacpan.org/release/XML-Twig) to parse the
+    internal XML.
+
+- Spreadsheet::XLSX
+
+    See [Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX)
+    documentation.
+
+    This module is dead and deprecated. It is **buggy and unmaintained**.  _Please_
+    use [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX)
+    instead.
+
+- Spreadsheet::ParseODS
+
+    [Spreadsheet::ParseODS](https://metacpan.org/release/Spreadsheet-ParseODS) is a
+    parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files. It is the
+    successor of  [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC).
+
+- Spreadsheet::ReadSXC
+
+    [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC) is a
+    parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files.
+
+- Spreadsheet::BasicRead
+
+    See [Spreadsheet::BasicRead](https://metacpan.org/release/Spreadsheet-BasicRead)
+    for xlscat-like functionality (Excel only)
+
+- Spreadsheet::ConvertAA
+
+    See [Spreadsheet::ConvertAA](https://metacpan.org/release/Spreadsheet-ConvertAA)
+    for an alternative set of ["cell2cr"](#cell2cr)/["cr2cell"](#cr2cell) pair.
+
+- Spreadsheet::Perl
+
+    [Spreadsheet::Perl](https://metacpan.org/release/Spreadsheet-Perl) offers a Pure
+    Perl implementation of a spreadsheet engine.  Users that want this format to be
+    supported in Spreadsheet::Read are hereby motivated to offer patches. It is
+    not high on my TODO-list.
+
+- Spreadsheet::CSV
+
+    [Spreadsheet::CSV](https://metacpan.org/release/Spreadsheet-CSV) offers the
+    interesting approach of seeing all supported spreadsheet formats as if it were
+    CSV, mimicking the [Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS)
+    interface.
+
+- xls2csv
+
+    [xls2csv](https://github.com/Tux/Spreadsheet-Read/blob/master/examples/xls2csv)
+    offers an alternative for my `xlscat -c`, in the xls2csv tool, but this tool
+    focuses on character encoding transparency, and requires some other modules.
+
+# AUTHOR
+
+H.Merijn Brand, <h.m.brand@xs4all.nl>
+
+# COPYRIGHT AND LICENSE
+
+Copyright (C) 2005-2020 H.Merijn Brand
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
