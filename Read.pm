@@ -14,6 +14,7 @@ package Spreadsheet::Read;
  my $book  = ReadData ("test.ods");
  my $book  = ReadData ("test.xls");
  my $book  = ReadData ("test.xlsx");
+ my $book  = ReadData ("test.xlsm");
  my $book  = ReadData ($fh, parser => "xls");
 
  Spreadsheet::Read::add ($book, "sheet.csv");
@@ -55,7 +56,7 @@ my @parsers = (
     [ csv  => "Text::CSV",				"1.17"		],
     [ ods  => "Spreadsheet::ParseODS",			"0.24"		],
     [ ods  => "Spreadsheet::ReadSXC",			"0.20"		],
-    [ sxc  => "Spreadsheet::ParseODS",			"0.24"		],
+    [ sxc  => "Spreadsheet::ParseODS",			"0.25"		],
     [ sxc  => "Spreadsheet::ReadSXC",			"0.20"		],
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
@@ -169,6 +170,7 @@ sub _parser {
     # Aliases and fullnames
     $type eq "excel"		and return "xls";
     $type eq "excel2007"	and return "xlsx";
+    $type eq "xlsm"		and return "xlsx";
     $type eq "oo"		and return $ods;
 #   $type eq "sxc"		and return $ods;
     $type eq "openoffice"	and return $ods;
@@ -589,13 +591,14 @@ sub ReadData {
 	    $io_txt = 0;
 	    $_parser = _parser ($opt{parser} = "xlsx");
 	    }
-	elsif (!$io_ref && $txt =~ m/\.xlsx?$/i) {
+	elsif (!$io_ref && $txt =~ m/\.xls[xm]?$/i) {
 	    $@ = "Cannot open $txt as file";
 	    return;
 	    }
 	}
     if ($opt{parser} ? $_parser =~ m/^(?:xlsx?|ods)$/
-		     : ($io_fil && $txt =~ m/\.(xlsx?|ods)$/i && ($_parser = $1))
+		     : ($io_fil && $txt =~ m/\.(xls[xm]?|ods)$/i &&
+			    ($_parser = _parser ($1)))
 		   and ($can{$_parser} || "") !~ m/sxc/i) {
 	my $parse_type = $_parser =~ m/ods/i ? "ODS"
 		       : $_parser =~ m/x$/i  ? "XLSX" : "XLS";
