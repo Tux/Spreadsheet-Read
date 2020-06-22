@@ -595,6 +595,26 @@ sub ReadData {
 	    $io_txt = 0;
 	    $_parser = _parser ($opt{parser} = "xlsx");
 	    }
+	elsif ( # /usr/share/misc/magic
+		$txt =~ m{\APK\003\004.{9,30}\Qmimetypeapplication/vnd.oasis.opendocument.spreadsheet}
+		) {
+	    $can{ods} or croak "ODS parser not installed";
+        #warn "Looks like an ODS file passed in as plain string";
+	    my $tmpfile;
+	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
+            #warn "Opening an in-memory fh to it";
+		$tmpfile = \$txt;
+		}
+	    else {
+		$tmpfile = File::Temp->new (SUFFIX => ".ods", UNLINK => 1);
+		binmode $tmpfile;
+		print   $tmpfile $txt;
+		close   $tmpfile;
+		}
+	    open $io_ref, "<", $tmpfile or do { $@ = $!; return };
+	    $io_txt = 0;
+	    $_parser = _parser ($opt{parser} = "ods");
+	    }
 	elsif (!$io_ref && $txt =~ m/\.xls[xm]?$/i) {
 	    $@ = "Cannot open $txt as file";
 	    return;
