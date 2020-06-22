@@ -620,12 +620,10 @@ sub ReadData {
 	    return;
 	    }
 	}
-    if ($opt{parser} ? $_parser =~ m/^(?:xlsx?|ods)$/
-		     : ($io_fil && $txt =~ m/\.(xls[xm]?|ods)$/i &&
-			    ($_parser = _parser ($1)))
-		   and ($can{$_parser} || "") !~ m/sxc/i) {
-	my $parse_type = $_parser =~ m/ods/i ? "ODS"
-		       : $_parser =~ m/x$/i  ? "XLSX" : "XLS";
+    if ($opt{parser} ? $_parser =~ m/^(?:xlsx?)$/
+		     : ($io_fil && $txt =~ m/\.(xls[xm]?)$/i &&
+			    ($_parser = _parser ($1)))) {
+	my $parse_type = $_parser =~ m/x$/i  ? "XLSX" : "XLS";
 	my $parser = $can{lc $parse_type} or
 	    croak "Parser for $parse_type is not installed";
 	#$debug and print STDERR __FILE__, "#", __LINE__, " | $_parser | $parser | $parse_type\n";
@@ -634,15 +632,11 @@ sub ReadData {
 	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
 	my $oBook = eval {
 	    $io_ref
-	      ? $parse_type eq "ODS"
-		? $parser->new (%parser_opts)->parse ($io_ref)
-	        : $parse_type eq "XLSX"
+		? $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($io_ref)
 		: $parser->new (%parser_opts)->parse ($io_ref)
 		: $parser->new (%parser_opts)->Parse ($io_ref)
-	      : $parse_type eq "ODS"
-		? $parser->new (%parser_opts)->parse ($txt)
 	        : $parse_type eq "XLSX"
 		? $can{xlsx} =~ m/::XLSX$/
 		? $parser->new ($txt)
@@ -915,6 +909,209 @@ sub ReadData {
 				    $sheet{$cell} = $sheet{$p_cell};
 				    }
 				}
+			    }
+			}
+		    }
+		}
+	    for (@{$sheet{cell}}) {
+		defined or $_ = [];
+		}
+	    push @data, { %sheet };
+#	    $data[0]{sheets}++;
+	    if ($sheet{label} eq "-- unlabeled --") {
+		$sheet{label} = "";
+		}
+	    else {
+		$data[0]{sheet}{$sheet{label}} = $#data;
+		}
+	    }
+	return _clipsheets \%opt, [ @data ];
+	}
+    if ($opt{parser} ? $_parser =~ m/^(ods)$/
+		     : ($io_fil && $txt =~ m/(ods)$/i &&
+			    ($_parser = _parser ($1)))
+		   and ($can{$_parser} || "") !~ m/sxc/i) {
+	my $parse_type = "ODS";
+	my $parser = $can{lc $parse_type} or
+	    croak "Parser for $parse_type is not installed";
+	#$debug and print STDERR __FILE__, "#", __LINE__, " | $_parser | $parser | $parse_type\n";
+	$debug and print STDERR "Opening $parse_type ", $io_ref ? "<REF>" : $txt,
+	    " using $parser-", $can{lc $parse_type}->VERSION, "\n";
+	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
+	my $oBook = eval {
+	    $io_ref
+		? $parser->new (%parser_opts)->parse ($io_ref)
+		: $parser->new (%parser_opts)->parse ($txt)
+	    };
+	unless ($oBook) {
+	    # cleanup will fail on folders with spaces.
+	    (my $msg = $@) =~ s/ at \S+ line \d+.*//s;
+	    croak "$parse_type parser cannot parse data: $msg";
+	    }
+	$debug > 8 and _dump (oBook => $oBook);
+
+	my @data = ( {
+	    type	=> lc $parse_type,
+	    parser	=> $can{lc $parse_type},
+	    version	=> $can{lc $parse_type}->VERSION,
+	    parsers	=> [{
+		type	=> lc $parse_type,
+		parser	=> $can{lc $parse_type},
+		version	=> $can{lc $parse_type}->VERSION,
+		}],
+	    error	=> undef,
+	    sheets	=> scalar $oBook->worksheets,
+	    sheet	=> {},
+	    } );
+	# $debug and $data[0]{_parser} = $oBook;
+
+	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
+	my $active_sheet = $oBook->get_active_sheet;
+	my $current_sheet = 0;
+	foreach my $oWkS ($oBook->worksheets) {
+	    $current_sheet++;
+	    $opt{clip} and $oWkS->row_max == 0 and $oWkS->col_max == 0 and next; # Skip empty sheets
+	    my %sheet = (
+		parser	=> 0,
+		label	=> $oWkS->label,
+		maxrow	=> $oWkS->row_max+1,
+		maxcol	=> $oWkS->col_max+1,
+		cell	=> [],
+		attr	=> [],
+		merged  => [],
+		active	=> 0,
+		);
+	    # $debug and $sheet{_parser} = $oWkS;
+	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
+	    $sheet{merged} = [
+		map  {  $_->[0] }
+		sort {  $a->[1] cmp $b->[1] }
+		map  {[ $_, pack "NNNN", @$_          ]}
+		map  {[ map { $_ + 1 } @{$_}[1,0,3,2] ]}
+		@{$oWkS->get_merged_areas || []}];
+	    my $sheet_idx = 1 + @data;
+	    $debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} x $sheet{maxcol}\n";
+	    if (defined $active_sheet) {
+		# _SheetNo is 0-based
+		my $sheet_no = defined $oWkS->{_SheetNo} ? $oWkS->{_SheetNo} : $current_sheet - 1;
+		$sheet_no eq $active_sheet and $sheet{active} = 1;
+		}
+	    # Sheet keys:
+	    # _Book          FooterMargin   MinCol         RightMargin
+	    # BottomMargin   FooterMergin   MinRow         RightMergin
+	    # BottomMergin   HCenter        Name           RowHeight
+	    # Cells          Header         NoColor        RowHidden
+	    # ColFmtNo       HeaderMargin   NoOrient       Scale
+	    # ColHidden      HeaderMergin   NoPls          SheetHidden
+	    # ColWidth       Kind           Notes          _SheetNo
+	    # Copis          Landscape      PageFit        SheetType
+	    # DefColWidth    LeftMargin     PageStart      SheetVersion
+	    # DefRowHeight   LeftMergin     PaperSize      TopMargin
+	    # Draft          LeftToRight    _Pos           TopMergin
+	    # FitHeight      MaxCol         PrintGrid      UsePage
+	    # FitWidth       MaxRow         PrintHeaders   VCenter
+	    # Footer         MergedArea     Res            VRes
+	    if (exists $oWkS->{MinRow}) {
+		my $hiddenRows = $oWkS->{RowHidden} || [];
+		my $hiddenCols = $oWkS->{ColHidden} || [];
+		if ($opt{clip}) {
+		    my ($mr, $mc) = (-1, -1);
+		    foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
+			foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
+			    my $oWkC = $oWkS->{Cells}[$r][$c] or next;
+			    defined (my $val = $oWkC->{Val})  or next;
+			    $val eq "" and next;
+			    $r > $mr and $mr = $r;
+			    $c > $mc and $mc = $c;
+			    }
+			}
+		    ($sheet{maxrow}, $sheet{maxcol}) = ($mr + 1, $mc + 1);
+		    }
+		foreach my $r ($oWkS->{MinRow} .. $sheet{maxrow}) {
+		    foreach my $c ($oWkS->{MinCol} .. $sheet{maxcol}) {
+			my $oWkC = $oWkS->{Cells}[$r][$c] or next;
+			#defined (my $val = $oWkC->{Val}) or next;
+			my $val = $oWkC->{Val};
+			if (defined $val and my $enc = $oWkC->{Code}) {
+			    $enc eq "ucs2" and $val = decode ("utf-16be", $val);
+			    }
+			my $cell = cr2cell ($c + 1, $r + 1);
+			$opt{rc} and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
+
+			my $fmt;
+			my $FmT = $oWkC->{Format};
+			if ($FmT) {
+			    unless (ref $FmT) {
+				$fmt = $FmT;
+				$FmT = {};
+				}
+			    }
+			else {
+			    $FmT = {};
+			    }
+			foreach my $attr (qw( AlignH AlignV FmtIdx Hidden Lock
+					      Wrap )) {
+			    exists $FmT->{$attr} or $FmT->{$attr} = 0;
+			    }
+			exists $FmT->{Fill} or $FmT->{Fill} = [ 0 ];
+			exists $FmT->{Font} or $FmT->{Font} = undef;
+
+			unless (defined $fmt) {
+			    $fmt = $FmT->{FmtIdx}
+			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
+			       : undef;
+			    }
+			if ($oWkC->{Type} eq "Numeric") {
+			    # Fixed in 0.33 and up
+			    # see Spreadsheet/ParseExcel/FmtDefault.pm
+			    $FmT->{FmtIdx} == 0x0e ||
+			    $FmT->{FmtIdx} == 0x0f ||
+			    $FmT->{FmtIdx} == 0x10 ||
+			    $FmT->{FmtIdx} == 0x11 ||
+			    $FmT->{FmtIdx} == 0x16 ||
+			    (defined $fmt && $fmt =~ m{^[dmy][-\\/dmy]*$}) and
+				$oWkC->{Type} = "Date";
+			    $FmT->{FmtIdx} == 0x09 ||
+			    $FmT->{FmtIdx} == 0x0a ||
+			    (defined $fmt && $fmt =~ m{^0+\.0+%$}) and
+				$oWkC->{Type} = "Percentage";
+			    }
+			defined $fmt and $fmt =~ s/\\//g;
+			$opt{cells} and	# Formatted value
+			    $sheet{$cell} = defined $val
+				? $oWkC->value : undef;
+			if ($opt{attr}) {
+			    my $FnT = $FmT->{Font};
+			    my $fmi = $FmT->{FmtIdx}
+			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
+			       : undef;
+			    $fmi and $fmi =~ s/\\//g;
+			    $sheet{attr}[$c + 1][$r + 1] = {
+				@def_attr,
+
+				type    => lc $oWkC->{Type},
+				enc     => $oWkC->{Code},
+				merged  => (defined $oWkC->{Merged} ? $oWkC->{Merged} : $oWkC->is_merged) || 0,
+				hidden  => ($hiddenRows->[$r] || $hiddenCols->[$c] ? 1 :
+					    defined $oWkC->{Hidden} ? $oWkC->{Hidden} : $FmT->{Hidden})   || 0,
+				locked  => $FmT->{Lock}     || 0,
+				format  => $fmi,
+				halign  => [ undef, qw( left center right
+					   fill justify ), undef,
+					   "equal_space" ]->[$FmT->{AlignH}],
+				valign  => [ qw( top center bottom justify
+					   equal_space )]->[$FmT->{AlignV}],
+				wrap    => $FmT->{Wrap},
+				font    => $FnT->{Name},
+				size    => $FnT->{Height},
+				bold    => $FnT->{Bold},
+				italic  => $FnT->{Italic},
+				uline   => $FnT->{Underline},
+				fgcolor => _xls_color ($FnT->{Color}),
+				bgcolor => _xls_fill  (@{$FmT->{Fill}}),
+				formula => $oWkC->{Formula},
+				};
+			    #_dump "cell", $sheet{attr}[$c + 1][$r + 1];
 			    }
 			}
 		    }
