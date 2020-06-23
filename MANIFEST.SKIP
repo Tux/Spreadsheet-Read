@@ -11,10 +11,9 @@ blib/
 doc/
 color.pl
 cover_db/
-Makefile
+Makefile$
 MANIFEST.SKIP
-MYMETA.json
-MYMETA.yml
+MYMETA\.
 pm_to_blib
 pprove
 Rsync
@@ -32,3 +31,4 @@ t/634_dates.t
 t/635_perc.t
 t/637_merged.t
 ^xt/
+^test\.pl
