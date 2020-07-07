@@ -14,7 +14,7 @@ Spreadsheet::Read::parses ("ods") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_ODS}";
 
 my $ods;
-ok ($ods = ReadData ("files/attr.ods", attr => 1, debug => 99), "Excel Attributes testcase");
+ok ($ods = ReadData ("files/attr.ods", attr => 1), "Excel Attributes testcase");
 
 SKIP: {
     ok (my $clr = $ods->[$ods->[0]{sheet}{Colours}], "colors");
