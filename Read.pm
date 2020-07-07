@@ -161,6 +161,7 @@ sub _dump {
     else {
 	print STDERR Data::Dumper->Dump ([$ref], [$label]);
 	}
+    say STDERR join ", " => map { defined $_ ? $_ : "-" } caller (1);
     } # _dump
 
 sub _parser {
@@ -423,7 +424,7 @@ sub ReadData {
     exists $opt{strip}	or $opt{strip}	= $def_opts{strip};
     exists $opt{dtfmt}	or $opt{dtfmt}	= $def_opts{dtfmt};
 
-    # $debug = $opt{debug} // 0;
+    # $debug = $opt{debug} || 0;
     $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
     $debug > 4 and _dump (Options => \%opt);
 
@@ -653,7 +654,6 @@ sub ReadData {
 	    sheets	=> $oBook->{SheetCount} || 0,
 	    sheet	=> {},
 	    } );
-	# $debug and $data[0]{_parser} = $oBook;
 	# Overrule the default date format strings
 	my %def_fmt = (
 	    0x0E	=> lc $opt{dtfmt},	# m-d-yy
@@ -668,15 +668,17 @@ sub ReadData {
 		: Spreadsheet::ParseExcel::FmtDefault->new
 	    :     Spreadsheet::ParseExcel::FmtDefault->new;
 
+	$debug > 20 and _dump ("oBook before conversion", $oBook);
 	if ($parse_type eq "ODS" and !exists $oBook->{SheetCount}) {
-	    my $s = delete $oBook->{_sheets};
-	    #use DP;$opt{debug} > 9 and die DDumper $s;
-	    if ($s && ref $s eq "ARRAY") {
-		$data[0]{sheets} = $oBook->{SheetCount} = scalar @{$s};
+	    my $styles = delete $oBook->{_styles};
+	    my $sheets = delete $oBook->{_sheets};
+	    if ($sheets && ref $sheets eq "ARRAY") {
+		$styles = ($styles || {})->{styles} || {};
+		$data[0]{sheets} = $oBook->{SheetCount} = scalar @{$sheets};
 		$oBook->{Worksheet} = [];
 		*S::R::Sheet::get_merged_areas = sub { [] };
 		my $x = 0;
-		foreach my $sh (@{$s}) {
+		foreach my $sh (@{$sheets}) {
 		    push @{$oBook->{Worksheet}} => bless {
 			Name		=> $sh->{label},
 			Cells		=> [],
@@ -705,10 +707,13 @@ sub ReadData {
 			    Formula	=> $_->{formula},
 			    Hidden	=> undef,
 			    Merged	=> undef,
-			    Type	=> $_->{type}  // "",
-			    Val		=> $_->{value} // $_->{unformatted},
-			    Raw		=> $_->{unformatted} // $_->{value},
-			    _Style	=> $_->{style},
+			    # use || instead of // for now
+			    # even though it is undesirable
+			    Type	=> $_->{type}  || "",
+			    Val		=> $_->{value} || $_->{unformatted},
+			    Raw		=> $_->{unformatted} || $_->{value},
+			    _Style	=> $styles->{$_->{style} || ""}
+			                || $_->{style},
 			    # hyperlink
 			    } => "S::R::Cell" } @{$row} ];
 			}
@@ -716,7 +721,6 @@ sub ReadData {
 			   $oBook->{Worksheet}[-1]{MaxRow} = $r;
 		    }
 		}
-	    #use DP;$opt{debug} > 9 and die DDumper $oBook;
 	    }
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
@@ -725,6 +729,7 @@ sub ReadData {
 			|| $oBook->{SelectedSheet};
 	my $current_sheet = 0;
 	foreach my $oWkS (@{$oBook->{Worksheet}}) {
+	    $debug > 8 and _dump ("oWkS", $oWkS);
 	    $current_sheet++;
 	    $opt{clip} and !defined $oWkS->{Cells} and next; # Skip empty sheets
 	    my %sheet = (
