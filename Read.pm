@@ -668,6 +668,55 @@ sub ReadData {
 		: Spreadsheet::ParseExcel::FmtDefault->new
 	    :     Spreadsheet::ParseExcel::FmtDefault->new;
 
+	if ($parse_type eq "ODS" and !exists $oBook->{SheetCount}) {
+	    my $s = delete $oBook->{_sheets};
+	    if ($s && ref $s eq "ARRAY") {
+		$data[0]{sheets} = $oBook->{SheetCount} = scalar @{$s};
+		$oBook->{Worksheet} = [];
+		*S::R::Sheet::get_merged_areas = sub { [] };
+		my $x = 0;
+		foreach my $sh (@{$s}) {
+		    push @{$oBook->{Worksheet}} => bless {
+			Name		=> $sh->{label},
+			Cells		=> [],
+			MinRow		=> $sh->{col_min},
+			MaxRow		=> $sh->{row_max},
+			MinCol		=> $sh->{col_min},
+			MaxCol		=> $sh->{row_max},
+			RowHidden	=> $sh->{hidden_rows},
+			ColHidden	=> $sh->{hidden_cols},
+			_SheetNo	=> $x++,
+			} => "S::R::Sheet";
+		    # header_cols
+		    # header_rows
+		    # print_areas
+		    # sheet_hidden
+		    # tab_color
+		    *S::R::Cell::Value = sub { $_[0]{Raw} };
+		    my $r = 0;
+		    foreach my $row (@{$sh->{data}}) {
+			$#$row > $oBook->{Worksheet}[-1]{MaxCol} and
+				 $oBook->{Worksheet}[-1]{MaxCol} = $#$row;
+			$oBook->{Worksheet}[-1]{Cells}[$r++] = [ map { bless {
+			    Code	=> undef,
+			    Format	=> $_->{format},
+			    Formula	=> $_->{formula},
+			    Hidden	=> undef,
+			    Merged	=> undef,
+			    Type	=> $_->{type},
+			    Val		=> $_->{value} // $_->{unformatted},
+			    Raw		=> $_->{unformatted} // $_->{value},
+			    # hyperlink
+			    # style
+			    } => "S::R::Cell" } @{$row} ];
+			}
+		    --$r > $oBook->{Worksheet}[-1]{MaxRow} and
+			   $oBook->{Worksheet}[-1]{MaxRow} = $r;
+		    }
+		}
+	    #use DP;$opt{debug} > 9 and die DDumper $oBook;
+	    }
+
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
 	my $active_sheet = $oBook->get_active_sheet
 			|| $oBook->{ActiveSheet}
