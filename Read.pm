@@ -705,7 +705,7 @@ sub ReadData {
 			    Formula	=> $_->{formula},
 			    Hidden	=> undef,
 			    Merged	=> undef,
-			    Type	=> $_->{type},
+			    Type	=> $_->{type}  // "",
 			    Val		=> $_->{value} // $_->{unformatted},
 			    Raw		=> $_->{unformatted} // $_->{value},
 			    _Style	=> $_->{style},
