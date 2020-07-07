@@ -1,0 +1,29 @@
+#!/pro/bin/perl
+
+use 5.14.2;
+use warnings;
+
+our $VERSION = "0.01 - 20200707";
+our $CMD = $0 =~ s{.*/}{}r;
+
+sub usage {
+    my $err = shift and select STDERR;
+    say "usage: $CMD ...";
+    exit $err;
+    } # usage
+
+use lib qw( . lib blib );
+use Data::Peek;
+use Spreadsheet::Read;
+use Getopt::Long qw(:config bundling passthrough);
+GetOptions (
+    "help|?"		=> sub { usage (0); },
+    "V|version"		=> sub { say "$CMD [$VERSION]"; exit 0; },
+
+    "d|dump!"		=> \ my $opt_d,
+
+    "v|verbose:1"	=> \(my $opt_v = 0),
+    ) or usage (1);
+
+my $ss = Spreadsheet::Read->new (@ARGV);
+$opt_d and DDumper $ss;
