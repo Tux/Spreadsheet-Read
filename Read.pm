@@ -670,6 +670,7 @@ sub ReadData {
 
 	if ($parse_type eq "ODS" and !exists $oBook->{SheetCount}) {
 	    my $s = delete $oBook->{_sheets};
+	    #use DP;$opt{debug} > 9 and die DDumper $s;
 	    if ($s && ref $s eq "ARRAY") {
 		$data[0]{sheets} = $oBook->{SheetCount} = scalar @{$s};
 		$oBook->{Worksheet} = [];
@@ -692,7 +693,8 @@ sub ReadData {
 		    # print_areas
 		    # sheet_hidden
 		    # tab_color
-		    *S::R::Cell::Value = sub { $_[0]{Raw} };
+		    *S::R::Cell::Value     = sub { $_[0]{Raw} };
+		    *S::R::Cell::is_merged = sub { 0 };
 		    my $r = 0;
 		    foreach my $row (@{$sh->{data}}) {
 			$#$row > $oBook->{Worksheet}[-1]{MaxCol} and
@@ -706,8 +708,8 @@ sub ReadData {
 			    Type	=> $_->{type},
 			    Val		=> $_->{value} // $_->{unformatted},
 			    Raw		=> $_->{unformatted} // $_->{value},
+			    _Style	=> $_->{style},
 			    # hyperlink
-			    # style
 			    } => "S::R::Cell" } @{$row} ];
 			}
 		    --$r > $oBook->{Worksheet}[-1]{MaxRow} and

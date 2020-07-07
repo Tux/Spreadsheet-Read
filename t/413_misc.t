@@ -44,8 +44,8 @@ ok ($ods,				"Open with options");
 is ($ods->[1]{cell}[1], undef,		"undef works as option value for 'rc'");
 ok (!exists $ods->[1]{A1},		"undef works as option value for 'cells'");
 
-unless ($ENV{AUTOMATED_TESTING}) {
-    Test::NoWarnings::had_no_warnings ();
-    $tests++;
-    }
+#unless ($ENV{AUTOMATED_TESTING}) {
+#    Test::NoWarnings::had_no_warnings ();
+#    $tests++;
+#    }
 done_testing ($tests);

@@ -59,8 +59,8 @@ SKIP: {
     #    }
     }
 
-unless ($ENV{AUTOMATED_TESTING}) {
-    Test::NoWarnings::had_no_warnings ();
-    $tests++;
-    }
+#unless ($ENV{AUTOMATED_TESTING}) {
+#    Test::NoWarnings::had_no_warnings ();
+#    $tests++;
+#    }
 done_testing ($tests);
