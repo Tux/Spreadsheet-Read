@@ -9,6 +9,7 @@
       - version 0.25 should now pass the limited tests
     * It's 2020
     * Fallback to Pod::Text if nroff not available in tools
+    * Extended support for merged cells with merge option
 
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019

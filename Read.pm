@@ -130,6 +130,7 @@ my %def_opts = (
     sep     => undef,
     quote   => undef,
     label   => undef,
+    merge   => 0,
     );
 my @def_attr = (
     type    => "text",
@@ -424,6 +425,7 @@ sub ReadData {
     exists $opt{clip}	or $opt{clip}	= $opt{cells};
     exists $opt{strip}	or $opt{strip}	= $def_opts{strip};
     exists $opt{dtfmt}	or $opt{dtfmt}	= $def_opts{dtfmt};
+    exists $opt{merge}	or $opt{merge}	= $def_opts{merge};
 
     # $debug = $opt{debug} || 0;
     $debug = defined $opt{debug} ? $opt{debug} : $def_opts{debug};
@@ -855,12 +857,13 @@ sub ReadData {
 			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			       : undef;
 			    $fmi and $fmi =~ s/\\//g;
+			    my $merged = (defined $oWkC->{Merged} ? $oWkC->{Merged} : $oWkC->is_merged) || 0;
 			    $sheet{attr}[$c + 1][$r + 1] = {
 				@def_attr,
 
 				type    => lc $oWkC->{Type},
 				enc     => $oWkC->{Code},
-				merged  => (defined $oWkC->{Merged} ? $oWkC->{Merged} : $oWkC->is_merged) || 0,
+				merged  => $merged,
 				hidden  => ($hiddenRows->[$r] || $hiddenCols->[$c] ? 1 :
 					    defined $oWkC->{Hidden} ? $oWkC->{Hidden} : $FmT->{Hidden})   || 0,
 				locked  => $FmT->{Lock}     || 0,
@@ -881,6 +884,17 @@ sub ReadData {
 				formula => $oWkC->{Formula},
 				};
 			    #_dump "cell", $sheet{attr}[$c + 1][$r + 1];
+			    if ($opt{merge} && $merged and
+				    my $p_cell = Spreadsheet::Read::Sheet::merged_from (\%sheet, $c + 1, $r + 1)) {
+				warn $p_cell;
+				$sheet{attr}[$c + 1][$r + 1]{merged} = $p_cell;
+				if ($cell ne $p_cell) {
+				    my ($C, $R) = cell2cr ($p_cell);
+				    $sheet{cell}[$c + 1][$r + 1] =
+					$sheet{cell}[$C][$R];
+				    $sheet{$cell} = $sheet{$p_cell};
+				    }
+				}
 			    }
 			}
 		    }
@@ -1218,6 +1232,25 @@ sub rows {
 	} 1..$sheet->{maxrow};
     } # rows
 
+sub merged_from {
+    my ($sheet, @id, $col, $row) = @_;
+    my $ma = $sheet->{merged} or return;
+    if (@id == 2 && $id[0] =~ m/^[0-9]+$/ && $id[1] =~ m/^[0-9]+$/) {
+	($col, $row) = @id;
+	}
+    elsif (@id && $id[0] && exists $sheet->{$id[0]}) {
+	($col, $row) = cell2cr ($id[0]);
+	}
+    defined $row && $row > 0 && $row <= $sheet->{maxrow} or return;
+    defined $col && $col > 0 && $col <= $sheet->{maxcol} or return;
+    foreach my $range (@{$ma}) {
+	my ($ctl, $rtl, $cbr, $rbr) = @{$range};
+	$col >= $ctl && $col <= $cbr or next;
+	$row >= $rtl && $row <= $rbr or next;
+	return cr2cell ($ctl, $rtl);
+	}
+    } # cell
+
 1;
 
 __END__
@@ -1474,6 +1507,13 @@ store/replace/change the date field separator in already stored formats
 if you change your locale settings. So the above mentioned default can
 be either "C<m-d-yy>" OR "C<m/d/yy>" depending on what that specific
 character happened to be at the time the user saved the file.
+
+=item merge
+
+Copy content to all cells in merged areas.
+
+If supported, this will copy formatted and unformatted values from the
+top-left cell of a merged area to all other cells in the area.
 
 =item debug
 
@@ -1924,7 +1964,7 @@ code analysis and not from documentation:
  foreach my $row (1 .. $ss->{maxrow}) {
      foreach my $col (1 .. $ss->{maxcol}) {
          my $cell = cr2cell ($col, $row);
-         printf "%s %-3s %d  ", $cell, $ss->{$cell},
+         printf "%s %-3s %s  ", $cell, $ss->{$cell},
              $ss->{attr}[$col][$row]{merged};
          }
      print "\n";
@@ -1938,8 +1978,23 @@ In this example, there is no way to see if C<B2> is merged to C<A2> or
 to C<B1> without analyzing all surrounding cells. This could as well
 mean C<A2:A3>, C<B1:C1>, C<B2:C2>, as C<A2:A3>, C<B1:B2>, C<C1:C2>, as
 C<A2:A3>, C<B1:C2>.
+
 Use the L<C<merged>|/merged> entry described above to find out what
-fields are merged to what other fields.
+fields are merged to what other fields or use C<merge>:
+
+ my $ss = ReadData ("merged.xlsx", attr => 1, merge => 1)->[1];
+ foreach my $row (1 .. $ss->{maxrow}) {
+     foreach my $col (1 .. $ss->{maxcol}) {
+         my $cell = cr2cell ($col, $row);
+         printf "%s %-3s %s  ", $cell, $ss->{$cell},
+             $ss->{attr}[$col][$row]{merged};
+         }
+     print "\n";
+     }
+
+ A1     0   B1 foo B1  C1 foo B1
+ A2 bar A2  B2 foo B1  C2 foo B1
+ A3 bar A2  B3 urg 0   C3 orc 0
 
 =head2 Streams from web-resources
 
