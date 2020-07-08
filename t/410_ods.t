@@ -140,20 +140,36 @@ is ($ss->{F1},		"'",   "formatted a single '");
     ok ($ref, " clip strip 1");
     is ($ref->[1]{maxrow},     0,     "maxrow 1");
     is ($ref->[1]{maxcol},     0,     "maxcol 1");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
+    if ($es eq "") {
+	is ($ref->[1]{cell}[1][1], "", "undef (1, 1)");
+	is ($ref->[1]{A1},         "", "undef A1");
+	}
+    else {
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+	}
 	$ref = ReadData ("files/blank.ods", clip => 1, strip => 1, cells => 0);
     ok ($ref, " clip strip 1");
     is ($ref->[1]{maxrow},     0,     "maxrow 1");
     is ($ref->[1]{maxcol},     0,     "maxcol 1");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+    if ($es eq "") {
+	is ($ref->[1]{cell}[1][1], "", "undef (1, 1)");
+	}
+    else {
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	}
     is ($ref->[1]{A1},         undef, "undef A1");
 	$ref = ReadData ("files/blank.ods", clip => 1, strip => 2,             rc => 0);
     ok ($ref, " clip strip 2");
     is ($ref->[1]{maxrow},     0,     "maxrow 1");
     is ($ref->[1]{maxcol},     0,     "maxcol 1");
     is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
+    if ($es eq "") {
+	is ($ref->[1]{A1},         "",    "undef A1");
+	}
+    else {
+	is ($ref->[1]{A1},         undef, "undef A1");
+	}
 	$ref = ReadData ("files/blank.ods", clip => 1, strip => 3, cells => 0, rc => 0);
     ok ($ref, " clip strip 3");
     is ($ref->[1]{maxrow},     0,     "maxrow 1");
