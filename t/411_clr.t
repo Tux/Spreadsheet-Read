@@ -49,12 +49,18 @@ SKIP: {
 	}
     }
 
-ok ($ods = Spreadsheet::Read->new ("files/attr.ods", attr => 1), "Attributes OO");
-is ($ods->[1]{attr}[3][3]{fgcolor},		"#008000", "C3 Forground color direct");
-is ($ods->sheet (1)->attr (3, 3)->{fgcolor},	"#008000", "C3 Forground color OO rc   hash");
-is ($ods->sheet (1)->attr ("C3")->{fgcolor},	"#008000", "C3 Forground color OO cell hash");
-is ($ods->sheet (1)->attr (3, 3)->fgcolor,	"#008000", "C3 Forground color OO rc   method");
-is ($ods->sheet (1)->attr ("C3")->fgcolor,	"#008000", "C3 Forground color OO cell method");
+SKIP: {
+    ok ($ods = Spreadsheet::Read->new ("files/attr.ods", attr => 1), "Attributes OO");
+
+    defined $ods->[1]{attr}[3][3]{fgcolor} or
+	skip "$ods->[0]{parser} $ods->[0]{version} does not reliably support colors yet", 5;
+
+    is ($ods->[1]{attr}[3][3]{fgcolor},		"#008000", "C3 Forground color direct");
+    is ($ods->sheet (1)->attr (3, 3)->{fgcolor},"#008000", "C3 Forground color OO rc   hash");
+    is ($ods->sheet (1)->attr ("C3")->{fgcolor},"#008000", "C3 Forground color OO cell hash");
+    is ($ods->sheet (1)->attr (3, 3)->fgcolor,	"#008000", "C3 Forground color OO rc   method");
+    is ($ods->sheet (1)->attr ("C3")->fgcolor,	"#008000", "C3 Forground color OO cell method");
+    }
 
 is ($ods->[1]{attr}[3][3]{bogus_attribute},	undef, "C3 bogus attribute direct");
 is ($ods->sheet (1)->attr ("C3")->{bogus_attr},	undef, "C3 bogus attribute OO hash");
