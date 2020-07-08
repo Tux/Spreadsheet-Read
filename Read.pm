@@ -161,7 +161,8 @@ sub _dump {
     else {
 	print STDERR Data::Dumper->Dump ([$ref], [$label]);
 	}
-    say STDERR join ", " => map { defined $_ ? $_ : "-" } caller (1);
+    my @c = caller (1);
+    print STDERR "<<- $c[1]:$c[2]|$c[3]\n";
     } # _dump
 
 sub _parser {
@@ -826,6 +827,8 @@ sub ReadData {
 			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			       : undef;
 			    }
+			lc  $oWkC->{Type} eq "float" and
+			    $oWkC->{Type} =  "Numeric";
 			if ($oWkC->{Type} eq "Numeric") {
 			    # Fixed in 0.33 and up
 			    # see Spreadsheet/ParseExcel/FmtDefault.pm

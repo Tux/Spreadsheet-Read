@@ -24,11 +24,7 @@ foreach my $row (1 .. 19) {
     is ($ss->{attr}[1][$row]{type}, "numeric", "Type A$row numeric");
     foreach my $col (2, 3) {
 	my $cell = ("A".."C")[$col - 1].$row;
-	my $xvsn = $ods->[0]{version};
-	$xvsn =~ s/_[0-9]+$//; # remove beta part
-	my $expect = $xvsn < 0.23 && $type[$col] eq "numeric"
-	    ? "numeric" : "percentage";
-	is ($type[$col], $expect, "Type $cell percentage");
+	is ($type[$col], "percentage", "Type $cell percentage");
 	}
 
     SKIP: {
