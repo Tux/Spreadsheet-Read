@@ -1,6 +1,7 @@
 0.82	- 08 Jul 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
+    * Add ".xlsm" to known XLSX file extensions
     * Spreadsheet::ReadSXC has a new maintainer (Corion)
       - support file handles
       - suggest version 0.24 (0.22 causes fails)
