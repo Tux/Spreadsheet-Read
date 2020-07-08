@@ -13,9 +13,11 @@ use Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "No OpenOffice ODS parser found";
 
-$parser->VERSION <= 0.40 and
-    plan skip_all => "Spreadsheet::ReadSXC version " . $parser->VERSION .
-		    " doesn't support field attributes";
+my $pv = $parser->VERSION;
+$pv >= "0.25" and	# Spreadsheet::ReadSXC has never supported colors
+    plan skip_all => "Use Spreadsheet::ParseODS instead please";
+
+diag ("# Parser: $parser-$pv");
 
 my $ods;
 ok ($ods = ReadData ("files/attr.ods", attr => 1), "Excel Attributes testcase");

@@ -1022,7 +1022,7 @@ sub ReadData {
 		    } keys %$sxc
 		: @{$sxc};
 	    foreach my $sheet (@sheets) {
-		my @sheet = @{$sheet->{data}};
+		my @sheet = @{$sheet->{data} || []};
 		my %sheet = (
 		    parser => 0,
 		    label  => $sheet->{label},

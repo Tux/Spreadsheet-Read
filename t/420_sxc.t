@@ -13,7 +13,11 @@ use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("sxc") or
     plan skip_all => "No SXC parser found";
 
-print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
+my $pv = $parser->VERSION;
+$pv >= "0.25" and
+    plan skip_all => "Use Spreadsheet::ParseODS instead please";
+
+diag ("# Parser: $parser-$pv");
 
 my $content;
 {   local $/;

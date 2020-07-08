@@ -16,7 +16,7 @@ Spreadsheet::Read::parses ("ods") or
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $ods;
-ok ($ods = ReadData ("files/Dates.ods", debug => 99,
+ok ($ods = ReadData ("files/Dates.ods",
     attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
 my %fmt = (

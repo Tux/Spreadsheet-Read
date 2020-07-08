@@ -1,10 +1,11 @@
-0.82	- 10 Apr 2020, H.Merijn Brand
+0.82	- 08 Jul 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
     * Spreadsheet::ReadSXC has a new maintainer (Corion)
       - support file handles
       - suggest version 0.24 (0.22 causes fails)
     * First attempt in supporting Spreadsheet::ParseODS (alpha code)
+      - version 0.25 should now pass the limited tests
     * It's 2020
     * Fallback to Pod::Text if nroff not available in tools
 
