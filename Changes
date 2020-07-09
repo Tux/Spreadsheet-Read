@@ -1,4 +1,4 @@
-0.82	- 08 Jul 2020, H.Merijn Brand
+0.82	- 09 Jul 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
     * Add ".xlsm" to known XLSX file extensions
@@ -10,6 +10,7 @@
     * It's 2020
     * Fallback to Pod::Text if nroff not available in tools
     * Extended support for merged cells with merge option
+      - Added $sheet->merged_from ("C2")
 
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019

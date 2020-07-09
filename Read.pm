@@ -1785,6 +1785,21 @@ Convert C<{cell}>'s C<[column][row]> to a C<[row][column]> list.
 Note that the indexes in the returned list are 0-based, where the
 index in the C<{cell}> entry is 1-based.
 
+=head3 merged_from
+
+ my $top_left = $sheet->merged_from ("C2");
+ my $top_left = $sheet->merged_from (3, 2);
+
+If the parser supports merged areas, this method will return the label of the
+top-left cell in the merged area the requested cell is part of.
+
+If the requested ID is valid and withing the sheet cell range, but not part of
+a merged area, it will return C<"">.
+
+If the ID is not valid or out of range, it returns C<undef>.
+
+See L<Merged cells|/merged> for more details.
+
 =head3 label
 
  my $label = $sheet->label;
@@ -1955,6 +1970,11 @@ given example, that would be:
     [ 1, 2, 1, 3 ], # A2-A3
     [ 2, 1, 3, 2 ], # B1-C2
     ];
+
+To find the label of the top-left cell in a merged area, use the
+L<C<merged_from>|/merged_from> method.
+
+ $ss->merged_from ("C2"); # will return "B1"
 
 When the attributes are also enabled, there is some merge information
 copied directly from the cell information, but again, that stems from
