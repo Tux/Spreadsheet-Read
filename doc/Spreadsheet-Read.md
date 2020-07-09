@@ -279,6 +279,13 @@ Currently supported options are:
     be either "`m-d-yy`" OR "`m/d/yy`" depending on what that specific
     character happened to be at the time the user saved the file.
 
+- merge
+
+    Copy content to all cells in merged areas.
+
+    If supported, this will copy formatted and unformatted values from the
+    top-left cell of a merged area to all other cells in the area.
+
 - debug
 
     Enable some diagnostic messages to STDERR.
@@ -547,6 +554,21 @@ Convert `{cell}`'s `[column][row]` to a `[row][column]` list.
 Note that the indexes in the returned list are 0-based, where the
 index in the `{cell}` entry is 1-based.
 
+### merged\_from
+
+    my $top_left = $sheet->merged_from ("C2");
+    my $top_left = $sheet->merged_from (3, 2);
+
+If the parser supports merged areas, this method will return the label of the
+top-left cell in the merged area the requested cell is part of.
+
+If the requested ID is valid and withing the sheet cell range, but not part of
+a merged area, it will return `""`.
+
+If the ID is not valid or out of range, it returns `undef`.
+
+See [Merged cells](#merged) for more details.
+
 ### label
 
     my $label = $sheet->label;
@@ -718,6 +740,11 @@ given example, that would be:
        [ 2, 1, 3, 2 ], # B1-C2
        ];
 
+To find the label of the top-left cell in a merged area, use the
+[`merged_from`](#merged_from) method.
+
+    $ss->merged_from ("C2"); # will return "B1"
+
 When the attributes are also enabled, there is some merge information
 copied directly from the cell information, but again, that stems from
 code analysis and not from documentation:
@@ -726,7 +753,7 @@ code analysis and not from documentation:
     foreach my $row (1 .. $ss->{maxrow}) {
         foreach my $col (1 .. $ss->{maxcol}) {
             my $cell = cr2cell ($col, $row);
-            printf "%s %-3s %d  ", $cell, $ss->{$cell},
+            printf "%s %-3s %s  ", $cell, $ss->{$cell},
                 $ss->{attr}[$col][$row]{merged};
             }
         print "\n";
@@ -740,8 +767,23 @@ In this example, there is no way to see if `B2` is merged to `A2` or
 to `B1` without analyzing all surrounding cells. This could as well
 mean `A2:A3`, `B1:C1`, `B2:C2`, as `A2:A3`, `B1:B2`, `C1:C2`, as
 `A2:A3`, `B1:C2`.
+
 Use the [`merged`](#merged) entry described above to find out what
-fields are merged to what other fields.
+fields are merged to what other fields or use `merge`:
+
+    my $ss = ReadData ("merged.xlsx", attr => 1, merge => 1)->[1];
+    foreach my $row (1 .. $ss->{maxrow}) {
+        foreach my $col (1 .. $ss->{maxcol}) {
+            my $cell = cr2cell ($col, $row);
+            printf "%s %-3s %s  ", $cell, $ss->{$cell},
+                $ss->{attr}[$col][$row]{merged};
+            }
+        print "\n";
+        }
+
+    A1     0   B1 foo B1  C1 foo B1
+    A2 bar A2  B2 foo B1  C2 foo B1
+    A3 bar A2  B3 urg 0   C3 orc 0
 
 ## Streams from web-resources
 

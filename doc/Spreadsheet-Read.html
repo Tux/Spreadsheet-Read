@@ -49,6 +49,7 @@
           <li><a href="#row1">row</a></li>
           <li><a href="#cellrow1">cellrow</a></li>
           <li><a href="#rows1">rows</a></li>
+          <li><a href="#merged_from">merged_from</a></li>
           <li><a href="#label">label</a></li>
           <li><a href="#active">active</a></li>
         </ul>
@@ -331,6 +332,14 @@
 <p>Note that date formatting in MS-Excel is not reliable at all, as it will store/replace/change the date field separator in already stored formats if you change your locale settings. So the above mentioned default can be either &quot;<code>m-d-yy</code>&quot; OR &quot;<code>m/d/yy</code>&quot; depending on what that specific character happened to be at the time the user saved the file.</p>
 
 </dd>
+<dt id="merge">merge</dt>
+<dd>
+
+<p>Copy content to all cells in merged areas.</p>
+
+<p>If supported, this will copy formatted and unformatted values from the top-left cell of a merged area to all other cells in the area.</p>
+
+</dd>
 <dt id="debug">debug</dt>
 <dd>
 
@@ -579,6 +588,19 @@
 
 <p>Note that the indexes in the returned list are 0-based, where the index in the <code>{cell}</code> entry is 1-based.</p>
 
+<h3 id="merged_from">merged_from</h3>
+
+<pre><code> my $top_left = $sheet-&gt;merged_from (&quot;C2&quot;);
+ my $top_left = $sheet-&gt;merged_from (3, 2);</code></pre>
+
+<p>If the parser supports merged areas, this method will return the label of the top-left cell in the merged area the requested cell is part of.</p>
+
+<p>If the requested ID is valid and withing the sheet cell range, but not part of a merged area, it will return <code>&quot;&quot;</code>.</p>
+
+<p>If the ID is not valid or out of range, it returns <code>undef</code>.</p>
+
+<p>See <a href="#merged">Merged cells</a> for more details.</p>
+
 <h3 id="label">label</h3>
 
 <pre><code> my $label = $sheet-&gt;label;
@@ -717,13 +739,17 @@
     [ 2, 1, 3, 2 ], # B1-C2
     ];</code></pre>
 
+<p>To find the label of the top-left cell in a merged area, use the <a href="#merged_from"><code>merged_from</code></a> method.</p>
+
+<pre><code> $ss-&gt;merged_from (&quot;C2&quot;); # will return &quot;B1&quot;</code></pre>
+
 <p>When the attributes are also enabled, there is some merge information copied directly from the cell information, but again, that stems from code analysis and not from documentation:</p>
 
 <pre><code> my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1)-&gt;[1];
  foreach my $row (1 .. $ss-&gt;{maxrow}) {
      foreach my $col (1 .. $ss-&gt;{maxcol}) {
          my $cell = cr2cell ($col, $row);
-         printf &quot;%s %-3s %d  &quot;, $cell, $ss-&gt;{$cell},
+         printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
              $ss-&gt;{attr}[$col][$row]{merged};
          }
      print &quot;\n&quot;;
@@ -733,7 +759,23 @@
  A2 bar 1  B2     1  C2     1
  A3     1  B3 urg 0  C3 orc 0</code></pre>
 
-<p>In this example, there is no way to see if <code>B2</code> is merged to <code>A2</code> or to <code>B1</code> without analyzing all surrounding cells. This could as well mean <code>A2:A3</code>, <code>B1:C1</code>, <code>B2:C2</code>, as <code>A2:A3</code>, <code>B1:B2</code>, <code>C1:C2</code>, as <code>A2:A3</code>, <code>B1:C2</code>. Use the <a href="#merged"><code>merged</code></a> entry described above to find out what fields are merged to what other fields.</p>
+<p>In this example, there is no way to see if <code>B2</code> is merged to <code>A2</code> or to <code>B1</code> without analyzing all surrounding cells. This could as well mean <code>A2:A3</code>, <code>B1:C1</code>, <code>B2:C2</code>, as <code>A2:A3</code>, <code>B1:B2</code>, <code>C1:C2</code>, as <code>A2:A3</code>, <code>B1:C2</code>.</p>
+
+<p>Use the <a href="#merged"><code>merged</code></a> entry described above to find out what fields are merged to what other fields or use <code>merge</code>:</p>
+
+<pre><code> my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1, merge =&gt; 1)-&gt;[1];
+ foreach my $row (1 .. $ss-&gt;{maxrow}) {
+     foreach my $col (1 .. $ss-&gt;{maxcol}) {
+         my $cell = cr2cell ($col, $row);
+         printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
+             $ss-&gt;{attr}[$col][$row]{merged};
+         }
+     print &quot;\n&quot;;
+     }
+
+ A1     0   B1 foo B1  C1 foo B1
+ A2 bar A2  B2 foo B1  C2 foo B1
+ A3 bar A2  B3 urg 0   C3 orc 0</code></pre>
 
 <h2 id="Streams-from-web-resources">Streams from web-resources</h2>
 

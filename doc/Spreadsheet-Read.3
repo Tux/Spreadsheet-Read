@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 "2020-04-10" "perl v5.30.0" "User Contributed Perl Documentation"
+.TH STDIN 1 "2020-07-09" "perl v5.32.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -430,6 +430,12 @@ store/replace/change the date field separator in already stored formats
 if you change your locale settings. So the above mentioned default can
 be either "\f(CW\*(C`m\-d\-yy\*(C'\fR\*(L" \s-1OR \*(R"\s0\f(CW\*(C`m/d/yy\*(C'\fR" depending on what that specific
 character happened to be at the time the user saved the file.
+.IP "merge" 2
+.IX Item "merge"
+Copy content to all cells in merged areas.
+.Sp
+If supported, this will copy formatted and unformatted values from the
+top-left cell of a merged area to all other cells in the area.
 .IP "debug" 2
 .IX Item "debug"
 Enable some diagnostic messages to \s-1STDERR.\s0
@@ -777,6 +783,24 @@ Convert \f(CW\*(C`{cell}\*(C'\fR's \f(CW\*(C`[column][row]\*(C'\fR to a \f(CW\*(
 Note that the indexes in the returned list are 0\-based, where the
 index in the \f(CW\*(C`{cell}\*(C'\fR entry is 1\-based.
 .PP
+\fImerged_from\fR
+.IX Subsection "merged_from"
+.PP
+.Vb 2
+\& my $top_left = $sheet\->merged_from ("C2");
+\& my $top_left = $sheet\->merged_from (3, 2);
+.Ve
+.PP
+If the parser supports merged areas, this method will return the label of the
+top-left cell in the merged area the requested cell is part of.
+.PP
+If the requested \s-1ID\s0 is valid and withing the sheet cell range, but not part of
+a merged area, it will return \f(CW""\fR.
+.PP
+If the \s-1ID\s0 is not valid or out of range, it returns \f(CW\*(C`undef\*(C'\fR.
+.PP
+See Merged cells for more details.
+.PP
 \fIlabel\fR
 .IX Subsection "label"
 .PP
@@ -969,6 +993,13 @@ given example, that would be:
 \&    ];
 .Ve
 .PP
+To find the label of the top-left cell in a merged area, use the
+\&\f(CW\*(C`merged_from\*(C'\fR method.
+.PP
+.Vb 1
+\& $ss\->merged_from ("C2"); # will return "B1"
+.Ve
+.PP
 When the attributes are also enabled, there is some merge information
 copied directly from the cell information, but again, that stems from
 code analysis and not from documentation:
@@ -978,7 +1009,7 @@ code analysis and not from documentation:
 \& foreach my $row (1 .. $ss\->{maxrow}) {
 \&     foreach my $col (1 .. $ss\->{maxcol}) {
 \&         my $cell = cr2cell ($col, $row);
-\&         printf "%s %\-3s %d  ", $cell, $ss\->{$cell},
+\&         printf "%s %\-3s %s  ", $cell, $ss\->{$cell},
 \&             $ss\->{attr}[$col][$row]{merged};
 \&         }
 \&     print "\en";
@@ -993,8 +1024,25 @@ In this example, there is no way to see if \f(CW\*(C`B2\*(C'\fR is merged to \f(
 to \f(CW\*(C`B1\*(C'\fR without analyzing all surrounding cells. This could as well
 mean \f(CW\*(C`A2:A3\*(C'\fR, \f(CW\*(C`B1:C1\*(C'\fR, \f(CW\*(C`B2:C2\*(C'\fR, as \f(CW\*(C`A2:A3\*(C'\fR, \f(CW\*(C`B1:B2\*(C'\fR, \f(CW\*(C`C1:C2\*(C'\fR, as
 \&\f(CW\*(C`A2:A3\*(C'\fR, \f(CW\*(C`B1:C2\*(C'\fR.
+.PP
 Use the \f(CW\*(C`merged\*(C'\fR entry described above to find out what
-fields are merged to what other fields.
+fields are merged to what other fields or use \f(CW\*(C`merge\*(C'\fR:
+.PP
+.Vb 9
+\& my $ss = ReadData ("merged.xlsx", attr => 1, merge => 1)\->[1];
+\& foreach my $row (1 .. $ss\->{maxrow}) {
+\&     foreach my $col (1 .. $ss\->{maxcol}) {
+\&         my $cell = cr2cell ($col, $row);
+\&         printf "%s %\-3s %s  ", $cell, $ss\->{$cell},
+\&             $ss\->{attr}[$col][$row]{merged};
+\&         }
+\&     print "\en";
+\&     }
+\&
+\& A1     0   B1 foo B1  C1 foo B1
+\& A2 bar A2  B2 foo B1  C2 foo B1
+\& A3 bar A2  B3 urg 0   C3 orc 0
+.Ve
 .SS "Streams from web-resources"
 .IX Subsection "Streams from web-resources"
 If you want to stream a web-resource, and the underlying parser supports it,
