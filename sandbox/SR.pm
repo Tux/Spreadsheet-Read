@@ -37,11 +37,11 @@ See L<Text::CSV_XS>, L<Data::Peek>, L<JSON>
 
 Alias for C<< Spreadsheet::Read->new >>
 
-=head2 dcsv
+=head2 dsr
 
 Uses L<Data::Peek>'s DDumper to output the result of C<sr>
 
-=head2 jcsv
+=head2 jsr
 
 Uses L<JSON>'s decode_json to convert the result of C<sr> to JSON.
 

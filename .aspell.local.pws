@@ -1,15 +1,18 @@
-personal_ws-1.1 en 35
+personal_ws-1.1 en 38
 API
 attr
 Calligra
 cellcolumn
 cellrow
 Corion
+DDumper
 decrypt
+dsr
 dtfmt
 FastXLSX
 gnumeric
 gzip
+jsr
 ksp
 Kspread
 LibreOffice
@@ -24,6 +27,7 @@ ReadData
 ReadSXC
 sep
 SquirrelCalc
+sr
 STDERR
 sxc
 unformatted
