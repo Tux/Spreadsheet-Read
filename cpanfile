@@ -6,7 +6,7 @@ requires   "Exporter";
 requires   "File::Temp"               => "0.22";
 requires   "List::Util";
 
-recommends "Data::Peek"               => "0.48";
+recommends "Data::Peek"               => "0.49";
 recommends "File::Temp"               => "0.2309";
 recommends "IO::Scalar";
 
@@ -19,7 +19,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302168";
+    recommends "Test::More"               => "1.302175";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -27,19 +27,21 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     
     recommends "Text::CSV"                => "2.00";
     recommends "Text::CSV_PP"             => "2.00";
-    recommends "Text::CSV_XS"             => "1.40";
+    recommends "Text::CSV_XS"             => "1.43";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
-    requires   "Spreadsheet::ParseODS"    => "0.24";
+    requires   "Spreadsheet::ParseODS"    => "0.25";
     };
 
 feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
     requires   "Spreadsheet::ReadSXC"     => "0.24";
+    
+    recommends "Spreadsheet::ReadSXC"     => "0.25";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
-    recommends "Tk"                       => "804.034";
+    recommends "Tk"                       => "804.035";
     recommends "Tk::NoteBook";
     recommends "Tk::TableMatrix::Spreadsheet";
     };
