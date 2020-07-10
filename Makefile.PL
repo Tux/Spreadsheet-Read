@@ -5,6 +5,14 @@ require 5.008001;
 use ExtUtils::MakeMaker;
 use File::Copy;
 
+if ($ENV{PERLBREW_HOME} and $ENV{PERLBREW_HOME} eq "/home/njh/.perlbrew") {
+     warn "Your smokers have been blocked because of consistent failures that\n";
+     warn " are all caused by the smoking setup and not by module errors.  If\n";
+     warn " you have fixed that all, please inform the authors, so this block\n";
+     warn " can be lifted again.\n";
+     exit 0;
+     }
+
 sub link_or_copy {
     my ($source, $dest) = @_;
 
