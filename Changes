@@ -1,4 +1,4 @@
-0.82	- 09 Jul 2020, H.Merijn Brand
+0.82	- 24 Jul 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
     * Add ".xlsm" to known XLSX file extensions

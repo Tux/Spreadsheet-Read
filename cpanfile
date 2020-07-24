@@ -27,7 +27,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     
     recommends "Text::CSV"                => "2.00";
     recommends "Text::CSV_PP"             => "2.00";
-    recommends "Text::CSV_XS"             => "1.43";
+    recommends "Text::CSV_XS"             => "1.44";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
