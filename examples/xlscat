@@ -2,12 +2,12 @@
 
 # xlscat:  show XLS/SXC file as Text
 # xlsgrep: grep pattern
-#	   (m)'19 [2019-02-01] Copyright H.M.Brand 2005-2020
+#	   (m)'20 [2020-08-18] Copyright H.M.Brand 2005-2020
 
 use strict;
 use warnings;
 
-our $VERSION = "3.16";
+our $VERSION = "3.17";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -26,6 +26,7 @@ sub usage {
 	"       --strip[=#] Strip leading and/or traing spaces of all cells\n",
 	"       --noclip    Do not strip empty sheets and\n",
 	"                   trailing empty rows and columns\n",
+	"	--no-nl[=R] Replace all newlines in cells with R (default space)\n",
 	"       -e <enc>    Set encoding for input and output\n",
 	"       -b <enc>    Set encoding for input\n",
 	"       -a <enc>    Set encoding for output\n",
@@ -130,6 +131,7 @@ GetOptions (
       "noclip"		=> sub { $clip = 0 },
       "strip:3"		=> \my $strip,
       "sort=s"		=> \my $sort_order,
+    "N|no-nl:s"		=> \my $opt_N,
 
     # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
@@ -159,6 +161,7 @@ $opt_s && $opt_H and usage 1, "Options s and H are mutually exclusive";
 my %e = (a => "\a", b => "\b", e => "\e", f => "\f", n => "\n", r => "\r", t => "\t");
 $opt_s and $opt_s =~ s/\\+([abefnrt])/$e{$1}/g;
 defined $opt_S or $opt_S = $opt_i || $is_grep ? "all" : "1";
+defined $opt_N && !length $opt_N  and $opt_N = " ";
 $opt_i && !$is_grep && $opt_v < 1 and $opt_v = 1;
 $opt_f and $opt_A = 1;
 
@@ -423,6 +426,9 @@ foreach my $si (1 .. $sc) {
 	    my ($uval, $fval) = map {
 		defined $_ ? $enc_i ? decode ($enc_i, $_) : $_ : $undef
 		} $s->{cell}[$_][$r], $s->{$cell};
+	    if (defined $opt_N) {
+		s/\n/$opt_N/go for grep { defined } $uval, $fval;
+		}
 	    $opt_v > 2 and warn "$_:$r '$uval' / '$fval'\n";
 	    $opt_A and 
 		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
