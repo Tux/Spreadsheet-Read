@@ -1,4 +1,4 @@
-0.82	- 18 Aug 2020, H.Merijn Brand
+0.82	- 27 Aug 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs
     * Add ".xlsm" to known XLSX file extensions
@@ -12,6 +12,7 @@
     * Extended support for merged cells with merge option
       - Added $sheet->merged_from ("C2")
     * Add --no-nl[=x] to xlscat
+    * xlscat: Align-right more numerics on -L (was only positive integers)
 
 0.81	- 25 Aug 2019, H.Merijn Brand
     * It's 2019
