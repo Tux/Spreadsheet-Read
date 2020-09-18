@@ -1,18 +1,19 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'20 [2019-04-10] Copyright H.M.Brand 2016-2020
+#	   (m)'20 [2020-09-18] Copyright H.M.Brand 2016-2020
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.5";
+our $VERSION = "3.6";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
 use List::Util        qw( first );
+use Archive::Zip      qw(:ERROR_CODES :CONSTANTS );
 use Spreadsheet::Read qw( ReadData row );
 
 sub usage {
@@ -21,6 +22,7 @@ sub usage {
     print "       $cmd --help | --man | --info\n";
     print "    -A    --all     Export all sheets      (filename-sheetname.csv)\n";
     print "    -N    --no-pfx  No filene prefix on -A (sheetname.csv)\n";
+    print "    -Z    --zip     Convert sheets to CSV's in ZIP\n";
     print "    -J s  --join=s  Use s to join filename-sheetname (-)\n";
     print "    -o f  --out=f   Set output filename\n";
     print "    -i f  --in=f    Set infut  filename\n";
@@ -46,6 +48,7 @@ GetOptions (
 
     "A|all!"    => \ my $opt_A,
     "N|no-pfx!" => \ my $opt_N,
+    "Z|zip!"	=> \ my $opt_Z,
     "J|join=s"	=> \(my $opt_J = "-"),
     ) or usage 1;
 
@@ -86,8 +89,9 @@ unless ($xls) {
 my %e = (n => "\n", t => "\t", e => "\e", r => "\r");
 $opt_s and $opt_s =~ s/\\+([nter])/$e{$1}/g;
 
-if ($opt_A) {
+if ($opt_A || $opt_Z) {
     my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
+    my $az = $opt_Z ? Archive::Zip->new : undef;
     $csv and $xls = $csv;
     $xls =~ s/\.(csv|xlsx?)$//i;
     $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1, eol => "\r\n" });
@@ -100,12 +104,25 @@ if ($opt_A) {
 	   $sn =~ s/\s+$//;
 	   $sn =~ s/^\s+//;
 	   $sn =~ s/[^-\w.]+/_/g; # remove any special chars from worksheet name
+	if ($opt_Z) {
+	    open my $fh, ">:encoding(utf-8)", \my $data;
+	    $csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
+	    close $fh;
+	    $az->addString ($data, "$sn.csv");
+	    next;
+	    }
 	my $fn = $opt_N ? "$sn.csv" : "$xls$opt_J$sn.csv";
 	-f $fn && !$opt_f and die "$fn already exists\n";
 	warn "Saving sheet to $fn ...\n";
 	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
 	$csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
 	close $fh;
+	}
+    if ($opt_Z) {
+	my $fn = "$xls.zip";
+	-f $fn && $opt_f and unlink $fn;
+	-f $fn and die "$fn already exists\n";
+	$az->writeToFileNamed ($fn) == AZ_OK or die "$fn: $!\n";
 	}
     exit;
     }
