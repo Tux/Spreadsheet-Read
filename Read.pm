@@ -1878,7 +1878,7 @@ effort is made to analyze and store field attributes like this:
 	  hidden  => 0,
 	  locked  => 0,
 	  enc     => "utf-8",
-	  }, ]
+	  }, ],
 	[ undef, undef, undef, undef, undef, {
 	  type    => "text",
 	  fgcolor => "#e2e2e2",
@@ -1896,7 +1896,8 @@ effort is made to analyze and store field attributes like this:
 	  hidden  => 0,
 	  locked  => 0,
 	  enc     => "iso8859-1",
-	  }, ]
+	  }, ],
+	],
       merged => [],
       A1     => 1,
       B5     => "Nugget",
