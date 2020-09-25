@@ -1034,10 +1034,14 @@ sub ReadData {
 			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			       : undef;
 			    $fmi and $fmi =~ s/\\//g;
+			    my $type = $oWkC->type;
+			    if( $type eq 'float' ) {
+				$type = 'numeric';
+			    };
 			    $sheet{attr}[$c + 1][$r + 1] = {
 				@def_attr,
 
-				type    => $oWkC->type,
+				type    => $type,
 				#enc     => $oWkC->{Code},
 				merged  => $oWkC->is_merged || 0,
 				hidden  => ($hiddenRows->[$r] || $hiddenCols->[$c] ? 1 :
