@@ -940,8 +940,8 @@ sub ReadData {
 	$opt{passwd} and $parser_opts{Password} = $opt{passwd};
 	my $oBook = eval {
 	    $io_ref
-		? $parser->new (%parser_opts)->parse ($io_ref)
-		: $parser->new (%parser_opts)->parse ($txt)
+		? $parser->new (readonly => 1, %parser_opts)->parse ($io_ref)
+		: $parser->new (readonly => 1, %parser_opts)->parse ($txt)
 	    };
 	unless ($oBook) {
 	    # cleanup will fail on folders with spaces.

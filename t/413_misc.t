@@ -14,7 +14,7 @@ my $pt = Spreadsheet::Read::parses ("ods") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_ODS}";
 
 my $pv = $pt->VERSION;
-$pv le "0.25" and
+$pv lt "0.25" and
     plan skip_all => "$pt-$pv won't reliably read the test file";
 
 my $ods;
