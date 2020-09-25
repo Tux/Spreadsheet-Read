@@ -1022,7 +1022,11 @@ sub ReadData {
 			$opt{rc} and $sheet{cell}[$c + 1][$r + 1] = $val;	# Original
 
 			my $fmt;
-			my $FmT = $oWkC->get_format;
+			my $styleName = $oWkC->style;
+			my $FmT;
+			if( $styleName && defined( my $s = $oBook->_styles->{ $styleName })) {
+			    $fmt = $s;
+			};
 
 			defined $fmt and $fmt =~ s/\\//g;
 			$opt{cells} and	# Formatted value
