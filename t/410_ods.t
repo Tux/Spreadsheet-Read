@@ -24,7 +24,7 @@ my $notyet = $pv lt "0.25" and $tests -= 10;
     ok (!defined $ref, "Nonexistent file");
     $ref = ReadData ("files/empty.ods", debug => 8);
     use Data::Dumper;
-    local $TODO = "Handling of empty files needs more definition";
+    #local $TODO = "Handling of empty files needs more definition";
     ok (!defined $ref, "Empty file")
         or diag Dumper $ref;
     }

@@ -995,7 +995,6 @@ sub ReadData {
 		my $sheet_no = $current_sheet - 1;
 		$sheet_no eq $active_sheet and $sheet{active} = 1;
 		}
-	    #if (exists $oWkS->{MinRow}) {
 		my $hiddenRows = $oWkS->hidden_rows || [];
 		my $hiddenCols = $oWkS->hidden_cols || [];
 		if ($opt{clip}) {
@@ -1033,25 +1032,28 @@ sub ReadData {
 			    $sheet{$cell} = defined $val
 				? $oWkC->value : undef;
 			if ($opt{attr}) {
-			    my $FnT = $FmT->{Font};
-			    my $fmi = $FmT->{FmtIdx}
-			       ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
-			       : undef;
-			    $fmi and $fmi =~ s/\\//g;
+			    my $FnT = $FmT ? $FmT->{font_face} : undef;
+			    my $fmi;
+			    #my $fmi = $FmT ? $FmT->{FmtIdx}
+			    #   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
+			    #   : undef;
+			    #$fmi and $fmi =~ s/\\//g;
 			    my $type = $oWkC->type;
 			    if( $type eq 'float' ) {
 				$type = 'numeric';
 			    };
+
+			    my $merged = $oWkC->is_merged || 0;
 			    $sheet{attr}[$c + 1][$r + 1] = {
 				@def_attr,
 
 				type    => $type,
 				#enc     => $oWkC->{Code},
-				merged  => $oWkC->is_merged || 0,
+				merged  => $merged,
 				hidden  => ($hiddenRows->[$r] || $hiddenCols->[$c] ? 1 :
-					    $oWkC->is_hidden ? $oWkC->is_hidden : $FmT->is_hidden)   || 0,
+					    $oWkC->is_hidden ? $oWkC->is_hidden : undef)   || 0,
 				#locked  => $FmT->{Lock}     || 0,
-				#format  => $fmi,
+				format  => $fmi,
 				#halign  => [ undef, qw( left center right
 				#	   fill justify ), undef,
 				#	   "equal_space" ]->[$FmT->{AlignH}],
@@ -1068,15 +1070,23 @@ sub ReadData {
 				formula => $oWkC->formula,
 				};
 			    #_dump "cell", $sheet{attr}[$c + 1][$r + 1];
+			    if ($opt{merge} && $merged and
+				    my $p_cell = Spreadsheet::Read::Sheet::merged_from(\%sheet, $c + 1, $r + 1)) {
+				$sheet{attr}[$c + 1][$r + 1]{merged} = $p_cell;
+				if ($cell ne $p_cell) {
+				    my ($C, $R) = cell2cr ($p_cell);
+				    $sheet{cell}[$c + 1][$r + 1] =
+					$sheet{cell}[$C][$R];
+				    $sheet{$cell} = $sheet{$p_cell};
+				    }
+				}
 			    }
 			}
 		    }
-		#}
 	    for (@{$sheet{cell}}) {
 		defined or $_ = [];
 		}
 	    push @data, { %sheet };
-#	    $data[0]{sheets}++;
 	    if ($sheet{label} eq "-- unlabeled --") {
 		$sheet{label} = "";
 		}
