@@ -1038,7 +1038,7 @@ sub ReadData {
 			    #   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}
 			    #   : undef;
 			    #$fmi and $fmi =~ s/\\//g;
-			    my $type = $oWkC->type;
+			    my $type = $oWkC->type || '';
 			    if( $type eq 'float' ) {
 				$type = 'numeric';
 			    };
