@@ -999,10 +999,10 @@ sub ReadData {
 		my $hiddenCols = $oWkS->hidden_cols || [];
 		if ($opt{clip}) {
 		    my ($mr, $mc) = (-1, -1);
-		    foreach my $r ($oWkS->row_min .. $sheet{maxrow}) {
-			foreach my $c ($oWkS->col_min .. $sheet{maxcol}) {
+		    foreach my $r ($oWkS->row_min .. $sheet{maxrow}-1) {
+			foreach my $c ($oWkS->col_min .. $sheet{maxcol}-1) {
 			    my $oWkC = $oWkS->get_cell($r, $c) or next;
-			    defined (my $val = $oWkC->value)  or next;
+			    defined (my $val = $oWkC->value) or next;
 			    $val eq "" and next;
 			    $r > $mr and $mr = $r;
 			    $c > $mc and $mc = $c;
