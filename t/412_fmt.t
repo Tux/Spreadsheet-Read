@@ -20,13 +20,12 @@ my $parser = $ods->[0]{parser};
 
 SKIP: {
     ok (my $fmt = $ods->[$ods->[0]{sheet}{Format}],	"format");
-
     $fmt->{attr}[2][2]{merged} or
 	skip "$parser $ods->[0]{version} does not reliably support attributes yet", 38;
 
     # The return value for the invisible part of merged cells differs for
     # the available parsers
-    my $mcrv = $parser =~ m/::ODS/ ? undef : "";
+    my $mcrv = $parser =~ m/::ParseODS/ ? undef : "";
 
     is ($fmt->{B2},		"merged",	"Merged cell left    formatted");
     is ($fmt->{C2},		$mcrv,		"Merged cell right   formatted");
