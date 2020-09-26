@@ -127,14 +127,14 @@
       # Entry 0 is the overall control hash
       { sheets  =&gt; 2,
         sheet   =&gt; {
-          &quot;Sheet 1&quot;  =&gt; 1,
-          &quot;Sheet 2&quot;  =&gt; 2,
+          &quot;Sheet 1&quot; =&gt; 1,
+          &quot;Sheet 2&quot; =&gt; 2,
           },
         parsers =&gt; [ {
-            type    =&gt; &quot;xls&quot;,
-            parser  =&gt; &quot;Spreadsheet::ParseExcel&quot;,
-            version =&gt; 0.59,
-            }],
+          type      =&gt; &quot;xls&quot;,
+          parser    =&gt; &quot;Spreadsheet::ParseExcel&quot;,
+          version   =&gt; 0.59,
+          }],
         error   =&gt; undef,
         },
       # Entry 1 is the first sheet
@@ -665,7 +665,7 @@
           hidden  =&gt; 0,
           locked  =&gt; 0,
           enc     =&gt; &quot;utf-8&quot;,
-          }, ]
+          }, ],
         [ undef, undef, undef, undef, undef, {
           type    =&gt; &quot;text&quot;,
           fgcolor =&gt; &quot;#e2e2e2&quot;,
@@ -683,7 +683,8 @@
           hidden  =&gt; 0,
           locked  =&gt; 0,
           enc     =&gt; &quot;iso8859-1&quot;,
-          }, ]
+          }, ],
+        ],
       merged =&gt; [],
       A1     =&gt; 1,
       B5     =&gt; &quot;Nugget&quot;,

@@ -55,14 +55,14 @@ The data is returned as an array reference:
         # Entry 0 is the overall control hash
         { sheets  => 2,
           sheet   => {
-            "Sheet 1"  => 1,
-            "Sheet 2"  => 2,
+            "Sheet 1" => 1,
+            "Sheet 2" => 2,
             },
           parsers => [ {
-              type    => "xls",
-              parser  => "Spreadsheet::ParseExcel",
-              version => 0.59,
-              }],
+            type      => "xls",
+            parser    => "Spreadsheet::ParseExcel",
+            version   => 0.59,
+            }],
           error   => undef,
           },
         # Entry 1 is the first sheet
@@ -647,7 +647,7 @@ effort is made to analyze and store field attributes like this:
           hidden  => 0,
           locked  => 0,
           enc     => "utf-8",
-          }, ]
+          }, ],
         [ undef, undef, undef, undef, undef, {
           type    => "text",
           fgcolor => "#e2e2e2",
@@ -665,7 +665,8 @@ effort is made to analyze and store field attributes like this:
           hidden  => 0,
           locked  => 0,
           enc     => "iso8859-1",
-          }, ]
+          }, ],
+        ],
       merged => [],
       A1     => 1,
       B5     => "Nugget",
