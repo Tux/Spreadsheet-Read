@@ -43,21 +43,21 @@ SKIP: {
     is ($fmt->{attr}[2][4]{hidden}, 1,	"Hidden cell hidden");
     is ($fmt->{attr}[2][4]{merged}, 0,	"Hidden cell not merged");
 
-    foreach my $r (1 .. 4, 7 .. 12) {
+    foreach my $r (1 .. 4, 7 .. 12) {	# 1 .. 12 when date/time fixed
 	is ($fmt->{cell}[1][$r], 12345,	"Unformatted valued A$r");
 	}
-    foreach my $r (5,6) {
-	local $TODO="Date/time value representation is not yet unified";
+    foreach my $r (5, 6) {
+	local $TODO = "Date/time value representation is not yet unified";
 	is ($fmt->{cell}[1][$r], 12345,	"Unformatted valued A$r");
 	}
     is ($fmt->{attr}[1][1]{format}, undef,	"Default format");
     is ($fmt->{cell}[1][1],  $fmt->{A1},	"Formatted valued A1");
     is ($fmt->{cell}[1][10], $fmt->{A10},	"Formatted valued A10"); # String
-    foreach my $r (2,3,4,7,8, 9, 11) {
+    foreach my $r (2 .. 9, 11) {		# 2 .. 12 when date/time fixed
 	isnt ($fmt->{cell}[1][$r], $fmt->{"A$r"},	"Unformatted valued A$r");
 	}
-    foreach my $r (5,6,12) {
-	local $TODO="Date/time value representation is not yet unified";
+    foreach my $r (12) {
+	local $TODO = "Date/time value representation is not yet unified";
 	isnt ($fmt->{cell}[1][$r], $fmt->{"A$r"},	"Unformatted valued A$r");
 	}
     # Not yet. needs more digging
@@ -66,8 +66,8 @@ SKIP: {
     #    }
     }
 
-#unless ($ENV{AUTOMATED_TESTING}) {
-#    Test::NoWarnings::had_no_warnings ();
-#    $tests++;
-#    }
+unless ($ENV{AUTOMATED_TESTING}) {
+    Test::NoWarnings::had_no_warnings ();
+    $tests++;
+    }
 done_testing ($tests);

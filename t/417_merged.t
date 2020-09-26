@@ -31,7 +31,7 @@ is ($ss->{attr}[1][3]{merged}, 1, "unmerged A3");
 is ($ss->{attr}[2][3]{merged}, 0, "unmerged B3");
 is ($ss->{attr}[3][3]{merged}, 0, "unmerged C3");
 
-                           #A2:A3    B1:C2
+                          # A2:A3     B1:C2
 is_deeply ($ss->{merged}, [[1,2,1,3],[2,1,3,2]], "Merged areas");
 
 ok ($ss = Spreadsheet::Read->new ("files/merged.ods",
