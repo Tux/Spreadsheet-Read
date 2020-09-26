@@ -16,7 +16,7 @@ my $parser = Spreadsheet::Read::parses ("ods") or
 
 my $pv = $parser->VERSION;
 # ReadSXC is in transition to ParseODS by CORION
-$parser eq "Spreadsheet::ParseODS" && $pv le "0.25" and
+$parser eq "Spreadsheet::ParseODS" && $pv lt "0.25" and
     plan skip_all => "No merged cell support in $parser-$pv";
 
 ok (my $ss = ReadData ("files/merged.ods", attr => 1)->[1], "Read merged ods");
@@ -31,6 +31,7 @@ is ($ss->{attr}[1][3]{merged}, 1, "unmerged A3");
 is ($ss->{attr}[2][3]{merged}, 0, "unmerged B3");
 is ($ss->{attr}[3][3]{merged}, 0, "unmerged C3");
 
+                           #A2:A3    B1:C2
 is_deeply ($ss->{merged}, [[1,2,1,3],[2,1,3,2]], "Merged areas");
 
 ok ($ss = Spreadsheet::Read->new ("files/merged.ods",
