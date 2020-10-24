@@ -1,3 +1,6 @@
+0.83	- 24 Oct 2020, H.Merijn Brand
+    * Require ParseODS 0.26
+
 0.82	- 26 Sep 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)
     * Fix some links in the docs

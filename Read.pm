@@ -37,7 +37,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.82";
+our $VERSION = "0.83";
 sub  Version { $VERSION }
 
 use Carp;
@@ -54,10 +54,10 @@ my @parsers = (
     [ csv  => "Text::CSV_XS",				"0.71"		],
     [ csv  => "Text::CSV_PP",				"1.17"		],
     [ csv  => "Text::CSV",				"1.17"		],
-    [ ods  => "Spreadsheet::ParseODS",			"0.25"		],
-    [ ods  => "Spreadsheet::ReadSXC",			"0.20"		],
-    [ sxc  => "Spreadsheet::ParseODS",			"0.25"		],
-    [ sxc  => "Spreadsheet::ReadSXC",			"0.20"		],
+    [ ods  => "Spreadsheet::ParseODS",			"0.26"		],
+    [ ods  => "Spreadsheet::ReadSXC",			"0.26"		],
+    [ sxc  => "Spreadsheet::ParseODS",			"0.26"		],
+    [ sxc  => "Spreadsheet::ReadSXC",			"0.26"		],
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],

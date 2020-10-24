@@ -68,13 +68,14 @@ test_requires:
   Test::NoWarnings:     0
 recommends:
   IO::Scalar:           0
-  File::Temp:           0.2309
+  File::Temp:           0.2311
   Data::Peek:           0.49
 test_recommends:
-  Test::More:           1.302181
+  Test::More:           1.302183
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
+  bugtracker:           https://github.com/Tux/Spreadsheet-Read/issues
 meta-spec:
   version:              1.4
   url:                  http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -104,13 +105,15 @@ optional_features:
   opt_ods:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
-      Spreadsheet::ParseODS:               0.25
+      Spreadsheet::ParseODS:               0.26
+    recommends:
+      Spreadsheet::ParseODS:               0.32
   opt_sxc:
     description:        Provides parsing of OpenOffice spreadsheets old style
     requires:
-      Spreadsheet::ReadSXC:                0.24
+      Spreadsheet::ReadSXC:                0.26
     recommends:
-      Spreadsheet::ReadSXC:                0.25
+      Spreadsheet::ReadSXC:                0.32
   opt_tools:
     description:        Spreadsheet tools
     recommends:
