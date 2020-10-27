@@ -404,6 +404,25 @@ for that format unless overruled. See [`parser`](#parser).
 `parses ()` is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
 
+### parsers
+
+    my @p = parsers ();
+
+`parsers ()` returns a list of hashrefs with information about
+supported parsers, each giving information about the parser, its
+versions and if it will be used as default parser for the given
+type, like:
+
+    { ext => "csv",            # extension or type
+      mod => "Text::CSV_XS",   # parser module
+      min => "0.71",           # module required  version
+      vsn => "1.45",           # module installed version
+      def => "*",              # is default for ext
+      }
+
+As the modules are actually loaded to get their version, do only
+use this to analyse prerequisites.
+
 ### Version
 
     my $v = Version ()

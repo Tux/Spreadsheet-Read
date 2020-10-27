@@ -198,6 +198,26 @@ sub new {
     bless $r => $class;
     } # new
 
+sub parsers {
+    ref $_[0] eq __PACKAGE__ and shift;
+    my @c;
+    for (sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
+         grep { $_->[0] !~ m{^(?:dmp|ios|!.*)$} }
+         @parsers) {
+	my ($typ, $mod, $min) = @$_;
+	eval "local \$_; require $mod";
+	my $vsn = $@ ? "-" : eval { $mod->VERSION };
+	push @c => {
+	    ext => $typ,
+	    mod => $mod,
+	    min => $min,
+	    vsn => $vsn,
+	    def => $can{$typ} eq $mod ? "*" : "",
+	    };
+	}
+    @c;
+    } # parsers
+
 # Spreadsheet::Read::parses ("csv") or die "Cannot parse CSV"
 sub parses {
     ref $_[0] eq __PACKAGE__ and shift;
@@ -1813,6 +1833,25 @@ for that format unless overruled. See L<C<parser>|/parser>.
 
 C<parses ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
+
+=head3 parsers
+
+ my @p = parsers ();
+
+C<parsers ()> returns a list of hashrefs with information about
+supported parsers, each giving information about the parser, its
+versions and if it will be used as default parser for the given
+type, like:
+
+ { ext => "csv",            # extension or type
+   mod => "Text::CSV_XS",   # parser module
+   min => "0.71",           # module required  version
+   vsn => "1.45",           # module installed version
+   def => "*",              # is default for ext
+   }
+
+As the modules are actually loaded to get their version, do only
+use this to analyse prerequisites.
 
 =head3 Version
 

@@ -1,8 +1,8 @@
 #!/pro/bin/perl
 
-# xlscat:  show XLS/SXC file as Text
+# xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'20 [2020-08-27] Copyright H.M.Brand 2005-2020
+#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2005-2020
 
 use strict;
 use warnings;
@@ -22,6 +22,7 @@ sub usage {
 	"    Generic options:\n",
 	"       -v[#]       Set verbose level (xlscat/xlsgrep)\n",
 	"       -d[#]       Set debug   level (Spreadsheet::Read)\n",
+	"       --list      Show supported spreadsheet formats and exit\n",
 	"       -u          Use unformatted values\n",
 	"       --strip[=#] Strip leading and/or traing spaces of all cells\n",
 	"       --noclip    Do not strip empty sheets and\n",
@@ -81,6 +82,10 @@ sub usage {
     exit $err;
     } # usage
 
+use Data::Dumper;
+use Encode qw( encode decode );
+use Spreadsheet::Read;
+
 use Getopt::Long qw(:config bundling noignorecase passthrough);
 my $opt_c;		# Generate CSV
 my $opt_F = "";		# Fields to print
@@ -132,6 +137,7 @@ GetOptions (
       "strip:3"		=> \my $strip,
       "sort=s"		=> \my $sort_order,
     "N|no-nl:s"		=> \my $opt_N,
+      "list!"		=> \my $list,
 
     # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
@@ -143,6 +149,16 @@ GetOptions (
     "w|word!"		=> \my $opt_w,	# Grep words
     "h|header:1"	=> \$opt_h,
     ) or usage 1, "GetOpt: $@";
+
+if ($list) {
+    print "Ext   Parser module             Req   Has Def\n";
+    print "----- ----------------------- ----- ----- ---\n";
+    for (Spreadsheet::Read::parsers ()) {
+	printf "%-5s %-23s %5s %5s %s\n",
+	    $_->{ext}, $_->{mod}, $_->{min}, $_->{vsn}, $_->{def} ? "<==" : "";
+	}
+    exit 0;
+    }
 
 unless ($is_grep) {
 $opt_i && $opt_L and usage 1, "Options i and L are mutually exclusive";
@@ -180,8 +196,7 @@ if ($opt_c) {
     }
 
 # Debugging. Prefer Data::Peek over Data::Dumper if available
-{   use Data::Dumper;
-    my $dp = 0;
+{   my $dp = 0;
     eval q{
 	use Data::Peek;
 	$dp = 1;
@@ -219,9 +234,6 @@ else {
     $opt_v > 1 and warn "Working as a pipe\n";
     $file = *ARGV;
     }
-
-use Encode qw( encode decode );
-use Spreadsheet::Read;
 
 if ($opt_c) {
     Spreadsheet::Read::parses ("csv") or die "No CSV module found\n";

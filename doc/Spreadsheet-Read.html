@@ -29,6 +29,7 @@
           <li><a href="#cellrow">cellrow</a></li>
           <li><a href="#rows">rows</a></li>
           <li><a href="#parses">parses</a></li>
+          <li><a href="#parsers">parsers</a></li>
           <li><a href="#Version">Version</a></li>
           <li><a href="#sheets">sheets</a></li>
           <li><a href="#sheet">sheet</a></li>
@@ -450,6 +451,21 @@
 <p><code>parses ()</code> returns Spreadsheet::Read&#39;s capability to parse the required format. <a href="#ReadData"><code>ReadData</code></a> will pick its preferred parser for that format unless overruled. See <a href="#parser"><code>parser</code></a>.</p>
 
 <p><code>parses ()</code> is not imported by default, so either specify it in the use argument list, or call it fully qualified.</p>
+
+<h3 id="parsers">parsers</h3>
+
+<pre><code> my @p = parsers ();</code></pre>
+
+<p><code>parsers ()</code> returns a list of hashrefs with information about supported parsers, each giving information about the parser, its versions and if it will be used as default parser for the given type, like:</p>
+
+<pre><code> { ext =&gt; &quot;csv&quot;,            # extension or type
+   mod =&gt; &quot;Text::CSV_XS&quot;,   # parser module
+   min =&gt; &quot;0.71&quot;,           # module required  version
+   vsn =&gt; &quot;1.45&quot;,           # module installed version
+   def =&gt; &quot;*&quot;,              # is default for ext
+   }</code></pre>
+
+<p>As the modules are actually loaded to get their version, do only use this to analyse prerequisites.</p>
 
 <h3 id="Version">Version</h3>
 
