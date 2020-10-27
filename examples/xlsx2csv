@@ -19,6 +19,7 @@ sub usage {
     my $err = shift and select STDERR;
     print "usage: $cmd [-A [-N | -J c] | -o file.csv] [-s sep] [-f] [-i] file.xls\n";
     print "       $cmd --help | --man | --info\n";
+    print "          --list    List supported spreadsheet formats and exit\n";
     print "    -A    --all     Export all sheets      (filename-sheetname.csv)\n";
     print "    -N    --no-pfx  No filene prefix on -A (sheetname.csv)\n";
     print "    -Z    --zip     Convert sheets to CSV's in ZIP\n";
@@ -36,8 +37,9 @@ use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
     "help|?"    => sub { usage 0; },
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
-      "man"	=> sub { pod_nroff (); },
-      "info"	=> sub { pod_text  (); },
+      "man"	=> sub { pod_nroff    (); },
+      "info"	=> sub { pod_text     (); },
+      "list"	=> sub { list_parsers (); },
 
     "o|c|out=s" => \ my $csv,
     "i|s|in=s"	=> \ my $xls,
@@ -50,6 +52,16 @@ GetOptions (
     "Z|zip!"	=> \ my $opt_Z,
     "J|join=s"	=> \(my $opt_J = "-"),
     ) or usage 1;
+
+sub list_parsers {
+    print "Ext   Parser module             Req   Has Def\n";
+    print "----- ----------------------- ----- ----- ---\n";
+    for (Spreadsheet::Read::parsers ()) {
+	printf "%-5s %-23s %5s %5s %s\n",
+	    $_->{ext}, $_->{mod}, $_->{min}, $_->{vsn}, $_->{def} ? "<==" : "";
+	}
+    exit 0;
+    } # list_parsers
 
 sub pod_text {
     require Pod::Text::Color;
