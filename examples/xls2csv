@@ -1,14 +1,14 @@
 #!/pro/bin/perl
 
-# xls2csv: Convert Microsoft Excel spreadsheet to CSV
-#	   (m)'20 [2020-04-10] Copyright H.M.Brand 2008-2020
+# xls2csv: Convert supported spreadsheet formats to CSV
+#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2016-2020
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.5";
+our $VERSION = "3.6";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -17,8 +17,18 @@ use Spreadsheet::Read qw( ReadData row );
 
 sub usage {
     my $err = shift and select STDERR;
-    print "usage: $cmd [-A [-N] | -o file.csv] [-s sep] [-f] [-i] file.xls\n";
+    print "usage: $cmd [-A [-N | -J c] | -o file.csv] [-s sep] [-f] [-i] file.xls\n";
     print "       $cmd --help | --man | --info\n";
+    print "          --list    List supported spreadsheet formats and exit\n";
+    print "    -A    --all     Export all sheets      (filename-sheetname.csv)\n";
+    print "    -N    --no-pfx  No filene prefix on -A (sheetname.csv)\n";
+    print "    -Z    --zip     Convert sheets to CSV's in ZIP\n";
+    print "    -J s  --join=s  Use s to join filename-sheetname (-)\n";
+    print "    -o f  --out=f   Set output filename\n";
+    print "    -i f  --in=f    Set infut  filename\n";
+    print "    -f    --force   Force overwrite output if exists\n";
+    print "    -s s  --sep=s   Set CSV separator character\n";
+    print "Unless -A is used, all other options are passed on to xlscat\n";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
@@ -27,18 +37,31 @@ use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
     "help|?"    => sub { usage 0; },
     "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
-      "man"	=> sub { pod_nroff (); },
-      "info"	=> sub { pod_text  (); },
+      "man"	=> sub { pod_nroff    (); },
+      "info"	=> sub { pod_text     (); },
+      "list"	=> sub { list_parsers (); },
 
-    "o|c|out=s" => \my $csv,
-    "i|s|in=s"	=> \my $xls,
-    "f|force!"  => \my $opt_f,
+    "o|c|out=s" => \ my $csv,
+    "i|s|in=s"	=> \ my $xls,
+    "f|force!"  => \ my $opt_f,
 
-    "s|sep=s"	=> \my $opt_s,
+    "s|sep=s"	=> \ my $opt_s,
 
-    "A|all!"    => \my $opt_a,
-    "N|no-pfx!" => \my $opt_N,
+    "A|all!"    => \ my $opt_A,
+    "N|no-pfx!" => \ my $opt_N,
+    "Z|zip!"	=> \ my $opt_Z,
+    "J|join=s"	=> \(my $opt_J = "-"),
     ) or usage 1;
+
+sub list_parsers {
+    print "Ext   Parser module             Req   Has Def\n";
+    print "----- ----------------------- ----- ----- ---\n";
+    for (Spreadsheet::Read::parsers ()) {
+	printf "%-5s %-23s %5s %5s %s\n",
+	    $_->{ext}, $_->{mod}, $_->{min}, $_->{vsn}, $_->{def} ? "<==" : "";
+	}
+    exit 0;
+    } # list_parsers
 
 sub pod_text {
     require Pod::Text::Color;
@@ -74,11 +97,17 @@ unless ($xls) {
 -r $xls or usage 1, "Input file unreadable";
 -s $xls or usage 1, "Input file empty";
 
-my %e = (a => "\a", b => "\b", e => "\e", f => "\f", n => "\n", r => "\r", t => "\t");
-$opt_s and $opt_s =~ s/\\+([abefnrt])/$e{$1}/g;
+if ($opt_Z) {
+    require Archive::Zip;
+    $@ and die "--zip requires Archive::Zip, which could not be loaded\n";
+    }
 
-if ($opt_a) {
+my %e = (n => "\n", t => "\t", e => "\e", r => "\r");
+$opt_s and $opt_s =~ s/\\+([nter])/$e{$1}/g;
+
+if ($opt_A || $opt_Z) {
     my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
+    my $az = $opt_Z ? Archive::Zip->new : undef;
     $csv and $xls = $csv;
     $xls =~ s/\.(csv|xlsx?)$//i;
     $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1, eol => "\r\n" });
@@ -91,12 +120,25 @@ if ($opt_a) {
 	   $sn =~ s/\s+$//;
 	   $sn =~ s/^\s+//;
 	   $sn =~ s/[^-\w.]+/_/g; # remove any special chars from worksheet name
-	my $fn = $opt_N ? "$sn.csv" : "$xls-$sn.csv";
+	if ($opt_Z) {
+	    open my $fh, ">:encoding(utf-8)", \my $data;
+	    $csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
+	    close $fh;
+	    $az->addString ($data, "$sn.csv");
+	    next;
+	    }
+	my $fn = $opt_N ? "$sn.csv" : "$xls$opt_J$sn.csv";
 	-f $fn && !$opt_f and die "$fn already exists\n";
 	warn "Saving sheet to $fn ...\n";
 	open my $fh, ">:encoding(utf-8)", $fn or die "$fn: $!\n";
 	$csv->print ($fh, [ row ($s, $_) ]) for 1 .. $mr;
 	close $fh;
+	}
+    if ($opt_Z) {
+	my $fn = "$xls.zip";
+	-f $fn && $opt_f and unlink $fn;
+	-f $fn and die "$fn already exists\n";
+	$az->writeToFileNamed ($fn) == Archive::Zip::AZ_OK or die "$fn: $!\n";
 	}
     exit;
     }
@@ -119,12 +161,12 @@ __END__
 
 =head1 NAME
 
-   xls2csv - convert spreadsheet to CSV
+   xlsx2csv - convert spreadsheet to CSV(s)
 
 =head1 SYNOPSIS
 
-   xls2csv [ --all [ --no-pfx ] | -o file.csv ] [-f] [-i] file.xls
-   xls2csv   --help | --man | --info
+   xlsx2csv [ -A [ -N || -J str ] | -o file.csv ] [-f] [-i] file.xls
+   xlsx2csv   --help | --man | --info
 
 =head1 DESCRIPTION
 
@@ -176,6 +218,13 @@ sheet name.
 
 If specified, dump all will not use output CSV-file but sheet name only.
 
+=item -J str
+
+=item --join=str
+
+If specified, output file names under C<-A> will join on C<str> instead of
+the default C<->.
+
 =item -o CSV-file
 
 =item -c CSV-file
@@ -200,11 +249,11 @@ Default: Last ARGUMENT file that exists.
 
 =head1 SEE ALSO
 
-L<Spreadsheet::Read>, L<Text::CSV_XS>, L<xlsx2csv>, L<xlscat>
+L<Spreadsheet::Read>, L<Text::CSV_XS>, L<xlscat>
 
 =head1 AUTHOR
 
-H.Merijn Brand, <h.m.brand@xs4all.nl>
+H.Merijn Brand <perl5@tux.freedom.nl>
 
 =head1 COPYRIGHT AND LICENSE
 

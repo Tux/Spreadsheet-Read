@@ -21,7 +21,8 @@ sub link_or_copy {
 
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
-    -f "examples/xlsgrep" or link_or_copy "examples/xlscat", "examples/xlsgrep";
+    -f "examples/xls2csv" or link_or_copy "examples/xlsx2csv", "examples/xls2csv";
+    -f "examples/xlsgrep" or link_or_copy "examples/xlscat",   "examples/xlsgrep";
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
