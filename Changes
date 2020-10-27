@@ -4,6 +4,7 @@
     * Add --list to xlscat and xls2csv
     * Update xls2csv to be identical to xlsx2csv
     * ::parses ("") will return list of supported types
+    * Move installables from examples/ to scripts/
 
 0.82	- 26 Sep 2020, H.Merijn Brand
     * Move pod tests to xt (and do not distribute)

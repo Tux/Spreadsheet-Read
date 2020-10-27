@@ -15,6 +15,6 @@ if ($@) {
     }
 
 all_minimum_version_ok ("5.008001", { paths =>
-    [qw( Makefile.PL Read.pm lib t xt examples )]});
+    [qw( Makefile.PL Read.pm lib t xt scripts examples )]});
 
 done_testing ();

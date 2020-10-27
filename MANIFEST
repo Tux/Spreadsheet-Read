@@ -1,12 +1,12 @@
 Changes
 CONTRIBUTING.md
 cpanfile
-examples/ss2tk
-examples/ssdiff
+scripts/ss2tk
+scripts/ssdiff
+scripts/xlscat
+scripts/xls2csv
+scripts/xlsx2csv
 examples/ss-dups-tk.pl
-examples/xlscat
-examples/xls2csv
-examples/xlsx2csv
 files/Active2.xls
 files/Active2.xlsx
 files/attr.ods

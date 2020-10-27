@@ -192,7 +192,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
        parser
          Force the data to be parsed by a specific format. Possible values are
-         "csv", "prl" (or "perl"), "sc" (or "squirelcalc"), "sxc" (or "oo",
+         "csv", "prl" (or "perl"), "sc" (or "squirrelcalc"), "sxc" (or "oo",
          "ods", "openoffice", "libreoffice") "xls" (or "excel"), and "xlsx"
          (or "excel2007").
 
@@ -391,6 +391,11 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
        "parses ()" is not imported by default, so either specify it in the use
        argument list, or call it fully qualified.
+
+       If $format is false ("undef", "", or 0), "parses ()" will return a
+       sorted list of supported types.
+
+        @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
 
        [4mparsers[0m
 
@@ -822,7 +827,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
        file?"
 
        If the module was installed without the tools, you can find them here:
-         https://github.com/Tux/Spreadsheet-Read/tree/master/examples
+         https://github.com/Tux/Spreadsheet-Read/tree/master/scripts
 
    [1m"xlscat"[0m
        Show (parts of) a spreadsheet in plain text, CSV, or HTML
@@ -830,47 +835,61 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
         usage: xlscat   [-s <sep>] [-L] [-n] [-A] [-u] [Selection] file.xls
                         [-c | -m]                 [-u] [Selection] file.xls
                          -i                            [-S sheets] file.xls
-           Generic options:
-              -v[#]       Set verbose level (xlscat/xlsgrep)
-              -d[#]       Set debug   level (Spreadsheet::Read)
-              -u          Use unformatted values
-              --noclip    Do not strip empty sheets and
-                          trailing empty rows and columns
-              -e <enc>    Set encoding for input and output
-              -b <enc>    Set encoding for input
-              -a <enc>    Set encoding for output
-           Input CSV:
-              --in-sep=c  Set input sep_char for CSV
-           Input XLS:
-              --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
-                          the default replacement is 'yyyy-mm-dd'
-           Output Text (default):
-              -s <sep>    Use separator <sep>. Default '|', \n allowed
-              -L          Line up the columns
-              -n [skip]   Number lines (prefix with column number)
-                          optionally skip <skip> (header) lines
-              -A          Show field attributes in ANSI escapes
-              -h[#]       Show # header lines
-           Output Index only:
-              -i          Show sheet names and size only
-           Output CSV:
-              -c          Output CSV, separator = ','
-              -m          Output CSV, separator = ';'
-           Output HTML:
-              -H          Output HTML
-           Selection:
-              -S <sheets> Only print sheets <sheets>. 'all' is a valid set
-                          Default only prints the first sheet
-              -R <rows>   Only print rows    <rows>. Default is 'all'
-              -C <cols>   Only print columns <cols>. Default is 'all'
-              -F <flds>   Only fields <flds> e.g. -FA3,B16
-           Ordering (column numbers in result set *after* selection):
-              --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
-                          +#   - first # lines do not sort (header)
-                          #    - order on column # lexical ascending
-                          #n   - order on column # numeric ascending
-                          #r   - order on column # lexical descending
-                          #rn  - order on column # numeric descending
+            Generic options:
+               -v[#]       Set verbose level (xlscat/xlsgrep)
+               -d[#]       Set debug   level (Spreadsheet::Read)
+               --list      Show supported spreadsheet formats and exit
+               -u          Use unformatted values
+               --strip[=#] Strip leading and/or traing spaces of all cells
+               --noclip    Do not strip empty sheets and
+                           trailing empty rows and columns
+                --no-nl[=R] Replace all newlines in cells with R (default space)
+               -e <enc>    Set encoding for input and output
+               -b <enc>    Set encoding for input
+               -a <enc>    Set encoding for output
+               -U          Set encoding for output to utf-8 (short for -a utf-8)
+            Input CSV:
+               --in-sep=c  Set input sep_char for CSV (c can be 'TAB')
+            Input XLS:
+               --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                           the default replacement is 'yyyy-mm-dd'
+               --passwd=pw Specify the password for workbook
+                           if pw = -, read password from keyboard
+               --formulas  Show the formula instead of the value
+            Output Text (default):
+               -s <sep>    Use separator <sep>. Default '|', \n allowed
+                           Overrules ',' when used with --csv
+               -L          Line up the columns
+               -n [skip]   Number lines (prefix with column number)
+                           optionally skip <skip> (header) lines
+               -A          Show field attributes in ANSI escapes
+               -h[#]       Show # header lines
+               -D          Dump each record with Data::Peek or Data::Dumper
+                --hash     Like -D but as hash with first row as keys
+            Output Index only:
+               -i          Show sheet names and size only
+            Output CSV:
+               -c          Output CSV, separator = ','
+               -m          Output CSV, separator = ';'
+            Output HTML:
+               -H          Output HTML
+            Selection:
+               -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                           Default only prints the first sheet
+               -R <rows>   Only print rows    <rows>. Default is 'all'
+               -C <cols>   Only print columns <cols>. Default is 'all'
+               -F <flds>   Only fields <flds> e.g. -FA3,B16
+            Ordering (column numbers in result set *after* selection):
+               --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                           +#   - first # lines do not sort (header)
+                           #    - order on column # lexical ascending
+                           #n   - order on column # numeric ascending
+                           #r   - order on column # lexical descending
+                           #rn  - order on column # numeric descending
+
+        Examples:
+            xlscat -i foo.xls
+            xlscat --in-sep=: --sort=3n -L /etc/passwd
 
    [1m"xlsgrep"[0m
        Show (parts of) a spreadsheet that match a pattern in plain text, CSV,
@@ -879,65 +898,98 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
         usage: xlsgrep  [-s <sep>] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
                         [-c | -m]                 [-u] [Selection] pattern file.xls
                          -i                            [-S sheets] pattern file.xls
-           Generic options:
-              -v[#]       Set verbose level (xlscat/xlsgrep)
-              -d[#]       Set debug   level (Spreadsheet::Read)
-              -u          Use unformatted values
-              --noclip    Do not strip empty sheets and
-                          trailing empty rows and columns
-              -e <enc>    Set encoding for input and output
-              -b <enc>    Set encoding for input
-              -a <enc>    Set encoding for output
-           Input CSV:
-              --in-sep=c  Set input sep_char for CSV
-           Input XLS:
-              --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
-                          the default replacement is 'yyyy-mm-dd'
-           Output Text (default):
-              -s <sep>    Use separator <sep>. Default '|', \n allowed
-              -L          Line up the columns
-              -n [skip]   Number lines (prefix with column number)
-                          optionally skip <skip> (header) lines
-              -A          Show field attributes in ANSI escapes
-              -h[#]       Show # header lines
-           Grep options:
-              -i          Ignore case
-              -w          Match whole words only
-           Output CSV:
-              -c          Output CSV, separator = ','
-              -m          Output CSV, separator = ';'
-           Output HTML:
-              -H          Output HTML
-           Selection:
-              -S <sheets> Only print sheets <sheets>. 'all' is a valid set
-                          Default only prints the first sheet
-              -R <rows>   Only print rows    <rows>. Default is 'all'
-              -C <cols>   Only print columns <cols>. Default is 'all'
-              -F <flds>   Only fields <flds> e.g. -FA3,B16
-           Ordering (column numbers in result set *after* selection):
-              --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
-                          +#   - first # lines do not sort (header)
-                          #    - order on column # lexical ascending
-                          #n   - order on column # numeric ascending
-                          #r   - order on column # lexical descending
-                          #rn  - order on column # numeric descending
+            Generic options:
+               -v[#]       Set verbose level (xlscat/xlsgrep)
+               -d[#]       Set debug   level (Spreadsheet::Read)
+               --list      Show supported spreadsheet formats and exit
+               -u          Use unformatted values
+               --strip[=#] Strip leading and/or traing spaces of all cells
+               --noclip    Do not strip empty sheets and
+                           trailing empty rows and columns
+                --no-nl[=R] Replace all newlines in cells with R (default space)
+               -e <enc>    Set encoding for input and output
+               -b <enc>    Set encoding for input
+               -a <enc>    Set encoding for output
+               -U          Set encoding for output to utf-8 (short for -a utf-8)
+            Input CSV:
+               --in-sep=c  Set input sep_char for CSV (c can be 'TAB')
+            Input XLS:
+               --dtfmt=fmt Specify the default date format to replace 'm-d-yy'
+                           the default replacement is 'yyyy-mm-dd'
+               --passwd=pw Specify the password for workbook
+                           if pw = -, read password from keyboard
+               --formulas  Show the formula instead of the value
+            Output Text (default):
+               -s <sep>    Use separator <sep>. Default '|', \n allowed
+                           Overrules ',' when used with --csv
+               -L          Line up the columns
+               -n [skip]   Number lines (prefix with column number)
+                           optionally skip <skip> (header) lines
+               -A          Show field attributes in ANSI escapes
+               -h[#]       Show # header lines
+               -D          Dump each record with Data::Peek or Data::Dumper
+                --hash     Like -D but as hash with first row as keys
+            Grep options:
+               -i          Ignore case
+               -w          Match whole words only
+            Output CSV:
+               -c          Output CSV, separator = ','
+               -m          Output CSV, separator = ';'
+            Output HTML:
+               -H          Output HTML
+            Selection:
+               -S <sheets> Only print sheets <sheets>. 'all' is a valid set
+                           Default only prints the first sheet
+               -R <rows>   Only print rows    <rows>. Default is 'all'
+               -C <cols>   Only print columns <cols>. Default is 'all'
+               -F <flds>   Only fields <flds> e.g. -FA3,B16
+            Ordering (column numbers in result set *after* selection):
+               --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                           +#   - first # lines do not sort (header)
+                           #    - order on column # lexical ascending
+                           #n   - order on column # numeric ascending
+                           #r   - order on column # lexical descending
+                           #rn  - order on column # numeric descending
 
-   [1m"xls2csv"[0m
+        Examples:
+            xlscat -i foo.xls
+            xlscat --in-sep=: --sort=3n -L /etc/passwd
+
+   [1m"xlsx2csv"[0m
        Convert a spreadsheet to CSV. This is just a small wrapper over
        "xlscat".
 
-        usage: xls2csv [ -o file.csv ] file.xls
+        usage: xlsx2csv [-A [-N | -J c] | -o file.csv] [-s sep] [-f] [-i] file.xls
+               xlsx2csv --help | --man | --info
+                  --list    List supported spreadsheet formats and exit
+            -A    --all     Export all sheets      (filename-sheetname.csv)
+            -N    --no-pfx  No filene prefix on -A (sheetname.csv)
+            -Z    --zip     Convert sheets to CSV's in ZIP
+            -J s  --join=s  Use s to join filename-sheetname (-)
+            -o f  --out=f   Set output filename
+            -i f  --in=f    Set infut  filename
+            -f    --force   Force overwrite output if exists
+            -s s  --sep=s   Set CSV separator character
+        Unless -A is used, all other options are passed on to xlscat
+
+   [1m"xls2csv"[0m
+       Convert a spreadsheet to CSV. This is identical to "xlsx2csv"
 
    [1m"ss2tk"[0m
        Show a spreadsheet in a perl/Tk spreadsheet widget
 
-        usage: ss2tk [-w <width>] [X11 options] file.xls [<pattern>]
-               -w <width> use <width> as default column width (4)
+        usage: ss2tk [options] [X11 options] file.xls [<pattern>]
+               -w <width> use <width> as column width
+               -L         Add spreadsheet tags to top (A, B, ..Z, AB, ...)
+                          and left (1, 2, ...)
+               --fs[=7]   Set font size (default 7 if no value)
+               --fn=name  Set font Face name (default is DejaVu Sans Mono
+                          if font size is given
 
    [1m"ssdiff"[0m
        Show the differences between two spreadsheets.
 
-        usage: examples/ssdiff [--verbose[=1]] file.xls file.xlsx
+        usage: ssdiff [--verbose[=1]] file.xls file.xlsx
 
 [1mTODO[0m
        Options
@@ -1054,7 +1106,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
        xls2csv
          xls2csv <https://github.com/Tux/Spreadsheet-
-         Read/blob/master/examples/xls2csv> offers an alternative for my
+         Read/blob/master/scripts/xls2csv> offers an alternative for my
          "xlscat -c", in the xls2csv tool, but this tool focuses on character
          encoding transparency, and requires some other modules.
 

@@ -59,7 +59,7 @@ possible name clash:
 
 =head1 TODO
 
-  * Make tests for examples/xlscat
+  * Make tests for scripts/xlscat
   * Support Parsers native module options
   * Check if Tk is installed before asking if ss2tk is wanted
   * Test diagnostics output

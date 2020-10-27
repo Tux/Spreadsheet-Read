@@ -21,8 +21,8 @@ sub link_or_copy {
 
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
-    -f "examples/xls2csv" or link_or_copy "examples/xlsx2csv", "examples/xls2csv";
-    -f "examples/xlsgrep" or link_or_copy "examples/xlscat",   "examples/xlsgrep";
+    -f "scripts/xls2csv" or link_or_copy "scripts/xlsx2csv", "scripts/xls2csv";
+    -f "scripts/xlsgrep" or link_or_copy "scripts/xlscat",   "scripts/xlsgrep";
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
@@ -31,7 +31,7 @@ unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
 	  [ "xlsx2csv",	"Wrapper around xlscat for easy XLSX => CSV"	],
 	  ) {
 	prompt ("Do you want to install $_->[0]\t$_->[1] ?", "y") =~ m/[Yy]/ and
-	    push @exe, "examples/$_->[0]";
+	    push @exe, "scripts/$_->[0]";
 	}
     }
 my %wm = (

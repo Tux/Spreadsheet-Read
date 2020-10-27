@@ -19,7 +19,8 @@ pprove
 Rsync
 Spreadsheet/
 sandbox/
-examples/xlsgrep
+scripts/xls2csv
+scripts/xlsgrep
 test/
 \.aspell\.local\.pws
 \.perlcriticrc

@@ -3,9 +3,12 @@
 use strict;
 use warnings;
 
+our $VERSION = "0.03";
+our $CMD = $0; $CMD =~ s{.*/}{};
+
 sub usage {
     my $err = shift and select STDERR;
-    print "usage: $0 [--verbose[=1]] file.xls file.xlsx\n";
+    print "usage: $CMD [--verbose[=1]] file.xls file.xlsx\n";
     exit $err;
     } # usage
 
@@ -13,6 +16,8 @@ use Getopt::Long qw(:config bundling);
 my $opt_v = 1;
 GetOptions (
     "help|?"		=> sub { usage (0); },
+    "V|version"		=> sub { print "$CMD [$VERSION]\n"; exit 0; },
+
     "v|verbose:2"	=> \$opt_v,
     ) or usage (1);
 

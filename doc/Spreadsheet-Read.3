@@ -346,7 +346,7 @@ Currently supported options are:
 .IX Xref "parser"
 .IX Item "parser"
 Force the data to be parsed by a specific format. Possible values are
-\&\f(CW\*(C`csv\*(C'\fR, \f(CW\*(C`prl\*(C'\fR (or \f(CW\*(C`perl\*(C'\fR), \f(CW\*(C`sc\*(C'\fR (or \f(CW\*(C`squirelcalc\*(C'\fR), \f(CW\*(C`sxc\*(C'\fR (or \f(CW\*(C`oo\*(C'\fR,
+\&\f(CW\*(C`csv\*(C'\fR, \f(CW\*(C`prl\*(C'\fR (or \f(CW\*(C`perl\*(C'\fR), \f(CW\*(C`sc\*(C'\fR (or \f(CW\*(C`squirrelcalc\*(C'\fR), \f(CW\*(C`sxc\*(C'\fR (or \f(CW\*(C`oo\*(C'\fR,
 \&\f(CW\*(C`ods\*(C'\fR, \f(CW\*(C`openoffice\*(C'\fR, \f(CW\*(C`libreoffice\*(C'\fR) \f(CW\*(C`xls\*(C'\fR (or \f(CW\*(C`excel\*(C'\fR), and \f(CW\*(C`xlsx\*(C'\fR
 (or \f(CW\*(C`excel2007\*(C'\fR).
 .Sp
@@ -579,6 +579,13 @@ for that format unless overruled. See \f(CW\*(C`parser\*(C'\fR.
 .PP
 \&\f(CW\*(C`parses ()\*(C'\fR is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
+.PP
+If \f(CW$format\fR is false (\f(CW\*(C`undef\*(C'\fR, \f(CW""\fR, or \f(CW0\fR), \f(CW\*(C`parses ()\*(C'\fR will
+return a sorted list of supported types.
+.PP
+.Vb 1
+\& @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
+.Ve
 .PP
 \fIparsers\fR
 .IX Subsection "parsers"
@@ -1095,7 +1102,7 @@ This modules comes with a few tools that perform tasks from the \s-1FAQ,\s0 like
 \&\*(L"How do I select only column D through F from sheet 2 into a \s-1CSV\s0 file?\*(R"
 .PP
 If the module was installed without the tools, you can find them here:
-  https://github.com/Tux/Spreadsheet\-Read/tree/master/examples
+  https://github.com/Tux/Spreadsheet\-Read/tree/master/scripts
 .ie n .SS """xlscat"""
 .el .SS "\f(CWxlscat\fP"
 .IX Subsection "xlscat"
@@ -1105,47 +1112,61 @@ Show (parts of) a spreadsheet in plain text, \s-1CSV,\s0 or \s-1HTML\s0
 \& usage: xlscat   [\-s <sep>] [\-L] [\-n] [\-A] [\-u] [Selection] file.xls
 \&                 [\-c | \-m]                 [\-u] [Selection] file.xls
 \&                  \-i                            [\-S sheets] file.xls
-\&    Generic options:
-\&       \-v[#]       Set verbose level (xlscat/xlsgrep)
-\&       \-d[#]       Set debug   level (Spreadsheet::Read)
-\&       \-u          Use unformatted values
-\&       \-\-noclip    Do not strip empty sheets and
-\&                   trailing empty rows and columns
-\&       \-e <enc>    Set encoding for input and output
-\&       \-b <enc>    Set encoding for input
-\&       \-a <enc>    Set encoding for output
-\&    Input CSV:
-\&       \-\-in\-sep=c  Set input sep_char for CSV
-\&    Input XLS:
-\&       \-\-dtfmt=fmt Specify the default date format to replace \*(Aqm\-d\-yy\*(Aq
-\&                   the default replacement is \*(Aqyyyy\-mm\-dd\*(Aq
-\&    Output Text (default):
-\&       \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
-\&       \-L          Line up the columns
-\&       \-n [skip]   Number lines (prefix with column number)
-\&                   optionally skip <skip> (header) lines
-\&       \-A          Show field attributes in ANSI escapes
-\&       \-h[#]       Show # header lines
-\&    Output Index only:
-\&       \-i          Show sheet names and size only
-\&    Output CSV:
-\&       \-c          Output CSV, separator = \*(Aq,\*(Aq
-\&       \-m          Output CSV, separator = \*(Aq;\*(Aq
-\&    Output HTML:
-\&       \-H          Output HTML
-\&    Selection:
-\&       \-S <sheets> Only print sheets <sheets>. \*(Aqall\*(Aq is a valid set
-\&                   Default only prints the first sheet
-\&       \-R <rows>   Only print rows    <rows>. Default is \*(Aqall\*(Aq
-\&       \-C <cols>   Only print columns <cols>. Default is \*(Aqall\*(Aq
-\&       \-F <flds>   Only fields <flds> e.g. \-FA3,B16
-\&    Ordering (column numbers in result set *after* selection):
-\&       \-\-sort=spec Sort output (e.g. \-\-sort=3,2r,5n,1rn+2)
-\&                   +#   \- first # lines do not sort (header)
-\&                   #    \- order on column # lexical ascending
-\&                   #n   \- order on column # numeric ascending
-\&                   #r   \- order on column # lexical descending
-\&                   #rn  \- order on column # numeric descending
+\&     Generic options:
+\&        \-v[#]       Set verbose level (xlscat/xlsgrep)
+\&        \-d[#]       Set debug   level (Spreadsheet::Read)
+\&        \-\-list      Show supported spreadsheet formats and exit
+\&        \-u          Use unformatted values
+\&        \-\-strip[=#] Strip leading and/or traing spaces of all cells
+\&        \-\-noclip    Do not strip empty sheets and
+\&                    trailing empty rows and columns
+\&         \-\-no\-nl[=R] Replace all newlines in cells with R (default space)
+\&        \-e <enc>    Set encoding for input and output
+\&        \-b <enc>    Set encoding for input
+\&        \-a <enc>    Set encoding for output
+\&        \-U          Set encoding for output to utf\-8 (short for \-a utf\-8)
+\&     Input CSV:
+\&        \-\-in\-sep=c  Set input sep_char for CSV (c can be \*(AqTAB\*(Aq)
+\&     Input XLS:
+\&        \-\-dtfmt=fmt Specify the default date format to replace \*(Aqm\-d\-yy\*(Aq
+\&                    the default replacement is \*(Aqyyyy\-mm\-dd\*(Aq
+\&        \-\-passwd=pw Specify the password for workbook
+\&                    if pw = \-, read password from keyboard
+\&        \-\-formulas  Show the formula instead of the value
+\&     Output Text (default):
+\&        \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
+\&                    Overrules \*(Aq,\*(Aq when used with \-\-csv
+\&        \-L          Line up the columns
+\&        \-n [skip]   Number lines (prefix with column number)
+\&                    optionally skip <skip> (header) lines
+\&        \-A          Show field attributes in ANSI escapes
+\&        \-h[#]       Show # header lines
+\&        \-D          Dump each record with Data::Peek or Data::Dumper
+\&         \-\-hash     Like \-D but as hash with first row as keys
+\&     Output Index only:
+\&        \-i          Show sheet names and size only
+\&     Output CSV:
+\&        \-c          Output CSV, separator = \*(Aq,\*(Aq
+\&        \-m          Output CSV, separator = \*(Aq;\*(Aq
+\&     Output HTML:
+\&        \-H          Output HTML
+\&     Selection:
+\&        \-S <sheets> Only print sheets <sheets>. \*(Aqall\*(Aq is a valid set
+\&                    Default only prints the first sheet
+\&        \-R <rows>   Only print rows    <rows>. Default is \*(Aqall\*(Aq
+\&        \-C <cols>   Only print columns <cols>. Default is \*(Aqall\*(Aq
+\&        \-F <flds>   Only fields <flds> e.g. \-FA3,B16
+\&     Ordering (column numbers in result set *after* selection):
+\&        \-\-sort=spec Sort output (e.g. \-\-sort=3,2r,5n,1rn+2)
+\&                    +#   \- first # lines do not sort (header)
+\&                    #    \- order on column # lexical ascending
+\&                    #n   \- order on column # numeric ascending
+\&                    #r   \- order on column # lexical descending
+\&                    #rn  \- order on column # numeric descending
+\&
+\& Examples:
+\&     xlscat \-i foo.xls
+\&     xlscat \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
 .Ve
 .ie n .SS """xlsgrep"""
 .el .SS "\f(CWxlsgrep\fP"
@@ -1156,65 +1177,99 @@ Show (parts of) a spreadsheet that match a pattern in plain text, \s-1CSV,\s0 or
 \& usage: xlsgrep  [\-s <sep>] [\-L] [\-n] [\-A] [\-u] [Selection] pattern file.xls
 \&                 [\-c | \-m]                 [\-u] [Selection] pattern file.xls
 \&                  \-i                            [\-S sheets] pattern file.xls
-\&    Generic options:
-\&       \-v[#]       Set verbose level (xlscat/xlsgrep)
-\&       \-d[#]       Set debug   level (Spreadsheet::Read)
-\&       \-u          Use unformatted values
-\&       \-\-noclip    Do not strip empty sheets and
-\&                   trailing empty rows and columns
-\&       \-e <enc>    Set encoding for input and output
-\&       \-b <enc>    Set encoding for input
-\&       \-a <enc>    Set encoding for output
-\&    Input CSV:
-\&       \-\-in\-sep=c  Set input sep_char for CSV
-\&    Input XLS:
-\&       \-\-dtfmt=fmt Specify the default date format to replace \*(Aqm\-d\-yy\*(Aq
-\&                   the default replacement is \*(Aqyyyy\-mm\-dd\*(Aq
-\&    Output Text (default):
-\&       \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
-\&       \-L          Line up the columns
-\&       \-n [skip]   Number lines (prefix with column number)
-\&                   optionally skip <skip> (header) lines
-\&       \-A          Show field attributes in ANSI escapes
-\&       \-h[#]       Show # header lines
-\&    Grep options:
-\&       \-i          Ignore case
-\&       \-w          Match whole words only
-\&    Output CSV:
-\&       \-c          Output CSV, separator = \*(Aq,\*(Aq
-\&       \-m          Output CSV, separator = \*(Aq;\*(Aq
-\&    Output HTML:
-\&       \-H          Output HTML
-\&    Selection:
-\&       \-S <sheets> Only print sheets <sheets>. \*(Aqall\*(Aq is a valid set
-\&                   Default only prints the first sheet
-\&       \-R <rows>   Only print rows    <rows>. Default is \*(Aqall\*(Aq
-\&       \-C <cols>   Only print columns <cols>. Default is \*(Aqall\*(Aq
-\&       \-F <flds>   Only fields <flds> e.g. \-FA3,B16
-\&    Ordering (column numbers in result set *after* selection):
-\&       \-\-sort=spec Sort output (e.g. \-\-sort=3,2r,5n,1rn+2)
-\&                   +#   \- first # lines do not sort (header)
-\&                   #    \- order on column # lexical ascending
-\&                   #n   \- order on column # numeric ascending
-\&                   #r   \- order on column # lexical descending
-\&                   #rn  \- order on column # numeric descending
+\&     Generic options:
+\&        \-v[#]       Set verbose level (xlscat/xlsgrep)
+\&        \-d[#]       Set debug   level (Spreadsheet::Read)
+\&        \-\-list      Show supported spreadsheet formats and exit
+\&        \-u          Use unformatted values
+\&        \-\-strip[=#] Strip leading and/or traing spaces of all cells
+\&        \-\-noclip    Do not strip empty sheets and
+\&                    trailing empty rows and columns
+\&         \-\-no\-nl[=R] Replace all newlines in cells with R (default space)
+\&        \-e <enc>    Set encoding for input and output
+\&        \-b <enc>    Set encoding for input
+\&        \-a <enc>    Set encoding for output
+\&        \-U          Set encoding for output to utf\-8 (short for \-a utf\-8)
+\&     Input CSV:
+\&        \-\-in\-sep=c  Set input sep_char for CSV (c can be \*(AqTAB\*(Aq)
+\&     Input XLS:
+\&        \-\-dtfmt=fmt Specify the default date format to replace \*(Aqm\-d\-yy\*(Aq
+\&                    the default replacement is \*(Aqyyyy\-mm\-dd\*(Aq
+\&        \-\-passwd=pw Specify the password for workbook
+\&                    if pw = \-, read password from keyboard
+\&        \-\-formulas  Show the formula instead of the value
+\&     Output Text (default):
+\&        \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
+\&                    Overrules \*(Aq,\*(Aq when used with \-\-csv
+\&        \-L          Line up the columns
+\&        \-n [skip]   Number lines (prefix with column number)
+\&                    optionally skip <skip> (header) lines
+\&        \-A          Show field attributes in ANSI escapes
+\&        \-h[#]       Show # header lines
+\&        \-D          Dump each record with Data::Peek or Data::Dumper
+\&         \-\-hash     Like \-D but as hash with first row as keys
+\&     Grep options:
+\&        \-i          Ignore case
+\&        \-w          Match whole words only
+\&     Output CSV:
+\&        \-c          Output CSV, separator = \*(Aq,\*(Aq
+\&        \-m          Output CSV, separator = \*(Aq;\*(Aq
+\&     Output HTML:
+\&        \-H          Output HTML
+\&     Selection:
+\&        \-S <sheets> Only print sheets <sheets>. \*(Aqall\*(Aq is a valid set
+\&                    Default only prints the first sheet
+\&        \-R <rows>   Only print rows    <rows>. Default is \*(Aqall\*(Aq
+\&        \-C <cols>   Only print columns <cols>. Default is \*(Aqall\*(Aq
+\&        \-F <flds>   Only fields <flds> e.g. \-FA3,B16
+\&     Ordering (column numbers in result set *after* selection):
+\&        \-\-sort=spec Sort output (e.g. \-\-sort=3,2r,5n,1rn+2)
+\&                    +#   \- first # lines do not sort (header)
+\&                    #    \- order on column # lexical ascending
+\&                    #n   \- order on column # numeric ascending
+\&                    #r   \- order on column # lexical descending
+\&                    #rn  \- order on column # numeric descending
+\&
+\& Examples:
+\&     xlscat \-i foo.xls
+\&     xlscat \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
+.Ve
+.ie n .SS """xlsx2csv"""
+.el .SS "\f(CWxlsx2csv\fP"
+.IX Subsection "xlsx2csv"
+Convert a spreadsheet to \s-1CSV.\s0 This is just a small wrapper over \f(CW\*(C`xlscat\*(C'\fR.
+.PP
+.Vb 12
+\& usage: xlsx2csv [\-A [\-N | \-J c] | \-o file.csv] [\-s sep] [\-f] [\-i] file.xls
+\&        xlsx2csv \-\-help | \-\-man | \-\-info
+\&           \-\-list    List supported spreadsheet formats and exit
+\&     \-A    \-\-all     Export all sheets      (filename\-sheetname.csv)
+\&     \-N    \-\-no\-pfx  No filene prefix on \-A (sheetname.csv)
+\&     \-Z    \-\-zip     Convert sheets to CSV\*(Aqs in ZIP
+\&     \-J s  \-\-join=s  Use s to join filename\-sheetname (\-)
+\&     \-o f  \-\-out=f   Set output filename
+\&     \-i f  \-\-in=f    Set infut  filename
+\&     \-f    \-\-force   Force overwrite output if exists
+\&     \-s s  \-\-sep=s   Set CSV separator character
+\& Unless \-A is used, all other options are passed on to xlscat
 .Ve
 .ie n .SS """xls2csv"""
 .el .SS "\f(CWxls2csv\fP"
 .IX Subsection "xls2csv"
-Convert a spreadsheet to \s-1CSV.\s0 This is just a small wrapper over \f(CW\*(C`xlscat\*(C'\fR.
-.PP
-.Vb 1
-\& usage: xls2csv [ \-o file.csv ] file.xls
-.Ve
+Convert a spreadsheet to \s-1CSV.\s0 This is identical to \f(CW\*(C`xlsx2csv\*(C'\fR
 .ie n .SS """ss2tk"""
 .el .SS "\f(CWss2tk\fP"
 .IX Subsection "ss2tk"
 Show a spreadsheet in a perl/Tk spreadsheet widget
 .PP
-.Vb 2
-\& usage: ss2tk [\-w <width>] [X11 options] file.xls [<pattern>]
-\&        \-w <width> use <width> as default column width (4)
+.Vb 7
+\& usage: ss2tk [options] [X11 options] file.xls [<pattern>]
+\&        \-w <width> use <width> as column width
+\&        \-L         Add spreadsheet tags to top (A, B, ..Z, AB, ...)
+\&                   and left (1, 2, ...)
+\&        \-\-fs[=7]   Set font size (default 7 if no value)
+\&        \-\-fn=name  Set font Face name (default is DejaVu Sans Mono
+\&                   if font size is given
 .Ve
 .ie n .SS """ssdiff"""
 .el .SS "\f(CWssdiff\fP"
@@ -1222,7 +1277,7 @@ Show a spreadsheet in a perl/Tk spreadsheet widget
 Show the differences between two spreadsheets.
 .PP
 .Vb 1
-\& usage: examples/ssdiff [\-\-verbose[=1]] file.xls file.xlsx
+\& usage: ssdiff [\-\-verbose[=1]] file.xls file.xlsx
 .Ve
 .SH "TODO"
 .IX Header "TODO"
@@ -1348,7 +1403,7 @@ interesting approach of seeing all supported spreadsheet formats as if it were
 interface.
 .IP "xls2csv" 2
 .IX Item "xls2csv"
-xls2csv <https://github.com/Tux/Spreadsheet-Read/blob/master/examples/xls2csv>
+xls2csv <https://github.com/Tux/Spreadsheet-Read/blob/master/scripts/xls2csv>
 offers an alternative for my \f(CW\*(C`xlscat \-c\*(C'\fR, in the xls2csv tool, but this tool
 focuses on character encoding transparency, and requires some other modules.
 .SH "AUTHOR"
