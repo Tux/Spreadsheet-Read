@@ -1,10 +1,10 @@
 #!/pro/bin/perl
 
-use strict;
+use 5.14.0;
 use warnings;
 
 our $VERSION = "0.03";
-our $CMD = $0; $CMD =~ s{.*/}{};
+our $CMD = $0 =~ s{.*/}{}r;
 
 sub usage {
     my $err = shift and select STDERR;
@@ -12,13 +12,16 @@ sub usage {
     exit $err;
     } # usage
 
+use Spreadsheet::Read;
+use List::Util   qw( max );
 use Getopt::Long qw(:config bundling);
-my $opt_v = 1;
 GetOptions (
     "help|?"		=> sub { usage (0); },
     "V|version"		=> sub { print "$CMD [$VERSION]\n"; exit 0; },
 
-    "v|verbose:2"	=> \$opt_v,
+    "ccdiff!"		=> \ my $opt_cc,
+
+    "v|verbose:2"	=> \(my $opt_v = 1),
     ) or usage (1);
 
 my $file1 = shift or usage (1);
@@ -26,16 +29,21 @@ my $file2 = shift or usage (1);
 
 binmode STDOUT, ":encoding(utf-8)";
 
-use List::Util qw( max );
-use Spreadsheet::Read;
-my $ss1 = ReadData ($file1) or die "Cannot read $file1: $!\n";
-my $ss2 = ReadData ($file2) or die "Cannot read $file2: $!\n";
+my $ss1 = Spreadsheet::Read->new ($file1) or die "Cannot read $file1: $!\n";
+my $ss2 = Spreadsheet::Read->new ($file2) or die "Cannot read $file2: $!\n";
 
-print "< $file1\t($ss1->[0]{sheets} sheets)\n";
-print "> $file2\t($ss2->[0]{sheets} sheets)\n";
-foreach my $s (1 .. max map { $_->[0]{sheets} } $ss1, $ss2) {
-    my $s1 = $ss1->[$s];
-    my $s2 = $ss2->[$s];
+say for $ss1->sheets;
+if ($opt_cc) {
+    require App::ccdiff;
+    $@ || $App::ccdiff::VERSION lt "0.29" and
+	die "App::ccdiff-0.29 or higher required for --cc\n"
+    }
+
+print "< $file1\t(", scalar $ss1->sheets, " sheets)\n";
+print "> $file2\t(", scalar $ss2->sheets, " sheets)\n";
+foreach my $s (1 .. max map { scalar $_->sheets } $ss1, $ss2) {
+    my $s1 = $ss1->sheet ($s);
+    my $s2 = $ss2->sheet ($s);
     unless ($s1) {
 	print "$s: not in $file1\n";
 	last;
@@ -46,21 +54,33 @@ foreach my $s (1 .. max map { $_->[0]{sheets} } $ss1, $ss2) {
 	}
 
     printf "Sheet %d\n\t< %5d x %5d %s\n\t> %5d x %5d %s\n", $s,
-	$s1->{maxcol}, $s1->{maxrow}, $s1->{label},
-	$s2->{maxcol}, $s2->{maxrow}, $s2->{label};
+	$s1->maxcol, $s1->maxrow, $s1->label,
+	$s2->maxcol, $s2->maxrow, $s2->label;
 
-    my $mc = max map { $_->{maxcol} } $s1, $s2;
-    foreach my $r (1 ..  max map { $_->{maxrow} } $s1, $s2) {
-	if ($r > $s1->{maxrow}) {
+    if ($opt_cc) {
+	my @c;
+	foreach my $ss ($s1, $s2) {
+	    push @c => [ map { join ("|" => @$_) . "\n" }
+		[ map { $ss->col2label ($_) } 1 .. $ss->maxcol ],
+		map { [ $ss->row ($_) ] }     1 .. $ss->maxrow ];
+	    }
+
+	App::ccdiff::ccdiff (@c, { header => 0, unified => 3, "utf-8" => 1 });
+	next;
+	}
+
+    my $mc = max map { $_->maxcol } $s1, $s2;
+    foreach my $r (1 ..  max map { $_->maxrow } $s1, $s2) {
+	if ($r > $s1->maxrow) {
 	    print "$s: EOS in $file1 at row $r\n";
 	    last;
 	    }
-	if ($r > $s2->{maxrow}) {
+	if ($r > $s2->maxrow) {
 	    print "$s: EOS in $file2 at row $r\n";
 	    last;
 	    }
-	my @r1 = Spreadsheet::Read::row ($s1, $r);
-	my @r2 = Spreadsheet::Read::row ($s2, $r);
+	my @r1 = $s1->row ($r);
+	my @r2 = $s2->row ($r);
 	foreach my $c (1 ..  $mc) {
 	    my $c1 = $r1[$c];
 	    my $c2 = $r2[$c];

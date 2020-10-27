@@ -27,7 +27,9 @@ if ($check) {
     my @ef = grep { !m/xls(cat|grep)|ssdiff/ } map { glob "$_/*" } qw( examples scripts );
     $meta->check_minimum ([ "t", @ef, "Read.pm", "Makefile.PL" ]);
     $meta->{h}{requires}{perl} = "5.008004";
-    $meta->check_minimum ([ map { "scripts/$_" } qw( xlscat xlsgrep ssdiff )]);
+    $meta->check_minimum ([ map { "scripts/$_" } qw( xlscat xlsgrep )]);
+    $meta->{h}{requires}{perl} = "5.14";
+    $meta->check_minimum ([ map { "scripts/$_" } qw( ssdiff )]);
     $meta->done_testing ();
     }
 elsif ($opt_v) {
