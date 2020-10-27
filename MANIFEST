@@ -4,7 +4,6 @@ cpanfile
 scripts/ss2tk
 scripts/ssdiff
 scripts/xlscat
-scripts/xls2csv
 scripts/xlsx2csv
 examples/ss-dups-tk.pl
 files/Active2.xls
