@@ -64,7 +64,8 @@ possible name clash:
   * Check if Tk is installed before asking if ss2tk is wanted
   * Test diagnostics output
   * Make clip skip empty sheets
-  * Support Data::XLSX::Parser ?
+  * Support Spreadsheet::Perl
+  * Support Data::XLSX::Parser
 
 =head1 AUTHOR
 

@@ -18,7 +18,7 @@ is (parses ("xyzzy"), 0, "Unknown sheet type");
 is (parses ("xls"), parses ("excel"),      "Excel alias type");
 is (parses ("ods"), parses ("oo"),         "OpenOffice alias type 1");
 is (parses ("ods"), parses ("OpenOffice"), "OpenOffice alias type 2");
-is (parses ("prl"), parses ("perl"),       "Perl alias type");
+is (parses ("sc"),  parses ("scalc"),      "SquirrelCalc alias type");
 
 foreach my $x ([ "A1",              1,      1 ],
                [ "Z26",            26,     26 ],
