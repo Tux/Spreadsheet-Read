@@ -2535,7 +2535,7 @@ focuses on character encoding transparency, and requires some other modules.
 
 =head1 AUTHOR
 
-H.Merijn Brand, <h.m.brand@xs4all.nl>
+H.Merijn Brand <perl5@tux.freedom.nl>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1059,7 +1059,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
          encoding transparency, and requires some other modules.
 
 [1mAUTHOR[0m
-       H.Merijn Brand, <h.m.brand@xs4all.nl>
+       H.Merijn Brand <perl5@tux.freedom.nl>
 
 [1mCOPYRIGHT AND LICENSE[0m
        Copyright (C) 2005-2020 H.Merijn Brand

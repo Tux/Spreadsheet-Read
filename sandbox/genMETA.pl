@@ -44,7 +44,7 @@ version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
 license:                perl
 author:                 
-  - H.Merijn Brand <h.m.brand@xs4all.nl>
+  - H.Merijn Brand <perl5@tux.freedom.nl>
 generated_by:           Author
 distribution_type:      module
 provides:

@@ -1083,7 +1083,7 @@ Show the differences between two spreadsheets.
 
 # AUTHOR
 
-H.Merijn Brand, <h.m.brand@xs4all.nl>
+H.Merijn Brand <perl5@tux.freedom.nl>
 
 # COPYRIGHT AND LICENSE
 
