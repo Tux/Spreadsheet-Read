@@ -62,6 +62,7 @@ my @parsers = (
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
     [ prl  => "Spreadsheet::Perl",			""		],
+    [ sc   => "Spreadsheet::Read",			"0.01"		],
 
     # Helper modules
     [ ios  => "IO::Scalar",				""		],
