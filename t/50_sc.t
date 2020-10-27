@@ -9,7 +9,7 @@ require Test::NoWarnings;
 
 use     Spreadsheet::Read;
 my $parser = Spreadsheet::Read::parses ("sc") or
-    plan skip_all => "No SquirelCalc parser found";
+    plan skip_all => "No SquirrelCalc parser found";
 
 print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 

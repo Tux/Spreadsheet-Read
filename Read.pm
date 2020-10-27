@@ -109,7 +109,7 @@ for (@parsers) {
     eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" or
 	$_->[0] = "! Cannot use $mod version $vsn: $@";
     }
-$can{sc} = __PACKAGE__;	# SquirelCalc is built-in
+$can{sc} = __PACKAGE__;	# SquirrelCalc is built-in
 
 defined $Spreadsheet::ParseExcel::VERSION && $Spreadsheet::ParseExcel::VERSION < 0.61 and
     *Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
@@ -180,7 +180,8 @@ sub _parser {
     $type eq "openoffice"	and return $ods;
     $type eq "libreoffice"	and return $ods;
     $type eq "perl"		and return "prl";
-    $type eq "squirelcalc"	and return "sc";
+    $type eq "scalc"		and return "sc";
+    $type eq "squirrelcalc"	and return "sc";
     return exists $can{$type} ? $type : "";
     } # _parser
 
@@ -1622,7 +1623,7 @@ Currently supported options are:
 X<parser>
 
 Force the data to be parsed by a specific format. Possible values are
-C<csv>, C<prl> (or C<perl>), C<sc> (or C<squirelcalc>), C<sxc> (or C<oo>,
+C<csv>, C<prl> (or C<perl>), C<sc> (or C<squirrelcalc>), C<sxc> (or C<oo>,
 C<ods>, C<openoffice>, C<libreoffice>) C<xls> (or C<excel>), and C<xlsx>
 (or C<excel2007>).
 

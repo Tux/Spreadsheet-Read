@@ -8,7 +8,7 @@ use Test::NoWarnings;
 
 use Spreadsheet::Read;
     Spreadsheet::Read::parses ("sc") or
-	plan skip_all => "No SquirelCalc parser found";
+	plan skip_all => "No SquirrelCalc parser found";
 
 plan tests => 81;
 
