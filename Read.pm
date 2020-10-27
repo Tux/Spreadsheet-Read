@@ -60,8 +60,9 @@ my @parsers = (
     [ sxc  => "Spreadsheet::ReadSXC",			"0.26"		],
     [ xls  => "Spreadsheet::ParseExcel",		"0.34"		],
     [ xlsx => "Spreadsheet::ParseXLSX",			"0.24"		],
+    [ xlsm => "Spreadsheet::ParseXLSX",			"0.24"		],
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
-    [ prl  => "Spreadsheet::Perl",			""		],
+#   [ prl  => "Spreadsheet::Perl",			""		],
     [ sc   => "Spreadsheet::Read",			"0.01"		],
 
     # Helper modules
@@ -223,7 +224,12 @@ sub parsers {
 # Spreadsheet::Read::parses ("csv") or die "Cannot parse CSV"
 sub parses {
     ref $_[0] eq __PACKAGE__ and shift;
-    my $type = _parser (shift)	or  return 0;
+
+    my $type = shift or
+	return sort grep { !m/^(?:dmp|ios)/ && $can{$_} !~ m{^!} }
+	    keys %can;
+
+    $type = _parser ($type) or return 0;
     if ($can{$type} =~ m/^!\s*(.*)/) {
 	$@ = $1;
 	return 0;
@@ -1835,6 +1841,11 @@ for that format unless overruled. See L<C<parser>|/parser>.
 
 C<parses ()> is not imported by default, so either specify it in the
 use argument list, or call it fully qualified.
+
+If C<$format> is false (C<undef>, C<"">, or C<0>), C<parses ()> will
+return a sorted list of supported types.
+
+ @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
 
 =head3 parsers
 

@@ -3,14 +3,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 114;
+use Test::More tests => 115;
 use Test::NoWarnings;
 
 use Spreadsheet::Read qw(:DEFAULT parses rows );
 
 is (Spreadsheet::Read::Version (), $Spreadsheet::Read::VERSION, "Version check");
 
-is (parses (undef),   0, "No sheet type");
+ok (my @ext = parses (undef), "No sheet type");
+is_deeply ([ grep m/^sc/ => @ext ], [ "sc" ], "Supports Squirrelcalc");
+
 is (parses ("xyzzy"), 0, "Unknown sheet type");
 
 is (parses ("xls"), parses ("excel"),      "Excel alias type");

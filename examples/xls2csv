@@ -1,14 +1,14 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2016-2020
+#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2008-2020
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.6";
+our $VERSION = "3.7";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -97,6 +97,10 @@ unless ($xls) {
 -r $xls or usage 1, "Input file unreadable";
 -s $xls or usage 1, "Input file empty";
 
+my @known_ext = Spreadsheet::Read::parses (0);
+   @known_ext or @known_ext = qw( csv ods sc sxc xls xlsx );
+my $valid_ext = do { local $" = "|"; qr{ \. (?: @known_ext )}xi };
+
 if ($opt_Z) {
     require Archive::Zip;
     $@ and die "--zip requires Archive::Zip, which could not be loaded\n";
@@ -109,7 +113,7 @@ if ($opt_A || $opt_Z) {
     my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
     my $az = $opt_Z ? Archive::Zip->new : undef;
     $csv and $xls = $csv;
-    $xls =~ s/\.(csv|xlsx?)$//i;
+    $xls =~ s/$valid_ext $//ix;
     $csv = Text::CSV_XS->new ({ binary => 1, auto_diag => 1, eol => "\r\n" });
     $opt_s and $csv->sep_char ($opt_s);
     foreach my $si (1 .. $ss->[0]{sheets}) {
@@ -143,7 +147,7 @@ if ($opt_A || $opt_Z) {
     exit;
     }
 
-$csv or ($csv = $xls) =~ s/\.xlsx?$/.csv/i;
+$csv or ($csv = $xls) =~ s/$valid_ext $/.csv/xi;
 if (-f $csv) {
     $opt_f or die "$csv already exists\n";
     unlink $csv;
