@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 112;
+use Test::More tests => 114;
 use Test::NoWarnings;
 
 use Spreadsheet::Read qw(:DEFAULT parses rows );
@@ -105,3 +105,9 @@ for (undef, "", " ", 0, 1, [], {}) {
     my $arg = defined $_ ? $_ : "-- undef --";
     is ($ref, undef, "Illegal ReadData ({ $arg })");
     }
+
+my $sr = "Spreadsheet::Read";
+ok (my @p = $sr->parsers (), "Parser info");
+is_deeply ((grep { $_->{ext} eq "sc" } @p)[0],
+    { ext => "sc", min => "0.01", mod => $sr, vsn => $sr->VERSION, def => "*" },
+    "SquirrelCalc is internal");
