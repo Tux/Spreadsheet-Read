@@ -6,7 +6,7 @@ requires   "Exporter";
 requires   "File::Temp"               => "0.22";
 requires   "List::Util";
 
-recommends "Data::Peek"               => "0.49";
+recommends "Data::Peek"               => "0.50";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 

@@ -71,7 +71,7 @@ test_requires:
 recommends:
   IO::Scalar:           0
   File::Temp:           0.2311
-  Data::Peek:           0.49
+  Data::Peek:           0.50
 test_recommends:
   Test::More:           1.302183
 resources:
