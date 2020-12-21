@@ -15,6 +15,8 @@ if ($@) {
     }
 
 all_minimum_version_ok ("5.008001", { paths =>
-    [qw( Makefile.PL Read.pm lib t xt scripts examples )]});
+    [qw( Makefile.PL Read.pm lib t xt examples ),
+     grep !m/\b ssdiff \b/x => glob "scripts/*" ]});
+# ssdiff is checked in tgzdist
 
 done_testing ();
