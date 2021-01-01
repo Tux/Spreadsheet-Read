@@ -37,7 +37,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.83";
+our $VERSION = "0.84";
 sub  Version { $VERSION }
 
 use Carp;
@@ -2600,7 +2600,7 @@ H.Merijn Brand <perl5@tux.freedom.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2020 H.Merijn Brand
+Copyright (C) 2005-2021 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

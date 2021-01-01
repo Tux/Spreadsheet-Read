@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2008-2020
+#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2008-2021
 
 require 5.008001;
 
@@ -261,7 +261,7 @@ H.Merijn Brand <perl5@tux.freedom.nl>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2020 H.Merijn Brand
+Copyright (C) 2008-2021 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
