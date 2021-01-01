@@ -89,7 +89,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.00
       Text::CSV_PP:                        2.00
-      Text::CSV_XS:                        1.44
+      Text::CSV_XS:                        1.45
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -109,13 +109,13 @@ optional_features:
     requires:
       Spreadsheet::ParseODS:               0.26
     recommends:
-      Spreadsheet::ParseODS:               0.32
+      Spreadsheet::ParseODS:               0.33
   opt_sxc:
     description:        Provides parsing of OpenOffice spreadsheets old style
     requires:
       Spreadsheet::ReadSXC:                0.26
     recommends:
-      Spreadsheet::ReadSXC:                0.32
+      Spreadsheet::ReadSXC:                0.33
   opt_tools:
     description:        Spreadsheet tools
     recommends:

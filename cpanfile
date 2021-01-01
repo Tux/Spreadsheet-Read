@@ -27,19 +27,19 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.00";
     recommends "Text::CSV_PP"             => "2.00";
-    recommends "Text::CSV_XS"             => "1.44";
+    recommends "Text::CSV_XS"             => "1.45";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
     requires   "Spreadsheet::ParseODS"    => "0.26";
 
-    recommends "Spreadsheet::ParseODS"    => "0.32";
+    recommends "Spreadsheet::ParseODS"    => "0.33";
     };
 
 feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
     requires   "Spreadsheet::ReadSXC"     => "0.26";
 
-    recommends "Spreadsheet::ReadSXC"     => "0.32";
+    recommends "Spreadsheet::ReadSXC"     => "0.33";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
