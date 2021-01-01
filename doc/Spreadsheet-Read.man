@@ -1114,11 +1114,11 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
        H.Merijn Brand <perl5@tux.freedom.nl>
 
 [1mCOPYRIGHT AND LICENSE[0m
-       Copyright (C) 2005-2020 H.Merijn Brand
+       Copyright (C) 2005-2021 H.Merijn Brand
 
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
 
 
-perl v5.32.0                      2020-10-27                          STDIN(1)
+perl v5.32.0                      2021-01-01                          STDIN(1)
