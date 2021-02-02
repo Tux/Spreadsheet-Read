@@ -2,12 +2,12 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2005-2021
+#	   (m)'21 [2021-02-02] Copyright H.M.Brand 2005-2021
 
 use strict;
 use warnings;
 
-our $VERSION = "3.19";
+our $VERSION = "3.20";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -456,13 +456,6 @@ foreach my $si (1 .. $sc) {
 		{ map { $s->{cell}[$_ + 1][1] => $row[$_] } 0 .. $#row });
 	    next;
 	    }
-	if ($opt_L) {
-	    foreach my $c (0 .. $#row) {
-		my $l = length $row[$c];
-		$l > $w[$c] and $w[$c] = $l;
-		$row[$c] =~ m/^\s*(?:-\s*)?[0-9][0-9 .,]+$/ or $align[$c] = "-";
-		}
-	    }
 	if ($opt_H) {	# HTML
 	    print "  <tr>";
 	    if (defined $opt_n) {
@@ -537,6 +530,18 @@ foreach my $si (1 .. $sc) {
 	unshift @align, "";
 	}
     $opt_n = 0;
+    if ($opt_L) {
+	foreach my $r (0 .. $#data) {
+	    my $R = $data[$r][0];
+	    foreach my $c (0 .. $#$R) {
+		my $d = $R->[$c];
+		my $l = length $d;
+		$l > $w[$c] and $w[$c] = $l;
+		$r && $d =~ m/\S/ or next;
+		$d =~ m/^\s*(?:-\s*)?[0-9][0-9 .,]*$/ or $align[$c] = "-";
+		}
+	    }
+	}
     for (@data) {
 	my ($row, $att) = @$_;
 	my @row = @$row;
@@ -544,7 +549,7 @@ foreach my $si (1 .. $sc) {
 	    my $l = length $row[$_];
 	    my $w = $l < $w[$_] ? " " x ($w[$_] - $l) : "";
 	    if ($align[$_]) {
-		$_ ==  $#row or $row[$_] .= $w;
+		$_ == $#row or $row[$_] .= $w;
 		}
 	    else {
 		substr $row[$_], 0, 0, $w;
