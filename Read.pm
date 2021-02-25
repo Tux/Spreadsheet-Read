@@ -447,6 +447,10 @@ sub ReadData {
 	elsif (@_ % 2 == 0)          { %opt = @_          }
 	}
 
+    # Aliasses
+    exists $opt{transpose} && !exists $opt{pivot} and $opt{pivot} = delete $opt{transpose};
+    exists $opt{trim}      && !exists $opt{strip} and $opt{strip} = delete $opt{trim};
+
     exists $opt{rc}	or $opt{rc}	= $def_opts{rc};
     exists $opt{cells}	or $opt{cells}	= $def_opts{cells};
     exists $opt{attr}	or $opt{attr}	= $def_opts{attr};
@@ -1664,6 +1668,8 @@ per sheet that have no data, where no data means only undefined or empty
 cells (after optional stripping). If a sheet has no data at all, the sheet
 will be skipped entirely when this attribute is true.
 
+=item trim
+
 =item strip
 
 If set, L<C<ReadData>|/ReadData> will remove trailing- and/or
@@ -1676,6 +1682,11 @@ leading-whitespace from every field.
     2      n/a     strip
     3     strip    strip
 
+C<trim> and C<strip> are aliasses. If passed both, C<trim> is ignored
+because of backward compatability.
+
+=item transpose
+
 =item pivot
 
 Swap all rows and columns.
@@ -1686,13 +1697,16 @@ When a sheet contains data like
   A2      C2  D2
   A3  B3  C3  D3  E3
 
-using C<pivot> will return the sheet data as
+using C<transpose> or C<pivot> will return the sheet data as
 
   A1  A2  A3
   B1      B3
   C1  C2  C3
       D2  D3
   E1      E3
+
+C<transpose> and C<pivot> are aliasses. If passed both, C<transpose> is
+ignored because of backward compatability.
 
 =item sep
 

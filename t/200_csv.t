@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my     $tests = 206;
+my     $tests = 295;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -84,93 +84,97 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
     }
 
-{   # RT#74976 - Error Received when reading empty sheets
-    foreach my $strip (0 .. 3) {
-	my $ref = ReadData ("files/blank.csv", strip => $strip);
-	ok ($ref, "File with no content - strip $strip");
+foreach my $attr ("strip", "trim") {
+    {   # RT#74976 - Error Received when reading empty sheets
+	foreach my $strip (0 .. 3) {
+	    my $ref = ReadData ("files/blank.csv", $attr => $strip);
+	    ok ($ref, "File with no content - $attr $strip");
+	    }
+	}
+
+    # blank.csv has only one sheet with A1 filled with ' '
+    {   my  $ref = ReadData ("files/blank.csv", clip => 0, $attr => 0);
+	ok ($ref, "!clip $attr 0");
+	is ($ref->[1]{maxrow},     3,     "maxrow 3");
+	is ($ref->[1]{maxcol},     4,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+	is ($ref->[1]{A1},         " ",   "A1     = ' '");
+	    $ref = ReadData ("files/blank.csv", clip => 0, $attr => 1);
+	ok ($ref, "!clip $attr 1");
+	is ($ref->[1]{maxrow},     3,     "maxrow 3");
+	is ($ref->[1]{maxcol},     4,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
+	is ($ref->[1]{A1},         "",    "undef A1");
+	    $ref = ReadData ("files/blank.csv", clip => 0, $attr => 1, cells => 0);
+	ok ($ref, "!clip $attr 1");
+	is ($ref->[1]{maxrow},     3,     "maxrow 3");
+	is ($ref->[1]{maxcol},     4,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+	    $ref = ReadData ("files/blank.csv", clip => 0, $attr => 2,             rc => 0);
+	ok ($ref, "!clip $attr 2");
+	is ($ref->[1]{maxrow},     3,     "maxrow 3");
+	is ($ref->[1]{maxcol},     4,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         "",    "blank A1");
+	    $ref = ReadData ("files/blank.csv", clip => 0, $attr => 3, cells => 0, rc => 0);
+	ok ($ref, "!clip $attr 3");
+	is ($ref->[1]{maxrow},     3,     "maxrow 3");
+	is ($ref->[1]{maxcol},     4,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+
+	    $ref = ReadData ("files/blank.csv", clip => 1, $attr => 0);
+	ok ($ref, " clip $attr 0");
+	is ($ref->[1]{maxrow},     1,     "maxrow 3");
+	is ($ref->[1]{maxcol},     1,     "maxcol 4");
+	is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
+	is ($ref->[1]{A1},         " ",   "A1     = ' '");
+
+	    $ref = ReadData ("files/blank.csv", clip => 1, $attr => 1);
+	ok ($ref, " clip $attr 1");
+	is ($ref->[1]{maxrow},     0,     "maxrow 0");
+	is ($ref->[1]{maxcol},     0,     "maxcol 0");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+	    $ref = ReadData ("files/blank.csv", clip => 1, $attr => 1, cells => 0);
+	ok ($ref, " clip $attr 1");
+	is ($ref->[1]{maxrow},     0,     "maxrow 0");
+	is ($ref->[1]{maxcol},     0,     "maxcol 0");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+	    $ref = ReadData ("files/blank.csv", clip => 1, $attr => 2,             rc => 0);
+	ok ($ref, " clip $attr 2");
+	is ($ref->[1]{maxrow},     0,     "maxrow 0");
+	is ($ref->[1]{maxcol},     0,     "maxcol 0");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
+	    $ref = ReadData ("files/blank.csv", clip => 1, $attr => 3, cells => 0, rc => 0);
+	ok ($ref, " clip $attr 3");
+	is ($ref->[1]{maxrow},     0,     "maxrow 0");
+	is ($ref->[1]{maxcol},     0,     "maxcol 0");
+	is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
+	is ($ref->[1]{A1},         undef, "undef A1");
 	}
     }
 
-# blank.csv has only one sheet with A1 filled with ' '
-{   my  $ref = ReadData ("files/blank.csv", clip => 0, strip => 0);
-    ok ($ref, "!clip strip 0");
-    is ($ref->[1]{maxrow},     3,     "maxrow 3");
-    is ($ref->[1]{maxcol},     4,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
-    is ($ref->[1]{A1},         " ",   "A1     = ' '");
-        $ref = ReadData ("files/blank.csv", clip => 0, strip => 1);
-    ok ($ref, "!clip strip 1");
-    is ($ref->[1]{maxrow},     3,     "maxrow 3");
-    is ($ref->[1]{maxcol},     4,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
-    is ($ref->[1]{A1},         "",    "undef A1");
-	$ref = ReadData ("files/blank.csv", clip => 0, strip => 1, cells => 0);
-    ok ($ref, "!clip strip 1");
-    is ($ref->[1]{maxrow},     3,     "maxrow 3");
-    is ($ref->[1]{maxcol},     4,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], "",    "blank (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.csv", clip => 0, strip => 2,             rc => 0);
-    ok ($ref, "!clip strip 2");
-    is ($ref->[1]{maxrow},     3,     "maxrow 3");
-    is ($ref->[1]{maxcol},     4,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         "",    "blank A1");
-	$ref = ReadData ("files/blank.csv", clip => 0, strip => 3, cells => 0, rc => 0);
-    ok ($ref, "!clip strip 3");
-    is ($ref->[1]{maxrow},     3,     "maxrow 3");
-    is ($ref->[1]{maxcol},     4,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
+foreach my $attr ("pivot", "transpose") {
+    ok ($csv = ReadData ("files/test.csv", $attr => 1),	"Read/Parse csv file");
+    ok (1, "Defined fields");
+    foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
+	my ($c, $r) = cell2cr ($cell);
+	is ($csv->[1]{cell}[$r][$c],	$cell,	"Unformatted cell $cell");
+	my $llec = cr2cell ($r, $c);
+	is ($csv->[1]{$llec},		$cell,	"Formatted   cell $cell");
+	}
 
-	$ref = ReadData ("files/blank.csv", clip => 1, strip => 0);
-    ok ($ref, " clip strip 0");
-    is ($ref->[1]{maxrow},     1,     "maxrow 3");
-    is ($ref->[1]{maxcol},     1,     "maxcol 4");
-    is ($ref->[1]{cell}[1][1], " ",   "(1, 1) = ' '");
-    is ($ref->[1]{A1},         " ",   "A1     = ' '");
-
-	$ref = ReadData ("files/blank.csv", clip => 1, strip => 1);
-    ok ($ref, " clip strip 1");
-    is ($ref->[1]{maxrow},     0,     "maxrow 0");
-    is ($ref->[1]{maxcol},     0,     "maxcol 0");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.csv", clip => 1, strip => 1, cells => 0);
-    ok ($ref, " clip strip 1");
-    is ($ref->[1]{maxrow},     0,     "maxrow 0");
-    is ($ref->[1]{maxcol},     0,     "maxcol 0");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.csv", clip => 1, strip => 2,             rc => 0);
-    ok ($ref, " clip strip 2");
-    is ($ref->[1]{maxrow},     0,     "maxrow 0");
-    is ($ref->[1]{maxcol},     0,     "maxcol 0");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-	$ref = ReadData ("files/blank.csv", clip => 1, strip => 3, cells => 0, rc => 0);
-    ok ($ref, " clip strip 3");
-    is ($ref->[1]{maxrow},     0,     "maxrow 0");
-    is ($ref->[1]{maxcol},     0,     "maxcol 0");
-    is ($ref->[1]{cell}[1][1], undef, "undef (1, 1)");
-    is ($ref->[1]{A1},         undef, "undef A1");
-    }
-
-ok ($csv = ReadData ("files/test.csv", pivot => 1),	"Read/Parse csv file");
-ok (1, "Defined fields");
-foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
-    my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$r][$c],	$cell,	"Unformatted cell $cell");
-    my $llec = cr2cell ($r, $c);
-    is ($csv->[1]{$llec},		$cell,	"Formatted   cell $cell");
-    }
-
-ok (1, "Undefined fields");
-foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
-    my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$r][$c],	"",   	"Unformatted cell $cell");
-    my $llec = cr2cell ($r, $c);
-    is ($csv->[1]{$llec},		"",   	"Formatted   cell $cell");
+    ok (1, "Undefined fields");
+    foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
+	my ($c, $r) = cell2cr ($cell);
+	is ($csv->[1]{cell}[$r][$c],	"",   	"Unformatted cell $cell");
+	my $llec = cr2cell ($r, $c);
+	is ($csv->[1]{$llec},		"",   	"Formatted   cell $cell");
+	}
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {
