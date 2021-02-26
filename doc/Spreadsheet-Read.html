@@ -281,6 +281,10 @@
 <p>If set, <a href="#ReadData"><code>ReadData</code></a> will remove all trailing rows and columns per sheet that have no data, where no data means only undefined or empty cells (after optional stripping). If a sheet has no data at all, the sheet will be skipped entirely when this attribute is true.</p>
 
 </dd>
+<dt id="trim">trim</dt>
+<dd>
+
+</dd>
 <dt id="strip">strip</dt>
 <dd>
 
@@ -292,6 +296,12 @@
     1     strip     n/a
     2      n/a     strip
     3     strip    strip</code></pre>
+
+<p><code>trim</code> and <code>strip</code> are aliases. If passed both, <code>trim</code> is ignored because of backward compatibility.</p>
+
+</dd>
+<dt id="transpose">transpose</dt>
+<dd>
 
 </dd>
 <dt id="pivot">pivot</dt>
@@ -305,13 +315,15 @@
   A2      C2  D2
   A3  B3  C3  D3  E3</code></pre>
 
-<p>using <code>pivot</code> will return the sheet data as</p>
+<p>using <code>transpose</code> or <code>pivot</code> will return the sheet data as</p>
 
 <pre><code>  A1  A2  A3
   B1      B3
   C1  C2  C3
       D2  D3
   E1      E3</code></pre>
+
+<p><code>transpose</code> and <code>pivot</code> are aliases. If passed both, <code>transpose</code> is ignored because of backward compatibility.</p>
 
 </dd>
 <dt id="sep">sep</dt>

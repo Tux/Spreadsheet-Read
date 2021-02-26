@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 "2021-02-16" "perl v5.32.1" "User Contributed Perl Documentation"
+.TH STDIN 1 "2021-02-26" "perl v5.32.1" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -378,8 +378,12 @@ If set, \f(CW\*(C`ReadData\*(C'\fR will remove all trailing rows and columns
 per sheet that have no data, where no data means only undefined or empty
 cells (after optional stripping). If a sheet has no data at all, the sheet
 will be skipped entirely when this attribute is true.
+.IP "trim" 2
+.IX Item "trim"
+.PD 0
 .IP "strip" 2
 .IX Item "strip"
+.PD
 If set, \f(CW\*(C`ReadData\*(C'\fR will remove trailing\- and/or
 leading-whitespace from every field.
 .Sp
@@ -391,8 +395,15 @@ leading-whitespace from every field.
 \&    2      n/a     strip
 \&    3     strip    strip
 .Ve
+.Sp
+\&\f(CW\*(C`trim\*(C'\fR and \f(CW\*(C`strip\*(C'\fR are aliases. If passed both, \f(CW\*(C`trim\*(C'\fR is ignored
+because of backward compatibility.
+.IP "transpose" 2
+.IX Item "transpose"
+.PD 0
 .IP "pivot" 2
 .IX Item "pivot"
+.PD
 Swap all rows and columns.
 .Sp
 When a sheet contains data like
@@ -403,7 +414,7 @@ When a sheet contains data like
 \&  A3  B3  C3  D3  E3
 .Ve
 .Sp
-using \f(CW\*(C`pivot\*(C'\fR will return the sheet data as
+using \f(CW\*(C`transpose\*(C'\fR or \f(CW\*(C`pivot\*(C'\fR will return the sheet data as
 .Sp
 .Vb 5
 \&  A1  A2  A3
@@ -412,6 +423,9 @@ using \f(CW\*(C`pivot\*(C'\fR will return the sheet data as
 \&      D2  D3
 \&  E1      E3
 .Ve
+.Sp
+\&\f(CW\*(C`transpose\*(C'\fR and \f(CW\*(C`pivot\*(C'\fR are aliases. If passed both, \f(CW\*(C`transpose\*(C'\fR is
+ignored because of backward compatibility.
 .IP "sep" 2
 .IX Item "sep"
 Set separator for \s-1CSV.\s0 Default is comma \f(CW\*(C`,\*(C'\fR.

@@ -228,6 +228,7 @@ Currently supported options are:
     cells (after optional stripping). If a sheet has no data at all, the sheet
     will be skipped entirely when this attribute is true.
 
+- trim
 - strip
 
     If set, [`ReadData`](#readdata) will remove trailing- and/or
@@ -240,6 +241,10 @@ Currently supported options are:
           2      n/a     strip
           3     strip    strip
 
+    `trim` and `strip` are aliases. If passed both, `trim` is ignored
+    because of backward compatibility.
+
+- transpose
 - pivot
 
     Swap all rows and columns.
@@ -250,13 +255,16 @@ Currently supported options are:
         A2      C2  D2
         A3  B3  C3  D3  E3
 
-    using `pivot` will return the sheet data as
+    using `transpose` or `pivot` will return the sheet data as
 
         A1  A2  A3
         B1      B3
         C1  C2  C3
             D2  D3
         E1      E3
+
+    `transpose` and `pivot` are aliases. If passed both, `transpose` is
+    ignored because of backward compatibility.
 
 - sep
 

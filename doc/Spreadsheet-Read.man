@@ -222,6 +222,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
          cells (after optional stripping). If a sheet has no data at all, the
          sheet will be skipped entirely when this attribute is true.
 
+       trim
        strip
          If set, "ReadData" will remove trailing- and/or leading-whitespace
          from every field.
@@ -233,6 +234,10 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
              2      n/a     strip
              3     strip    strip
 
+         "trim" and "strip" are aliases. If passed both, "trim" is ignored
+         because of backward compatibility.
+
+       transpose
        pivot
          Swap all rows and columns.
 
@@ -242,13 +247,16 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
            A2      C2  D2
            A3  B3  C3  D3  E3
 
-         using "pivot" will return the sheet data as
+         using "transpose" or "pivot" will return the sheet data as
 
            A1  A2  A3
            B1      B3
            C1  C2  C3
                D2  D3
            E1      E3
+
+         "transpose" and "pivot" are aliases. If passed both, "transpose" is
+         ignored because of backward compatibility.
 
        sep
          Set separator for CSV. Default is comma ",".
@@ -1121,4 +1129,4 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
 
 
-perl v5.32.1                      2021-02-16                          STDIN(1)
+perl v5.32.1                      2021-02-26                          STDIN(1)
