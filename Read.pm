@@ -113,7 +113,7 @@ for (@parsers) {
     $can{$flag} and next;
     eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" and next;
     $_->[0] = "! Cannot use $mod version $vsn: $@";
-    $can{$flag} = $@ =~ m/need to install/i
+    $can{$flag} = $@ =~ m/need to install|can(?:not|'t) locate/i
 	? 0	# Not found
 	: "";	# Too old
     }
