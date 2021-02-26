@@ -1682,8 +1682,8 @@ leading-whitespace from every field.
     2      n/a     strip
     3     strip    strip
 
-C<trim> and C<strip> are aliasses. If passed both, C<trim> is ignored
-because of backward compatability.
+C<trim> and C<strip> are aliases. If passed both, C<trim> is ignored
+because of backward compatibility.
 
 =item transpose
 
@@ -1705,8 +1705,8 @@ using C<transpose> or C<pivot> will return the sheet data as
       D2  D3
   E1      E3
 
-C<transpose> and C<pivot> are aliasses. If passed both, C<transpose> is
-ignored because of backward compatability.
+C<transpose> and C<pivot> are aliases. If passed both, C<transpose> is
+ignored because of backward compatibility.
 
 =item sep
 
