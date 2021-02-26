@@ -65,6 +65,10 @@ my @parsers = (
 #   [ prl  => "Spreadsheet::Perl",			""		],
     [ sc   => "Spreadsheet::Read",			"0.01"		],
 
+    [ zzz1 => "Z10::Just::For::Testing",		"1.23"		],
+    [ zzz2 => "Z20::Just::For::Testing",		""		],
+    [ zzz3 => "Z30::Just::For::Testing",		"1.00"		],
+
     # Helper modules
     [ ios  => "IO::Scalar",				""		],
     [ dmp  => "Data::Peek",				""		],
@@ -107,8 +111,11 @@ delete $can{supports};
 for (@parsers) {
     my ($flag, $mod, $vsn) = @$_;
     $can{$flag} and next;
-    eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" or
-	$_->[0] = "! Cannot use $mod version $vsn: $@";
+    eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" and next;
+    $_->[0] = "! Cannot use $mod version $vsn: $@";
+    $can{$flag} = $@ =~ m/need to install/i
+	? 0	# Not found
+	: "";	# Too old
     }
 $can{sc} = __PACKAGE__;	# SquirrelCalc is built-in
 
@@ -1464,6 +1471,20 @@ sub merged_from {
 
 1;
 
+BEGIN {
+    $INC{"Z10/Just/For/Testing.pm"}   = $0;
+    $INC{"Z20/Just/For/Testing.pm"}   = $0;
+    $Z10::Just::For::Testing::VERSION = "1.00";
+    $Z20::Just::For::Testing::VERSION = undef;
+    }
+
+package Z10::Just::For::Testing;
+
+1;
+
+package Z20::Just::For::Testing;
+
+1;
 __END__
 =head1 DESCRIPTION
 

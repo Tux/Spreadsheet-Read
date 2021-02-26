@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 115;
+use Test::More tests => 118;
 use Test::NoWarnings;
 
 use Spreadsheet::Read qw(:DEFAULT parses rows );
@@ -13,7 +13,10 @@ is (Spreadsheet::Read::Version (), $Spreadsheet::Read::VERSION, "Version check")
 ok (my @ext = parses (undef), "No sheet type");
 is_deeply ([ grep m/^sc/ => @ext ], [ "sc" ], "Supports Squirrelcalc");
 
-is (parses ("xyzzy"), 0, "Unknown sheet type");
+is (parses ("zzz0"), 0,				"Unknown     sheet type");
+is (parses ("zzz1"), "",			"Too old     sheet type");
+is (parses ("zzz2"), "Z20::Just::For::Testing",	"Testing     sheet type");
+is (parses ("zzz3"), 0,				"Unsupported sheet type");
 
 is (parses ("xls"), parses ("excel"),      "Excel alias type");
 is (parses ("ods"), parses ("oo"),         "OpenOffice alias type 1");

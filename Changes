@@ -1,7 +1,8 @@
-0.84	- 25 Feb 2021, H.Merijn Brand
+0.84	- 26 Feb 2021, H.Merijn Brand
     * It's 2021
     * Alias pivot to transpose (issue#36)
     * Alias strip to trim      (issue#36)
+    * Check for consistent return values of parses ()
 
 0.83	- 21 Dec 2020, H.Merijn Brand
     * Require ParseODS 0.26
