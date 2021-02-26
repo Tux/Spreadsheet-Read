@@ -43,7 +43,7 @@ feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => su
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
-    recommends "Tk"                       => "804.035";
+    recommends "Tk"                       => "804.036";
     recommends "Tk::NoteBook";
     recommends "Tk::TableMatrix::Spreadsheet";
     };
