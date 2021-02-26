@@ -1103,7 +1103,7 @@ Show the differences between two spreadsheets.
 
 - Spreadsheet::ParseODS
 
-    [Spreadsheet::ParseODS](https://metacpan.org/release/Spreadsheet-ParseODS) is a
+    [Spreadsheet::ParseODS](https://metacpan.org/pod/Spreadsheet::ParseODS) is a
     parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files. It is the
     successor of  [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC).
 

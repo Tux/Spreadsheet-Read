@@ -2588,7 +2588,7 @@ instead.
 
 =item Spreadsheet::ParseODS
 
-L<Spreadsheet::ParseODS|https://metacpan.org/release/Spreadsheet-ParseODS> is a
+L<Spreadsheet::ParseODS|https://metacpan.org/pod/Spreadsheet::ParseODS> is a
 parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files. It is the
 successor of  L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>.
 
