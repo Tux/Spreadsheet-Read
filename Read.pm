@@ -37,7 +37,7 @@ use 5.8.1;
 use strict;
 use warnings;
 
-our $VERSION = "0.84";
+our $VERSION = "0.85";
 sub  Version { $VERSION }
 
 use Carp;
@@ -445,6 +445,15 @@ sub _xls_fill {
     return _xls_color ($bg);
     } # _xls_fill
 
+sub _missing_parser {
+    my ($type, $suggest) = (shift, "");
+    for (@parsers) {
+	$_->[0] eq lc $type or next;
+	$suggest = "\nPlease install $_->[1]";
+	}
+    "No parser for $type found$suggest\n";
+    } # _missing_parser
+
 sub ReadData {
     my $txt = shift	or  return;
 
@@ -485,7 +494,7 @@ sub ReadData {
     $io_ref &&  eof $txt and do { $@ = "Empty stream";  return };
 
     if ($opt{parser} ? $_parser eq "csv" : ($io_fil && $txt =~ m/\.(csv)$/i)) {
-	$can{csv} or croak "CSV parser not installed";
+	$can{csv} or croak _missing_parser ("CSV");
 
 	my $label = defined $opt{label} ? $opt{label} : $io_fil ? $txt : "IO";
 
@@ -601,7 +610,7 @@ sub ReadData {
 	     || $txt =~ m{\A.{2080}Microsoft Excel 5.0 Worksheet}
 	     || $txt =~ m{\A\x09\x04\x06\x00\x00\x00\x10\x00}
 		) {
-	    $can{xls} or croak "Spreadsheet::ParseExcel not installed";
+	    $can{xls} or croak _missing_parser ("XLS");
 	    my $tmpfile;
 	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
 		$tmpfile = \$txt;
@@ -619,7 +628,7 @@ sub ReadData {
 	elsif ( # /usr/share/misc/magic
 		$txt =~ m{\APK\003\004.{4,30}(?:\[Content_Types\]\.xml|_rels/\.rels)}
 		) {
-	    $can{xlsx} or croak "XLSX parser not installed";
+	    $can{xlsx} or croak _missing_parser ("XLSX");
 	    my $tmpfile;
 	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
 		$tmpfile = \$txt;
@@ -637,7 +646,7 @@ sub ReadData {
 	elsif ( # /usr/share/misc/magic
 		$txt =~ m{\APK\003\004.{9,30}\Qmimetypeapplication/vnd.oasis.opendocument.spreadsheet}
 		) {
-	    $can{ods} or croak "ODS parser not installed";
+	    $can{ods} or croak _missing_parser ("ODS");
 	    my $tmpfile;
 	    if ($can{ios}) { # Do not use a temp file if IO::Scalar is available
 		$tmpfile = \$txt;
@@ -661,8 +670,7 @@ sub ReadData {
 		     : ($io_fil && $txt =~ m/\.(xls[xm]?)$/i &&
 		      ($_parser = _parser ($1)))) {
 	my $parse_type = $_parser =~ m/x$/i  ? "XLSX" : "XLS";
-	my $parser = $can{lc $parse_type} or
-	    croak "Parser for $parse_type is not installed";
+	my $parser = $can{lc $parse_type} or croak _missing_parser ($parse_type);
 	#$debug and print STDERR __FILE__, "#", __LINE__, " | $_parser | $parser | $parse_type\n";
 	$debug and print STDERR "Opening $parse_type ", $io_ref ? "<REF>" : $txt,
 	    " using $parser-", $can{lc $parse_type}->VERSION, "\n";
@@ -970,7 +978,7 @@ sub ReadData {
 	     and ($can{$_parser} || "") !~ m/sxc/i) {
 	my $parse_type = "ODS";
 	my $parser = $can{lc $parse_type} or
-	    croak "Parser for $parse_type is not installed";
+	    croak _missing_parser ($parse_type);
 	#$debug and print STDERR __FILE__, "#", __LINE__, " | $_parser | $parser | $parse_type\n";
 	$debug and print STDERR "Opening $parse_type ", $io_ref ? "<REF>" : $txt,
 	    " using $parser-", $can{lc $parse_type}->VERSION, "\n";
@@ -1198,7 +1206,7 @@ sub ReadData {
 
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
-	$can{sxc} or croak "Spreadsheet::ReadSXC not installed";
+	$can{sxc} or croak _missing_parser ("SXC");
 
 	ref $txt && $can{sxc}->VERSION <= 0.23 and
 	    croak ("Sorry, references as input are not supported by Spreadsheet::ReadSXC before 0.23");
