@@ -142,7 +142,7 @@ if ($opt_A || $opt_Z) {
 	my $fn = "$xls.zip";
 	-f $fn && $opt_f and unlink $fn;
 	-f $fn and die "$fn already exists\n";
-	$az->writeToFileNamed ($fn) == Archive::Zip::AZ_OK or die "$fn: $!\n";
+	$az->writeToFileNamed ($fn) == 0 or die "$fn: $!\n";
 	}
     exit;
     }
