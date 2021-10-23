@@ -82,32 +82,32 @@
 
 <h1 id="NAME">NAME</h1>
 
-<pre><code> Spreadsheet::Read - Read the data from a spreadsheet</code></pre>
+<pre><code>Spreadsheet::Read - Read the data from a spreadsheet</code></pre>
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<pre><code> use Spreadsheet::Read;
- my $book  = ReadData (&quot;test.csv&quot;, sep =&gt; &quot;;&quot;);
- my $book  = ReadData (&quot;test.sxc&quot;);
- my $book  = ReadData (&quot;test.ods&quot;);
- my $book  = ReadData (&quot;test.xls&quot;);
- my $book  = ReadData (&quot;test.xlsx&quot;);
- my $book  = ReadData (&quot;test.xlsm&quot;);
- my $book  = ReadData ($fh, parser =&gt; &quot;xls&quot;);
+<pre><code>use Spreadsheet::Read;
+my $book  = ReadData (&quot;test.csv&quot;, sep =&gt; &quot;;&quot;);
+my $book  = ReadData (&quot;test.sxc&quot;);
+my $book  = ReadData (&quot;test.ods&quot;);
+my $book  = ReadData (&quot;test.xls&quot;);
+my $book  = ReadData (&quot;test.xlsx&quot;);
+my $book  = ReadData (&quot;test.xlsm&quot;);
+my $book  = ReadData ($fh, parser =&gt; &quot;xls&quot;);
 
- Spreadsheet::Read::add ($book, &quot;sheet.csv&quot;);
+Spreadsheet::Read::add ($book, &quot;sheet.csv&quot;);
 
- my $sheet = $book-&gt;[1];             # first datasheet
- my $cell  = $book-&gt;[1]{A3};         # content of field A3 of sheet 1
- my $cell  = $book-&gt;[1]{cell}[1][3]; # same, unformatted
+my $sheet = $book-&gt;[1];             # first datasheet
+my $cell  = $book-&gt;[1]{A3};         # content of field A3 of sheet 1
+my $cell  = $book-&gt;[1]{cell}[1][3]; # same, unformatted
 
- # OO API
- my $book = Spreadsheet::Read-&gt;new (&quot;file.csv&quot;);
- my $sheet = $book-&gt;sheet (1);
- my $cell  = $sheet-&gt;cell (&quot;A3&quot;);
- my $cell  = $sheet-&gt;cell (1, 3);
+# OO API
+my $book = Spreadsheet::Read-&gt;new (&quot;file.csv&quot;);
+my $sheet = $book-&gt;sheet (1);
+my $cell  = $sheet-&gt;cell (&quot;A3&quot;);
+my $cell  = $sheet-&gt;cell (1, 3);
 
- $book-&gt;add (&quot;test.xls&quot;);</code></pre>
+$book-&gt;add (&quot;test.xls&quot;);</code></pre>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -125,40 +125,40 @@
 
 <p>The data is returned as an array reference:</p>
 
-<pre><code>  $book = [
-      # Entry 0 is the overall control hash
-      { sheets  =&gt; 2,
-        sheet   =&gt; {
-          &quot;Sheet 1&quot; =&gt; 1,
-          &quot;Sheet 2&quot; =&gt; 2,
-          },
-        parsers =&gt; [ {
-          type      =&gt; &quot;xls&quot;,
-          parser    =&gt; &quot;Spreadsheet::ParseExcel&quot;,
-          version   =&gt; 0.59,
-          }],
-        error   =&gt; undef,
+<pre><code>$book = [
+    # Entry 0 is the overall control hash
+    { sheets  =&gt; 2,
+      sheet   =&gt; {
+        &quot;Sheet 1&quot; =&gt; 1,
+        &quot;Sheet 2&quot; =&gt; 2,
         },
-      # Entry 1 is the first sheet
-      { parser  =&gt; 0,
-        label   =&gt; &quot;Sheet 1&quot;,
-        maxrow  =&gt; 2,
-        maxcol  =&gt; 4,
-        cell    =&gt; [ undef,
-          [ undef, 1 ],
-          [ undef, undef, undef, undef, undef, &quot;Nugget&quot; ],
-          ],
-        attr    =&gt; [],
-        merged  =&gt; [],
-        active  =&gt; 1,
-        A1      =&gt; 1,
-        B5      =&gt; &quot;Nugget&quot;,
-        },
-      # Entry 2 is the second sheet
-      { parser  =&gt; 0,
-        label   =&gt; &quot;Sheet 2&quot;,
-        :
-        :</code></pre>
+      parsers =&gt; [ {
+        type      =&gt; &quot;xls&quot;,
+        parser    =&gt; &quot;Spreadsheet::ParseExcel&quot;,
+        version   =&gt; 0.59,
+        }],
+      error   =&gt; undef,
+      },
+    # Entry 1 is the first sheet
+    { parser  =&gt; 0,
+      label   =&gt; &quot;Sheet 1&quot;,
+      maxrow  =&gt; 2,
+      maxcol  =&gt; 4,
+      cell    =&gt; [ undef,
+        [ undef, 1 ],
+        [ undef, undef, undef, undef, undef, &quot;Nugget&quot; ],
+        ],
+      attr    =&gt; [],
+      merged  =&gt; [],
+      active  =&gt; 1,
+      A1      =&gt; 1,
+      B5      =&gt; &quot;Nugget&quot;,
+      },
+    # Entry 2 is the second sheet
+    { parser  =&gt; 0,
+      label   =&gt; &quot;Sheet 2&quot;,
+      :
+      :</code></pre>
 
 <p>To keep as close contact to spreadsheet users, row and column 1 have index 1 too in the <code>cell</code> element of the sheet hash, so cell &quot;A1&quot; is the same as <code>cell</code> [1, 1] (column first). To switch between the two, there are helper functions available: <code>cell2cr ()</code>, <code>cr2cell ()</code>, and <code>col2label ()</code>.</p>
 
@@ -166,7 +166,7 @@
 
 <p>The control hash (the first entry in the returned array ref), contains some spreadsheet meta-data. The entry <code>sheet</code> is there to be able to find the sheets when accessing them by name:</p>
 
-<pre><code>  my %sheet2 = %{$book-&gt;[$book-&gt;[0]{sheet}{&quot;Sheet 2&quot;}]};</code></pre>
+<pre><code>my %sheet2 = %{$book-&gt;[$book-&gt;[0]{sheet}{&quot;Sheet 2&quot;}]};</code></pre>
 
 <h2 id="Formatted-vs-Unformatted">Formatted vs Unformatted</h2>
 
@@ -174,64 +174,64 @@
 
 <p>To show what this implies:</p>
 
-<pre><code> use Spreadsheet::Read;
+<pre><code>use Spreadsheet::Read;
 
- my $file     = &quot;files/example.xlsx&quot;;
- my $workbook = Spreadsheet::Read-&gt;new ($file);
+my $file     = &quot;files/example.xlsx&quot;;
+my $workbook = Spreadsheet::Read-&gt;new ($file);
 
- my $info     = $workbook-&gt;[0];
- say &quot;Parsed $file with $info-&gt;{parser}-$info-&gt;{version}&quot;;
+my $info     = $workbook-&gt;[0];
+say &quot;Parsed $file with $info-&gt;{parser}-$info-&gt;{version}&quot;;
 
- my $sheet    = $workbook-&gt;sheet (1);
+my $sheet    = $workbook-&gt;sheet (1);
 
- say join &quot;\t&quot; =&gt; &quot;Formatted:&quot;,   $sheet-&gt;row     (1);
- say join &quot;\t&quot; =&gt; &quot;Unformatted:&quot;, $sheet-&gt;cellrow (1);</code></pre>
+say join &quot;\t&quot; =&gt; &quot;Formatted:&quot;,   $sheet-&gt;row     (1);
+say join &quot;\t&quot; =&gt; &quot;Unformatted:&quot;, $sheet-&gt;cellrow (1);</code></pre>
 
 <p>Might return very different results depending one the underlying parser (and its version):</p>
 
-<pre><code> Parsed files/example.xlsx with Spreadsheet::ParseXLSX-0.27
- Formatted:      8-Aug   Foo &amp; Barr &lt; Quux
- Unformatted:    39668   Foo &amp; Barr &lt; Quux
+<pre><code>Parsed files/example.xlsx with Spreadsheet::ParseXLSX-0.27
+Formatted:      8-Aug   Foo &amp; Barr &lt; Quux
+Unformatted:    39668   Foo &amp; Barr &lt; Quux
 
- Parsed files/example.xlsx with Spreadsheet::XLSX-0.15
- Formatted:      39668   Foo &amp;amp; Barr &amp;lt; Quux
- Unformatted:    39668   Foo &amp;amp; Barr &amp;lt; Quux</code></pre>
+Parsed files/example.xlsx with Spreadsheet::XLSX-0.15
+Formatted:      39668   Foo &amp;amp; Barr &amp;lt; Quux
+Unformatted:    39668   Foo &amp;amp; Barr &amp;lt; Quux</code></pre>
 
 <h2 id="Functions-and-methods">Functions and methods</h2>
 
 <h3 id="new">new</h3>
 
-<pre><code> my $book = Spreadsheet::Read-&gt;new (...) or die $@;</code></pre>
+<pre><code>my $book = Spreadsheet::Read-&gt;new (...) or die $@;</code></pre>
 
 <p>All options accepted by ReadData are accepted by new.</p>
 
 <p>With no arguments at all, $book will be an object where sheets can be added using <code>add</code></p>
 
-<pre><code> my $book = Spreadsheet::Read-&gt;new ();
- $book-&gt;add (&quot;file.csv&quot;);
- $book-&gt;add (&quot;file.cslx&quot;);</code></pre>
+<pre><code>my $book = Spreadsheet::Read-&gt;new ();
+$book-&gt;add (&quot;file.csv&quot;);
+$book-&gt;add (&quot;file.cslx&quot;);</code></pre>
 
 <h3 id="ReadData">ReadData</h3>
 
-<pre><code> my $book = ReadData ($source [, option =&gt; value [, ... ]]);
+<pre><code>my $book = ReadData ($source [, option =&gt; value [, ... ]]);
 
- my $book = ReadData (&quot;file.csv&quot;, sep =&gt; &#39;,&#39;, quote =&gt; &#39;&quot;&#39;);
+my $book = ReadData (&quot;file.csv&quot;, sep =&gt; &#39;,&#39;, quote =&gt; &#39;&quot;&#39;);
 
- my $book = ReadData (&quot;file.xls&quot;, dtfmt =&gt; &quot;yyyy-mm-dd&quot;);
+my $book = ReadData (&quot;file.xls&quot;, dtfmt =&gt; &quot;yyyy-mm-dd&quot;);
 
- my $book = ReadData (&quot;file.ods&quot;);
+my $book = ReadData (&quot;file.ods&quot;);
 
- my $book = ReadData (&quot;file.sxc&quot;);
+my $book = ReadData (&quot;file.sxc&quot;);
 
- my $book = ReadData (&quot;content.xml&quot;);
+my $book = ReadData (&quot;content.xml&quot;);
 
- my $book = ReadData ($content);
+my $book = ReadData ($content);
 
- my $book = ReadData ($content,  parser =&gt; &quot;xlsx&quot;);
+my $book = ReadData ($content,  parser =&gt; &quot;xlsx&quot;);
 
- my $book = ReadData ($fh,       parser =&gt; &quot;xlsx&quot;);
+my $book = ReadData ($fh,       parser =&gt; &quot;xlsx&quot;);
 
- my $book = ReadData (\$content, parser =&gt; &quot;xlsx&quot;);</code></pre>
+my $book = ReadData (\$content, parser =&gt; &quot;xlsx&quot;);</code></pre>
 
 <p>Tries to convert the given file, string, or stream to the data structure described above.</p>
 
@@ -254,7 +254,7 @@
 
 <p>Spreadsheet::Read supports several underlying parsers per spreadsheet type. It will try those from most favored to least favored. When you have a good reason to prefer a different parser, you can set that in environment variables. The other options then will not be tested for:</p>
 
-<pre><code> env SPREADSHEET_READ_CSV=Text::CSV_PP ...</code></pre>
+<pre><code>env SPREADSHEET_READ_CSV=Text::CSV_PP ...</code></pre>
 
 </dd>
 <dt id="cells">cells </dt>
@@ -290,12 +290,12 @@
 
 <p>If set, <a href="#ReadData"><code>ReadData</code></a> will remove trailing- and/or leading-whitespace from every field.</p>
 
-<pre><code>  strip  leading  strailing
-  -----  -------  ---------
-    0      n/a      n/a
-    1     strip     n/a
-    2      n/a     strip
-    3     strip    strip</code></pre>
+<pre><code>strip  leading  strailing
+-----  -------  ---------
+  0      n/a      n/a
+  1     strip     n/a
+  2      n/a     strip
+  3     strip    strip</code></pre>
 
 <p><code>trim</code> and <code>strip</code> are aliases. If passed both, <code>trim</code> is ignored because of backward compatibility.</p>
 
@@ -311,17 +311,17 @@
 
 <p>When a sheet contains data like</p>
 
-<pre><code>  A1  B1  C1      E1
-  A2      C2  D2
-  A3  B3  C3  D3  E3</code></pre>
+<pre><code>A1  B1  C1      E1
+A2      C2  D2
+A3  B3  C3  D3  E3</code></pre>
 
 <p>using <code>transpose</code> or <code>pivot</code> will return the sheet data as</p>
 
-<pre><code>  A1  A2  A3
-  B1      B3
-  C1  C2  C3
-      D2  D3
-  E1      E3</code></pre>
+<pre><code>A1  A2  A3
+B1      B3
+C1  C2  C3
+    D2  D3
+E1      E3</code></pre>
 
 <p><code>transpose</code> and <code>pivot</code> are aliases. If passed both, <code>transpose</code> is ignored because of backward compatibility.</p>
 
@@ -376,44 +376,44 @@
 
 <h3 id="col2label">col2label</h3>
 
-<pre><code> my $col_id = col2label (col);
+<pre><code>my $col_id = col2label (col);
 
- my $col_id = $book-&gt;col2label (col);  # OO</code></pre>
+my $col_id = $book-&gt;col2label (col);  # OO</code></pre>
 
 <p><code>col2label ()</code> converts a <code>(column)</code> (1 based) to the letters used in the traditional cell notation:</p>
 
-<pre><code>  my $id = col2label ( 4); # $id now &quot;D&quot;
-  my $id = col2label (28); # $id now &quot;AB&quot;</code></pre>
+<pre><code>my $id = col2label ( 4); # $id now &quot;D&quot;
+my $id = col2label (28); # $id now &quot;AB&quot;</code></pre>
 
 <h3 id="cr2cell">cr2cell</h3>
 
-<pre><code> my $cell = cr2cell (col, row);
+<pre><code>my $cell = cr2cell (col, row);
 
- my $cell = $book-&gt;cr2cell (col, row);  # OO</code></pre>
+my $cell = $book-&gt;cr2cell (col, row);  # OO</code></pre>
 
 <p><code>cr2cell ()</code> converts a <code>(column, row)</code> pair (1 based) to the traditional cell notation:</p>
 
-<pre><code>  my $cell = cr2cell ( 4, 14); # $cell now &quot;D14&quot;
-  my $cell = cr2cell (28,  4); # $cell now &quot;AB4&quot;</code></pre>
+<pre><code>my $cell = cr2cell ( 4, 14); # $cell now &quot;D14&quot;
+my $cell = cr2cell (28,  4); # $cell now &quot;AB4&quot;</code></pre>
 
 <h3 id="cell2cr">cell2cr</h3>
 
-<pre><code> my ($col, $row) = cell2cr ($cell);
+<pre><code>my ($col, $row) = cell2cr ($cell);
 
- my ($col, $row) = $book-&gt;cell2cr ($cell);  # OO</code></pre>
+my ($col, $row) = $book-&gt;cell2cr ($cell);  # OO</code></pre>
 
 <p><code>cell2cr ()</code> converts traditional cell notation to a <code>(column, row)</code> pair (1 based):</p>
 
-<pre><code>  my ($col, $row) = cell2cr (&quot;D14&quot;); # returns ( 4, 14)
-  my ($col, $row) = cell2cr (&quot;AB4&quot;); # returns (28,  4)</code></pre>
+<pre><code>my ($col, $row) = cell2cr (&quot;D14&quot;); # returns ( 4, 14)
+my ($col, $row) = cell2cr (&quot;AB4&quot;); # returns (28,  4)</code></pre>
 
 <h3 id="row">row</h3>
 
-<pre><code> my @row = row ($sheet, $row)
+<pre><code>my @row = row ($sheet, $row)
 
- my @row = Spreadsheet::Read::row ($book-&gt;[1], 3);
+my @row = Spreadsheet::Read::row ($book-&gt;[1], 3);
 
- my @row = $book-&gt;row ($sheet, $row); # OO</code></pre>
+my @row = $book-&gt;row ($sheet, $row); # OO</code></pre>
 
 <p>Get full row of formatted values (like <code>$sheet-&gt;{A3} .. $sheet-&gt;{G3}</code>)</p>
 
@@ -425,11 +425,11 @@
 
 <h3 id="cellrow">cellrow</h3>
 
-<pre><code> my @row = cellrow ($sheet, $row);
+<pre><code>my @row = cellrow ($sheet, $row);
 
- my @row = Spreadsheet::Read::cellrow ($book-&gt;[1], 3);
+my @row = Spreadsheet::Read::cellrow ($book-&gt;[1], 3);
 
- my @row = $book-&gt;cellrow ($sheet, $row); # OO</code></pre>
+my @row = $book-&gt;cellrow ($sheet, $row); # OO</code></pre>
 
 <p>Get full row of unformatted values (like <code>$sheet-&gt;{cell}[1][3] .. $sheet-&gt;{cell}[7][3]</code>)</p>
 
@@ -441,11 +441,11 @@
 
 <h3 id="rows">rows</h3>
 
-<pre><code> my @rows = rows ($sheet);
+<pre><code>my @rows = rows ($sheet);
 
- my @rows = Spreadsheet::Read::rows ($book-&gt;[1]);
+my @rows = Spreadsheet::Read::rows ($book-&gt;[1]);
 
- my @rows = $book-&gt;rows (1); # OO</code></pre>
+my @rows = $book-&gt;rows (1); # OO</code></pre>
 
 <p>Convert <code>{cell}</code>&#39;s <code>[column][row]</code> to a <code>[row][column]</code> list.</p>
 
@@ -455,11 +455,11 @@
 
 <h3 id="parses">parses</h3>
 
-<pre><code> parses ($format);
+<pre><code>parses ($format);
 
- Spreadsheet::Read::parses (&quot;CSV&quot;);
+Spreadsheet::Read::parses (&quot;CSV&quot;);
 
- $book-&gt;parses (&quot;CSV&quot;); # OO</code></pre>
+$book-&gt;parses (&quot;CSV&quot;); # OO</code></pre>
 
 <p><code>parses ()</code> returns Spreadsheet::Read&#39;s capability to parse the required format. <a href="#ReadData"><code>ReadData</code></a> will pick its preferred parser for that format unless overruled. See <a href="#parser"><code>parser</code></a>.</p>
 
@@ -467,32 +467,32 @@
 
 <p>If <code>$format</code> is false (<code>undef</code>, <code>&quot;&quot;</code>, or <code>0</code>), <code>parses ()</code> will return a sorted list of supported types.</p>
 
-<pre><code> @my types = parses (&quot;&quot;);   # e.g: csv, ods, sc, sxc, xls, xlsx</code></pre>
+<pre><code>@my types = parses (&quot;&quot;);   # e.g: csv, ods, sc, sxc, xls, xlsx</code></pre>
 
 <h3 id="parsers">parsers</h3>
 
-<pre><code> my @p = parsers ();</code></pre>
+<pre><code>my @p = parsers ();</code></pre>
 
 <p><code>parsers ()</code> returns a list of hashrefs with information about supported parsers, each giving information about the parser, its versions and if it will be used as default parser for the given type, like:</p>
 
-<pre><code> { ext =&gt; &quot;csv&quot;,            # extension or type
-   mod =&gt; &quot;Text::CSV_XS&quot;,   # parser module
-   min =&gt; &quot;0.71&quot;,           # module required  version
-   vsn =&gt; &quot;1.45&quot;,           # module installed version
-   def =&gt; &quot;*&quot;,              # is default for ext
-   }</code></pre>
+<pre><code>{ ext =&gt; &quot;csv&quot;,            # extension or type
+  mod =&gt; &quot;Text::CSV_XS&quot;,   # parser module
+  min =&gt; &quot;0.71&quot;,           # module required  version
+  vsn =&gt; &quot;1.45&quot;,           # module installed version
+  def =&gt; &quot;*&quot;,              # is default for ext
+  }</code></pre>
 
 <p>As the modules are actually loaded to get their version, do only use this to analyse prerequisites.</p>
 
 <h3 id="Version">Version</h3>
 
-<pre><code> my $v = Version ()
+<pre><code>my $v = Version ()
 
- my $v = Spreadsheet::Read::Version ()
+my $v = Spreadsheet::Read::Version ()
 
- my $v = Spreadsheet::Read-&gt;VERSION;
+my $v = Spreadsheet::Read-&gt;VERSION;
 
- my $v = $book-&gt;Version (); # OO</code></pre>
+my $v = $book-&gt;Version (); # OO</code></pre>
 
 <p>Returns the current version of Spreadsheet::Read.</p>
 
@@ -502,15 +502,15 @@
 
 <h3 id="sheets">sheets</h3>
 
-<pre><code> my $sheets = $book-&gt;sheets; # OO
- my @sheets = $book-&gt;sheets; # OO</code></pre>
+<pre><code>my $sheets = $book-&gt;sheets; # OO
+my @sheets = $book-&gt;sheets; # OO</code></pre>
 
 <p>In scalar context return the number of sheets in the book. In list context return the labels of the sheets in the book.</p>
 
 <h3 id="sheet">sheet</h3>
 
-<pre><code> my $sheet = $book-&gt;sheet (1);     # OO
- my $sheet = $book-&gt;sheet (&quot;Foo&quot;); # OO</code></pre>
+<pre><code>my $sheet = $book-&gt;sheet (1);     # OO
+my $sheet = $book-&gt;sheet (&quot;Foo&quot;); # OO</code></pre>
 
 <p>Return the numbered or named sheet out of the book. Will return <code>undef</code> if there is no match. Will not work for sheets <i>named</i> with a number between 1 and the number of sheets in the book.</p>
 
@@ -520,70 +520,70 @@
 
 <h3 id="add">add</h3>
 
-<pre><code> my $book = ReadData (&quot;file.csv&quot;);
- Spreadsheet::Read::add ($book, &quot;file.xlsx&quot;);
+<pre><code>my $book = ReadData (&quot;file.csv&quot;);
+Spreadsheet::Read::add ($book, &quot;file.xlsx&quot;);
 
- my $book = Spreadsheet::Read-&gt;new (&quot;file.csv&quot;);
- $book-&gt;add (&quot;file.xlsx&quot;); # OO</code></pre>
+my $book = Spreadsheet::Read-&gt;new (&quot;file.csv&quot;);
+$book-&gt;add (&quot;file.xlsx&quot;); # OO</code></pre>
 
 <h2 id="Methods-on-sheets">Methods on sheets</h2>
 
 <h3 id="maxcol">maxcol</h3>
 
-<pre><code> my $col = $sheet-&gt;maxcol;</code></pre>
+<pre><code>my $col = $sheet-&gt;maxcol;</code></pre>
 
 <p>Return the index of the last in-use column in the sheet. This index is 1-based.</p>
 
 <h3 id="maxrow">maxrow</h3>
 
-<pre><code> my $row = $sheet-&gt;maxrow;</code></pre>
+<pre><code>my $row = $sheet-&gt;maxrow;</code></pre>
 
 <p>Return the index of the last in-use row in the sheet. This index is 1-based.</p>
 
 <h3 id="cell">cell</h3>
 
-<pre><code> my $cell = $sheet-&gt;cell (&quot;A3&quot;);
- my $cell = $sheet-&gt;cell (1, 3);</code></pre>
+<pre><code>my $cell = $sheet-&gt;cell (&quot;A3&quot;);
+my $cell = $sheet-&gt;cell (1, 3);</code></pre>
 
 <p>Return the value for a cell. Using tags will return the formatted value, using column and row will return unformatted value.</p>
 
 <h3 id="attr1">attr</h3>
 
-<pre><code> my $cell = $sheet-&gt;attr (&quot;A3&quot;);
- my $cell = $sheet-&gt;attr (1, 3);</code></pre>
+<pre><code>my $cell = $sheet-&gt;attr (&quot;A3&quot;);
+my $cell = $sheet-&gt;attr (1, 3);</code></pre>
 
 <p>Return the attributes of a cell. Only valid if attributes are enabled through option <code>attr</code>.</p>
 
 <h3 id="col2label1">col2label</h3>
 
-<pre><code> my $col_id = $sheet-&gt;col2label (col);</code></pre>
+<pre><code>my $col_id = $sheet-&gt;col2label (col);</code></pre>
 
 <p><code>col2label ()</code> converts a <code>(column)</code> (1 based) to the letters used in the traditional cell notation:</p>
 
-<pre><code>  my $id = $sheet-&gt;col2label ( 4); # $id now &quot;D&quot;
-  my $id = $sheet-&gt;col2label (28); # $id now &quot;AB&quot;</code></pre>
+<pre><code>my $id = $sheet-&gt;col2label ( 4); # $id now &quot;D&quot;
+my $id = $sheet-&gt;col2label (28); # $id now &quot;AB&quot;</code></pre>
 
 <h3 id="cr2cell1">cr2cell</h3>
 
-<pre><code> my $cell = $sheet-&gt;cr2cell (col, row);</code></pre>
+<pre><code>my $cell = $sheet-&gt;cr2cell (col, row);</code></pre>
 
 <p><code>cr2cell ()</code> converts a <code>(column, row)</code> pair (1 based) to the traditional cell notation:</p>
 
-<pre><code>  my $cell = $sheet-&gt;cr2cell ( 4, 14); # $cell now &quot;D14&quot;
-  my $cell = $sheet-&gt;cr2cell (28,  4); # $cell now &quot;AB4&quot;</code></pre>
+<pre><code>my $cell = $sheet-&gt;cr2cell ( 4, 14); # $cell now &quot;D14&quot;
+my $cell = $sheet-&gt;cr2cell (28,  4); # $cell now &quot;AB4&quot;</code></pre>
 
 <h3 id="cell2cr1">cell2cr</h3>
 
-<pre><code> my ($col, $row) = $sheet-&gt;cell2cr ($cell);</code></pre>
+<pre><code>my ($col, $row) = $sheet-&gt;cell2cr ($cell);</code></pre>
 
 <p><code>cell2cr ()</code> converts traditional cell notation to a <code>(column, row)</code> pair (1 based):</p>
 
-<pre><code>  my ($col, $row) = $sheet-&gt;cell2cr (&quot;D14&quot;); # returns ( 4, 14)
-  my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code></pre>
+<pre><code>my ($col, $row) = $sheet-&gt;cell2cr (&quot;D14&quot;); # returns ( 4, 14)
+my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code></pre>
 
 <h3 id="col">col</h3>
 
-<pre><code> my @col = $sheet-&gt;column ($col);</code></pre>
+<pre><code>my @col = $sheet-&gt;column ($col);</code></pre>
 
 <p>Get full column of formatted values (like <code>$sheet-&gt;{C1} .. $sheet-&gt;{C9}</code>)</p>
 
@@ -591,7 +591,7 @@
 
 <h3 id="cellcolumn">cellcolumn</h3>
 
-<pre><code> my @col = $sheet-&gt;cellcolumn ($col);</code></pre>
+<pre><code>my @col = $sheet-&gt;cellcolumn ($col);</code></pre>
 
 <p>Get full column of unformatted values (like <code>$sheet-&gt;{cell}[3][1] .. $sheet-&gt;{cell}[3][9]</code>)</p>
 
@@ -599,7 +599,7 @@
 
 <h3 id="row1">row</h3>
 
-<pre><code> my @row = $sheet-&gt;row ($row);</code></pre>
+<pre><code>my @row = $sheet-&gt;row ($row);</code></pre>
 
 <p>Get full row of formatted values (like <code>$sheet-&gt;{A3} .. $sheet-&gt;{G3}</code>)</p>
 
@@ -607,7 +607,7 @@
 
 <h3 id="cellrow1">cellrow</h3>
 
-<pre><code> my @row = $sheet-&gt;cellrow ($row);</code></pre>
+<pre><code>my @row = $sheet-&gt;cellrow ($row);</code></pre>
 
 <p>Get full row of unformatted values (like <code>$sheet-&gt;{cell}[1][3] .. $sheet-&gt;{cell}[7][3]</code>)</p>
 
@@ -615,7 +615,7 @@
 
 <h3 id="rows1">rows</h3>
 
-<pre><code> my @rows = $sheet-&gt;rows ();</code></pre>
+<pre><code>my @rows = $sheet-&gt;rows ();</code></pre>
 
 <p>Convert <code>{cell}</code>&#39;s <code>[column][row]</code> to a <code>[row][column]</code> list.</p>
 
@@ -623,8 +623,8 @@
 
 <h3 id="merged_from">merged_from</h3>
 
-<pre><code> my $top_left = $sheet-&gt;merged_from (&quot;C2&quot;);
- my $top_left = $sheet-&gt;merged_from (3, 2);</code></pre>
+<pre><code>my $top_left = $sheet-&gt;merged_from (&quot;C2&quot;);
+my $top_left = $sheet-&gt;merged_from (3, 2);</code></pre>
 
 <p>If the parser supports merged areas, this method will return the label of the top-left cell in the merged area the requested cell is part of.</p>
 
@@ -636,14 +636,14 @@
 
 <h3 id="label">label</h3>
 
-<pre><code> my $label = $sheet-&gt;label;
- $sheet-&gt;label (&quot;New sheet label&quot;);</code></pre>
+<pre><code>my $label = $sheet-&gt;label;
+$sheet-&gt;label (&quot;New sheet label&quot;);</code></pre>
 
 <p>Set a new label to a sheet. Note that the index in the control structure will <i>NOT</i> be updated.</p>
 
 <h3 id="active">active</h3>
 
-<pre><code> my $sheet_is_active = $sheet-&gt;active;</code></pre>
+<pre><code>my $sheet_is_active = $sheet-&gt;active;</code></pre>
 
 <p>Returns 1 if the selected sheet is active, otherwise returns 0.</p>
 
@@ -657,71 +657,71 @@
 
 <p>When an error is found in the CSV, it is automatically reported (to STDERR). The structure will store the error in <code>$ss-&gt;[0]{error}</code> as anonymous list returned by <a href="https://metacpan.org/pod/Text::CSV_XS#error_diag"><code>$csv-&gt;error_diag</code></a>. See <a href="https://metacpan.org/pod/Text::CSV_XS">Text::CSV_XS</a> for documentation.</p>
 
-<pre><code> my $ss = ReadData (&quot;bad.csv&quot;);
- $ss-&gt;[0]{error} and say $ss-&gt;[0]{error}[1];</code></pre>
+<pre><code>my $ss = ReadData (&quot;bad.csv&quot;);
+$ss-&gt;[0]{error} and say $ss-&gt;[0]{error}[1];</code></pre>
 
 <p>As CSV has no sheet labels, the default label for a CSV sheet is its filename. For CSV, this can be overruled using the <i>label</i> attribute:</p>
 
-<pre><code> my $ss = Spreadsheet::Read-&gt;new (&quot;/some/place/test.csv&quot;, label =&gt; &quot;Test&quot;);</code></pre>
+<pre><code>my $ss = Spreadsheet::Read-&gt;new (&quot;/some/place/test.csv&quot;, label =&gt; &quot;Test&quot;);</code></pre>
 
 <h2 id="Cell-Attributes">Cell Attributes </h2>
 
 <p>If the constructor was called with <code>attr</code> having a true value,</p>
 
-<pre><code> my $book = ReadData (&quot;book.xls&quot;, attr =&gt; 1);
- my $book = Spreadsheet::Read-&gt;new (&quot;book.xlsx&quot;, attr =&gt; 1);</code></pre>
+<pre><code>my $book = ReadData (&quot;book.xls&quot;, attr =&gt; 1);
+my $book = Spreadsheet::Read-&gt;new (&quot;book.xlsx&quot;, attr =&gt; 1);</code></pre>
 
 <p>effort is made to analyze and store field attributes like this:</p>
 
-<pre><code>    { label  =&gt; &quot;Sheet 1&quot;,
-      maxrow =&gt; 5,
-      maxcol =&gt; 2,
-      cell   =&gt; [ undef,
-        [ undef, 1 ],
-        [ undef, undef, undef, undef, undef, &quot;Nugget&quot; ],
-        ],
-      attr   =&gt; [ undef,
-        [ undef, {
-          type    =&gt; &quot;numeric&quot;,
-          fgcolor =&gt; &quot;#ff0000&quot;,
-          bgcolor =&gt; undef,
-          font    =&gt; &quot;Arial&quot;,
-          size    =&gt; undef,
-          format  =&gt; &quot;## ##0.00&quot;,
-          halign  =&gt; &quot;right&quot;,
-          valign  =&gt; &quot;top&quot;,
-          uline   =&gt; 0,
-          bold    =&gt; 0,
-          italic  =&gt; 0,
-          wrap    =&gt; 0,
-          merged  =&gt; 0,
-          hidden  =&gt; 0,
-          locked  =&gt; 0,
-          enc     =&gt; &quot;utf-8&quot;,
-          }, ],
-        [ undef, undef, undef, undef, undef, {
-          type    =&gt; &quot;text&quot;,
-          fgcolor =&gt; &quot;#e2e2e2&quot;,
-          bgcolor =&gt; undef,
-          font    =&gt; &quot;Letter Gothic&quot;,
-          size    =&gt; 15,
-          format  =&gt; undef,
-          halign  =&gt; &quot;left&quot;,
-          valign  =&gt; &quot;top&quot;,
-          uline   =&gt; 0,
-          bold    =&gt; 0,
-          italic  =&gt; 0,
-          wrap    =&gt; 0,
-          merged  =&gt; 0,
-          hidden  =&gt; 0,
-          locked  =&gt; 0,
-          enc     =&gt; &quot;iso8859-1&quot;,
-          }, ],
-        ],
-      merged =&gt; [],
-      A1     =&gt; 1,
-      B5     =&gt; &quot;Nugget&quot;,
-      },</code></pre>
+<pre><code>{ label  =&gt; &quot;Sheet 1&quot;,
+  maxrow =&gt; 5,
+  maxcol =&gt; 2,
+  cell   =&gt; [ undef,
+    [ undef, 1 ],
+    [ undef, undef, undef, undef, undef, &quot;Nugget&quot; ],
+    ],
+  attr   =&gt; [ undef,
+    [ undef, {
+      type    =&gt; &quot;numeric&quot;,
+      fgcolor =&gt; &quot;#ff0000&quot;,
+      bgcolor =&gt; undef,
+      font    =&gt; &quot;Arial&quot;,
+      size    =&gt; undef,
+      format  =&gt; &quot;## ##0.00&quot;,
+      halign  =&gt; &quot;right&quot;,
+      valign  =&gt; &quot;top&quot;,
+      uline   =&gt; 0,
+      bold    =&gt; 0,
+      italic  =&gt; 0,
+      wrap    =&gt; 0,
+      merged  =&gt; 0,
+      hidden  =&gt; 0,
+      locked  =&gt; 0,
+      enc     =&gt; &quot;utf-8&quot;,
+      }, ],
+    [ undef, undef, undef, undef, undef, {
+      type    =&gt; &quot;text&quot;,
+      fgcolor =&gt; &quot;#e2e2e2&quot;,
+      bgcolor =&gt; undef,
+      font    =&gt; &quot;Letter Gothic&quot;,
+      size    =&gt; 15,
+      format  =&gt; undef,
+      halign  =&gt; &quot;left&quot;,
+      valign  =&gt; &quot;top&quot;,
+      uline   =&gt; 0,
+      bold    =&gt; 0,
+      italic  =&gt; 0,
+      wrap    =&gt; 0,
+      merged  =&gt; 0,
+      hidden  =&gt; 0,
+      locked  =&gt; 0,
+      enc     =&gt; &quot;iso8859-1&quot;,
+      }, ],
+    ],
+  merged =&gt; [],
+  A1     =&gt; 1,
+  B5     =&gt; &quot;Nugget&quot;,
+  },</code></pre>
 
 <p>The entries <code>maxrow</code> and <code>maxcol</code> are 1-based.</p>
 
@@ -731,15 +731,15 @@
 
 <p>You can get the attributes of a cell (as a hash-ref) like this:</p>
 
-<pre><code> my $attr = $book[1]{attr}[1][3];          # Direct structure
- my $attr = $book-&gt;sheet (1)-&gt;attr (1, 3); # Same using OO
- my $attr = $book-&gt;sheet (1)-&gt;attr (&quot;A3&quot;); # Same using OO</code></pre>
+<pre><code>my $attr = $book[1]{attr}[1][3];          # Direct structure
+my $attr = $book-&gt;sheet (1)-&gt;attr (1, 3); # Same using OO
+my $attr = $book-&gt;sheet (1)-&gt;attr (&quot;A3&quot;); # Same using OO</code></pre>
 
 <p>To get to the <code>font</code> attribute, use any of these:</p>
 
-<pre><code> my $font = $book[1]{attr}[1][3]{font};
- my $font = $book-&gt;sheet (1)-&gt;attr (1, 3)-&gt;{font};
- my $font = $book-&gt;sheet (1)-&gt;attr (&quot;A3&quot;)-&gt;font;</code></pre>
+<pre><code>my $font = $book[1]{attr}[1][3]{font};
+my $font = $book-&gt;sheet (1)-&gt;attr (1, 3)-&gt;{font};
+my $font = $book-&gt;sheet (1)-&gt;attr (&quot;A3&quot;)-&gt;font;</code></pre>
 
 <h3 id="Merged-cells">Merged cells </h3>
 
@@ -755,80 +755,80 @@
 
 <p>Given this spreadsheet as an example</p>
 
-<pre><code> merged.xlsx:
+<pre><code>merged.xlsx:
 
-     A     B     C
-  +-----+-----------+
- 1|     | foo       |
-  +-----+           +
- 2| bar |           |
-  |     +-----+-----+
- 3|     | urg | orc |
-  +-----+-----+-----+</code></pre>
+    A     B     C
+ +-----+-----------+
+1|     | foo       |
+ +-----+           +
+2| bar |           |
+ |     +-----+-----+
+3|     | urg | orc |
+ +-----+-----+-----+</code></pre>
 
 <p>the information extracted from that undocumented information is returned in the <code>merged</code> entry of the sheet&#39;s hash as a list of top-left, bottom-right coordinate pars (col, row, col, row). For given example, that would be:</p>
 
-<pre><code> $ss-&gt;{merged} = [
-    [ 1, 2, 1, 3 ], # A2-A3
-    [ 2, 1, 3, 2 ], # B1-C2
-    ];</code></pre>
+<pre><code>$ss-&gt;{merged} = [
+   [ 1, 2, 1, 3 ], # A2-A3
+   [ 2, 1, 3, 2 ], # B1-C2
+   ];</code></pre>
 
 <p>To find the label of the top-left cell in a merged area, use the <a href="#merged_from"><code>merged_from</code></a> method.</p>
 
-<pre><code> $ss-&gt;merged_from (&quot;C2&quot;); # will return &quot;B1&quot;</code></pre>
+<pre><code>$ss-&gt;merged_from (&quot;C2&quot;); # will return &quot;B1&quot;</code></pre>
 
 <p>When the attributes are also enabled, there is some merge information copied directly from the cell information, but again, that stems from code analysis and not from documentation:</p>
 
-<pre><code> my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1)-&gt;[1];
- foreach my $row (1 .. $ss-&gt;{maxrow}) {
-     foreach my $col (1 .. $ss-&gt;{maxcol}) {
-         my $cell = cr2cell ($col, $row);
-         printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
-             $ss-&gt;{attr}[$col][$row]{merged};
-         }
-     print &quot;\n&quot;;
-     }
+<pre><code>my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1)-&gt;[1];
+foreach my $row (1 .. $ss-&gt;{maxrow}) {
+    foreach my $col (1 .. $ss-&gt;{maxcol}) {
+        my $cell = cr2cell ($col, $row);
+        printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
+            $ss-&gt;{attr}[$col][$row]{merged};
+        }
+    print &quot;\n&quot;;
+    }
 
- A1     0  B1 foo 1  C1     1
- A2 bar 1  B2     1  C2     1
- A3     1  B3 urg 0  C3 orc 0</code></pre>
+A1     0  B1 foo 1  C1     1
+A2 bar 1  B2     1  C2     1
+A3     1  B3 urg 0  C3 orc 0</code></pre>
 
 <p>In this example, there is no way to see if <code>B2</code> is merged to <code>A2</code> or to <code>B1</code> without analyzing all surrounding cells. This could as well mean <code>A2:A3</code>, <code>B1:C1</code>, <code>B2:C2</code>, as <code>A2:A3</code>, <code>B1:B2</code>, <code>C1:C2</code>, as <code>A2:A3</code>, <code>B1:C2</code>.</p>
 
 <p>Use the <a href="#merged"><code>merged</code></a> entry described above to find out what fields are merged to what other fields or use <code>merge</code>:</p>
 
-<pre><code> my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1, merge =&gt; 1)-&gt;[1];
- foreach my $row (1 .. $ss-&gt;{maxrow}) {
-     foreach my $col (1 .. $ss-&gt;{maxcol}) {
-         my $cell = cr2cell ($col, $row);
-         printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
-             $ss-&gt;{attr}[$col][$row]{merged};
-         }
-     print &quot;\n&quot;;
-     }
+<pre><code>my $ss = ReadData (&quot;merged.xlsx&quot;, attr =&gt; 1, merge =&gt; 1)-&gt;[1];
+foreach my $row (1 .. $ss-&gt;{maxrow}) {
+    foreach my $col (1 .. $ss-&gt;{maxcol}) {
+        my $cell = cr2cell ($col, $row);
+        printf &quot;%s %-3s %s  &quot;, $cell, $ss-&gt;{$cell},
+            $ss-&gt;{attr}[$col][$row]{merged};
+        }
+    print &quot;\n&quot;;
+    }
 
- A1     0   B1 foo B1  C1 foo B1
- A2 bar A2  B2 foo B1  C2 foo B1
- A3 bar A2  B3 urg 0   C3 orc 0</code></pre>
+A1     0   B1 foo B1  C1 foo B1
+A2 bar A2  B2 foo B1  C2 foo B1
+A3 bar A2  B3 urg 0   C3 orc 0</code></pre>
 
 <h2 id="Streams-from-web-resources">Streams from web-resources</h2>
 
 <p>If you want to stream a web-resource, and the underlying parser supports it, you could use a helper function like this (thanks Corion):</p>
 
-<pre><code> use HTTP::Tiny;
- use Spreadsheet::Read;
+<pre><code>use HTTP::Tiny;
+use Spreadsheet::Read;
 
- # Fetch data and return a filehandle to that data
- sub fh_from_url {
-     my $url = shift;
-     my $ua  = HTTP::Tiny-&gt;new;
-     my $res = $ua-&gt;get ($url);
-     open my $fh, &quot;&lt;&quot;, \$res-&gt;{content};
-     return $fh
-     } # fh_from_url
+# Fetch data and return a filehandle to that data
+sub fh_from_url {
+    my $url = shift;
+    my $ua  = HTTP::Tiny-&gt;new;
+    my $res = $ua-&gt;get ($url);
+    open my $fh, &quot;&lt;&quot;, \$res-&gt;{content};
+    return $fh
+    } # fh_from_url
 
- my $fh = fh_from_url (&quot;http://example.com/example.csv&quot;);
- my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code></pre>
+my $fh = fh_from_url (&quot;http://example.com/example.csv&quot;);
+my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code></pre>
 
 <h1 id="TOOLS">TOOLS</h1>
 
@@ -840,145 +840,145 @@
 
 <p>Show (parts of) a spreadsheet in plain text, CSV, or HTML</p>
 
-<pre><code> usage: xlscat   [-s &lt;sep&gt;] [-L] [-n] [-A] [-u] [Selection] file.xls
-                 [-c | -m]                 [-u] [Selection] file.xls
-                  -i                            [-S sheets] file.xls
-     Generic options:
-        -v[#]       Set verbose level (xlscat/xlsgrep)
-        -d[#]       Set debug   level (Spreadsheet::Read)
-        --list      Show supported spreadsheet formats and exit
-        -u          Use unformatted values
-        --strip[=#] Strip leading and/or traing spaces of all cells
-        --noclip    Do not strip empty sheets and
-                    trailing empty rows and columns
-         --no-nl[=R] Replace all newlines in cells with R (default space)
-        -e &lt;enc&gt;    Set encoding for input and output
-        -b &lt;enc&gt;    Set encoding for input
-        -a &lt;enc&gt;    Set encoding for output
-        -U          Set encoding for output to utf-8 (short for -a utf-8)
-     Input CSV:
-        --in-sep=c  Set input sep_char for CSV (c can be &#39;TAB&#39;)
-     Input XLS:
-        --dtfmt=fmt Specify the default date format to replace &#39;m-d-yy&#39;
-                    the default replacement is &#39;yyyy-mm-dd&#39;
-        --passwd=pw Specify the password for workbook
-                    if pw = -, read password from keyboard
-        --formulas  Show the formula instead of the value
-     Output Text (default):
-        -s &lt;sep&gt;    Use separator &lt;sep&gt;. Default &#39;|&#39;, \n allowed
-                    Overrules &#39;,&#39; when used with --csv
-        -L          Line up the columns
-        -n [skip]   Number lines (prefix with column number)
-                    optionally skip &lt;skip&gt; (header) lines
-        -A          Show field attributes in ANSI escapes
-        -h[#]       Show # header lines
-        -D          Dump each record with Data::Peek or Data::Dumper
-         --hash     Like -D but as hash with first row as keys
-     Output Index only:
-        -i          Show sheet names and size only
-     Output CSV:
-        -c          Output CSV, separator = &#39;,&#39;
-        -m          Output CSV, separator = &#39;;&#39;
-     Output HTML:
-        -H          Output HTML
-     Selection:
-        -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
-                    Default only prints the first sheet
-        -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
-        -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
-        -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
-     Ordering (column numbers in result set *after* selection):
-        --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
-                    +#   - first # lines do not sort (header)
-                    #    - order on column # lexical ascending
-                    #n   - order on column # numeric ascending
-                    #r   - order on column # lexical descending
-                    #rn  - order on column # numeric descending
+<pre><code>usage: xlscat   [-s &lt;sep&gt;] [-L] [-n] [-A] [-u] [Selection] file.xls
+                [-c | -m]                 [-u] [Selection] file.xls
+                 -i                            [-S sheets] file.xls
+    Generic options:
+       -v[#]       Set verbose level (xlscat/xlsgrep)
+       -d[#]       Set debug   level (Spreadsheet::Read)
+       --list      Show supported spreadsheet formats and exit
+       -u          Use unformatted values
+       --strip[=#] Strip leading and/or traing spaces of all cells
+       --noclip    Do not strip empty sheets and
+                   trailing empty rows and columns
+        --no-nl[=R] Replace all newlines in cells with R (default space)
+       -e &lt;enc&gt;    Set encoding for input and output
+       -b &lt;enc&gt;    Set encoding for input
+       -a &lt;enc&gt;    Set encoding for output
+       -U          Set encoding for output to utf-8 (short for -a utf-8)
+    Input CSV:
+       --in-sep=c  Set input sep_char for CSV (c can be &#39;TAB&#39;)
+    Input XLS:
+       --dtfmt=fmt Specify the default date format to replace &#39;m-d-yy&#39;
+                   the default replacement is &#39;yyyy-mm-dd&#39;
+       --passwd=pw Specify the password for workbook
+                   if pw = -, read password from keyboard
+       --formulas  Show the formula instead of the value
+    Output Text (default):
+       -s &lt;sep&gt;    Use separator &lt;sep&gt;. Default &#39;|&#39;, \n allowed
+                   Overrules &#39;,&#39; when used with --csv
+       -L          Line up the columns
+       -n [skip]   Number lines (prefix with column number)
+                   optionally skip &lt;skip&gt; (header) lines
+       -A          Show field attributes in ANSI escapes
+       -h[#]       Show # header lines
+       -D          Dump each record with Data::Peek or Data::Dumper
+        --hash     Like -D but as hash with first row as keys
+    Output Index only:
+       -i          Show sheet names and size only
+    Output CSV:
+       -c          Output CSV, separator = &#39;,&#39;
+       -m          Output CSV, separator = &#39;;&#39;
+    Output HTML:
+       -H          Output HTML
+    Selection:
+       -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
+                   Default only prints the first sheet
+       -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
+       -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
+       -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
+    Ordering (column numbers in result set *after* selection):
+       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                   +#   - first # lines do not sort (header)
+                   #    - order on column # lexical ascending
+                   #n   - order on column # numeric ascending
+                   #r   - order on column # lexical descending
+                   #rn  - order on column # numeric descending
 
- Examples:
-     xlscat -i foo.xls
-     xlscat --in-sep=: --sort=3n -L /etc/passwd</code></pre>
+Examples:
+    xlscat -i foo.xls
+    xlscat --in-sep=: --sort=3n -L /etc/passwd</code></pre>
 
 <h2 id="xlsgrep"><code>xlsgrep</code></h2>
 
 <p>Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML</p>
 
-<pre><code> usage: xlsgrep  [-s &lt;sep&gt;] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
-                 [-c | -m]                 [-u] [Selection] pattern file.xls
-                  -i                            [-S sheets] pattern file.xls
-     Generic options:
-        -v[#]       Set verbose level (xlscat/xlsgrep)
-        -d[#]       Set debug   level (Spreadsheet::Read)
-        --list      Show supported spreadsheet formats and exit
-        -u          Use unformatted values
-        --strip[=#] Strip leading and/or traing spaces of all cells
-        --noclip    Do not strip empty sheets and
-                    trailing empty rows and columns
-         --no-nl[=R] Replace all newlines in cells with R (default space)
-        -e &lt;enc&gt;    Set encoding for input and output
-        -b &lt;enc&gt;    Set encoding for input
-        -a &lt;enc&gt;    Set encoding for output
-        -U          Set encoding for output to utf-8 (short for -a utf-8)
-     Input CSV:
-        --in-sep=c  Set input sep_char for CSV (c can be &#39;TAB&#39;)
-     Input XLS:
-        --dtfmt=fmt Specify the default date format to replace &#39;m-d-yy&#39;
-                    the default replacement is &#39;yyyy-mm-dd&#39;
-        --passwd=pw Specify the password for workbook
-                    if pw = -, read password from keyboard
-        --formulas  Show the formula instead of the value
-     Output Text (default):
-        -s &lt;sep&gt;    Use separator &lt;sep&gt;. Default &#39;|&#39;, \n allowed
-                    Overrules &#39;,&#39; when used with --csv
-        -L          Line up the columns
-        -n [skip]   Number lines (prefix with column number)
-                    optionally skip &lt;skip&gt; (header) lines
-        -A          Show field attributes in ANSI escapes
-        -h[#]       Show # header lines
-        -D          Dump each record with Data::Peek or Data::Dumper
-         --hash     Like -D but as hash with first row as keys
-     Grep options:
-        -i          Ignore case
-        -w          Match whole words only
-     Output CSV:
-        -c          Output CSV, separator = &#39;,&#39;
-        -m          Output CSV, separator = &#39;;&#39;
-     Output HTML:
-        -H          Output HTML
-     Selection:
-        -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
-                    Default only prints the first sheet
-        -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
-        -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
-        -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
-     Ordering (column numbers in result set *after* selection):
-        --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
-                    +#   - first # lines do not sort (header)
-                    #    - order on column # lexical ascending
-                    #n   - order on column # numeric ascending
-                    #r   - order on column # lexical descending
-                    #rn  - order on column # numeric descending
+<pre><code>usage: xlsgrep  [-s &lt;sep&gt;] [-L] [-n] [-A] [-u] [Selection] pattern file.xls
+                [-c | -m]                 [-u] [Selection] pattern file.xls
+                 -i                            [-S sheets] pattern file.xls
+    Generic options:
+       -v[#]       Set verbose level (xlscat/xlsgrep)
+       -d[#]       Set debug   level (Spreadsheet::Read)
+       --list      Show supported spreadsheet formats and exit
+       -u          Use unformatted values
+       --strip[=#] Strip leading and/or traing spaces of all cells
+       --noclip    Do not strip empty sheets and
+                   trailing empty rows and columns
+        --no-nl[=R] Replace all newlines in cells with R (default space)
+       -e &lt;enc&gt;    Set encoding for input and output
+       -b &lt;enc&gt;    Set encoding for input
+       -a &lt;enc&gt;    Set encoding for output
+       -U          Set encoding for output to utf-8 (short for -a utf-8)
+    Input CSV:
+       --in-sep=c  Set input sep_char for CSV (c can be &#39;TAB&#39;)
+    Input XLS:
+       --dtfmt=fmt Specify the default date format to replace &#39;m-d-yy&#39;
+                   the default replacement is &#39;yyyy-mm-dd&#39;
+       --passwd=pw Specify the password for workbook
+                   if pw = -, read password from keyboard
+       --formulas  Show the formula instead of the value
+    Output Text (default):
+       -s &lt;sep&gt;    Use separator &lt;sep&gt;. Default &#39;|&#39;, \n allowed
+                   Overrules &#39;,&#39; when used with --csv
+       -L          Line up the columns
+       -n [skip]   Number lines (prefix with column number)
+                   optionally skip &lt;skip&gt; (header) lines
+       -A          Show field attributes in ANSI escapes
+       -h[#]       Show # header lines
+       -D          Dump each record with Data::Peek or Data::Dumper
+        --hash     Like -D but as hash with first row as keys
+    Grep options:
+       -i          Ignore case
+       -w          Match whole words only
+    Output CSV:
+       -c          Output CSV, separator = &#39;,&#39;
+       -m          Output CSV, separator = &#39;;&#39;
+    Output HTML:
+       -H          Output HTML
+    Selection:
+       -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
+                   Default only prints the first sheet
+       -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
+       -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
+       -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
+    Ordering (column numbers in result set *after* selection):
+       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)
+                   +#   - first # lines do not sort (header)
+                   #    - order on column # lexical ascending
+                   #n   - order on column # numeric ascending
+                   #r   - order on column # lexical descending
+                   #rn  - order on column # numeric descending
 
- Examples:
-     xlscat -i foo.xls
-     xlscat --in-sep=: --sort=3n -L /etc/passwd</code></pre>
+Examples:
+    xlscat -i foo.xls
+    xlscat --in-sep=: --sort=3n -L /etc/passwd</code></pre>
 
 <h2 id="xlsx2csv"><code>xlsx2csv</code></h2>
 
 <p>Convert a spreadsheet to CSV. This is just a small wrapper over <code>xlscat</code>.</p>
 
-<pre><code> usage: xlsx2csv [-A [-N | -J c] | -o file.csv] [-s sep] [-f] [-i] file.xls
-        xlsx2csv --help | --man | --info
-           --list    List supported spreadsheet formats and exit
-     -A    --all     Export all sheets      (filename-sheetname.csv)
-     -N    --no-pfx  No filene prefix on -A (sheetname.csv)
-     -Z    --zip     Convert sheets to CSV&#39;s in ZIP
-     -J s  --join=s  Use s to join filename-sheetname (-)
-     -o f  --out=f   Set output filename
-     -i f  --in=f    Set infut  filename
-     -f    --force   Force overwrite output if exists
-     -s s  --sep=s   Set CSV separator character
- Unless -A is used, all other options are passed on to xlscat</code></pre>
+<pre><code>usage: xlsx2csv [-A [-N | -J c] | -o file.csv] [-s sep] [-f] [-i] file.xls
+       xlsx2csv --help | --man | --info
+          --list    List supported spreadsheet formats and exit
+    -A    --all     Export all sheets      (filename-sheetname.csv)
+    -N    --no-pfx  No filene prefix on -A (sheetname.csv)
+    -Z    --zip     Convert sheets to CSV&#39;s in ZIP
+    -J s  --join=s  Use s to join filename-sheetname (-)
+    -o f  --out=f   Set output filename
+    -i f  --in=f    Set infut  filename
+    -f    --force   Force overwrite output if exists
+    -s s  --sep=s   Set CSV separator character
+Unless -A is used, all other options are passed on to xlscat</code></pre>
 
 <h2 id="xls2csv"><code>xls2csv</code></h2>
 
@@ -988,19 +988,19 @@
 
 <p>Show a spreadsheet in a perl/Tk spreadsheet widget</p>
 
-<pre><code> usage: ss2tk [options] [X11 options] file.xls [&lt;pattern&gt;]
-        -w &lt;width&gt; use &lt;width&gt; as column width
-        -L         Add spreadsheet tags to top (A, B, ..Z, AB, ...)
-                   and left (1, 2, ...)
-        --fs[=7]   Set font size (default 7 if no value)
-        --fn=name  Set font Face name (default is DejaVu Sans Mono
-                   if font size is given</code></pre>
+<pre><code>usage: ss2tk [options] [X11 options] file.xls [&lt;pattern&gt;]
+       -w &lt;width&gt; use &lt;width&gt; as column width
+       -L         Add spreadsheet tags to top (A, B, ..Z, AB, ...)
+                  and left (1, 2, ...)
+       --fs[=7]   Set font size (default 7 if no value)
+       --fn=name  Set font Face name (default is DejaVu Sans Mono
+                  if font size is given</code></pre>
 
 <h2 id="ssdiff"><code>ssdiff</code></h2>
 
 <p>Show the differences between two spreadsheets.</p>
 
-<pre><code> usage: ssdiff [--verbose[=1]] file.xls file.xlsx</code></pre>
+<pre><code>usage: ssdiff [--verbose[=1]] file.xls file.xlsx</code></pre>
 
 <h1 id="TODO">TODO</h1>
 

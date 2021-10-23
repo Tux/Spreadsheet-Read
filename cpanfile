@@ -19,27 +19,27 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302183";
+    recommends "Test::More"               => "1.302188";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.00";
-    recommends "Text::CSV_PP"             => "2.00";
-    recommends "Text::CSV_XS"             => "1.45";
+    recommends "Text::CSV"                => "2.01";
+    recommends "Text::CSV_PP"             => "2.01";
+    recommends "Text::CSV_XS"             => "1.46";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
     requires   "Spreadsheet::ParseODS"    => "0.26";
 
-    recommends "Spreadsheet::ParseODS"    => "0.33";
+    recommends "Spreadsheet::ParseODS"    => "0.35";
     };
 
 feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
     requires   "Spreadsheet::ReadSXC"     => "0.26";
 
-    recommends "Spreadsheet::ReadSXC"     => "0.33";
+    recommends "Spreadsheet::ReadSXC"     => "0.35";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {

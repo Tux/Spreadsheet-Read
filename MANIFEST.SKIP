@@ -34,3 +34,4 @@ t/637_merged.t
 ^xt/
 ^test\.pl
 ^sr$
+^bad\.
