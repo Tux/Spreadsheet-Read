@@ -71,7 +71,7 @@ test_requires:
 recommends:
   IO::Scalar:           0
   File::Temp:           0.2311
-  Data::Peek:           0.50
+  Data::Peek:           0.51
 test_recommends:
   Test::More:           1.302188
 resources:
@@ -89,7 +89,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.01
       Text::CSV_PP:                        2.01
-      Text::CSV_XS:                        1.46
+      Text::CSV_XS:                        1.47
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -109,13 +109,13 @@ optional_features:
     requires:
       Spreadsheet::ParseODS:               0.26
     recommends:
-      Spreadsheet::ParseODS:               0.35
+      Spreadsheet::ParseODS:               0.37
   opt_sxc:
     description:        Provides parsing of OpenOffice spreadsheets old style
     requires:
       Spreadsheet::ReadSXC:                0.26
     recommends:
-      Spreadsheet::ReadSXC:                0.35
+      Spreadsheet::ReadSXC:                0.37
   opt_tools:
     description:        Spreadsheet tools
     recommends:
