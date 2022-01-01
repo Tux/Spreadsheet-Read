@@ -2,7 +2,7 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'21 [2021-02-02] Copyright H.M.Brand 2005-2021
+#	   (m)'21 [2021-02-02] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;

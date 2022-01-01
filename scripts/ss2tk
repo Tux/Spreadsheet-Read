@@ -1,7 +1,7 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-07-03] Copyright H.M.Brand 2005-2021
+#	  (m)'17 [2017-07-03] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;
