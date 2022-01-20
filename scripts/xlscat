@@ -125,7 +125,7 @@ GetOptions (
     "C|columns=s"	=> \my $opt_C,	# Columns to print
     "F|fields=s"	=> \   $opt_F,
     "L|fit|align!"	=> \my $opt_L,	# Auto-size/align columns
-    "B|box!"		=> \my $opt_B,	# Align and add outer frame
+    "B|box|frame!"	=> \my $opt_B,	# Align and add outer frame
     "P|pivot!"		=> \my $pivot,
     "n|number:0"	=> \my $opt_n,	# Prefix lines with column number
     "A|ansi|color!"	=> \my $opt_A,	# Show field colors in ANSI escapes
