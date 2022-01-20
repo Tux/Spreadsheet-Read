@@ -2,12 +2,12 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'21 [2021-02-02] Copyright H.M.Brand 2005-2022
+#	   (m)'22 [2022-01-20] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;
 
-our $VERSION = "3.20";
+our $VERSION = "3.21";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -44,6 +44,7 @@ sub usage {
 	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
 	"                   Overrules ',' when used with --csv\n",
 	"       -L          Line up the columns\n",
+	"       -B  --box   Like -L but also add outer frame\n",
 	"       -n [skip]   Number lines (prefix with column number)\n",
 	"                   optionally skip <skip> (header) lines\n",
 	"       -A          Show field attributes in ANSI escapes\n",
@@ -124,6 +125,7 @@ GetOptions (
     "C|columns=s"	=> \my $opt_C,	# Columns to print
     "F|fields=s"	=> \   $opt_F,
     "L|fit|align!"	=> \my $opt_L,	# Auto-size/align columns
+    "B|box!"		=> \my $opt_B,	# Align and add outer frame
     "P|pivot!"		=> \my $pivot,
     "n|number:0"	=> \my $opt_n,	# Prefix lines with column number
     "A|ansi|color!"	=> \my $opt_A,	# Show field colors in ANSI escapes
@@ -160,6 +162,7 @@ if ($list) {
     exit 0;
     }
 
+$opt_B and $opt_L++;
 unless ($is_grep) {
 $opt_i && $opt_L and usage 1, "Options i and L are mutually exclusive";
 $opt_i && $opt_s and usage 1, "Options i and s are mutually exclusive";
@@ -493,7 +496,7 @@ foreach my $si (1 .. $sc) {
 		    "\e[0m";
 		}
 	    }
-	line ($opt_s => @row);
+	line (0, $opt_s => @row);
 	} continue {
 	    ++$h % 100 == 0 && $opt_v and printf STDERR $v_fmt, $nc, $h, "\r";
 	    }
@@ -538,10 +541,12 @@ foreach my $si (1 .. $sc) {
 		my $l = length $d;
 		$l > $w[$c] and $w[$c] = $l;
 		$r && $d =~ m/\S/ or next;
-		$d =~ m/^\s*(?:-\s*)?[0-9][0-9 .,]*$/ or $align[$c] = "-";
+		$d =~ m/^(?:-|\s*(?:-\s*)?[0-9][0-9 .,]*)$/ or $align[$c] = "-";
 		}
 	    }
 	}
+
+    $opt_B and line (1, $opt_s => map { "-" x $w[$_] } 0..$#{$data[0][0]});
     for (@data) {
 	my ($row, $att) = @$_;
 	my @row = @$row;
@@ -559,17 +564,45 @@ foreach my $si (1 .. $sc) {
 		$row[$_] .= "\e[0m";
 		}
 	    }
-	line ($opt_s => @row);
-	++$opt_n == $opt_h and line ("+", map {"-"x$w[$_]} 0..$#row);
+	line (0, $opt_s => @row);
+	++$opt_n == $opt_h and
+	    line (2, $opt_s => map { "-" x $w[$_] } 0..$#row);
 	}
+    $opt_B and line (3, $opt_s => map { "-" x $w[$_] } 0..$#{$data[0][0]});
     }
 $opt_H and print "</body>\n</html>\n";
 
 sub line {
-    my $sep  = shift || " \x{2502} ";
-    my $line = join $sep => @_;
+    my $uh   = "\x{2500}";	# BOX DRAWINGS LIGHT HORIZONTAL
+    my $uv   = "\x{2502}";
+    my @tpl  = ($uv, "\x{250c}", "\x{251c}", "\x{2514}");
+    my @tpm  = ($uv, "\x{252c}", "\x{253c}", "\x{2534}");
+    my @tpr  = ($uv, "\x{2510}", "\x{2524}", "\x{2518}");
+
+    my $type = shift; # 0: data, 1: top, 2: middle, 3: bottom
+    my $sep  = shift || " $uv ";
+    my @dta  = @_;
+    if ($opt_L) {
+	$type > 0 and $sep =~ s/ /-/g;
+	if ($sep =~ m/$uv/) {
+	    $sep =~ s/-/$uh/g;
+	    $sep =~ s/$uv/$tpm[$type]/;
+	    if ($type > 0) {
+		s/-/$uh/g for grep { length } @dta;
+		}
+	    }
+	elsif ($type > 0) {
+	    $sep =~ s/\|/+/;
+	    }
+	}
+    my $line = join $sep => @dta;
+    if ($opt_B) {
+	substr $line, 0, 0, $sep =~ s/^(?:\s|$uh)[\x{2500}-\x{25ff}]/$tpl[$type]/r;
+	$line .= $sep =~ s/[\x{2500}-\x{25ff}](?:\s|$uh)$/$tpr[$type]/r;
+	}
     !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
-    print "$line\n";
+    print $line;
+    print "\n";
     } # show_line
 
 END {
