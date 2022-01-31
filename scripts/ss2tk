@@ -1,12 +1,12 @@
 #!/pro/bin/perl
 
 # ss2tk: show SpreadSheet file in Tk::TableMatrix::Spreadsheet (*)
-#	  (m)'17 [2017-07-03] Copyright H.M.Brand 2005-2022
+#	  (m)'22 [2022-01-31] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;
 
-our $VERSION = "2.8";
+our $VERSION = "2.81";
 
 sub usage {
     my $err = shift and select STDERR;
@@ -46,6 +46,7 @@ GetOptions (
 use Data::Peek;
 use Spreadsheet::Read;
 use Tk;
+use Tk::Balloon;
 use Tk::NoteBook;
 use Tk::TableMatrix::Spreadsheet;
 
@@ -70,6 +71,14 @@ my $pat = @ARGV ? qr/$ARGV[0]/i : undef;
 
 my $mw = MainWindow->new (-title => $title);
 $geometry and $mw->geometry ($geometry);
+
+my $balloon = $mw->Balloon (
+    -state     => "balloon",
+    -initwait  => 300,
+    -foreground => "#000000",
+    -background => "#ffffff",
+    );
+
 my $nb = $mw->NoteBook ()->pack (qw(-side top -expand 1 -fill both ));
 my @nb;
 foreach my $sht (1 .. $ref->[0]{sheets}) {
@@ -131,14 +140,14 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 
     # Search frame
     my $sf = $nb[$sht]->Frame ()->pack (-side => "left", -expand => 1, -fill => "both");
-    my $sl = $sf->Label (
+    $sf->Label (
 	-text     => "Search",
 	)->pack (-side => "left", -anchor => "sw");
     my $sb = $sf->Entry (
 	-textvariable => \$sv,
 	)->pack (-side => "left", -anchor => "sw");
     $sb->bind ("<Return>" => sub { search ($si = 0); });
-    my $sn = $sf->Button (
+    $sf->Button (
 	-text     => "Next",
 	-command  => sub { search (++$si) },
 	)->pack (-side => "left", -anchor => "sw");
@@ -150,20 +159,32 @@ foreach my $sht (1 .. $ref->[0]{sheets}) {
 	-foreground => "#8b0000",
 	-command    => \&exit,
 	)->pack (-side => "right", -anchor => "se");
-    $cf->Button (
-	-text       => "\x{21f5}",
+    $balloon->attach ($cf->Button (			# Restart
+	-text       => "\x{21f5}",	# Restart
 	-foreground => "#ffa500",
 	-command    => sub {
 	    my $geo = $mw->geometry;
 	    # Add column widths here
 	    exec $0, "--geometry=$geo";
 	    },
-	)->pack (-side => "right", -anchor => "se");
-    $cf->Button (
+	)->pack (-side => "right", -anchor => "se"),
+	-balloonposition => "mouse",
+	-balloonmsg      => "Restart",
+	-msg             => {
+	    Background   => "Restart",
+	    separator    => "Restart",
+	    });
+    $balloon->attach ($cf->Button (			# Reload
 	-text       => "\x{21bb}",
 	-foreground => "#008b00",
 	-command    => $reload,
-	)->pack (-side => "right", -anchor => "se");
+	)->pack (-side => "right", -anchor => "se"),
+	-balloonposition => "mouse",
+	-balloonmsg      => "Reload",
+	-msg             => {
+	    Background   => "Reload",
+	    separator    => "Reload",
+	    });
 
     my $swss = $ss->Subwidget ("spreadsheet");
 
