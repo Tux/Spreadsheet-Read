@@ -2,12 +2,12 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'22 [2022-01-20] Copyright H.M.Brand 2005-2022
+#	   (m)'22 [2022-02-18] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;
 
-our $VERSION = "3.21";
+our $VERSION = "3.22";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -554,7 +554,7 @@ foreach my $si (1 .. $sc) {
 	    my $l = length $row[$_];
 	    my $w = $l < $w[$_] ? " " x ($w[$_] - $l) : "";
 	    if ($align[$_]) {
-		$_ == $#row or $row[$_] .= $w;
+		$_ < $#row || $opt_B and $row[$_] .= $w;
 		}
 	    else {
 		substr $row[$_], 0, 0, $w;
@@ -603,7 +603,7 @@ sub line {
     !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
     print $line;
     print "\n";
-    } # show_line
+    } # line
 
 END {
     if ($opt_v >= 7) {

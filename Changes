@@ -1,6 +1,8 @@
-0.85	- 01 Jan 2022, H.Merijn Brand
+0.85	- 18 Feb 2022, H.Merijn Brand
     * Suggest the preferred parser if none found
     * It's 2022
+    * xlscat --box and improvements for -L
+    * Add balloons to ss2tk buttons
 
 0.84	- 26 Feb 2021, H.Merijn Brand
     * It's 2021
