@@ -2,12 +2,12 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'22 [2022-02-18] Copyright H.M.Brand 2005-2022
+#	   (m)'22 [2022-09-13] Copyright H.M.Brand 2005-2022
 
 use strict;
 use warnings;
 
-our $VERSION = "3.22";
+our $VERSION = "3.23";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -597,8 +597,11 @@ sub line {
 	}
     my $line = join $sep => @dta;
     if ($opt_B) {
-	substr $line, 0, 0, $sep =~ s/^(?:\s|$uh)[\x{2500}-\x{25ff}]/$tpl[$type]/r;
-	$line .= $sep =~ s/[\x{2500}-\x{25ff}](?:\s|$uh)$/$tpr[$type]/r;
+	# Cannot use s///r for 5.8.x
+	(my $s1 = $sep) =~ s/^(?:\s|$uh)[\x{2500}-\x{25ff}]/$tpl[$type]/;
+	substr $line, 0, 0, $s1;
+	(my $s2 = $sep) =~ s/[\x{2500}-\x{25ff}](?:\s|$uh)$/$tpr[$type]/;
+	$line .= $s2;
 	}
     !$enc_o && Encode::is_utf8 ($line) and $line = encode ("utf-8", $line);
     print $line;

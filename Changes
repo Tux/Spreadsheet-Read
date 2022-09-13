@@ -1,4 +1,4 @@
-0.85	- 18 Feb 2022, H.Merijn Brand
+0.85	- 13 Sep 2022, H.Merijn Brand
     * Suggest the preferred parser if none found
     * It's 2022
     * xlscat --box and improvements for -L

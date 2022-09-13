@@ -19,15 +19,15 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302188";
+    recommends "Test::More"               => "1.302191";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.01";
-    recommends "Text::CSV_PP"             => "2.01";
-    recommends "Text::CSV_XS"             => "1.47";
+    recommends "Text::CSV"                => "2.02";
+    recommends "Text::CSV_PP"             => "2.02";
+    recommends "Text::CSV_XS"             => "1.48";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
