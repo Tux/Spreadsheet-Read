@@ -1506,7 +1506,7 @@ L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>
 For Microsoft Excel this module uses
 L<Spreadsheet::ParseExcel|https://metacpan.org/release/Spreadsheet-ParseExcel>,
 L<Spreadsheet::ParseXLSX|https://metacpan.org/release/Spreadsheet-ParseXLSX>, or
-L<Spreadsheet::XLSX|https://metacpan.org/release/Spreadsheet-XLSX> (stronly
+L<Spreadsheet::XLSX|https://metacpan.org/release/Spreadsheet-XLSX> (strongly
 discouraged).
 
 For CSV this module uses L<Text::CSV_XS|https://metacpan.org/release/Text-CSV_XS>
