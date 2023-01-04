@@ -1148,7 +1148,7 @@ H.Merijn Brand <perl5@tux.freedom.nl>
 
 # COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2022 H.Merijn Brand
+Copyright (C) 2005-2023 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
