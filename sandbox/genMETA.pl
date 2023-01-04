@@ -71,7 +71,7 @@ test_requires:
 recommends:
   IO::Scalar:           0
   File::Temp:           0.2311
-  Data::Peek:           0.51
+  Data::Peek:           0.52
 test_recommends:
   Test::More:           1.302191
 resources:
@@ -89,7 +89,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.02
       Text::CSV_PP:                        2.02
-      Text::CSV_XS:                        1.48
+      Text::CSV_XS:                        1.49
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:

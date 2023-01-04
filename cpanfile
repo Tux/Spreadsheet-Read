@@ -6,7 +6,7 @@ requires   "Exporter";
 requires   "File::Temp"               => "0.22";
 requires   "List::Util";
 
-recommends "Data::Peek"               => "0.51";
+recommends "Data::Peek"               => "0.52";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 
@@ -27,7 +27,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.02";
     recommends "Text::CSV_PP"             => "2.02";
-    recommends "Text::CSV_XS"             => "1.48";
+    recommends "Text::CSV_XS"             => "1.49";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
