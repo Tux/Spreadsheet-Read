@@ -41,7 +41,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
        <https://metacpan.org/release/Spreadsheet-ParseExcel>,
        Spreadsheet::ParseXLSX <https://metacpan.org/release/Spreadsheet-
        ParseXLSX>, or Spreadsheet::XLSX
-       <https://metacpan.org/release/Spreadsheet-XLSX> (stronly discouraged).
+       <https://metacpan.org/release/Spreadsheet-XLSX> (strongly discouraged).
 
        For CSV this module uses Text::CSV_XS
        <https://metacpan.org/release/Text-CSV_XS> or Text::CSV_PP
@@ -975,7 +975,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
             -Z    --zip     Convert sheets to CSV's in ZIP
             -J s  --join=s  Use s to join filename-sheetname (-)
             -o f  --out=f   Set output filename
-            -i f  --in=f    Set infut  filename
+            -i f  --in=f    Set input  filename
             -f    --force   Force overwrite output if exists
             -s s  --sep=s   Set CSV separator character
         Unless -A is used, all other options are passed on to xlscat
@@ -1130,4 +1130,4 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
 
 
-perl v5.34.0                      2022-01-01                          STDIN(1)
+perl v5.36.0                      2023-01-04                          STDIN(1)

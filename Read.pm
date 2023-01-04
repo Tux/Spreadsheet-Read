@@ -2458,7 +2458,7 @@ Convert a spreadsheet to CSV. This is just a small wrapper over C<xlscat>.
      -Z    --zip     Convert sheets to CSV's in ZIP
      -J s  --join=s  Use s to join filename-sheetname (-)
      -o f  --out=f   Set output filename
-     -i f  --in=f    Set infut  filename
+     -i f  --in=f    Set input  filename
      -f    --force   Force overwrite output if exists
      -s s  --sep=s   Set CSV separator character
  Unless -A is used, all other options are passed on to xlscat

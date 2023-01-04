@@ -39,7 +39,7 @@ For OpenOffice and/or LibreOffice this module uses
 For Microsoft Excel this module uses
 [Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel),
 [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX), or
-[Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX) (stronly
+[Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX) (strongly
 discouraged).
 
 For CSV this module uses [Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS)
@@ -985,7 +985,7 @@ Convert a spreadsheet to CSV. This is just a small wrapper over `xlscat`.
         -Z    --zip     Convert sheets to CSV's in ZIP
         -J s  --join=s  Use s to join filename-sheetname (-)
         -o f  --out=f   Set output filename
-        -i f  --in=f    Set infut  filename
+        -i f  --in=f    Set input  filename
         -f    --force   Force overwrite output if exists
         -s s  --sep=s   Set CSV separator character
     Unless -A is used, all other options are passed on to xlscat

@@ -1,14 +1,14 @@
 #!/pro/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'20 [2020-10-27] Copyright H.M.Brand 2008-2022
+#	   (m)'23 [2023-01-04] Copyright H.M.Brand 2008-2023
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.7";
+our $VERSION = "3.8";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -25,7 +25,7 @@ sub usage {
     print "    -Z    --zip     Convert sheets to CSV's in ZIP\n";
     print "    -J s  --join=s  Use s to join filename-sheetname (-)\n";
     print "    -o f  --out=f   Set output filename\n";
-    print "    -i f  --in=f    Set infut  filename\n";
+    print "    -i f  --in=f    Set input  filename\n";
     print "    -f    --force   Force overwrite output if exists\n";
     print "    -s s  --sep=s   Set CSV separator character\n";
     print "Unless -A is used, all other options are passed on to xlscat\n";
