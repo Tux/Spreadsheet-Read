@@ -1,4 +1,4 @@
-use 5.12.0;
+use 5.012000;
 use warnings;
 use Spreadsheet::Read;
 use Data::Peek;

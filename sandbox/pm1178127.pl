@@ -1,6 +1,6 @@
 #!/pro/bin/perl
 
-use 5.18.0;
+use 5.018000;
 use warnings;
 use Spreadsheet::Read;
 

@@ -1,6 +1,6 @@
 #!/pro/bin/perl
 
-use 5.22.0;
+use 5.022000;
 use warnings;
 
 use Data::Peek;
