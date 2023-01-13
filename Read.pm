@@ -64,6 +64,7 @@ my @parsers = (
     [ xlsx => "Spreadsheet::XLSX",			"0.13"		],
 #   [ prl  => "Spreadsheet::Perl",			""		],
     [ sc   => "Spreadsheet::Read",			"0.01"		],
+    [ gnumeric => 'Spreadsheet::ReadGnumeric',		"0.1"		],
 
     [ zzz1 => "Z10::Just::For::Testing",		"1.23"		],
     [ zzz2 => "Z20::Just::For::Testing",		""		],
@@ -453,6 +454,34 @@ sub _missing_parser {
 	}
     "No parser for $type found$suggest\n";
     } # _missing_parser
+
+sub _txt_is_xml {
+    # Return true if $txt is gzipped or contains XML.  If we are also passed
+    # $ns_uri_of_interest, $txt must contain it in the first 1000 or so
+    # characters (but we try to search quickly rather than precisely).
+    my ($txt, $ns_uri_of_interest) = @_;
+
+    if (ref ($txt)) {
+	# Can't tell (unless we assume the stream is seekable).
+	return;
+	}
+    if ($txt =~ m/\A\037\213/) {
+	# Literal gzipped string (/usr/share/misc/magic).  [this is a hack that
+	# works only because Gnumeric is the only format that uses gzip.  --
+	# rgr, 13-Jan-23.]
+	return 1;
+	}
+    if ($txt =~ m/\A<\?xml/) {
+	return 1 unless $ns_uri_of_interest;
+	$ns_uri_of_interest =~ s/([^\w\d])/\\$1/g;
+	my $prefix = length ($txt) > 10000 ? substr ($txt, 0, 1000) : $txt;
+	return $prefix =~ /xmlns:\w+=.$ns_uri_of_interest/;
+	}
+    open (my $in, '<', $txt)
+	or return;
+    read ($in, my $block, 1000) or return;
+    return _txt_is_xml ($block, $ns_uri_of_interest);
+    }
 
 sub ReadData {
     my $txt = shift	or  return;
@@ -1204,6 +1233,14 @@ sub ReadData {
 	return _clipsheets \%opt, [ @data ];
 	}
 
+    if ($opt{parser} ? _parser ($opt{parser}) eq "gnumeric"
+		     : _txt_is_xml ($txt, 'http://www.gnumeric.org/v10.dtd')) {
+	$can{gnumeric} or croak _missing_parser ("gnumeric");
+
+	my $gnm = $can{gnumeric}->new (%parser_opts, gzipped_p => $opt{gzipped_p});
+	return _clipsheets \%opt, $gnm->parse ($txt);
+    }
+
     if ($opt{parser} ? _parser ($opt{parser}) eq "sxc"
 		     : ($txt =~ m/^<\?xml/ or -f $txt)) {
 	$can{sxc} or croak _missing_parser ("SXC");
@@ -1214,7 +1251,7 @@ sub ReadData {
 	my $using = "using $can{sxc}-" . $can{sxc}->VERSION;
 	my $sxc_options = { %parser_opts, OrderBySheet => 1 }; # New interface 0.20 and up
 	my $sxc;
-	   if ($txt =~ m/\.(sxc|ods)$/i) {
+	if ($txt =~ m/\.(sxc|ods)$/i) {
 	    $debug and print STDERR "Opening \U$1\E $txt $using\n";
 	    $debug and print STDERR __FILE__, "#", __LINE__, "\n";
 	    $sxc = Spreadsheet::ReadSXC::read_sxc      ($txt, $sxc_options) or return;
