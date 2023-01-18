@@ -93,6 +93,7 @@ my $book  = ReadData (&quot;test.ods&quot;);
 my $book  = ReadData (&quot;test.xls&quot;);
 my $book  = ReadData (&quot;test.xlsx&quot;);
 my $book  = ReadData (&quot;test.xlsm&quot;);
+my $book  = ReadData (&quot;test.gnumeric&quot;);
 my $book  = ReadData ($fh, parser =&gt; &quot;xls&quot;);
 
 Spreadsheet::Read::add ($book, &quot;sheet.csv&quot;);
@@ -1053,14 +1054,6 @@ Unless -A is used, all other options are passed on to xlscat</code></pre>
 
 <dl>
 
-<dt id="Gnumeric-.gnumeric">Gnumeric (.gnumeric)</dt>
-<dd>
-
-<p>I have seen no existing CPAN module yet.</p>
-
-<p>It is gzip&#39;ed XML</p>
-
-</dd>
 <dt id="Kspread-.ksp">Kspread (.ksp)</dt>
 <dd>
 
@@ -1126,6 +1119,12 @@ Unless -A is used, all other options are passed on to xlscat</code></pre>
 <dd>
 
 <p><a href="https://metacpan.org/release/Spreadsheet-ReadSXC">Spreadsheet::ReadSXC</a> is a parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files.</p>
+
+</dd>
+<dt id="Spreadsheet::ReadGnumeric">Spreadsheet::ReadGnumeric</dt>
+<dd>
+
+<p><a href="https://metacpan.org/release/Spreadsheet-ReadGnumeric">Spreadsheet::ReadGnumeric</a> is a parser for <a href="http://www.gnumeric.org/">Gnumeric</a> (.gnumeric) spreadsheet files.</p>
 
 </dd>
 <dt id="Spreadsheet::BasicRead">Spreadsheet::BasicRead</dt>

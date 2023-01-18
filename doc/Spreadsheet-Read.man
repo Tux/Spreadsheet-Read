@@ -13,6 +13,7 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
         my $book  = ReadData ("test.xls");
         my $book  = ReadData ("test.xlsx");
         my $book  = ReadData ("test.xlsm");
+        my $book  = ReadData ("test.gnumeric");
         my $book  = ReadData ($fh, parser => "xls");
 
         Spreadsheet::Read::add ($book, "sheet.csv");
@@ -1031,11 +1032,6 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
            Under investigation:
 
-           Gnumeric (.gnumeric)
-             I have seen no existing CPAN module yet.
-
-             It is gzip'ed XML
-
            Kspread (.ksp)
              Now knows as Calligra Sheets.
 
@@ -1093,6 +1089,11 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
          ReadSXC> is a parser for OpenOffice/LibreOffice (.sxc and .ods)
          spreadsheet files.
 
+       Spreadsheet::ReadGnumeric
+         Spreadsheet::ReadGnumeric <https://metacpan.org/release/Spreadsheet-
+         ReadGnumeric> is a parser for Gnumeric <http://www.gnumeric.org/>
+         (.gnumeric) spreadsheet files.
+
        Spreadsheet::BasicRead
          See Spreadsheet::BasicRead <https://metacpan.org/release/Spreadsheet-
          BasicRead> for xlscat-like functionality (Excel only)
@@ -1130,4 +1131,4 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
 
 
-perl v5.36.0                      2023-01-04                          STDIN(1)
+perl v5.36.0                      2023-01-18                          STDIN(1)

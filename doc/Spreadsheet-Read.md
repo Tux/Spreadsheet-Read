@@ -11,6 +11,7 @@
     my $book  = ReadData ("test.xls");
     my $book  = ReadData ("test.xlsx");
     my $book  = ReadData ("test.xlsm");
+    my $book  = ReadData ("test.gnumeric");
     my $book  = ReadData ($fh, parser => "xls");
 
     Spreadsheet::Read::add ($book, "sheet.csv");
@@ -1046,12 +1047,6 @@ Show the differences between two spreadsheets.
 
     Under investigation:
 
-    - Gnumeric (.gnumeric)
-
-        I have seen no existing CPAN module yet.
-
-        It is gzip'ed XML
-
     - Kspread (.ksp)
 
         Now knows as Calligra Sheets.
@@ -1111,6 +1106,12 @@ Show the differences between two spreadsheets.
 
     [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC) is a
     parser for OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files.
+
+- Spreadsheet::ReadGnumeric
+
+    [Spreadsheet::ReadGnumeric](https://metacpan.org/release/Spreadsheet-ReadGnumeric)
+    is a parser for [Gnumeric](http://www.gnumeric.org/) (.gnumeric) spreadsheet
+    files.
 
 - Spreadsheet::BasicRead
 
