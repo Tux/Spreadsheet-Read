@@ -13,7 +13,7 @@ my $parser = Spreadsheet::Read::parses ("gnumeric") or
 print STDERR "# Parser: $parser-", $parser->VERSION, "\n";
 
 sub test_source {
-    # 11 tests per file version.
+    # 7 tests per file version.
     my ($source, $source_name, @options) = @_;
 
     ok (ref ($source) || Spreadsheet::Read::_txt_is_xml
@@ -28,11 +28,16 @@ sub test_source {
 					"cell C30 matches via col/row name");
     is ($b1->{cell}[3][30], "monthly maintenance fee",
 					"cell C30 matches via array indices");
+}
 
-    $book = Spreadsheet::Read->new ($source, @options);
-    ok ($book,				"OO have gnumeric book");
+sub test_oo_source {
+    # 5 tests per file version.
+    my ($source, $source_name, @options) = @_;
+
+    my $book = Spreadsheet::Read->new ($source, @options);
+    ok ($book,				"OO $source_name: have gnumeric book");
     is (scalar $book->sheets, 3,	"OO book has 3 sheets");
-    ok ($b1 = $book->sheet (1),		"OO first sheet");
+    ok (my $b1 = $book->sheet (1),	"OO first sheet");
     is ($b1->cell ("C30"), "monthly maintenance fee",
 					"OO cell C30 matches via col/row name");
     is ($b1->cell (3, 30), "monthly maintenance fee",
@@ -41,11 +46,15 @@ sub test_source {
 
 for my $file (qw(files/gnumeric.xml files/gnumeric.gnumeric)) {
     test_source ($file, "file $file");
+    test_oo_source ($file, "file $file");
     open my $in, "<", $file or die "oops: $!";
     test_source ($in, "stream $file", parser => "gnumeric");
+    open $in, "<", $file or die "oops: $!";
+    test_oo_source ($in, "stream $file", parser => "gnumeric");
     open $in, "<", $file or die "oops again: $!";
     my $data = do { local $/; <$in> };
     test_source ($data, "scalar $file");
+    test_oo_source ($data, "scalar $file");
     }
 
-done_testing (2 * 3 * 11);
+done_testing (2 * 3 * (7 + 5));
