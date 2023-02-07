@@ -30,6 +30,12 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     recommends "Text::CSV_XS"             => "1.49";
     };
 
+feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
+    requires   "Spreadsheet::ReadGnumeric" => "0.1";
+
+    recommends "Spreadsheet::ReadGnumeric" => "0.1";
+    };
+
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
     requires   "Spreadsheet::ParseODS"    => "0.26";
 

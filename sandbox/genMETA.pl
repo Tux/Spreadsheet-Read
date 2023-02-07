@@ -116,6 +116,12 @@ optional_features:
       Spreadsheet::ReadSXC:                0.26
     recommends:
       Spreadsheet::ReadSXC:                0.37
+  opt_gnumeric:
+    description:        Provides parsing of Gnumeric spreadsheets
+    requires:
+      Spreadsheet::ReadGnumeric:           0.1
+    recommends:
+      Spreadsheet::ReadGnumeric:           0.1
   opt_tools:
     description:        Spreadsheet tools
     recommends:
