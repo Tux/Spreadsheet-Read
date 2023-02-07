@@ -17,6 +17,7 @@ files/blank.xls
 files/blank.xlsx
 files/clear.ods
 files/content.xml
+files/Dates.gnumeric
 files/Dates.ods
 files/Dates.xls
 files/Dates.xlsx
@@ -123,4 +124,5 @@ t/624_dates.t
 t/625_perc.t
 t/627_merged.t
 t/700_gnumeric.t
+t/704_dates.t
 t/999_fail.t
