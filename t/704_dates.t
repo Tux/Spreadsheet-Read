@@ -14,17 +14,15 @@ Spreadsheet::Read::parses ("gnumeric") or
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $gnumeric;
-ok ($gnumeric = ReadData ("files/Dates.gnumeric"),
-    "Gnumeric date tests");
+ok ($gnumeric = ReadData ("files/Dates.gnumeric"), "Gnumeric date tests");
 
-{
-    ok (my $ss = $gnumeric->[1], "have sheet");
+{   ok (my $ss = $gnumeric->[1], "have sheet");
 
-    my @date = (undef, 39668,   39672,      39790,        39673);
+    my @date = (undef, 39668, 39672, 39790, 39673);
     foreach my $r (1 .. 4) {
-	is ($ss->{cell}[$_][$r], $date[$r],
-	    "Date value  row $r col $_")
-	    for 1 .. 4;
+	for (1 .. 4) {
+	    is ($ss->{cell}[$_][$r], $date[$r], "Date value  row $r col $_");
+	    }
 	}
     }
 
