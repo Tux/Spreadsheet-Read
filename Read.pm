@@ -478,8 +478,9 @@ sub _txt_is_xml {
 	return $prefix =~ m/xmlns:\w+=.$ns_uri_of_interest/;
 	}
 
-    open my $in, "<", $txt	or return;
-    read $in, my $block, 1000	or return;
+    $txt =~ m/\n/		and return; # safeguard for older perl versions
+    open my $in, "<", $txt	or  return;
+    read $in, my $block, 1000	or  return;
     return _txt_is_xml ($block, $ns_uri_of_interest);
     } # _txt_is_xml
 
