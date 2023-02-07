@@ -1,0 +1,10 @@
+% diff-xls-text 1.ods 2.ods
+diff -ruN /tmp/7Cg65CIPVj/1.ods/workbook-Sheet1.csv /tmp/7Cg65CIPVj/2.ods/workbook-Sheet1.csv
+--- /tmp/7Cg65CIPVj/1.ods/workbook-Sheet1.csv   2020-10-27 18:17:38.383908992 +0700
++++ /tmp/7Cg65CIPVj/2.ods/workbook-Sheet1.csv   2020-10-27 18:17:38.707942929 +0700
+@@ -1,3 +1,3 @@
+-a1,b1,c1
+-a2,b2,c2
++a1,b1,c1*
+ a3,b3,c3
++a4,b4,c4

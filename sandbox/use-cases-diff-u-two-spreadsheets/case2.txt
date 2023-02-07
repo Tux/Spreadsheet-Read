@@ -1,0 +1,9 @@
+% diff-xls-text --transpose-csv 1.ods 3.ods
+diff -ruN /tmp/WbANhKUOLZ/1.ods/workbook-Sheet1.transpose.csv /tmp/WbANhKUOLZ/3.ods/workbook-Sheet1.transpose.csv
+--- /tmp/WbANhKUOLZ/1.ods/workbook-Sheet1.transpose.csv 2020-10-27 18:13:32.519863898 +0700
++++ /tmp/WbANhKUOLZ/3.ods/workbook-Sheet1.transpose.csv 2020-10-27 18:13:33.080068129 +0700
+@@ -1,3 +1,4 @@
+ a1,a2,a3
+ b1,b2,b3
+ c1,c2,c3
++d1,d2,d3
