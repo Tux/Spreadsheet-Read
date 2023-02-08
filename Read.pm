@@ -1243,7 +1243,12 @@ sub ReadData {
 		     : _txt_is_xml ($txt, "http://www.gnumeric.org/v10.dtd")) {
 	$can{gnumeric} or croak _missing_parser ("gnumeric");
 
-	my $gnm = $can{gnumeric}->new (%parser_opts, gzipped_p => $opt{gzipped_p});
+	my $gnm = $can{gnumeric}->new (%parser_opts,
+				       attr => $opt{attr},
+				       cells => $opt{cells},
+				       merge => $opt{merge},
+				       rc => $opt{rc},
+				       gzipped_p => $opt{gzipped_p});
 	return _clipsheets \%opt, $gnm->parse ($txt);
 	}
 

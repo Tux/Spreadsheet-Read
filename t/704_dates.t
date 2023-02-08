@@ -3,20 +3,21 @@
 use strict;
 use warnings;
 
-my     $tests = 18;
-use     Test::More;
+my $tests = 18;
+use Test::More;
 require Test::NoWarnings;
 
-use     Spreadsheet::Read;
-Spreadsheet::Read::parses ("gnumeric") or
-    plan skip_all => "Cannot use Spreadsheet::ReadGnumeric";
+use Spreadsheet::Read;
+Spreadsheet::Read::parses ("gnumeric")
+    or plan skip_all => "Cannot use Spreadsheet::ReadGnumeric";
 
 BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 
 my $gnumeric;
 ok ($gnumeric = ReadData ("files/Dates.gnumeric"), "Gnumeric date tests");
 
-{   ok (my $ss = $gnumeric->[1], "have sheet");
+{
+    ok (my $ss = $gnumeric->[1], "have sheet");
 
     my @date = (undef, 39668, 39672, 39790, 39673);
     foreach my $r (1 .. 4) {
