@@ -1,4 +1,4 @@
-#!/pro/bin/perl
+#!/usr/bin/perl
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
