@@ -461,7 +461,11 @@ returns and is only kept for backward compatibility reasons.
     my @sheets = $book->sheets; # OO
 
 In scalar context return the number of sheets in the book.
-In list context return the labels of the sheets in the book.
+
+In list context return the labels of the sheets in the book. This list only
+returns known unique labels in sorted order. Sheets could have no label or
+there can be more sheets with the same label (depends on the spreadsheet
+format and the parser used).
 
 ### sheet
 

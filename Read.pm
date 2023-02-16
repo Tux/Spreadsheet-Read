@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.86";
+our $VERSION = "0.87";
 sub  Version { $VERSION }
 
 use Carp;
@@ -248,8 +248,10 @@ sub parses {
 
 sub sheets {
     my $ctrl = shift->[0];
-    my %s = %{$ctrl->{sheet}};
-    wantarray ? sort { $s{$a} <=> $s{$b} } keys %s : $ctrl->{sheets};
+    wantarray or return $ctrl->{sheets};
+
+    my $s = $ctrl->{sheet} or return (); # No labels defined
+    sort { $s->{$a} <=> $s->{$b} } keys %$s;
     } # sheets
 
 # col2label (4) => "D"
@@ -344,7 +346,10 @@ sub sheet {
 sub _clipsheets {
     my ($opt, $ref) = @_;
 
-    $ref->[0]{sheets} or return $ref;
+    unless ($ref->[0]{sheets}) {
+	$ref->{sheet} ||= {};
+	return $ref;
+	}
 
     my ($rc, $cl)      = ($opt->{rc},   $opt->{cells});
     my ($oc, $os, $oa) = ($opt->{clip}, $opt->{strip}, $opt->{attr});
@@ -1971,7 +1976,11 @@ returns and is only kept for backward compatibility reasons.
  my @sheets = $book->sheets; # OO
 
 In scalar context return the number of sheets in the book.
-In list context return the labels of the sheets in the book.
+
+In list context return the labels of the sheets in the book. This list only
+returns known unique labels in sorted order. Sheets could have no label or
+there can be more sheets with the same label (depends on the spreadsheet
+format and the parser used).
 
 =head3 sheet
 

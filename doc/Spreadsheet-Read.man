@@ -448,8 +448,12 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
         my $sheets = $book->sheets; # OO
         my @sheets = $book->sheets; # OO
 
-       In scalar context return the number of sheets in the book.  In list
-       context return the labels of the sheets in the book.
+       In scalar context return the number of sheets in the book.
+
+       In list context return the labels of the sheets in the book. This list
+       only returns known unique labels in sorted order. Sheets could have no
+       label or there can be more sheets with the same label (depends on the
+       spreadsheet format and the parser used).
 
        [4msheet[0m
 
@@ -1131,4 +1135,4 @@ STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
 
 
-perl v5.36.0                      2023-01-18                          STDIN(1)
+perl v5.36.0                      2023-02-16                          STDIN(1)
