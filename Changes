@@ -1,3 +1,6 @@
+0.87	- 14 Feb 2023, H.Merijn Brand
+    * Change default #! to /usr/bin/perl (Tinita)
+
 0.86	- 07 Feb 2023, H.Merijn Brand
     * Add Gnumeric support (Bob Rogers, THANKS!)
       - work in progress, use with care, feedback welcome
