@@ -65,7 +65,7 @@ my @parsers = (
     [ xlsx	=> "Spreadsheet::XLSX",			"0.13"		],
 #   [ prl	=> "Spreadsheet::Perl",			""		],
     [ sc	=> "Spreadsheet::Read",			"0.01"		],
-    [ gnumeric	=> "Spreadsheet::ReadGnumeric",		"0.1"		],
+    [ gnumeric	=> "Spreadsheet::ReadGnumeric",		"0.2"		],
 
     [ zzz1	=> "Z10::Just::For::Testing",		"1.23"		],
     [ zzz2	=> "Z20::Just::For::Testing",		""		],
@@ -1244,10 +1244,10 @@ sub ReadData {
 	$can{gnumeric} or croak _missing_parser ("gnumeric");
 
 	my $gnm = $can{gnumeric}->new (%parser_opts,
-				       attr => $opt{attr},
-				       cells => $opt{cells},
-				       merge => $opt{merge},
-				       rc => $opt{rc},
+				       attr      => $opt{attr},
+				       cells     => $opt{cells},
+				       merge     => $opt{merge},
+				       rc        => $opt{rc},
 				       gzipped_p => $opt{gzipped_p});
 	return _clipsheets \%opt, $gnm->parse ($txt);
 	}

@@ -33,7 +33,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
     requires   "Spreadsheet::ReadGnumeric" => "0.1";
 
-    recommends "Spreadsheet::ReadGnumeric" => "0.1";
+    recommends "Spreadsheet::ReadGnumeric" => "0.2";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {

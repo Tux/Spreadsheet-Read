@@ -18,8 +18,8 @@ ok ($book = ReadData ("files/attr.gnumeric", attr => 1),
 ok (my $clr = $book->[$book->[0]{sheet}{Colours}], "have the 'Colours' sheet");
 
 is ($clr->{cell}[1][1],          "auto",    "Auto");
-is ($clr->{attr}[1][1]{fgcolor}, '#000000', "Unspecified font color");
-is ($clr->{attr}[1][1]{bgcolor}, '#FFFFFF', "Unspecified fill color");
+is ($clr->{attr}[1][1]{fgcolor}, "#000000", "Unspecified font color");
+is ($clr->{attr}[1][1]{bgcolor}, "#FFFFFF", "Unspecified fill color");
 
 my @clr = (
     [],
@@ -35,10 +35,10 @@ my @clr = (
     );
 
 foreach my $col (1 .. $#clr) {
-    my $bg = $clr[$col][1] || '#FFFFFF';
+    my $bg = $clr[$col][1] || "#FFFFFF";
     is ($clr->{cell}[$col][1], $clr[$col][0], "Column $col header");
     foreach my $row (1 .. $#clr) {
-	my $fg = $clr[$row][1] || '#000000';
+	my $fg = $clr[$row][1] || "#000000";
 	is ($clr->{cell}[1][$row], $clr[$row][0],   "Row $row header");
 	is ($clr->{attr}[$col][$row]{fgcolor}, $fg, "FG ($col, $row)");
 	is ($clr->{attr}[$col][$row]{bgcolor}, $bg, "BG ($col, $row)");

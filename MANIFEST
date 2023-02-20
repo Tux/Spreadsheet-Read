@@ -8,6 +8,7 @@ scripts/xlsx2csv
 examples/ss-dups-tk.pl
 files/Active2.xls
 files/Active2.xlsx
+files/attr.gnumeric
 files/attr.ods
 files/attr.xls
 files/attr.xlsx
@@ -33,6 +34,7 @@ files/gnumeric.gnumeric
 files/gnumeric.xml
 files/macosx.csv
 files/macosx.xls
+files/merged.gnumeric
 files/merged.ods
 files/merged.xls
 files/merged.xlsx
@@ -124,5 +126,8 @@ t/624_dates.t
 t/625_perc.t
 t/627_merged.t
 t/700_gnumeric.t
+t/701_clr.t
+t/702_fmt.t
 t/704_dates.t
+t/707_merged.t
 t/999_fail.t

@@ -15,8 +15,7 @@ my $book;
 ok ($book = ReadData ("files/attr.gnumeric", attr => 1),
     "Gnumeric attributes testcase");
 
-{
-    ok (my $fmt = $book->[$book->[0]{sheet}{Format}], "have 'Format' sheet");
+{   ok (my $fmt = $book->[$book->[0]{sheet}{Format}], "have 'Format' sheet");
 
     is ($fmt->{B2},                 "merged", "Merged cell left    formatted");
     is ($fmt->{C2},                 undef,    "Merged cell right   formatted");
@@ -37,7 +36,7 @@ ok ($book = ReadData ("files/attr.gnumeric", attr => 1),
     foreach my $r (1 .. 12) {
 	is ($fmt->{cell}[1][$r], 12345, "Unformatted valued A$r");
 	}
-    is ($fmt->{attr}[1][1]{format}, 'General',  "Default format");
+    is ($fmt->{attr}[1][1]{format}, "General",  "Default format");
     is ($fmt->{cell}[1][1],         $fmt->{A1}, "Formatted valued A1");
     is ($fmt->{cell}[1][10], $fmt->{A10}, "Formatted valued A10");    # String
     # There's no point in testing the formatted values here, because Gnumeric

@@ -119,9 +119,9 @@ optional_features:
   opt_gnumeric:
     description:        Provides parsing of Gnumeric spreadsheets
     requires:
-      Spreadsheet::ReadGnumeric:           0.1
+      Spreadsheet::ReadGnumeric:           0.2
     recommends:
-      Spreadsheet::ReadGnumeric:           0.1
+      Spreadsheet::ReadGnumeric:           0.2
   opt_tools:
     description:        Spreadsheet tools
     recommends:
