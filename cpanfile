@@ -31,7 +31,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
-    requires   "Spreadsheet::ReadGnumeric" => "0.1";
+    requires   "Spreadsheet::ReadGnumeric" => "0.2";
 
     recommends "Spreadsheet::ReadGnumeric" => "0.2";
     };

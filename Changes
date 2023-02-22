@@ -1,4 +1,4 @@
-0.87	- 20 Feb 2023, H.Merijn Brand
+0.87	- 22 Feb 2023, H.Merijn Brand
     * Change default #! to /usr/bin/perl (Tinita)
     * Improve ->sheets (safer and docs)
     * Update to Spreadsheet::ReadGnumeric 0.2 (attributes and small fixes)
