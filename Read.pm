@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.87";
+our $VERSION = "0.88";
 sub  Version { $VERSION }
 
 use Carp;
@@ -52,28 +52,29 @@ use File::Temp   qw( );
 use Data::Dumper;
 
 my @parsers = (
-    [ csv	=> "Text::CSV_XS",			"0.71"		],
-    [ csv	=> "Text::CSV_PP",			"1.17"		],
-    [ csv	=> "Text::CSV",				"1.17"		],
-    [ ods	=> "Spreadsheet::ParseODS",		"0.26"		],
-    [ ods	=> "Spreadsheet::ReadSXC",		"0.26"		],
-    [ sxc	=> "Spreadsheet::ParseODS",		"0.26"		],
-    [ sxc	=> "Spreadsheet::ReadSXC",		"0.26"		],
-    [ xls	=> "Spreadsheet::ParseExcel",		"0.34"		],
-    [ xlsx	=> "Spreadsheet::ParseXLSX",		"0.24"		],
-    [ xlsm	=> "Spreadsheet::ParseXLSX",		"0.24"		],
-    [ xlsx	=> "Spreadsheet::XLSX",			"0.13"		],
-#   [ prl	=> "Spreadsheet::Perl",			""		],
-    [ sc	=> "Spreadsheet::Read",			"0.01"		],
-    [ gnumeric	=> "Spreadsheet::ReadGnumeric",		"0.2"		],
+    [ csv	=> "Text::CSV_XS",		"0.71"	],
+    [ csv	=> "Text::CSV_PP",		"1.17"	],
+    [ csv	=> "Text::CSV",			"1.17"	],
+    [ ods	=> "Spreadsheet::ParseODS",	"0.26"	],
+    [ ods	=> "Spreadsheet::ReadSXC",	"0.26"	],
+    [ sxc	=> "Spreadsheet::ParseODS",	"0.26"	],
+    [ sxc	=> "Spreadsheet::ReadSXC",	"0.26"	],
+    [ sxc	=> "Spreadsheet::ReadSXC__BAD",	"0.26"	], # For testing
+    [ xls	=> "Spreadsheet::ParseExcel",	"0.34"	],
+    [ xlsx	=> "Spreadsheet::ParseXLSX",	"0.24"	],
+    [ xlsm	=> "Spreadsheet::ParseXLSX",	"0.24"	],
+    [ xlsx	=> "Spreadsheet::XLSX",		"0.13"	],
+#   [ prl	=> "Spreadsheet::Perl",		""	],
+    [ sc	=> "Spreadsheet::Read",		"0.01"	],
+    [ gnumeric	=> "Spreadsheet::ReadGnumeric",	"0.2"	],
 
-    [ zzz1	=> "Z10::Just::For::Testing",		"1.23"		],
-    [ zzz2	=> "Z20::Just::For::Testing",		""		],
-    [ zzz3	=> "Z30::Just::For::Testing",		"1.00"		],
+    [ zzz1	=> "Z10::Just::For::Testing",	"1.23"	],
+    [ zzz2	=> "Z20::Just::For::Testing",	""	],
+    [ zzz3	=> "Z30::Just::For::Testing",	"1.00"	],
 
     # Helper modules
-    [ ios	=> "IO::Scalar",				""		],
-    [ dmp	=> "Data::Peek",				""		],
+    [ ios	=> "IO::Scalar",		""	],
+    [ dmp	=> "Data::Peek",		""	],
     );
 my %can = ( supports => { map { $_->[1] => $_->[2] } @parsers });
 foreach my $p (@parsers) {
@@ -110,11 +111,11 @@ foreach my $p (@parsers) {
     $can{$format} = $preset;
     }
 delete $can{supports};
-for (@parsers) {
-    my ($flag, $mod, $vsn) = @$_;
+foreach my $p (@parsers) {
+    my ($flag, $mod, $vsn) = @$p;
     $can{$flag} and next;
     eval "require $mod; \$vsn and ${mod}->VERSION (\$vsn); \$can{\$flag} = '$mod'" and next;
-    $_->[0] = "! Cannot use $mod version $vsn: $@";
+    $p->[0] = "! Cannot use $mod version $vsn: $@";
     $can{$flag} = $@ =~ m/need to install|can(?:not|'t) locate/i
 	? 0	# Not found
 	: "";	# Too old
@@ -454,9 +455,9 @@ sub _xls_fill {
 
 sub _missing_parser {
     my ($type, $suggest) = (shift, "");
-    for (@parsers) {
-	$_->[0] eq lc $type or next;
-	$suggest = "\nPlease install $_->[1]";
+    foreach my $p (@parsers) {
+	$p->[0] eq lc $type or next;
+	$suggest = "\nPlease install $p->[1]";
 	}
     "No parser for $type found$suggest\n";
     } # _missing_parser

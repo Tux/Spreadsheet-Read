@@ -1,3 +1,6 @@
+0.88	- 08 Mar 2023, H.Merijn Brand
+    * Guard $_ globbering from external bitrotted code
+
 0.87	- 22 Feb 2023, H.Merijn Brand
     * Change default #! to /usr/bin/perl (Tinita)
     * Improve ->sheets (safer and docs)
