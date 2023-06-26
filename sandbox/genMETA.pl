@@ -127,7 +127,7 @@ optional_features:
     requires:
       Spreadsheet::ReadGnumeric:           0.2
     recommends:
-      Spreadsheet::ReadGnumeric:           0.3
+      Spreadsheet::ReadGnumeric:           0.4
   opt_tools:
     description:        Spreadsheet tools
     recommends:
