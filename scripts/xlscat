@@ -2,12 +2,12 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'22 [2022-09-13] Copyright H.M.Brand 2005-2023
+#	   (m)'23 [2023-06-26] Copyright H.M.Brand 2005-2023
 
 use strict;
 use warnings;
 
-our $VERSION = "3.23";
+our $VERSION = "3.24";
 
 my $is_grep = $0 =~ m/grep$/;
 
@@ -152,15 +152,18 @@ GetOptions (
     "h|header:1"	=> \$opt_h,
     ) or usage 1, "GetOpt: $@";
 
-if ($list) {
-    print "Ext   Parser module             Req   Has Def\n";
-    print "----- ----------------------- ----- ----- ---\n";
+sub list_parsers {
+    my $err = shift || 0;
+    print "Ext      Parser module               Req   Has Def\n";
+    print "-------- ------------------------- ----- ----- ---\n";
     for (Spreadsheet::Read::parsers ()) {
-	printf "%-5s %-23s %5s %5s %s\n",
+	$_->{ext} =~ m/^zzz/ and next;
+	printf "%-8s %-25s %5s %5s %s\n",
 	    $_->{ext}, $_->{mod}, $_->{min}, $_->{vsn}, $_->{def} ? "<==" : "";
 	}
-    exit 0;
+    exit $err;
     }
+$list and list_parsers ();
 
 $opt_B and $opt_L++;
 unless ($is_grep) {
@@ -282,8 +285,31 @@ if ($passwd) {
     push @RDarg, passwd => $passwd;
     }
 $opt_v > 4 and warn "ReadData ($file, @RDarg);\n";
-my $xls = ReadData ($file, @RDarg) or die "cannot read $file\n";
+my $xls = eval { ReadData ($file, @RDarg) };
 $opt_v > 7 and ddumper ($xls);
+unless ($xls) {
+    warn "cannot read $file\n";
+    if ($@) {
+	my $e = $@;
+	$e =~ s{\s+at\s+\S+\s+line\s.*}{}s;
+	$e =~ s{\s+\(perhaps you forgot to load.*}{}s;
+	warn "$e\n";
+	}
+    if (my @e = sort grep m/^SPREADSHEET_READ_/ => keys %ENV) {
+	warn "\n";
+	warn " $_ is set to $ENV{$_}\n" for @e;
+	warn "\n";
+	}
+    if ($@ =~ m/cannot|can't/) {
+	print "Supported parsers per spreadsheet:\n";
+	list_parsers (-1);
+	}
+    exit -1;
+    }
+if ($xls->[0]{parser} =~ m/Spreadsheet::XLSX/) {
+    warn "You parse with Spreadsheet::XLSX, which is deprecated\n";
+    warn "Please use Spreadsheet::ParseXLSX for more reliable results\n";
+    }
 my $sc  = $xls->[0]{sheets}	or die "No sheets in $file\n";
 $opt_v > 1 and warn "Opened $file with $sc sheets\n";
 

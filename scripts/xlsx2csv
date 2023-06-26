@@ -1,14 +1,14 @@
 #!/usr/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'23 [2023-01-04] Copyright H.M.Brand 2008-2023
+#	   (m)'23 [2023-06-26] Copyright H.M.Brand 2008-2023
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.8";
+our $VERSION = "3.9";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -35,22 +35,24 @@ sub usage {
 
 use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
-    "help|?"    => sub { usage 0; },
-    "V|version" => sub { print "$cmd [$VERSION]\n"; exit 0; },
-      "man"	=> sub { pod_nroff    (); },
-      "info"	=> sub { pod_text     (); },
-      "list"	=> sub { list_parsers (); },
+    "help|?"    	=> sub { usage 0; },
+    "V|version" 	=> sub { print "$cmd [$VERSION]\n"; exit 0; },
+      "man"		=> sub { pod_nroff    (); },
+      "info"		=> sub { pod_text     (); },
+      "list"		=> sub { list_parsers (); },
 
-    "o|c|out=s" => \ my $csv,
-    "i|s|in=s"	=> \ my $xls,
-    "f|force!"  => \ my $opt_f,
+    "o|c|out=s" 	=> \ my $csv,
+    "i|s|in=s"		=> \ my $xls,
+    "f|force!"  	=> \ my $opt_f,
 
-    "s|sep=s"	=> \ my $opt_s,
+    "s|sep=s"		=> \ my $opt_s,
 
-    "A|all!"    => \ my $opt_A,
-    "N|no-pfx!" => \ my $opt_N,
-    "Z|zip!"	=> \ my $opt_Z,
-    "J|join=s"	=> \(my $opt_J = "-"),
+    "A|all!"    	=> \ my $opt_A,
+    "N|no-pfx!" 	=> \ my $opt_N,
+    "Z|zip!"		=> \ my $opt_Z,
+    "J|join=s"		=> \(my $opt_J = "-"),
+
+    "v|verbose:1"	=> \(my $opt_v = 0),
     ) or usage 1;
 
 sub list_parsers {
@@ -110,7 +112,8 @@ my %e = (n => "\n", t => "\t", e => "\e", r => "\r");
 $opt_s and $opt_s =~ s/\\+([nter])/$e{$1}/g;
 
 if ($opt_A || $opt_Z) {
-    my $ss = ReadData ($xls)  or die "Cannot read/parse $xls\n";
+    $opt_v and warn "Reading $xls ...\n";
+    my $ss = ReadData ($xls) or die "Cannot read/parse $xls\n";
     my $az = $opt_Z ? Archive::Zip->new : undef;
     $csv and $xls = $csv;
     $xls =~ s/$valid_ext $//ix;
@@ -156,7 +159,8 @@ if (-f $csv) {
 warn "Converting $xls to $csv ...\n";
 open STDOUT, ">", $csv or die "$csv: $!\n";
 $^O eq "MSWin32" and $xls = qq{"$xls"};
-$opt_s and unshift @ARGV, "--sep=$opt_s";
+$opt_s and unshift @ARGV => "--sep=$opt_s";
+$opt_v and unshift @ARGV => "--verbose=$opt_v";
 exec { "xlscat" } "xlscat", "-c", @ARGV, $xls;
 
 __END__
