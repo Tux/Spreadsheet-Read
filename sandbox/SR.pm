@@ -47,7 +47,7 @@ Uses L<JSON>'s decode_json to convert the result of C<sr> to JSON.
 
 =head1 AUTHOR
 
-H.Merijn Brand <h.m.brand@xs4all.nl>
+H.Merijn Brand <hmbrand@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 

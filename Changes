@@ -1,5 +1,6 @@
-0.88	- 08 Mar 2023, H.Merijn Brand
+0.88	- 26 Jun 2023, H.Merijn Brand
     * Guard $_ globbering from external bitrotted code
+    * Use recommended and suggested versions based on known CVEs
 
 0.87	- 22 Feb 2023, H.Merijn Brand
     * Change default #! to /usr/bin/perl (Tinita)

@@ -1113,7 +1113,7 @@ sub ReadData {
 		    $opt{cells} and	# Formatted value
 			$sheet{$cell} = defined $val ? $oWkC->value : undef;
 		    if ($opt{attr}) {
-			my $FnT = $FmT ? $FmT->{font_face} : undef;
+#			my $FnT = $FmT ? $FmT->{font_face} : undef;
 			my $fmi;
 			#my $fmi = $FmT ? $FmT->{FmtIdx}
 			#   ? $oBook->{FormatStr}{$FmT->{FmtIdx}}

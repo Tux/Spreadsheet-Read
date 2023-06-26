@@ -3,15 +3,21 @@ requires   "Data::Dumper";
 requires   "Data::Peek";
 requires   "Encode";
 requires   "Exporter";
-requires   "File::Temp"               => "0.22";
+requires   "File::Temp"               => "0.22";  # ignore : CVE-2011-4116
 requires   "List::Util";
 
+recommends "Data::Dumper"             => "2.184";
 recommends "Data::Peek"               => "0.52";
+recommends "Encode"                   => "3.19";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
+
+    recommends "ExtUtils::MakeMaker"      => "7.22";
+
+    suggests   "ExtUtils::MakeMaker"      => "7.70";
     };
 
 on "test" => sub {
@@ -19,7 +25,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302193";
+    recommends "Test::More"               => "1.302195";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -33,7 +39,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
     requires   "Spreadsheet::ReadGnumeric" => "0.2";
 
-    recommends "Spreadsheet::ReadGnumeric" => "0.2";
+    recommends "Spreadsheet::ReadGnumeric" => "0.3";
     };
 
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {

@@ -45,7 +45,7 @@ name:                   Spreadsheet-Read
 version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
 license:                perl
-author:                 
+author:
   - H.Merijn Brand <perl5@tux.freedom.nl>
 generated_by:           Author
 distribution_type:      module
@@ -53,27 +53,33 @@ provides:
   Spreadsheet::Read:
     file:               Read.pm
     version:            VERSION
-requires:                       
+requires:
   perl:                 5.008001
   Exporter:             0
   Carp:                 0
   Data::Dumper:         0
   Data::Peek:           0
   Encode:               0
-  File::Temp:           0.22
+  File::Temp:           0.22	# ignore : CVE-2011-4116
   List::Util:           0
 configure_requires:
   ExtUtils::MakeMaker:  0
+configure_recommends:
+  ExtUtils::MakeMaker:  7.22
+configure_suggests:
+  ExtUtils::MakeMaker:  7.70
 test_requires:
   Test::Harness:        0
   Test::More:           0.88
   Test::NoWarnings:     0
 recommends:
   IO::Scalar:           0
+  Encode:               3.19
   File::Temp:           0.2311
   Data::Peek:           0.52
+  Data::Dumper:         2.184
 test_recommends:
-  Test::More:           1.302193
+  Test::More:           1.302195
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -121,7 +127,7 @@ optional_features:
     requires:
       Spreadsheet::ReadGnumeric:           0.2
     recommends:
-      Spreadsheet::ReadGnumeric:           0.2
+      Spreadsheet::ReadGnumeric:           0.3
   opt_tools:
     description:        Spreadsheet tools
     recommends:
