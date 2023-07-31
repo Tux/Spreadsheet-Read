@@ -2,91 +2,95 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'23 [2023-06-26] Copyright H.M.Brand 2005-2023
+#	   (m)'23 [2023-07-28] Copyright H.M.Brand 2005-2023
+
+require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.24";
+our $VERSION = "3.25";
+(my $CMD = $0) =~ s{.*[\/]}{};
 
-my $is_grep = $0 =~ m/grep$/;
+my $is_grep = $0 =~ m/grep$/;	# xlsgrep
 
 sub usage {
     my $err = shift and select STDERR;
-    (my $scrpt = $0) =~ s{.*[\/]}{};
     my $p = $is_grep ? " pattern" : "";
-    print
-	"usage: $scrpt\t[-s <sep>] [-L] [-n] [-A] [-u] [Selection]$p file.xls\n",
-	"             \t[-c | -m]                 [-u] [Selection]$p file.xls\n",
-	"             \t -i                            [-S sheets]$p file.xls\n",
-	"    Generic options:\n",
-	"       -v[#]       Set verbose level (xlscat/xlsgrep)\n",
-	"       -d[#]       Set debug   level (Spreadsheet::Read)\n",
-	"       --list      Show supported spreadsheet formats and exit\n",
-	"       -u          Use unformatted values\n",
-	"       --strip[=#] Strip leading and/or traing spaces of all cells\n",
-	"       --noclip    Do not strip empty sheets and\n",
-	"                   trailing empty rows and columns\n",
-	"	--no-nl[=R] Replace all newlines in cells with R (default space)\n",
-	"       -e <enc>    Set encoding for input and output\n",
-	"       -b <enc>    Set encoding for input\n",
-	"       -a <enc>    Set encoding for output\n",
-	"       -U          Set encoding for output to utf-8 (short for -a utf-8)\n",
-	"    Input CSV:\n",
-	"       --in-sep=c  Set input sep_char for CSV (c can be 'TAB')\n",
-	"    Input XLS:\n",
-	"       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'\n",
-	"                   the default replacement is 'yyyy-mm-dd'\n",
-	"       --passwd=pw Specify the password for workbook\n",
-	"                   if pw = -, read password from keyboard\n",
-	"       --formulas  Show the formula instead of the value\n",
-	"    Output Text (default):\n",
-	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed\n",
-	"                   Overrules ',' when used with --csv\n",
-	"       -L          Line up the columns\n",
-	"       -B  --box   Like -L but also add outer frame\n",
-	"       -n [skip]   Number lines (prefix with column number)\n",
-	"                   optionally skip <skip> (header) lines\n",
-	"       -A          Show field attributes in ANSI escapes\n",
-	"       -h[#]       Show # header lines\n",
-	"       -D          Dump each record with Data::Peek or Data::Dumper\n",
-	"        --hash     Like -D but as hash with first row as keys\n",
+    print join "\n" =>
+	"usage: $CMD\t[-s <sep>] [-L] [-n] [-A] [-u] [Selection]$p file.xls",
+	"             \t[-c | -m]                 [-u] [Selection]$p file.xls",
+	"             \t -i                            [-S sheets]$p file.xls",
+	"    Generic options:",
+	"       -v[#]       Set verbose level (xlscat/xlsgrep)",
+	"       -d[#]       Set debug   level (Spreadsheet::Read)",
+	"       --list      Show supported spreadsheet formats and exit",
+	"       -u          Use unformatted values",
+	"       --strip[=#] Strip leading and/or traing spaces of all cells",
+	"       --noclip    Do not strip empty sheets and",
+	"                   trailing empty rows and columns",
+	"	--no-nl[=R] Replace all newlines in cells with R (default space)",
+	"       -e <enc>    Set encoding for input and output",
+	"       -b <enc>    Set encoding for input",
+	"       -a <enc>    Set encoding for output",
+	"       -U          Set encoding for output to utf-8 (short for -a utf-8)",
+	"    Input CSV:",
+	"       --in-sep=c  Set input sep_char for CSV (c can be 'TAB')",
+	"    Input XLS:",
+	"       --dtfmt=fmt Specify the default date format to replace 'm-d-yy'",
+	"                   the default replacement is 'yyyy-mm-dd'",
+	"       --passwd=pw Specify the password for workbook",
+	"                   if pw = -, read password from keyboard",
+	"       --formulas  Show the formula instead of the value",
+	"    Output Text (default):",
+	"       -s <sep>    Use separator <sep>. Default '|', \\n allowed",
+	"                   Overrules ',' when used with --csv",
+	"       -L          Line up the columns",
+	"       -B  --box   Like -L but also add outer frame",
+	"       -n [skip]   Number lines (prefix with column number)",
+	"                   optionally skip <skip> (header) lines",
+	"       -A          Show field attributes in ANSI escapes",
+	"       -h[#]       Show # header lines",
+	"       -D          Dump each record with Data::Peek or Data::Dumper",
+	"        --hash     Like -D but as hash with first row as keys",
+	"    Output CSV:",
+	"       -c          Output CSV, separator = ','",
+	"       -m          Output CSV, separator = ';'",
 	$is_grep ? (
-	"    Grep options:\n",
-	"       -i          Ignore case\n",
-	"       -w          Match whole words only\n") : (
-	"    Output Index only:\n",
-	"       -i          Show sheet names and size only\n"),
-	"    Output CSV:\n",
-	"       -c          Output CSV, separator = ','\n",
-	"       -m          Output CSV, separator = ';'\n",
-	"    Output HTML:\n",
-	"       -H          Output HTML\n",
-	"    Selection:\n",
-	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set\n",
-	"                   Default only prints the first sheet\n",
-	"       -R <rows>   Only print rows    <rows>. Default is 'all'\n",
-	"       -C <cols>   Only print columns <cols>. Default is 'all'\n",
-	"       -F <flds>   Only fields <flds> e.g. -FA3,B16\n",
-	"    Ordering (column numbers in result set *after* selection):\n",
-	"       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)\n",
-	"                   +#   - first # lines do not sort (header)\n",
-	"                   #    - order on column # lexical ascending\n",
-	"                   #n   - order on column # numeric ascending\n",
-	"                   #r   - order on column # lexical descending\n",
-	"                   #rn  - order on column # numeric descending\n",
-	"\n",
-	"Examples:\n",
-	"    xlscat -i foo.xls\n",
-	"    xlscat --in-sep=: --sort=3n -L /etc/passwd\n";
+	"    Grep options:",
+	"       -i          Ignore case",
+	"       -w          Match whole words only") : (
+	"    Output Index only:",
+	"       -i          Show sheet names and size only"),
+	"    Output HTML:",
+	"       -H          Output HTML",
+	"    Selection:",
+	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set",
+	"                   Default only prints the first sheet",
+	"       -R <rows>   Only print rows    <rows>. Default is 'all'",
+	"       -C <cols>   Only print columns <cols>. Default is 'all'",
+	"       -F <flds>   Only fields <flds> e.g. -FA3,B16",
+	"    Ordering (column numbers in result set *after* selection):",
+	"       --sort=spec Sort output (e.g. --sort=3,2r,5n,1rn+2)",
+	"                   +#   - first # lines do not sort (header)",
+	"                   #    - order on column # lexical ascending",
+	"                   #n   - order on column # numeric ascending",
+	"                   #r   - order on column # lexical descending",
+	"                   #rn  - order on column # numeric descending",
+	"",
+	"Examples:",
+	"    xlscat   -i foo.xls",
+	"    xlscat   --in-sep=: --sort=3n -L /etc/passwd",
+	"    xlsgrep  pattern file.ods",
+	"";
     @_ and print join "\n", @_, "";
     exit $err;
     } # usage
 
+use Encode     qw( encode decode );
+use List::Util qw( first );
 use Data::Dumper;
-use Encode qw( encode decode );
 use Spreadsheet::Read;
-
 use Getopt::Long qw(:config bundling noignorecase passthrough);
 my $opt_c;		# Generate CSV
 my $opt_F = "";		# Fields to print
@@ -99,6 +103,8 @@ my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
 GetOptions (
     "help|?"		=> sub { usage (0); },
+    "V|version" 	=> sub { print "$CMD [$VERSION]\n"; exit 0; },
+      "list"		=> sub { list_parsers (); },
 
     # Input CSV
     "c|csv"		=> sub { $opt_c = "," },
@@ -115,7 +121,7 @@ GetOptions (
 
     # Output
     "i|index".
-     "|ignore-case!"	=> \my $opt_i,	# Index (cat) | ignore_case (grep) 
+     "|ignore-case!"	=> \my $opt_i,	# Index (cat) | ignore_case (grep)
     "s|separator|sep".
      "|outsepchar".
      "|out-sep".
@@ -139,7 +145,6 @@ GetOptions (
       "strip:3"		=> \my $strip,
       "sort=s"		=> \my $sort_order,
     "N|no-nl:s"		=> \my $opt_N,
-      "list!"		=> \my $list,
 
     # Encoding
     "e|encoding=s"	=> sub { $enc_i = $enc_o = $_[1] },
@@ -162,8 +167,7 @@ sub list_parsers {
 	    $_->{ext}, $_->{mod}, $_->{min}, $_->{vsn}, $_->{def} ? "<==" : "";
 	}
     exit $err;
-    }
-$list and list_parsers ();
+    } # list_parsers
 
 $opt_B and $opt_L++;
 unless ($is_grep) {
@@ -202,13 +206,9 @@ if ($opt_c) {
     }
 
 # Debugging. Prefer Data::Peek over Data::Dumper if available
-{   my $dp = 0;
-    eval q{
-	use Data::Peek;
-	$dp = 1;
-	};
+{   my $dp = eval { require Data::Peek; 1 };
     sub ddumper {
-	$dp ? DDumper (@_)
+	$dp ? Data::Peek::DDumper (@_)
 	    : print STDERR Dumper (@_);
 	} # ddumper
     }
@@ -365,11 +365,11 @@ sub css_color {
     @css ? qq{ style="@css"} : "";
     } # css_color
 
-	    binmode STDERR, ":utf8";
+	    binmode STDERR, ":encoding(utf-8)";
 $enc_o and  binmode STDOUT, ":encoding($enc_o)";
 
 if ($opt_H) {
-    print <<EOH;
+    print <<"EOH";
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -380,17 +380,17 @@ if ($opt_H) {
   <style type="text/css">
     body, h2,
     td, th { font-family:     "Nimbus Sans L", "DejaVu Sans",
-                              Helvetica, Arial, sans; }
+			      Helvetica, Arial, sans; }
     table  { border-spacing:  2px;
-             border-collapse: collapse;               }
+	     border-collapse: collapse;               }
     td, th { vertical-align:  top;
-             padding:         4px;                    }
+	     padding:         4px;                    }
     table  > tbody > tr > th,
     table  > tr > th {
-             background:      #e0e0e0;                }
+	     background:      #e0e0e0;                }
     table  > tbody > tr > td:not([class]),
     table  > tr > td:not([class]) {
-             background:      #f0f0f0;                }
+	     background:      #f0f0f0;                }
     .odd   { background:      #e0e0e0;                }
     </style>
   </head>
@@ -471,7 +471,7 @@ foreach my $si (1 .. $sc) {
 		s/\n/$opt_N/go for grep { defined } $uval, $fval;
 		}
 	    $opt_v > 2 and warn "$_:$r '$uval' / '$fval'\n";
-	    $opt_A and 
+	    $opt_A and
 		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
 	    $opt_f && $s->{attr}[$_][$r]{formula}
 		? "=".$s->{attr}[$_][$r]{formula}
@@ -479,7 +479,7 @@ foreach my $si (1 .. $sc) {
 	    } $c[0] .. $c[1];
 	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
-	    ! grep { defined $_ && $_ =~ $pattern } @row and next;
+	    ! first { defined $_ && $_ =~ $pattern } @row and next;
 	if ($opt_D) {
 	    ddumper ($opt_D == 1 ? \@row :
 		{ map { $s->{cell}[$_ + 1][1] => $row[$_] } 0 .. $#row });
