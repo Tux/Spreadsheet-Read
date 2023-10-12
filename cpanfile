@@ -6,7 +6,7 @@ requires   "Exporter";
 requires   "File::Temp"               => "0.22";  # ignore : CVE-2011-4116
 requires   "List::Util";
 
-recommends "Data::Dumper"             => "2.184";
+recommends "Data::Dumper"             => "2.188";
 recommends "Data::Peek"               => "0.52";
 recommends "Encode"                   => "3.19";
 recommends "File::Temp"               => "0.2311";
@@ -31,9 +31,9 @@ on "test" => sub {
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.02";
-    recommends "Text::CSV_PP"             => "2.02";
-    recommends "Text::CSV_XS"             => "1.50";
+    recommends "Text::CSV"                => "2.03";
+    recommends "Text::CSV_PP"             => "2.03";
+    recommends "Text::CSV_XS"             => "1.52";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
@@ -45,13 +45,13 @@ feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
     requires   "Spreadsheet::ParseODS"    => "0.26";
 
-    recommends "Spreadsheet::ParseODS"    => "0.37";
+    recommends "Spreadsheet::ParseODS"    => "0.38";
     };
 
 feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
     requires   "Spreadsheet::ReadSXC"     => "0.26";
 
-    recommends "Spreadsheet::ReadSXC"     => "0.37";
+    recommends "Spreadsheet::ReadSXC"     => "0.38";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {

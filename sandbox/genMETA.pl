@@ -77,7 +77,7 @@ recommends:
   Encode:               3.19
   File::Temp:           0.2311
   Data::Peek:           0.52
-  Data::Dumper:         2.184
+  Data::Dumper:         2.188
 test_recommends:
   Test::More:           1.302195
 resources:
@@ -93,9 +93,9 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.71
     recommends:
-      Text::CSV:                           2.02
-      Text::CSV_PP:                        2.02
-      Text::CSV_XS:                        1.50
+      Text::CSV:                           2.03
+      Text::CSV_PP:                        2.03
+      Text::CSV_XS:                        1.52
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -115,13 +115,13 @@ optional_features:
     requires:
       Spreadsheet::ParseODS:               0.26
     recommends:
-      Spreadsheet::ParseODS:               0.37
+      Spreadsheet::ParseODS:               0.38
   opt_sxc:
     description:        Provides parsing of OpenOffice spreadsheets old style
     requires:
       Spreadsheet::ReadSXC:                0.26
     recommends:
-      Spreadsheet::ReadSXC:                0.37
+      Spreadsheet::ReadSXC:                0.38
   opt_gnumeric:
     description:        Provides parsing of Gnumeric spreadsheets
     requires:
