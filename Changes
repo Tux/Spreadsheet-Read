@@ -1,8 +1,9 @@
-0.88	- 12 Oct 2023, H.Merijn Brand
+0.88	- 01 Nov 2023, H.Merijn Brand
     * Guard $_ globbering from external bitrotted code
     * Use recommended and suggested versions based on known CVEs
     * Improve user feedback on failing xlsx2csv & xlscat
     * Fix static docs for groff-1.24
+    * Basic support for Excel::ValueReader::XLSX
 
 0.87	- 22 Feb 2023, H.Merijn Brand
     * Change default #! to /usr/bin/perl (Tinita)

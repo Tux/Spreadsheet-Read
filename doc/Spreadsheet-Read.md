@@ -1100,6 +1100,16 @@ Show the differences between two spreadsheets.
     use [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX)
     instead.
 
+- Excel::ValueReader::XLSX
+
+    See [Excel::ValueReader::XLSX](https://metacpan.org/release/Excel-ValueReader-XLSX)
+    documentation.
+
+    This module aims at speed-reading ignoring all attributes and formatting.
+
+    Using this backend does not (yet) support parsing strings, string-refs, IO handles
+    or globs. Only filenames are supported.
+
 - Spreadsheet::ParseODS
 
     [Spreadsheet::ParseODS](https://metacpan.org/pod/Spreadsheet::ParseODS) is a

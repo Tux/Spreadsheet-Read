@@ -1079,21 +1079,31 @@ SEE ALSO
          Please                   use                   Spreadsheet::ParseXLSX
          <https://metacpan.org/release/Spreadsheet-ParseXLSX> instead.
 
+       Excel::ValueReader::XLSX
+         See   Excel::ValueReader::XLSX   <https://metacpan.org/release/Excel-
+         ValueReader-XLSX> documentation.
+
+         This  module  aims  at  speed-reading  ignoring  all  attributes  and
+         formatting.
+
+         Using this backend does not (yet) support  parsing  strings,  string-
+         refs, IO handles or globs. Only filenames are supported.
+
        Spreadsheet::ParseODS
          Spreadsheet::ParseODS
-         <https://metacpan.org/pod/Spreadsheet::ParseODS>  is  a  parser   for
-         OpenOffice/LibreOffice  (.sxc  and .ods) spreadsheet files. It is the
-         successor                  of                    Spreadsheet::ReadSXC
+         <https://metacpan.org/pod/Spreadsheet::ParseODS>   is  a  parser  for
+         OpenOffice/LibreOffice (.sxc and .ods) spreadsheet files. It  is  the
+         successor                   of                   Spreadsheet::ReadSXC
          <https://metacpan.org/release/Spreadsheet-ReadSXC>.
 
        Spreadsheet::ReadSXC
          Spreadsheet::ReadSXC       <https://metacpan.org/release/Spreadsheet-
-         ReadSXC> is a  parser  for  OpenOffice/LibreOffice  (.sxc  and  .ods)
+         ReadSXC>  is  a  parser  for  OpenOffice/LibreOffice  (.sxc and .ods)
          spreadsheet files.
 
        Spreadsheet::ReadGnumeric
          Spreadsheet::ReadGnumeric  <https://metacpan.org/release/Spreadsheet-
-         ReadGnumeric> is a  parser  for  Gnumeric  <http://www.gnumeric.org/>
+         ReadGnumeric>  is  a  parser  for Gnumeric <http://www.gnumeric.org/>
          (.gnumeric) spreadsheet files.
 
        Spreadsheet::BasicRead
@@ -1106,20 +1116,20 @@ SEE ALSO
 
        Spreadsheet::Perl
          Spreadsheet::Perl     <https://metacpan.org/release/Spreadsheet-Perl>
-         offers a Pure Perl implementation of  a  spreadsheet  engine.   Users
+         offers  a  Pure  Perl  implementation of a spreadsheet engine.  Users
          that want this format to be supported in Spreadsheet::Read are hereby
          motivated to offer patches. It is not high on my TODO-list.
 
        Spreadsheet::CSV
          Spreadsheet::CSV       <https://metacpan.org/release/Spreadsheet-CSV>
-         offers the interesting approach of seeing all  supported  spreadsheet
+         offers  the  interesting approach of seeing all supported spreadsheet
          formats   as   if   it   were   CSV,   mimicking   the   Text::CSV_XS
          <https://metacpan.org/release/Text-CSV_XS> interface.
 
        xls2csv
          xls2csv                          <https://github.com/Tux/Spreadsheet-
-         Read/blob/master/scripts/xls2csv>   offers   an  alternative  for  my
-         "xlscat -c", in the xls2csv tool, but this tool focuses on  character
+         Read/blob/master/scripts/xls2csv>  offers  an  alternative   for   my
+         "xlscat  -c", in the xls2csv tool, but this tool focuses on character
          encoding transparency, and requires some other modules.
 
 AUTHOR
@@ -1131,4 +1141,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.38.0                      2023-10-12                          STDIN(1)
+perl v5.38.0                      2023-11-01                          STDIN(1)

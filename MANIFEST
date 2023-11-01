@@ -125,6 +125,13 @@ t/623_misc.t
 t/624_dates.t
 t/625_perc.t
 t/627_merged.t
+t/630_xlsx.t
+t/631_clr.t
+t/632_fmt.t
+t/633_misc.t
+t/634_dates.t
+t/635_perc.t
+t/637_merged.t
 t/700_gnumeric.t
 t/701_clr.t
 t/702_fmt.t

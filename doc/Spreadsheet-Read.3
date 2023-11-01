@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2023-10-12 "perl v5.38.0" "User Contributed Perl Documentation"
+.TH STDIN 1 2023-11-01 "perl v5.38.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1308,6 +1308,15 @@ documentation.
 This module is dead and deprecated. It is \fBbuggy and unmaintained\fR.  \fIPlease\fR
 use Spreadsheet::ParseXLSX <https://metacpan.org/release/Spreadsheet-ParseXLSX>
 instead.
+.IP Excel::ValueReader::XLSX 2
+.IX Item "Excel::ValueReader::XLSX"
+See Excel::ValueReader::XLSX <https://metacpan.org/release/Excel-ValueReader-XLSX>
+documentation.
+.Sp
+This module aims at speed-reading ignoring all attributes and formatting.
+.Sp
+Using this backend does not (yet) support parsing strings, string-refs, IO handles
+or globs. Only filenames are supported.
 .IP Spreadsheet::ParseODS 2
 .IX Item "Spreadsheet::ParseODS"
 Spreadsheet::ParseODS <https://metacpan.org/pod/Spreadsheet::ParseODS> is a
