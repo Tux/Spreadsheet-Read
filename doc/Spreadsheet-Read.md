@@ -208,6 +208,18 @@ Currently supported options are:
 
         env SPREADSHEET_READ_CSV=Text::CSV_PP ...
 
+    You can also directly pass the required backend, forcing the matching
+    type, but this excludes version checking.
+
+        # Checks for minimal version
+        BEGIN { $ENV{SPREADSHEET_READ_CSV} = "Text::CSV_PP" }
+        my $book = ReadData ("test.csv", parser => "csv");
+
+        vs
+
+        # NO check for minimal version
+        my $book = ReadData ("test.csv", parser => "Text::CSV_PP");
+
 - cells
 
 

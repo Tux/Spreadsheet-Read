@@ -123,12 +123,14 @@ foreach my $p (@parsers) {
     }
 $can{sc} = __PACKAGE__;	# SquirrelCalc is built-in
 
-defined $Spreadsheet::ParseExcel::VERSION  && $Spreadsheet::ParseExcel::VERSION  < 0.61 and
-    *Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
-defined $Spreadsheet::ParseODS::VERSION    && $Spreadsheet::ParseODS::VERSION    < 0.25 and
-    *Spreadsheet::ParseODS::Workbook::get_active_sheet   = sub { undef; };
-defined $Excel::ValueReader::XLSX::VERSION && $Excel::ValueReader::XLSX::VERSION < 9.99 and
-    *Excel::ValueReader::XLSX::get_active_sheet          = sub { undef; };
+sub _def_gas {
+    defined $Spreadsheet::ParseExcel::VERSION  && $Spreadsheet::ParseExcel::VERSION  < 0.61 and
+	*Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
+    defined $Spreadsheet::ParseODS::VERSION    && $Spreadsheet::ParseODS::VERSION    < 0.25 and
+	*Spreadsheet::ParseODS::Workbook::get_active_sheet   = sub { undef; };
+    defined $Excel::ValueReader::XLSX::VERSION && $Excel::ValueReader::XLSX::VERSION < 9.99 and
+	*Excel::ValueReader::XLSX::get_active_sheet          = sub { undef; };
+    } # _def_gas
 
 my $debug = 0;
 my %def_opts = (
@@ -183,6 +185,14 @@ sub _dump {
 
 sub _parser {
     my $type = shift		or  return "";
+    if ($type =~ m/::/ and my @p = grep { $_->[1] eq $type } @parsers) {
+	my $format = $p[0][0];
+	$ENV{"SPREADSHEET_READ_\U$format"} = $type;
+	eval "local \$_; require $type";
+	$@ and croak ("Forced backend $type for $format fails to load:\n$@");
+	$can{$format} = $type;
+	$type = $format;
+	}
     $type = lc $type;
     my $ods = $can{ods} ? "ods" : "sxc";
     # Aliases and fullnames
@@ -873,6 +883,7 @@ sub ReadData {
 	    }
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
+	_def_gas ();
 	my $active_sheet = $oBook->get_active_sheet
 			|| $oBook->{ActiveSheet}
 			|| $oBook->{SelectedSheet};
@@ -1098,6 +1109,7 @@ sub ReadData {
 	# $debug and $data[0]{_parser} = $oBook;
 
 	$debug and print STDERR "\t$data[0]{sheets} sheets\n";
+	_def_gas ();
 	my $active_sheet = $oBook->get_active_sheet;
 	my $current_sheet = 0;
 	foreach my $oWkS ($oBook->worksheets) {
@@ -1775,6 +1787,18 @@ have a good reason to prefer a different parser, you can set that in
 environment variables. The other options then will not be tested for:
 
  env SPREADSHEET_READ_CSV=Text::CSV_PP ...
+
+You can also directly pass the required backend, forcing the matching
+type, but this excludes version checking.
+
+ # Checks for minimal version
+ BEGIN { $ENV{SPREADSHEET_READ_CSV} = "Text::CSV_PP" }
+ my $book = ReadData ("test.csv", parser => "csv");
+
+ vs
+
+ # NO check for minimal version
+ my $book = ReadData ("test.csv", parser => "Text::CSV_PP");
 
 =item cells
 X<cells>

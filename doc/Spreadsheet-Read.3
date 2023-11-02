@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2023-11-01 "perl v5.38.0" "User Contributed Perl Documentation"
+.TH STDIN 1 2023-11-02 "perl v5.38.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -283,6 +283,20 @@ environment variables. The other options then will not be tested for:
 .Sp
 .Vb 1
 \& env SPREADSHEET_READ_CSV=Text::CSV_PP ...
+.Ve
+.Sp
+You can also directly pass the required backend, forcing the matching
+type, but this excludes version checking.
+.Sp
+.Vb 3
+\& # Checks for minimal version
+\& BEGIN { $ENV{SPREADSHEET_READ_CSV} = "Text::CSV_PP" }
+\& my $book = ReadData ("test.csv", parser => "csv");
+\&
+\& vs
+\&
+\& # NO check for minimal version
+\& my $book = ReadData ("test.csv", parser => "Text::CSV_PP");
 .Ve
 .IP cells 2
 .IX Xref "cells"

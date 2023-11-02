@@ -257,6 +257,17 @@ my $book = ReadData (\$content, parser =&gt; &quot;xlsx&quot;);</code></pre>
 
 <pre><code>env SPREADSHEET_READ_CSV=Text::CSV_PP ...</code></pre>
 
+<p>You can also directly pass the required backend, forcing the matching type, but this excludes version checking.</p>
+
+<pre><code># Checks for minimal version
+BEGIN { $ENV{SPREADSHEET_READ_CSV} = &quot;Text::CSV_PP&quot; }
+my $book = ReadData (&quot;test.csv&quot;, parser =&gt; &quot;csv&quot;);
+
+vs
+
+# NO check for minimal version
+my $book = ReadData (&quot;test.csv&quot;, parser =&gt; &quot;Text::CSV_PP&quot;);</code></pre>
+
 </dd>
 <dt id="cells">cells </dt>
 <dd>

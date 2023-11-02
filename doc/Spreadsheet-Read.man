@@ -205,6 +205,18 @@ DESCRIPTION
 
           env SPREADSHEET_READ_CSV=Text::CSV_PP ...
 
+         You can also directly pass the required backend, forcing the matching
+         type, but this excludes version checking.
+
+          # Checks for minimal version
+          BEGIN { $ENV{SPREADSHEET_READ_CSV} = "Text::CSV_PP" }
+          my $book = ReadData ("test.csv", parser => "csv");
+
+          vs
+
+          # NO check for minimal version
+          my $book = ReadData ("test.csv", parser => "Text::CSV_PP");
+
        cells
          Control the generation of named cells (""A1"" etc). Default is true.
 
@@ -1141,4 +1153,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.38.0                      2023-11-01                          STDIN(1)
+perl v5.38.0                      2023-11-02                          STDIN(1)
