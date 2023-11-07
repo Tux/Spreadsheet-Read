@@ -1057,6 +1057,9 @@ Show the differences between two spreadsheets.
         This is SAX based parser, so you can parse very large XLSX file with
         lower memory usage.
 
+        Last commit 2021-02-16, so I will take PR's but won't do it myself as
+        there seems to be little gain in supporting this.
+
 - Other spreadsheet formats
 
     I consider adding any spreadsheet interface that offers a usable API.
@@ -1119,8 +1122,8 @@ Show the differences between two spreadsheets.
 
     This module aims at speed-reading ignoring all attributes and formatting.
 
-    Using this backend does not (yet) support parsing strings, string-refs, IO handles
-    or globs. Only filenames are supported.
+    Using this backend does not, and will not, support parsing strings, string-refs,
+    or globs. Only filenames and file handles are supported.
 
 - Spreadsheet::ParseODS
 

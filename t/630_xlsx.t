@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Excel::ValueReader::XLSX"; }
 
-my     $tests = 128;
+my     $tests = 121;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -33,7 +33,6 @@ my $content;
 
 my $xls;
 foreach my $base ( [ "files/test.xlsx",	"Read/Parse xlsx file"	],
-#		   [ $content,		"Parse xlsx data"	],
 		   ) {
     my ($txt, $msg) = @$base;
     ok ($xls = ReadData ($txt),	$msg);
@@ -168,14 +167,9 @@ is ($ss->{F1},		"",    "formatted a single '");
     my $data = $content;
     open my $fh, "<", "files/test.xlsx";
 
-    SKIP: { skip "NYI: support for file handles", 3; ok (0) for 1..3 };
-#   chk_test ( " FH    parser",    ReadData ( $fh,   parser => "xlsx")); close $fh;
-    SKIP: { skip "NYI: support for data ref",     3; ok (0) for 1..3 };
-#   chk_test ("\\DATA  parser",    ReadData (\$data, parser => "xlsx"));
-    SKIP: { skip "NYI: support for data string",  3; ok (0) for 1..3 };
-#   chk_test ( " DATA  no parser", ReadData ( $data                  ));
-    SKIP: { skip "NYI: support for data string",  3; ok (0) for 1..3 };
-#   chk_test ( " DATA  parser",    ReadData ( $data, parser => "xlsx"));
+    chk_test ( " FH    parser",    ReadData ( $fh,   parser => "xlsx")); close $fh;
+    SKIP: { skip "No support for data ref",     1; ok (0) };
+    SKIP: { skip "No support for data string",  1; ok (0) };
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {

@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2023-11-02 "perl v5.38.0" "User Contributed Perl Documentation"
+.TH STDIN 1 2023-11-07 "perl v5.38.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -1267,6 +1267,9 @@ FastXLSX library.
 .Sp
 This is SAX based parser, so you can parse very large XLSX file with
 lower memory usage.
+.Sp
+Last commit 2021\-02\-16, so I will take PR's but won't do it myself as
+there seems to be little gain in supporting this.
 .RE
 .RS 4
 .RE
@@ -1329,8 +1332,8 @@ documentation.
 .Sp
 This module aims at speed-reading ignoring all attributes and formatting.
 .Sp
-Using this backend does not (yet) support parsing strings, string-refs, IO handles
-or globs. Only filenames are supported.
+Using this backend does not, and will not, support parsing strings, string-refs,
+or globs. Only filenames and file handles are supported.
 .IP Spreadsheet::ParseODS 2
 .IX Item "Spreadsheet::ParseODS"
 Spreadsheet::ParseODS <https://metacpan.org/pod/Spreadsheet::ParseODS> is a

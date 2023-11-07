@@ -64,7 +64,7 @@ my @parsers = (
     [ xlsx	=> "Spreadsheet::ParseXLSX",	"0.24"	],
     [ xlsm	=> "Spreadsheet::ParseXLSX",	"0.24"	],
     [ xlsx	=> "Spreadsheet::XLSX",		"0.13"	],
-    [ xlsx	=> "Excel::ValueReader::XLSX",	"1.10"	],
+    [ xlsx	=> "Excel::ValueReader::XLSX",	"1.13"	],
 #   [ prl	=> "Spreadsheet::Perl",		""	],
     [ sc	=> "Spreadsheet::Read",		"0.01"	],
     [ gnumeric	=> "Spreadsheet::ReadGnumeric",	"0.2"	],
@@ -2651,6 +2651,9 @@ FastXLSX library.
 This is SAX based parser, so you can parse very large XLSX file with
 lower memory usage.
 
+Last commit 2021-02-16, so I will take PR's but won't do it myself as
+there seems to be little gain in supporting this.
+
 =back
 
 =item Other spreadsheet formats
@@ -2723,8 +2726,8 @@ documentation.
 
 This module aims at speed-reading ignoring all attributes and formatting.
 
-Using this backend does not (yet) support parsing strings, string-refs, IO handles
-or globs. Only filenames are supported.
+Using this backend does not, and will not, support parsing strings, string-refs,
+or globs. Only filenames and file handles are supported.
 
 =item Spreadsheet::ParseODS
 

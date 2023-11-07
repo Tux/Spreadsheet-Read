@@ -1054,6 +1054,8 @@ Unless -A is used, all other options are passed on to xlscat</code></pre>
 
 <p>This is SAX based parser, so you can parse very large XLSX file with lower memory usage.</p>
 
+<p>Last commit 2021-02-16, so I will take PR&#39;s but won&#39;t do it myself as there seems to be little gain in supporting this.</p>
+
 </dd>
 </dl>
 
@@ -1129,7 +1131,7 @@ Unless -A is used, all other options are passed on to xlscat</code></pre>
 
 <p>This module aims at speed-reading ignoring all attributes and formatting.</p>
 
-<p>Using this backend does not (yet) support parsing strings, string-refs, IO handles or globs. Only filenames are supported.</p>
+<p>Using this backend does not, and will not, support parsing strings, string-refs, or globs. Only filenames and file handles are supported.</p>
 
 </dd>
 <dt id="Spreadsheet::ParseODS">Spreadsheet::ParseODS</dt>
