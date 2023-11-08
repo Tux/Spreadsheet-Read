@@ -77,6 +77,8 @@ recommends:
   Encode:               3.19
   File::Temp:           0.2311
   Data::Peek:           0.52
+  Data::Dumper:         2.183
+suggests:
   Data::Dumper:         2.188
 test_recommends:
   Test::More:           1.302196
