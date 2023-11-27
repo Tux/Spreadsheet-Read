@@ -2,14 +2,14 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'23 [2023-07-28] Copyright H.M.Brand 2005-2023
+#	   (m)'23 [2023-11-27] Copyright H.M.Brand 2005-2023
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.25";
+our $VERSION = "3.26";
 (my $CMD = $0) =~ s{.*[\/]}{};
 
 my $is_grep = $0 =~ m/grep$/;	# xlsgrep
@@ -99,6 +99,7 @@ my $opt_d = 0;		# Debug level for Spreadsheet::Read
 my $opt_h = 0;		# Number of header lines for grep or -L
 my $opt_D = 0;		# Dump: 0 = none, 1 = array, 2 = hash
 my $clip  = 1;
+my $enc_bom;		# CSV input encoding derived from BOM
 my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
 GetOptions (
@@ -235,6 +236,27 @@ if (defined $file and $file ne "-") {
     $opt_v > 1 and warn "Using $file as input\n";
     -f $file or usage 1, "the file argument is not a regular file";
     -s $file or usage 1, "the file is empty";
+    if ($file =~ m/\.csv$/i and open my $fh, "<", $file) {	# Auto-BOM
+	my $l = <$fh>;
+	close $fh;
+	   if ($l =~ s/^\x00\x00\xfe\xff//) { $enc_bom = "utf-32be"   }
+	elsif ($l =~ s/^\xff\xfe\x00\x00//) { $enc_bom = "utf-32le"   }
+	elsif ($l =~ s/^\xfe\xff//)         { $enc_bom = "utf-16be"   }
+	elsif ($l =~ s/^\xff\xfe//)         { $enc_bom = "utf-16le"   }
+	elsif ($l =~ s/^\xef\xbb\xbf//)     { $enc_bom = "utf-8"      }
+	elsif ($l =~ s/^\xf7\x64\x4c//)     { $enc_bom = "utf-1"      }
+	elsif ($l =~ s/^\xdd\x73\x66\x73//) { $enc_bom = "utf-ebcdic" }
+	elsif ($l =~ s/^\x0e\xfe\xff//)     { $enc_bom = "scsu"       }
+	elsif ($l =~ s/^\xfb\xee\x28//)     { $enc_bom = "bocu-1"     }
+	elsif ($l =~ s/^\x84\x31\x95\x33//) { $enc_bom = "gb-18030"   }
+	elsif ($l =~ s/^\x{feff}//)         { $enc_bom = ""           }
+
+	if ($enc_bom and open $fh, "<:encoding($enc_bom)", $file) {
+	    $opt_v > 1 and warn "Opened $file with encoding $enc_bom after BOM detection\n";
+	    $file = $fh;
+	    push @RDarg, parser => "CSV";
+	    }
+	}
     }
 else {
     $opt_v > 1 and warn "Working as a pipe\n";
@@ -477,6 +499,7 @@ foreach my $si (1 .. $sc) {
 		? "=".$s->{attr}[$_][$r]{formula}
 		: defined $s->{cell}[$_][$r] ? $opt_u ? $uval : $fval : "";
 	    } $c[0] .. $c[1];
+	$r == 1 && $row[0] && defined $enc_bom and $row[0] =~ s/^\N{BOM}//;
 	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
 	    ! first { defined $_ && $_ =~ $pattern } @row and next;

@@ -1,5 +1,5 @@
-0.89	- 07 Nov 2023, H.Merijn Brand
-    * 
+0.89	- 27 Nov 2023, H.Merijn Brand
+    * Auto-use BOM in CSV *files* with xlscat script
 
 0.88	- 07 Nov 2023, H.Merijn Brand
     * Guard $_ globbering from external bitrotted code
