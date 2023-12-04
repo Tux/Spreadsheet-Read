@@ -1096,6 +1096,7 @@ Show the differences between two spreadsheets.
 
     [Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel) is
     the best parser for old-style Microsoft Excel (.xls) files.
+    Most recent commit was Jan 2014.
 
 - Spreadsheet::ParseXLSX
 
@@ -1104,15 +1105,16 @@ Show the differences between two spreadsheets.
     but for new Microsoft Excel 2007+ files (.xlsx). They have the same API.
 
     This module uses [XML::Twig](https://metacpan.org/release/XML-Twig) to parse the
-    internal XML.
+    internal XML. Most recent commit was in 2016. New maintainer needed.
 
 - Spreadsheet::XLSX
 
     See [Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX)
     documentation.
 
-    This module is dead and deprecated. It is **buggy and unmaintained**.  _Please_
-    use [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX)
+    This module is dead and deprecated. It is **buggy and unmaintained** (Most recent
+    commit was Oct 2014).  _Please_ use
+    [Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX)
     instead.
 
 - Excel::ValueReader::XLSX

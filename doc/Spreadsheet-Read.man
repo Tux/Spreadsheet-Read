@@ -1075,7 +1075,7 @@ SEE ALSO
        Spreadsheet::ParseExcel
          Spreadsheet::ParseExcel    <https://metacpan.org/release/Spreadsheet-
          ParseExcel>  is  the best parser for old-style Microsoft Excel (.xls)
-         files.
+         files.  Most recent commit was Jan 2014.
 
        Spreadsheet::ParseXLSX
          Spreadsheet::ParseXLSX     <https://metacpan.org/release/Spreadsheet-
@@ -1084,14 +1084,15 @@ SEE ALSO
          Microsoft Excel 2007+ files (.xlsx). They have the same API.
 
          This module uses XML::Twig <https://metacpan.org/release/XML-Twig> to
-         parse the internal XML.
+         parse  the  internal  XML.  Most  recent  commit  was  in  2016.  New
+         maintainer needed.
 
        Spreadsheet::XLSX
          See Spreadsheet::XLSX <https://metacpan.org/release/Spreadsheet-XLSX>
          documentation.
 
-         This  module  is  dead  and deprecated. It is buggy and unmaintained.
-         Please                   use                   Spreadsheet::ParseXLSX
+         This module is dead and deprecated.  It  is  buggy  and  unmaintained
+         (Most recent commit was Oct 2014).  Please use Spreadsheet::ParseXLSX
          <https://metacpan.org/release/Spreadsheet-ParseXLSX> instead.
 
        Excel::ValueReader::XLSX
@@ -1156,4 +1157,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.38.0                      2023-11-07                          STDIN(1)
+perl v5.38.2                      2023-12-04                          STDIN(1)
