@@ -8,11 +8,11 @@ requires   "List::Util";
 
 recommends "Data::Dumper"             => "2.183";
 recommends "Data::Peek"               => "0.52";
-recommends "Encode"                   => "3.19";
+recommends "Encode"                   => "3.20";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 
-suggest    "Data::Dumper"             => "2.188";
+suggests   "Data::Dumper"             => "2.188";
 
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
@@ -27,15 +27,15 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302196";
+    recommends "Test::More"               => "1.302198";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.03";
-    recommends "Text::CSV_PP"             => "2.03";
-    recommends "Text::CSV_XS"             => "1.52";
+    recommends "Text::CSV"                => "2.04";
+    recommends "Text::CSV_PP"             => "2.04";
+    recommends "Text::CSV_XS"             => "1.53";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
