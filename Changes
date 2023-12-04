@@ -1,5 +1,6 @@
-0.89	- 27 Nov 2023, H.Merijn Brand
+0.89	- 04 Dec 2023, H.Merijn Brand
     * Auto-use BOM in CSV *files* with xlscat script
+    * Fix duplicate option letter (typo) (Erix)
 
 0.88	- 07 Nov 2023, H.Merijn Brand
     * Guard $_ globbering from external bitrotted code

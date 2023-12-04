@@ -1,14 +1,14 @@
 #!/usr/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'23 [2023-06-26] Copyright H.M.Brand 2008-2023
+#	   (m)'23 [2023-12-04] Copyright H.M.Brand 2008-2023
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.9";
+our $VERSION = "3.10";
 (my $cmd = $0) =~ s{.*/}{};
 
 use Text::CSV_XS;
@@ -42,7 +42,7 @@ GetOptions (
       "list"		=> sub { list_parsers (); },
 
     "o|c|out=s" 	=> \ my $csv,
-    "i|s|in=s"		=> \ my $xls,
+    "i|x|in=s"		=> \ my $xls,
     "f|force!"  	=> \ my $opt_f,
 
     "s|sep=s"		=> \ my $opt_s,
