@@ -1,5 +1,5 @@
 0.90	- 02 Jan 2024, H.Merijn Brand
-    * Consistent return value for parses ($type) on failure
+    * Consistent return value for parses ($type) on failure (issue#52)
 
 0.89	- 02 Jan 2024, H.Merijn Brand
     * Auto-use BOM in CSV *files* with xlscat script
