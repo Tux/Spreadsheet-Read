@@ -2,14 +2,14 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'23 [2023-11-27] Copyright H.M.Brand 2005-2023
+#	   (m)'24 [2024-01-02] Copyright H.M.Brand 2005-2024
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.26";
+our $VERSION = "3.27";
 (my $CMD = $0) =~ s{.*[\/]}{};
 
 my $is_grep = $0 =~ m/grep$/;	# xlsgrep
@@ -253,6 +253,7 @@ if (defined $file and $file ne "-") {
 
 	if ($enc_bom and open $fh, "<:encoding($enc_bom)", $file) {
 	    $opt_v > 1 and warn "Opened $file with encoding $enc_bom after BOM detection\n";
+	    read $fh, (my $bom), 1;	# Skip BOM
 	    $file = $fh;
 	    push @RDarg, parser => "CSV";
 	    }
