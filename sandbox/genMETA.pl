@@ -104,14 +104,14 @@ optional_features:
       Spreadsheet::ParseExcel:             0.34
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseExcel:             0.65
+      Spreadsheet::ParseExcel:             0.66
   opt_xlsx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
       Spreadsheet::ParseXLSX:              0.24
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseXLSX:              0.27
+      Spreadsheet::ParseXLSX:              0.28
   opt_ods:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
