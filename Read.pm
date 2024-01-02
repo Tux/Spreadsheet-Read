@@ -2700,7 +2700,8 @@ L<Text::CSV_PP|https://metacpan.org/release/Text-CSV> (the pure perl version).
 
 L<Spreadsheet::ParseExcel|https://metacpan.org/release/Spreadsheet-ParseExcel> is
 the best parser for old-style Microsoft Excel (.xls) files.
-Most recent commit was Dec 2023.
+Most recent commit was Dec 2023. Please use version 0.66 or higher to prevent
+possible memory bombs.
 
 =item Spreadsheet::ParseXLSX
 
@@ -2709,7 +2710,8 @@ like L<Spreadsheet::ParseExcel|https://metacpan.org/release/Spreadsheet-ParseExc
 but for new Microsoft Excel 2007+ files (.xlsx). They have the same API.
 
 This module uses L<XML::Twig|https://metacpan.org/release/XML-Twig> to parse the
-internal XML. Most recent commit was in Dec 2023.
+internal XML. Most recent commit was in Dec 2023. Please use version 0.29 or
+higher to prevent possible memory bombs.
 
 =item Spreadsheet::XLSX
 

@@ -1075,7 +1075,8 @@ SEE ALSO
        Spreadsheet::ParseExcel
          Spreadsheet::ParseExcel    <https://metacpan.org/release/Spreadsheet-
          ParseExcel>  is  the best parser for old-style Microsoft Excel (.xls)
-         files.  Most recent commit was Dec 2023.
+         files.  Most recent commit was Dec 2023. Please use version  0.66  or
+         higher to prevent possible memory bombs.
 
        Spreadsheet::ParseXLSX
          Spreadsheet::ParseXLSX     <https://metacpan.org/release/Spreadsheet-
@@ -1084,7 +1085,8 @@ SEE ALSO
          Microsoft Excel 2007+ files (.xlsx). They have the same API.
 
          This module uses XML::Twig <https://metacpan.org/release/XML-Twig> to
-         parse the internal XML. Most recent commit was in Dec 2023.
+         parse the internal XML. Most recent commit was in  Dec  2023.  Please
+         use version 0.29 or higher to prevent possible memory bombs.
 
        Spreadsheet::XLSX
          See Spreadsheet::XLSX <https://metacpan.org/release/Spreadsheet-XLSX>
