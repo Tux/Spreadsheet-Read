@@ -1,6 +1,7 @@
 0.89	- 02 Jan 2024, H.Merijn Brand
     * Auto-use BOM in CSV *files* with xlscat script
     * Fix duplicate option letter (typo) (Erix)
+    * It's 2024
 
 0.88	- 07 Nov 2023, H.Merijn Brand
     * Guard $_ globbering from external bitrotted code
