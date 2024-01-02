@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.89";
+our $VERSION = "0.90";
 sub  Version { $VERSION }
 
 use Carp;
@@ -257,7 +257,7 @@ sub parses {
 	$@ = $1;
 	return 0;
 	}
-    return $can{$type};
+    return $can{$type} || 0;
     } # parses
 
 sub sheets {
@@ -2003,14 +2003,15 @@ use argument list, or call it fully qualified.
  $book->parses ("CSV"); # OO
 
 C<parses ()> returns Spreadsheet::Read's capability to parse the
-required format. L<C<ReadData>|/ReadData> will pick its preferred parser
-for that format unless overruled. See L<C<parser>|/parser>.
+required format or C<0> if it does not. L<C<ReadData>|/ReadData>
+will pick its preferred parser for that format unless overruled.
+See L<C<parser>|/parser>.
 
-C<parses ()> is not imported by default, so either specify it in the
-use argument list, or call it fully qualified.
+C<parses ()> is not imported by default, so either specify it in
+the use argument list, or call it fully qualified.
 
-If C<$format> is false (C<undef>, C<"">, or C<0>), C<parses ()> will
-return a sorted list of supported types.
+If C<$format> is false (C<undef>, C<"">, or C<0>), C<parses ()>
+will return a sorted list of supported types.
 
  @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
 

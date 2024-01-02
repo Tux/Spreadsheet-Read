@@ -14,7 +14,7 @@ ok (my @ext = parses (undef), "No sheet type");
 is_deeply ([ grep m/^sc/ => @ext ], [ "sc" ], "Supports Squirrelcalc");
 
 is (parses ("zzz0"), 0,				"Unknown     sheet type");
-is (parses ("zzz1"), "",			"Too old     sheet type");
+is (parses ("zzz1"), 0,				"Too old     sheet type");
 is (parses ("zzz2"), "Z20::Just::For::Testing",	"Testing     sheet type");
 is (parses ("zzz3"), 0,				"Unsupported sheet type");
 
