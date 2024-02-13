@@ -2461,8 +2461,11 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
         --list      Show supported spreadsheet formats and exit
         -u          Use unformatted values
         --strip[=#] Strip leading and/or traing spaces of all cells
+                    # & 01 = leading, # & 02 = trailing, 3 = default
+        --clip=#    Clip cells to max length #
         --noclip    Do not strip empty sheets and
                     trailing empty rows and columns
+        --no-empty  Skip empty rows
          --no-nl[=R] Replace all newlines in cells with R (default space)
         -e <enc>    Set encoding for input and output
         -b <enc>    Set encoding for input
@@ -2480,17 +2483,18 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
         -s <sep>    Use separator <sep>. Default '|', \n allowed
                     Overrules ',' when used with --csv
         -L          Line up the columns
+        -B  --box   Like -L but also add outer frame
         -n [skip]   Number lines (prefix with column number)
                     optionally skip <skip> (header) lines
         -A          Show field attributes in ANSI escapes
         -h[#]       Show # header lines
         -D          Dump each record with Data::Peek or Data::Dumper
          --hash     Like -D but as hash with first row as keys
-     Output Index only:
-        -i          Show sheet names and size only
      Output CSV:
         -c          Output CSV, separator = ','
         -m          Output CSV, separator = ';'
+     Output Index only:
+        -i          Show sheet names and size only
      Output HTML:
         -H          Output HTML
      Selection:
@@ -2506,10 +2510,7 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
                     #n   - order on column # numeric ascending
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
-
- Examples:
-     xlscat -i foo.xls
-     xlscat --in-sep=: --sort=3n -L /etc/passwd
+ 
 
 =head2 C<xlsgrep>
 
@@ -2543,18 +2544,19 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
         -s <sep>    Use separator <sep>. Default '|', \n allowed
                     Overrules ',' when used with --csv
         -L          Line up the columns
+        -B  --box   Like -L but also add outer frame
         -n [skip]   Number lines (prefix with column number)
                     optionally skip <skip> (header) lines
         -A          Show field attributes in ANSI escapes
         -h[#]       Show # header lines
         -D          Dump each record with Data::Peek or Data::Dumper
          --hash     Like -D but as hash with first row as keys
-     Grep options:
-        -i          Ignore case
-        -w          Match whole words only
      Output CSV:
         -c          Output CSV, separator = ','
         -m          Output CSV, separator = ';'
+     Grep options:
+        -i          Ignore case
+        -w          Match whole words only
      Output HTML:
         -H          Output HTML
      Selection:
@@ -2570,10 +2572,12 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
                     #n   - order on column # numeric ascending
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
-
+ 
  Examples:
-     xlscat -i foo.xls
-     xlscat --in-sep=: --sort=3n -L /etc/passwd
+     xlscat   -i foo.xls
+     xlscat   --in-sep=: --sort=3n -L /etc/passwd
+     xlsgrep  pattern file.ods
+
 
 =head2 C<xlsx2csv>
 

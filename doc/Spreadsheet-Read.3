@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2024-01-02 "perl v5.38.2" "User Contributed Perl Documentation"
+.TH STDIN 1 2024-02-13 "perl v5.38.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -525,14 +525,15 @@ use argument list, or call it fully qualified.
 .Ve
 .PP
 \&\f(CW\*(C`parses ()\*(C'\fR returns Spreadsheet::Read's capability to parse the
-required format. \f(CW\*(C`ReadData\*(C'\fR will pick its preferred parser
-for that format unless overruled. See \f(CW\*(C`parser\*(C'\fR.
+required format or \f(CW0\fR if it does not. \f(CW\*(C`ReadData\*(C'\fR
+will pick its preferred parser for that format unless overruled.
+See \f(CW\*(C`parser\*(C'\fR.
 .PP
-\&\f(CW\*(C`parses ()\*(C'\fR is not imported by default, so either specify it in the
-use argument list, or call it fully qualified.
+\&\f(CW\*(C`parses ()\*(C'\fR is not imported by default, so either specify it in
+the use argument list, or call it fully qualified.
 .PP
-If \f(CW$format\fR is false (\f(CW\*(C`undef\*(C'\fR, \f(CW""\fR, or \f(CW0\fR), \f(CW\*(C`parses ()\*(C'\fR will
-return a sorted list of supported types.
+If \f(CW$format\fR is false (\f(CW\*(C`undef\*(C'\fR, \f(CW""\fR, or \f(CW0\fR), \f(CW\*(C`parses ()\*(C'\fR
+will return a sorted list of supported types.
 .PP
 .Vb 1
 \& @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
@@ -1073,8 +1074,11 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
 \&        \-\-list      Show supported spreadsheet formats and exit
 \&        \-u          Use unformatted values
 \&        \-\-strip[=#] Strip leading and/or traing spaces of all cells
+\&                    # & 01 = leading, # & 02 = trailing, 3 = default
+\&        \-\-clip=#    Clip cells to max length #
 \&        \-\-noclip    Do not strip empty sheets and
 \&                    trailing empty rows and columns
+\&        \-\-no\-empty  Skip empty rows
 \&         \-\-no\-nl[=R] Replace all newlines in cells with R (default space)
 \&        \-e <enc>    Set encoding for input and output
 \&        \-b <enc>    Set encoding for input
@@ -1092,17 +1096,18 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
 \&        \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
 \&                    Overrules \*(Aq,\*(Aq when used with \-\-csv
 \&        \-L          Line up the columns
+\&        \-B  \-\-box   Like \-L but also add outer frame
 \&        \-n [skip]   Number lines (prefix with column number)
 \&                    optionally skip <skip> (header) lines
 \&        \-A          Show field attributes in ANSI escapes
 \&        \-h[#]       Show # header lines
 \&        \-D          Dump each record with Data::Peek or Data::Dumper
 \&         \-\-hash     Like \-D but as hash with first row as keys
-\&     Output Index only:
-\&        \-i          Show sheet names and size only
 \&     Output CSV:
 \&        \-c          Output CSV, separator = \*(Aq,\*(Aq
 \&        \-m          Output CSV, separator = \*(Aq;\*(Aq
+\&     Output Index only:
+\&        \-i          Show sheet names and size only
 \&     Output HTML:
 \&        \-H          Output HTML
 \&     Selection:
@@ -1118,10 +1123,6 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
 \&                    #n   \- order on column # numeric ascending
 \&                    #r   \- order on column # lexical descending
 \&                    #rn  \- order on column # numeric descending
-\&
-\& Examples:
-\&     xlscat \-i foo.xls
-\&     xlscat \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
 .Ve
 .ie n .SS """xlsgrep"""
 .el .SS \f(CWxlsgrep\fP
@@ -1157,18 +1158,19 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
 \&        \-s <sep>    Use separator <sep>. Default \*(Aq|\*(Aq, \en allowed
 \&                    Overrules \*(Aq,\*(Aq when used with \-\-csv
 \&        \-L          Line up the columns
+\&        \-B  \-\-box   Like \-L but also add outer frame
 \&        \-n [skip]   Number lines (prefix with column number)
 \&                    optionally skip <skip> (header) lines
 \&        \-A          Show field attributes in ANSI escapes
 \&        \-h[#]       Show # header lines
 \&        \-D          Dump each record with Data::Peek or Data::Dumper
 \&         \-\-hash     Like \-D but as hash with first row as keys
-\&     Grep options:
-\&        \-i          Ignore case
-\&        \-w          Match whole words only
 \&     Output CSV:
 \&        \-c          Output CSV, separator = \*(Aq,\*(Aq
 \&        \-m          Output CSV, separator = \*(Aq;\*(Aq
+\&     Grep options:
+\&        \-i          Ignore case
+\&        \-w          Match whole words only
 \&     Output HTML:
 \&        \-H          Output HTML
 \&     Selection:
@@ -1184,10 +1186,11 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
 \&                    #n   \- order on column # numeric ascending
 \&                    #r   \- order on column # lexical descending
 \&                    #rn  \- order on column # numeric descending
-\&
+\& 
 \& Examples:
-\&     xlscat \-i foo.xls
-\&     xlscat \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
+\&     xlscat   \-i foo.xls
+\&     xlscat   \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
+\&     xlsgrep  pattern file.ods
 .Ve
 .ie n .SS """xlsx2csv"""
 .el .SS \f(CWxlsx2csv\fP

@@ -419,14 +419,15 @@ use argument list, or call it fully qualified.
     $book->parses ("CSV"); # OO
 
 `parses ()` returns Spreadsheet::Read's capability to parse the
-required format. [`ReadData`](#readdata) will pick its preferred parser
-for that format unless overruled. See [`parser`](#parser).
+required format or `0` if it does not. [`ReadData`](#readdata)
+will pick its preferred parser for that format unless overruled.
+See [`parser`](#parser).
 
-`parses ()` is not imported by default, so either specify it in the
-use argument list, or call it fully qualified.
+`parses ()` is not imported by default, so either specify it in
+the use argument list, or call it fully qualified.
 
-If `$format` is false (`undef`, `""`, or `0`), `parses ()` will
-return a sorted list of supported types.
+If `$format` is false (`undef`, `""`, or `0`), `parses ()`
+will return a sorted list of supported types.
 
     @my types = parses ("");   # e.g: csv, ods, sc, sxc, xls, xlsx
 
@@ -876,8 +877,11 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
            --list      Show supported spreadsheet formats and exit
            -u          Use unformatted values
            --strip[=#] Strip leading and/or traing spaces of all cells
+                       # & 01 = leading, # & 02 = trailing, 3 = default
+           --clip=#    Clip cells to max length #
            --noclip    Do not strip empty sheets and
                        trailing empty rows and columns
+           --no-empty  Skip empty rows
             --no-nl[=R] Replace all newlines in cells with R (default space)
            -e <enc>    Set encoding for input and output
            -b <enc>    Set encoding for input
@@ -895,17 +899,18 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
            -s <sep>    Use separator <sep>. Default '|', \n allowed
                        Overrules ',' when used with --csv
            -L          Line up the columns
+           -B  --box   Like -L but also add outer frame
            -n [skip]   Number lines (prefix with column number)
                        optionally skip <skip> (header) lines
            -A          Show field attributes in ANSI escapes
            -h[#]       Show # header lines
            -D          Dump each record with Data::Peek or Data::Dumper
             --hash     Like -D but as hash with first row as keys
-        Output Index only:
-           -i          Show sheet names and size only
         Output CSV:
            -c          Output CSV, separator = ','
            -m          Output CSV, separator = ';'
+        Output Index only:
+           -i          Show sheet names and size only
         Output HTML:
            -H          Output HTML
         Selection:
@@ -921,10 +926,7 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
                        #n   - order on column # numeric ascending
                        #r   - order on column # lexical descending
                        #rn  - order on column # numeric descending
-
-    Examples:
-        xlscat -i foo.xls
-        xlscat --in-sep=: --sort=3n -L /etc/passwd
+    
 
 ## `xlsgrep`
 
@@ -958,18 +960,19 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
            -s <sep>    Use separator <sep>. Default '|', \n allowed
                        Overrules ',' when used with --csv
            -L          Line up the columns
+           -B  --box   Like -L but also add outer frame
            -n [skip]   Number lines (prefix with column number)
                        optionally skip <skip> (header) lines
            -A          Show field attributes in ANSI escapes
            -h[#]       Show # header lines
            -D          Dump each record with Data::Peek or Data::Dumper
             --hash     Like -D but as hash with first row as keys
-        Grep options:
-           -i          Ignore case
-           -w          Match whole words only
         Output CSV:
            -c          Output CSV, separator = ','
            -m          Output CSV, separator = ';'
+        Grep options:
+           -i          Ignore case
+           -w          Match whole words only
         Output HTML:
            -H          Output HTML
         Selection:
@@ -985,10 +988,11 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
                        #n   - order on column # numeric ascending
                        #r   - order on column # lexical descending
                        #rn  - order on column # numeric descending
-
+    
     Examples:
-        xlscat -i foo.xls
-        xlscat --in-sep=: --sort=3n -L /etc/passwd
+        xlscat   -i foo.xls
+        xlscat   --in-sep=: --sort=3n -L /etc/passwd
+        xlsgrep  pattern file.ods
 
 ## `xlsx2csv`
 
