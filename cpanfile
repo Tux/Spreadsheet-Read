@@ -73,5 +73,5 @@ feature "opt_xlsx", "Provides parsing of Microsoft Excel 2007 files" => sub {
     requires   "Spreadsheet::ParseExcel::FmtDefault";
     requires   "Spreadsheet::ParseXLSX"   => "0.24";
 
-    recommends "Spreadsheet::ParseXLSX"   => "0.29";
+    recommends "Spreadsheet::ParseXLSX"   => "0.31";
     };
