@@ -2,14 +2,14 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'24 [2024-01-02] Copyright H.M.Brand 2005-2024
+#	   (m)'24 [2024-02-13] Copyright H.M.Brand 2005-2024
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.27";
+our $VERSION = "3.28";
 (my $CMD = $0) =~ s{.*[\/]}{};
 
 my $is_grep = $0 =~ m/grep$/;	# xlsgrep
@@ -27,8 +27,11 @@ sub usage {
 	"       --list      Show supported spreadsheet formats and exit",
 	"       -u          Use unformatted values",
 	"       --strip[=#] Strip leading and/or traing spaces of all cells",
+	"                   # & 01 = leading, # & 02 = trailing, 3 = default",
+	"       --clip=#    Clip cells to max length #",
 	"       --noclip    Do not strip empty sheets and",
 	"                   trailing empty rows and columns",
+	"       --no-empty  Skip empty rows",
 	"	--no-nl[=R] Replace all newlines in cells with R (default space)",
 	"       -e <enc>    Set encoding for input and output",
 	"       -b <enc>    Set encoding for input",
@@ -104,7 +107,7 @@ my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
 GetOptions (
     "help|?"		=> sub { usage (0); },
-    "V|version" 	=> sub { print "$CMD [$VERSION]\n"; exit 0; },
+    "V|version" 	=> sub { print "$CMD [$VERSION] Spreadsheet::Read [$Spreadsheet::Read::VERSION]\n"; exit 0; },
       "list"		=> sub { list_parsers (); },
 
     # Input CSV
@@ -144,7 +147,9 @@ GetOptions (
     "H|html:1"		=> \my $opt_H,	# Output in HTML
       "noclip"		=> sub { $clip = 0 },
       "strip:3"		=> \my $strip,
+      "clip=i"		=> \my $clip_len,
       "sort=s"		=> \my $sort_order,
+      "no-empty"	=> \my $skip_empty,
     "N|no-nl:s"		=> \my $opt_N,
 
     # Encoding
@@ -334,7 +339,13 @@ if ($xls->[0]{parser} =~ m/Spreadsheet::XLSX/) {
     warn "Please use Spreadsheet::ParseXLSX for more reliable results\n";
     }
 my $sc  = $xls->[0]{sheets}	or die "No sheets in $file\n";
-$opt_v > 1 and warn "Opened $file with $sc sheets\n";
+$opt_v and
+    warn $opt_v > 1
+	? join " " =>
+	  "Spreadsheet::Read-$Spreadsheet::Read::VERSION",
+	  "parsed $file with $sc sheets",
+	  "using $xls->[0]{parser}-$xls->[0]{version}\n"
+	: "Parsed $file with $sc sheets\n";
 
 $opt_S eq "all" and $opt_S = "1..$sc";	# all
 $opt_S =~ s/-$/-$sc/;			# 3,6-
@@ -493,6 +504,9 @@ foreach my $si (1 .. $sc) {
 	    if (defined $opt_N) {
 		s/\n/$opt_N/go for grep { defined } $uval, $fval;
 		}
+	    if ($clip_len) {
+		$_ = substr $_, 0, $clip_len - 1 for grep { length > $clip_len } $uval, $fval;
+		}
 	    $opt_v > 2 and warn "$_:$r '$uval' / '$fval'\n";
 	    $opt_A and
 		push @att, [ @{$s->{attr}[$_][$r]}{qw( fgcolor bgcolor bold uline halign )} ];
@@ -504,6 +518,7 @@ foreach my $si (1 .. $sc) {
 	exists $print{col} and @row = @row[grep{$_<@row}@{$print{col}}];
 	$is_grep && $r > $opt_h &&
 	    ! first { defined $_ && $_ =~ $pattern } @row and next;
+	$skip_empty && ! first { length } @row and next;
 	if ($opt_D) {
 	    ddumper ($opt_D == 1 ? \@row :
 		{ map { $s->{cell}[$_ + 1][1] => $row[$_] } 0 .. $#row });
@@ -548,10 +563,10 @@ foreach my $si (1 .. $sc) {
 	    }
 	line (0, $opt_s => @row);
 	} continue {
-	    ++$h % 100 == 0 && $opt_v and printf STDERR $v_fmt, $nc, $h, "\r";
+	    ++$h % 100 == 0 && $opt_v && $v_fmt and printf STDERR $v_fmt, $nc, $h, "\r";
 	    }
     $opt_H and print "  </table>\n\n";
-    $v_fmt and printf STDERR $v_fmt, $nc, $h, "\n";
+    $v_fmt && $v_fmt and printf STDERR $v_fmt, $nc, $h, "\n";
     if ($sort_order) {
 	my @o;
 	my @h;
@@ -590,6 +605,8 @@ foreach my $si (1 .. $sc) {
 		my $d = $R->[$c];
 		my $l = length $d;
 		$l > $w[$c] and $w[$c] = $l;
+		# Number alignment won't be effective if first row is empty and
+		# second row has column headers
 		$r && $d =~ m/\S/ or next;
 		$d =~ m/^(?:-|\s*(?:-\s*)?[0-9][0-9 .,]*)$/ or $align[$c] = "-";
 		}
