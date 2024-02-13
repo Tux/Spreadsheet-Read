@@ -9,7 +9,7 @@ require Test::NoWarnings;
 use Spreadsheet::Read;
 my $parser;
 if ($parser = Spreadsheet::Read::parses ("xls")) {
-    plan tests => 188;
+    plan tests => 191;
     Test::NoWarnings->import;
     }
 else {
@@ -146,7 +146,7 @@ is ($ss->{D1},		"0",   "formatted numeric 0");
 is ($ss->{E1},		"1",   "formatted numeric 1");
 is ($ss->{F1},		"",    "formatted a single '");
 
-# Test extended attributes (active)
+# Test extended attributes (active & hidden)
 ok ($xls = Spreadsheet::Read->new ("files/Active2.xls", attr => 1), "Active sheet");
 is ($xls->sheets,		3,	"Book has 3 sheets");
 SKIP: {
@@ -155,7 +155,11 @@ SKIP: {
     is ($xls->sheet (1)->{active},	0, "Sheet 1 is not active");
     is ($xls->[2]{active},		1, "Sheet 2 is active");
     is ($xls->sheet (3)->active,	0, "Sheet 3 is not active");
+    is ($xls->sheet (1)->{hidden},	0, "Sheet 1 is not hidden");
+    is ($xls->[2]{hidden},		0, "Sheet 2 is not hidden");
+    is ($xls->sheet (3)->hidden,	0, "Sheet 3 is not hidden");
     }
+
 is ($xls->sheet (1)->attr ("A1")->{type}, "text", "Attr through method A1");
 is ($xls->sheet (1)->attr (2, 2)->{type}, "text", "Attr through method B2");
 

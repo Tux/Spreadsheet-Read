@@ -455,8 +455,9 @@ foreach my $si (1 .. $sc) {
     defined $nc or next;
     defined $sn or $sn = "";
     my $active = $s->{active} ? " (Active)" : "";
-    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows%s\n",
-	$file, $si, $name_len, $sn, $nc, $nr, $active;
+    my $hidden = $s->{hidden} ? " (Hidden)" : "";
+    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows%s%s\n",
+	$file, $si, $name_len, $sn, $nc, $nr, $active, $hidden;
     $opt_i && !$is_grep and next;
 
     if (@opt_F) {

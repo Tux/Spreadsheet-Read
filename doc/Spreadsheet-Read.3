@@ -141,6 +141,7 @@ The data is returned as an array reference:
 \&        attr    => [],
 \&        merged  => [],
 \&        active  => 1,
+\&        hidden  => 0,
 \&        A1      => 1,
 \&        B5      => "Nugget",
 \&        },
@@ -810,6 +811,17 @@ Returns 1 if the selected sheet is active, otherwise returns 0.
 .PP
 Currently only works on XLS (as of Spreadsheed::ParseExcel\-0.61).
 CSV is always active.
+.PP
+\fIhidden\fR
+.IX Subsection "hidden"
+.PP
+.Vb 1
+\& my $sheet_is_hidden = $sheet\->hidden;
+.Ve
+.PP
+Returns 1 if the selected sheet is hidden, otherwise returns 0.
+.PP
+Fully depends on the backend supporting this.  CSV and SC are never hidden.
 .SS "Using CSV"
 .IX Subsection "Using CSV"
 In case of CSV parsing, \f(CW\*(C`ReadData\*(C'\fR will use the first line of

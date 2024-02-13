@@ -78,6 +78,7 @@ The data is returned as an array reference:
           attr    => [],
           merged  => [],
           active  => 1,
+          hidden  => 0,
           A1      => 1,
           B5      => "Nugget",
           },
@@ -635,6 +636,14 @@ Returns 1 if the selected sheet is active, otherwise returns 0.
 
 Currently only works on XLS (as of Spreadsheed::ParseExcel-0.61).
 CSV is always active.
+
+### hidden
+
+    my $sheet_is_hidden = $sheet->hidden;
+
+Returns 1 if the selected sheet is hidden, otherwise returns 0.
+
+Fully depends on the backend supporting this.  CSV and SC are never hidden.
 
 ## Using CSV
 

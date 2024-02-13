@@ -5,7 +5,7 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::ParseXLSX"; }
 
-my     $tests = 128;
+my     $tests = 178;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -32,8 +32,9 @@ my $content;
     }
 
 my $xls;
-foreach my $base ( [ "files/test.xlsx",	"Read/Parse xlsx file"	],
-#		   [ $content,		"Parse xlsx data"	],
+foreach my $base ( [ "files/test.xlsx",   "Read/Parse xlsx file"			],
+                   [ "files/hidden.xlsx", "Read/Parse xlsx file with hidden sheet"	],
+#		   [ $content,            "Parse xlsx data"				],
 		   ) {
     my ($txt, $msg) = @$base;
     ok ($xls = ReadData ($txt),	$msg);
@@ -67,6 +68,14 @@ foreach my $base ( [ "files/test.xlsx",	"Read/Parse xlsx file"	],
     is (scalar @{$row[3]},	4,	"Row'ed columns");
     is ($row[0][3],		"D1",	"Row'ed value D1");
     is ($row[3][2],		"C4",	"Row'ed value C4");
+
+    is ($xls->[1]{hidden},     0, "Sheet 1 is not hidden");
+    if ($txt =~ m/hidden/) {
+	is ($xls->[2]{hidden}, 1, "Sheet 2 is     hidden");
+	}
+    else {
+	is ($xls->[2]{hidden}, 0, "Sheet 2 is not hidden");
+	}
     }
 
 # Tests for empty thingies

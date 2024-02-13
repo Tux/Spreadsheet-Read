@@ -572,6 +572,7 @@ sub ReadData {
 		attr	=> [],
 		merged	=> [],
 		active  => 1,
+		hidden	=> 0,
 		},
 	    );
 
@@ -845,6 +846,7 @@ sub ReadData {
 			MaxRow		=> $sh->{row_max},
 			MinCol		=> $sh->{col_min},
 			MaxCol		=> $sh->{row_max},
+			SheetHidden	=> $sh->{sheet_hidden} || 0,
 			RowHidden	=> $sh->{hidden_rows},
 			ColHidden	=> $sh->{hidden_cols},
 			_SheetNo	=> $x++,
@@ -901,6 +903,7 @@ sub ReadData {
 		attr	=> [],
 		merged  => [],
 		active	=> 0,
+		hidden	=> $oWkS->{SheetHidden} || 0,
 		);
 	    # $debug and $sheet{_parser} = $oWkS;
 	    defined $sheet{label}  or  $sheet{label}  = "-- unlabeled --";
@@ -1125,6 +1128,7 @@ sub ReadData {
 		attr	=> [],
 		merged  => [],
 		active	=> 0,
+		hidden	=> 0,
 		);
 	    # $debug and $sheet{_parser} = $oWkS;
 	    defined $sheet{label} or $sheet{label} = "-- unlabeled --";
@@ -1277,6 +1281,7 @@ sub ReadData {
 		attr	=> [],
 		merged  => [],
 		active  => 1,
+		hidden	=> 0,
 		},
 	    );
 
@@ -1384,6 +1389,7 @@ sub ReadData {
 		    attr   => [],
 		    merged => [],
 		    active => 0,
+		    hidden => 0,
 		    );
 		my $sheet_idx = 1 + @data;
 		$debug and print STDERR "\tSheet $sheet_idx '$sheet{label}' $sheet{maxrow} rows\n";
@@ -1528,6 +1534,11 @@ sub active {
     return $sheet->{active};
     } # label
 
+sub hidden {
+    my $sheet = shift;
+    return $sheet->{hidden};
+    } # label
+
 # my @row = $sheet->cellrow (1);
 sub cellrow {
     my ($sheet, $row) = @_;
@@ -1656,6 +1667,7 @@ The data is returned as an array reference:
         attr    => [],
         merged  => [],
         active  => 1,
+        hidden  => 0,
         A1      => 1,
         B5      => "Nugget",
         },
@@ -2219,6 +2231,14 @@ Returns 1 if the selected sheet is active, otherwise returns 0.
 
 Currently only works on XLS (as of Spreadsheed::ParseExcel-0.61).
 CSV is always active.
+
+=head3 hidden
+
+ my $sheet_is_hidden = $sheet->hidden;
+
+Returns 1 if the selected sheet is hidden, otherwise returns 0.
+
+Fully depends on the backend supporting this.  CSV and SC are never hidden.
 
 =head2 Using CSV
 

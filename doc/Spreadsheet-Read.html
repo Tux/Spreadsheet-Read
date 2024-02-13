@@ -53,6 +53,7 @@
           <li><a href="#merged_from">merged_from</a></li>
           <li><a href="#label">label</a></li>
           <li><a href="#active">active</a></li>
+          <li><a href="#hidden">hidden</a></li>
         </ul>
       </li>
       <li><a href="#Using-CSV">Using CSV</a></li>
@@ -152,6 +153,7 @@ $book-&gt;add (&quot;test.xls&quot;);</code></pre>
       attr    =&gt; [],
       merged  =&gt; [],
       active  =&gt; 1,
+      hidden  =&gt; 0,
       A1      =&gt; 1,
       B5      =&gt; &quot;Nugget&quot;,
       },
@@ -662,6 +664,14 @@ $sheet-&gt;label (&quot;New sheet label&quot;);</code></pre>
 <p>Returns 1 if the selected sheet is active, otherwise returns 0.</p>
 
 <p>Currently only works on XLS (as of Spreadsheed::ParseExcel-0.61). CSV is always active.</p>
+
+<h3 id="hidden">hidden</h3>
+
+<pre><code>my $sheet_is_hidden = $sheet-&gt;hidden;</code></pre>
+
+<p>Returns 1 if the selected sheet is hidden, otherwise returns 0.</p>
+
+<p>Fully depends on the backend supporting this. CSV and SC are never hidden.</p>
 
 <h2 id="Using-CSV">Using CSV</h2>
 
