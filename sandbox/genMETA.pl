@@ -111,7 +111,7 @@ optional_features:
       Spreadsheet::ParseXLSX:              0.24
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseXLSX:              0.29
+      Spreadsheet::ParseXLSX:              0.31
   opt_ods:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:
