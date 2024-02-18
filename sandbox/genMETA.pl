@@ -103,8 +103,10 @@ optional_features:
     requires:
       Spreadsheet::ParseExcel:             0.34
       Spreadsheet::ParseExcel::FmtDefault: 0
+      OLE::Storage_Lite:                   "!= 0.21"
     recommends:
       Spreadsheet::ParseExcel:             0.66
+      OLE::Storage_Lite:                   0.22
   opt_xlsx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:

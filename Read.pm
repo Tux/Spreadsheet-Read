@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.90";
+our $VERSION = "0.91";
 sub  Version { $VERSION }
 
 use Carp;

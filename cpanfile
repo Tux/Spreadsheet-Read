@@ -63,9 +63,11 @@ feature "opt_tools", "Spreadsheet tools" => sub {
     };
 
 feature "opt_xls", "Provides parsing of Microsoft Excel files" => sub {
+    requires   "OLE::Storage_Lite"        => "!= 0.21";
     requires   "Spreadsheet::ParseExcel"  => "0.34";
     requires   "Spreadsheet::ParseExcel::FmtDefault";
 
+    recommends "OLE::Storage_Lite"        => "0.22";
     recommends "Spreadsheet::ParseExcel"  => "0.66";
     };
 
