@@ -1,5 +1,6 @@
-0.91	- 18 Feb 2024, H.Merijn Brand
+0.91	- 22 Mar 2024, H.Merijn Brand
     * Exclude OLE::Storage_Lite-0.21
+    * xlscat --head[=10], --tail[=10]
 
 0.90	- 13 Feb 2024, H.Merijn Brand
     * Consistent return value for parses ($type) on failure (issue#52)

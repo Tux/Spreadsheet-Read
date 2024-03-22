@@ -2,14 +2,14 @@
 
 # xlscat:  show supported spreadsheet file as Text
 # xlsgrep: grep pattern
-#	   (m)'24 [2024-02-13] Copyright H.M.Brand 2005-2024
+#	   (m)'24 [2024-03-22] Copyright H.M.Brand 2005-2024
 
 require 5.008001;
 
 use strict;
 use warnings;
 
-our $VERSION = "3.28";
+our $VERSION = "3.29";
 (my $CMD = $0) =~ s{.*[\/]}{};
 
 my $is_grep = $0 =~ m/grep$/;	# xlsgrep
@@ -71,6 +71,11 @@ sub usage {
 	"       -S <sheets> Only print sheets <sheets>. 'all' is a valid set",
 	"                   Default only prints the first sheet",
 	"       -R <rows>   Only print rows    <rows>. Default is 'all'",
+	"                   Ranges and lists supported as 2,4-7,8-",
+	"                   Trailing - is to end of data",
+	"                   Negative rows count from tail -8--2 is allowed",
+	"        --head[=n] Alias for -R1..n   where n defaults to 10",
+	"        --tail[=n] Alias for -R-n-    where n defaults to 10",
 	"       -C <cols>   Only print columns <cols>. Default is 'all'",
 	"       -F <flds>   Only fields <flds> e.g. -FA3,B16",
 	"    Ordering (column numbers in result set *after* selection):",
@@ -132,6 +137,8 @@ GetOptions (
      "|out-sep-char=s"	=> \my $opt_s,	# Text separator
     "S|sheets=s"	=> \my $opt_S,	# Sheets to print
     "R|rows=s"		=> \my $opt_R,	# Rows to print
+      "head:10"		=> \my $opt_head,
+      "tail:10"		=> \my $opt_tail,
     "C|columns=s"	=> \my $opt_C,	# Columns to print
     "F|fields=s"	=> \   $opt_F,
     "L|fit|align!"	=> \my $opt_L,	# Auto-size/align columns
@@ -174,6 +181,9 @@ sub list_parsers {
 	}
     exit $err;
     } # list_parsers
+
+$opt_head and $opt_R = "1-$opt_head";
+$opt_tail and $opt_R = "-$opt_tail-";
 
 $opt_B and $opt_L++;
 unless ($is_grep) {
@@ -470,6 +480,8 @@ foreach my $si (1 .. $sc) {
 
     if (my $rows = $opt_R) {
 	$rows eq "all" and $rows = "1..$nr";	# all
+	$rows =~ s/--(\d+)/-($nr+1-$1)/ge;	# 3--2
+	$rows =~ s/-(\d+)(?=-)/($nr+1-$1)/ge;	# -3-
 	$rows =~ s/-$/-$nr/;			# 3,6-
 	$rows =~ s/-/../g;
 	eval "%{\$print{row}} = map { \$_ => 1 } $rows";

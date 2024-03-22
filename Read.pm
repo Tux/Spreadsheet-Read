@@ -2521,6 +2521,11 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
         -S <sheets> Only print sheets <sheets>. 'all' is a valid set
                     Default only prints the first sheet
         -R <rows>   Only print rows    <rows>. Default is 'all'
+                    Ranges and lists supported as 2,4-7,8-
+                    Trailing - is to end of data
+                    Negative rows count from tail -8--2 is allowed
+         --head[=n] Alias for -R1..n   where n defaults to 10
+         --tail[=n] Alias for -R-n-    where n defaults to 10
         -C <cols>   Only print columns <cols>. Default is 'all'
         -F <flds>   Only fields <flds> e.g. -FA3,B16
      Ordering (column numbers in result set *after* selection):
@@ -2531,6 +2536,10 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
  
+ Examples:
+     xlscat   -i foo.xls
+     xlscat   --in-sep=: --sort=3n -L /etc/passwd
+     xlsgrep  pattern file.ods
 
 =head2 C<xlsgrep>
 
@@ -2545,8 +2554,11 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
         --list      Show supported spreadsheet formats and exit
         -u          Use unformatted values
         --strip[=#] Strip leading and/or traing spaces of all cells
+                    # & 01 = leading, # & 02 = trailing, 3 = default
+        --clip=#    Clip cells to max length #
         --noclip    Do not strip empty sheets and
                     trailing empty rows and columns
+        --no-empty  Skip empty rows
          --no-nl[=R] Replace all newlines in cells with R (default space)
         -e <enc>    Set encoding for input and output
         -b <enc>    Set encoding for input
@@ -2583,6 +2595,11 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
         -S <sheets> Only print sheets <sheets>. 'all' is a valid set
                     Default only prints the first sheet
         -R <rows>   Only print rows    <rows>. Default is 'all'
+                    Ranges and lists supported as 2,4-7,8-
+                    Trailing - is to end of data
+                    Negative rows count from tail -8--2 is allowed
+         --head[=n] Alias for -R1..n   where n defaults to 10
+         --tail[=n] Alias for -R-n-    where n defaults to 10
         -C <cols>   Only print columns <cols>. Default is 'all'
         -F <flds>   Only fields <flds> e.g. -FA3,B16
      Ordering (column numbers in result set *after* selection):
@@ -2597,7 +2614,6 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
      xlscat   -i foo.xls
      xlscat   --in-sep=: --sort=3n -L /etc/passwd
      xlsgrep  pattern file.ods
-
 
 =head2 C<xlsx2csv>
 

@@ -913,6 +913,11 @@ my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code
         -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
                     Default only prints the first sheet
         -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
+                    Ranges and lists supported as 2,4-7,8-
+                    Trailing - is to end of data
+                    Negative rows count from tail -8--2 is allowed
+         --head[=n] Alias for -R1..n   where n defaults to 10
+         --tail[=n] Alias for -R-n-    where n defaults to 10
         -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
         -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
      Ordering (column numbers in result set *after* selection):
@@ -922,7 +927,11 @@ my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code
                     #n   - order on column # numeric ascending
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
- </code></pre>
+ 
+ Examples:
+     xlscat   -i foo.xls
+     xlscat   --in-sep=: --sort=3n -L /etc/passwd
+     xlsgrep  pattern file.ods</code></pre>
 
 <h2 id="xlsgrep"><code>xlsgrep</code></h2>
 
@@ -937,8 +946,11 @@ my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code
         --list      Show supported spreadsheet formats and exit
         -u          Use unformatted values
         --strip[=#] Strip leading and/or traing spaces of all cells
+                    # &amp; 01 = leading, # &amp; 02 = trailing, 3 = default
+        --clip=#    Clip cells to max length #
         --noclip    Do not strip empty sheets and
                     trailing empty rows and columns
+        --no-empty  Skip empty rows
          --no-nl[=R] Replace all newlines in cells with R (default space)
         -e &lt;enc&gt;    Set encoding for input and output
         -b &lt;enc&gt;    Set encoding for input
@@ -975,6 +987,11 @@ my $sheet = Spreadsheet::Read-&gt;new ($fh, parser =&gt; &quot;csv&quot;);</code
         -S &lt;sheets&gt; Only print sheets &lt;sheets&gt;. &#39;all&#39; is a valid set
                     Default only prints the first sheet
         -R &lt;rows&gt;   Only print rows    &lt;rows&gt;. Default is &#39;all&#39;
+                    Ranges and lists supported as 2,4-7,8-
+                    Trailing - is to end of data
+                    Negative rows count from tail -8--2 is allowed
+         --head[=n] Alias for -R1..n   where n defaults to 10
+         --tail[=n] Alias for -R-n-    where n defaults to 10
         -C &lt;cols&gt;   Only print columns &lt;cols&gt;. Default is &#39;all&#39;
         -F &lt;flds&gt;   Only fields &lt;flds&gt; e.g. -FA3,B16
      Ordering (column numbers in result set *after* selection):
