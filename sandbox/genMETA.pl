@@ -74,7 +74,7 @@ test_requires:
   Test::NoWarnings:     0
 recommends:
   IO::Scalar:           0
-  Encode:               3.20
+  Encode:               3.21
   File::Temp:           0.2311
   Data::Peek:           0.52
   Data::Dumper:         2.183
@@ -113,7 +113,7 @@ optional_features:
       Spreadsheet::ParseXLSX:              0.24
       Spreadsheet::ParseExcel::FmtDefault: 0
     recommends:
-      Spreadsheet::ParseXLSX:              0.31
+      Spreadsheet::ParseXLSX:              0.35
   opt_ods:
     description:        Provides parsing of OpenOffice spreadsheets
     requires:

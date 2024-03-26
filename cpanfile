@@ -8,7 +8,7 @@ requires   "List::Util";
 
 recommends "Data::Dumper"             => "2.183";
 recommends "Data::Peek"               => "0.52";
-recommends "Encode"                   => "3.20";
+recommends "Encode"                   => "3.21";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 
@@ -75,5 +75,5 @@ feature "opt_xlsx", "Provides parsing of Microsoft Excel 2007 files" => sub {
     requires   "Spreadsheet::ParseExcel::FmtDefault";
     requires   "Spreadsheet::ParseXLSX"   => "0.24";
 
-    recommends "Spreadsheet::ParseXLSX"   => "0.31";
+    recommends "Spreadsheet::ParseXLSX"   => "0.35";
     };
