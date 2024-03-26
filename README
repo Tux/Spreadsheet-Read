@@ -63,9 +63,10 @@ possible name clash:
   * Support Parsers native module options
   * Check if Tk is installed before asking if ss2tk is wanted
   * Test diagnostics output
-  * Make clip skip empty sheets
   * Support Spreadsheet::Perl
   * Support Data::XLSX::Parser
+  * Steal options from other CSV/Spreadsheet tools to implement in
+    xlscat and xlsgrep
 
 =head1 AUTHOR
 
