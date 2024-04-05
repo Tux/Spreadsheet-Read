@@ -16,6 +16,15 @@
   <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
   <li><a href="#DESCRIPTION">DESCRIPTION</a>
     <ul>
+      <li>
+        <ul>
+          <li><a href="#OpenOffice-and-LibreOffice-ODS-and-SXC">OpenOffice and LibreOffice (ODS and SXC)</a></li>
+          <li><a href="#Microsoft-Excel-XLSX-and-XLS">Microsoft Excel (XLSX and XLS)</a></li>
+          <li><a href="#CSV-CSV">CSV (CSV)</a></li>
+          <li><a href="#Gnumeric-gnumeric">Gnumeric (gnumeric)</a></li>
+          <li><a href="#SquirrelCalc-sc">SquirrelCalc (sc)</a></li>
+        </ul>
+      </li>
       <li><a href="#Data-structure">Data structure</a></li>
       <li><a href="#Formatted-vs-Unformatted">Formatted vs Unformatted</a></li>
       <li><a href="#Functions-and-methods">Functions and methods</a>
@@ -115,11 +124,25 @@ $book-&gt;add (&quot;test.xls&quot;);</code></pre>
 
 <p>Spreadsheet::Read tries to transparently read *any* spreadsheet and return its content in a universal manner independent of the parsing module that does the actual spreadsheet scanning.</p>
 
-<p>For OpenOffice and/or LibreOffice this module uses <a href="https://metacpan.org/release/Spreadsheet-ReadSXC">Spreadsheet::ReadSXC</a></p>
+<p>The parser has to be available and is not provided by this module.</p>
 
-<p>For Microsoft Excel this module uses <a href="https://metacpan.org/release/Spreadsheet-ParseExcel">Spreadsheet::ParseExcel</a>, <a href="https://metacpan.org/release/Spreadsheet-ParseXLSX">Spreadsheet::ParseXLSX</a>, or <a href="https://metacpan.org/release/Spreadsheet-XLSX">Spreadsheet::XLSX</a> (strongly discouraged).</p>
+<h3 id="OpenOffice-and-LibreOffice-ODS-and-SXC">OpenOffice and LibreOffice (<code>ODS</code> and <code>SXC</code>)</h3>
+
+<p>For OpenOffice and/or LibreOffice this module uses <a href="https://metacpan.org/release/Spreadsheet-ParseODS">Spreadsheet::ParseODS</a> or <a href="https://metacpan.org/release/Spreadsheet-ReadSXC">Spreadsheet::ReadSXC</a></p>
+
+<h3 id="Microsoft-Excel-XLSX-and-XLS">Microsoft Excel (<code>XLSX</code> and <code>XLS</code>)</h3>
+
+<p>For Microsoft Excel this module uses <a href="https://metacpan.org/release/Spreadsheet-ParseExcel">Spreadsheet::ParseExcel</a>, <a href="https://metacpan.org/release/Spreadsheet-ParseXLSX">Spreadsheet::ParseXLSX</a>, <a href="https://metacpan.org/release/Excel-ValueReader-XLSX">Excel::ValueReader::XLSX</a>, or <a href="https://metacpan.org/release/Spreadsheet-XLSX">Spreadsheet::XLSX</a> (strongly discouraged).</p>
+
+<h3 id="CSV-CSV">CSV (<code>CSV</code>)</h3>
 
 <p>For CSV this module uses <a href="https://metacpan.org/release/Text-CSV_XS">Text::CSV_XS</a> or <a href="https://metacpan.org/release/Text-CSV">Text::CSV_PP</a>.</p>
+
+<h3 id="Gnumeric-gnumeric">Gnumeric (<code>gnumeric</code>)</h3>
+
+<p>For Gnumeric this module uses <a href="https://metacpan.org/release/Spreadsheet-ReadGnumeric">Spreadsheet::ReadGnumeric</a>.</p>
+
+<h3 id="SquirrelCalc-sc">SquirrelCalc (<code>sc</code>)</h3>
 
 <p>For SquirrelCalc there is a very simplistic built-in parser</p>
 

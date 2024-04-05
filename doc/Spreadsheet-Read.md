@@ -34,17 +34,34 @@ Spreadsheet::Read tries to transparently read \*any\* spreadsheet and
 return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 
+The parser has to be available and is not provided by this module.
+
+### OpenOffice and LibreOffice (`ODS` and `SXC`)
+
 For OpenOffice and/or LibreOffice this module uses
+[Spreadsheet::ParseODS](https://metacpan.org/release/Spreadsheet-ParseODS) or
 [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC)
+
+### Microsoft Excel (`XLSX` and `XLS`)
 
 For Microsoft Excel this module uses
 [Spreadsheet::ParseExcel](https://metacpan.org/release/Spreadsheet-ParseExcel),
-[Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX), or
+[Spreadsheet::ParseXLSX](https://metacpan.org/release/Spreadsheet-ParseXLSX),
+[Excel::ValueReader::XLSX](https://metacpan.org/release/Excel-ValueReader-XLSX), or
 [Spreadsheet::XLSX](https://metacpan.org/release/Spreadsheet-XLSX) (strongly
 discouraged).
 
+### CSV (`CSV`)
+
 For CSV this module uses [Text::CSV\_XS](https://metacpan.org/release/Text-CSV_XS)
 or [Text::CSV\_PP](https://metacpan.org/release/Text-CSV).
+
+### Gnumeric (`gnumeric`)
+
+For Gnumeric this module uses
+[Spreadsheet::ReadGnumeric](https://metacpan.org/release/Spreadsheet-ReadGnumeric).
+
+### SquirrelCalc (`sc`)
 
 For SquirrelCalc there is a very simplistic built-in parser
 

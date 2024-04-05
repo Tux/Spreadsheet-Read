@@ -33,18 +33,37 @@ DESCRIPTION
        return its content in a universal manner independent of the parsing
        module that does the actual spreadsheet scanning.
 
-       For OpenOffice and/or LibreOffice this module uses Spreadsheet::ReadSXC
+       The parser has to be available and is not provided by this module.
+
+       OpenOffice and LibreOffice ("ODS" and "SXC")
+
+       For OpenOffice and/or LibreOffice this module uses
+       Spreadsheet::ParseODS <https://metacpan.org/release/Spreadsheet-
+       ParseODS> or Spreadsheet::ReadSXC
        <https://metacpan.org/release/Spreadsheet-ReadSXC>
+
+       Microsoft Excel ("XLSX" and "XLS")
 
        For Microsoft Excel this module uses Spreadsheet::ParseExcel
        <https://metacpan.org/release/Spreadsheet-ParseExcel>,
        Spreadsheet::ParseXLSX <https://metacpan.org/release/Spreadsheet-
-       ParseXLSX>, or Spreadsheet::XLSX
-       <https://metacpan.org/release/Spreadsheet-XLSX> (strongly discouraged).
+       ParseXLSX>, Excel::ValueReader::XLSX
+       <https://metacpan.org/release/Excel-ValueReader-XLSX>, or
+       Spreadsheet::XLSX <https://metacpan.org/release/Spreadsheet-XLSX>
+       (strongly discouraged).
+
+       CSV ("CSV")
 
        For CSV this module uses Text::CSV_XS
        <https://metacpan.org/release/Text-CSV_XS> or Text::CSV_PP
        <https://metacpan.org/release/Text-CSV>.
+
+       Gnumeric ("gnumeric")
+
+       For Gnumeric this module uses Spreadsheet::ReadGnumeric
+       <https://metacpan.org/release/Spreadsheet-ReadGnumeric>.
+
+       SquirrelCalc ("sc")
 
        For SquirrelCalc there is a very simplistic built-in parser
 
@@ -1188,4 +1207,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.38.2                      2024-03-22                          STDIN(1)
+perl v5.38.2                      2024-04-05                          STDIN(1)

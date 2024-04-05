@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2024-03-22 "perl v5.38.2" "User Contributed Perl Documentation"
+.TH STDIN 1 2024-04-05 "perl v5.38.2" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -97,17 +97,39 @@ Spreadsheet::Read tries to transparently read *any* spreadsheet and
 return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 .PP
+The parser has to be available and is not provided by this module.
+.PP
+\fIOpenOffice and LibreOffice (\fR\f(CI\*(C`ODS\*(C'\fR\fI and \fR\f(CI\*(C`SXC\*(C'\fR\fI)\fR
+.IX Subsection "OpenOffice and LibreOffice (ODS and SXC)"
+.PP
 For OpenOffice and/or LibreOffice this module uses
+Spreadsheet::ParseODS <https://metacpan.org/release/Spreadsheet-ParseODS> or
 Spreadsheet::ReadSXC <https://metacpan.org/release/Spreadsheet-ReadSXC>
+.PP
+\fIMicrosoft Excel (\fR\f(CI\*(C`XLSX\*(C'\fR\fI and \fR\f(CI\*(C`XLS\*(C'\fR\fI)\fR
+.IX Subsection "Microsoft Excel (XLSX and XLS)"
 .PP
 For Microsoft Excel this module uses
 Spreadsheet::ParseExcel <https://metacpan.org/release/Spreadsheet-ParseExcel>,
-Spreadsheet::ParseXLSX <https://metacpan.org/release/Spreadsheet-ParseXLSX>, or
+Spreadsheet::ParseXLSX <https://metacpan.org/release/Spreadsheet-ParseXLSX>,
+Excel::ValueReader::XLSX <https://metacpan.org/release/Excel-ValueReader-XLSX>, or
 Spreadsheet::XLSX <https://metacpan.org/release/Spreadsheet-XLSX> (strongly
 discouraged).
 .PP
+\fICSV (\fR\f(CI\*(C`CSV\*(C'\fR\fI)\fR
+.IX Subsection "CSV (CSV)"
+.PP
 For CSV this module uses Text::CSV_XS <https://metacpan.org/release/Text-CSV_XS>
 or Text::CSV_PP <https://metacpan.org/release/Text-CSV>.
+.PP
+\fIGnumeric (\fR\f(CI\*(C`gnumeric\*(C'\fR\fI)\fR
+.IX Subsection "Gnumeric (gnumeric)"
+.PP
+For Gnumeric this module uses
+Spreadsheet::ReadGnumeric <https://metacpan.org/release/Spreadsheet-ReadGnumeric>.
+.PP
+\fISquirrelCalc (\fR\f(CI\*(C`sc\*(C'\fR\fI)\fR
+.IX Subsection "SquirrelCalc (sc)"
 .PP
 For SquirrelCalc there is a very simplistic built-in parser
 .SS "Data structure"
