@@ -2671,6 +2671,13 @@ Show the differences between two spreadsheets.
 
  usage: ssdiff [--verbose[=1]] file.xls file.xlsx
 
+=head1 Vulnerabilities
+
+As this is just a wrapper over the actual parsers, it cannot vouch for
+vulnerabilities in these parsers.  We try to keep up with the CVE's as
+published, and check for weaknesses. For a more thourrough report see
+L<this securityposting|https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html>.
+
 =head1 TODO
 
 =over 4
