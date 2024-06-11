@@ -1632,7 +1632,7 @@ The parser has to be available and is not provided by this module.
 =head3 OpenOffice and LibreOffice (C<ODS> and C<SXC>)
 
 For OpenOffice and/or LibreOffice this module uses
-L<Spreadsheet::ParseODS|https://metacpan.org/release/Spreadsheet-ParseODS> or
+L<Spreadsheet::ParseODS|https://metacpan.org/pod/Spreadsheet::ParseODS> or
 L<Spreadsheet::ReadSXC|https://metacpan.org/release/Spreadsheet-ReadSXC>
 
 =head3 Microsoft Excel (C<XLSX> and C<XLS>)
