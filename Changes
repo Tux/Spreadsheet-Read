@@ -1,6 +1,7 @@
-0.91	- 05 Apr 2024, H.Merijn Brand
+0.91	- 11 Jun 2024, H.Merijn Brand
     * Exclude OLE::Storage_Lite-0.21
     * xlscat --head[=10], --tail[=10], --first=C
+    * Make (re)defining ->get_active_sheet safer
 
 0.90	- 13 Feb 2024, H.Merijn Brand
     * Consistent return value for parses ($type) on failure (issue#52)

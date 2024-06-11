@@ -123,13 +123,17 @@ foreach my $p (@parsers) {
     }
 $can{sc} = __PACKAGE__;	# SquirrelCalc is built-in
 
+# Define ->get_active_sheet if not defined (yet)
 sub _def_gas {
-    defined $Spreadsheet::ParseExcel::VERSION  && $Spreadsheet::ParseExcel::VERSION  < 0.61 and
-	*Spreadsheet::ParseExcel::Workbook::get_active_sheet = sub { undef; };
-    defined $Spreadsheet::ParseODS::VERSION    && $Spreadsheet::ParseODS::VERSION    < 0.25 and
-	*Spreadsheet::ParseODS::Workbook::get_active_sheet   = sub { undef; };
-    defined $Excel::ValueReader::XLSX::VERSION && $Excel::ValueReader::XLSX::VERSION < 9.99 and
-	*Excel::ValueReader::XLSX::get_active_sheet          = sub { undef; };
+    for ([ 0.61, $Spreadsheet::ParseExcel::VERSION,  *Spreadsheet::ParseExcel::Workbook::get_active_sheet	],
+	 [ 0.25, $Spreadsheet::ParseODS::VERSION,    *Spreadsheet::ParseODS::Workbook::get_active_sheet		],
+	 [ 9.99, $Excel::ValueReader::XLSX::VERSION, *Excel::ValueReader::XLSX::get_active_sheet		],
+	 ) {
+	my ($mv, $v, $cb) = @$_;
+	defined $v && $v < $mv or next;
+	defined $cb && defined *{$cb}{CODE} and next;
+	*{$cb} = sub { undef };
+	}
     } # _def_gas
 
 my $debug = 0;
