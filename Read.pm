@@ -2679,8 +2679,8 @@ Show the differences between two spreadsheets.
 
 As this is just a wrapper over the actual parsers, it cannot vouch for
 vulnerabilities in these parsers.  We try to keep up with the CVE's as
-published, and check for weaknesses. For a more thourrough report see
-L<this securityposting|https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html>.
+published, and check for weaknesses. For a more thorough report see
+L<this security-posting|https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html>.
 
 =head1 TODO
 

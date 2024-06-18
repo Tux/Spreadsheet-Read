@@ -84,6 +84,7 @@
       <li><a href="#ssdiff">ssdiff</a></li>
     </ul>
   </li>
+  <li><a href="#Vulnerabilities">Vulnerabilities</a></li>
   <li><a href="#TODO">TODO</a></li>
   <li><a href="#SEE-ALSO">SEE ALSO</a></li>
   <li><a href="#AUTHOR">AUTHOR</a></li>
@@ -128,7 +129,7 @@ $book-&gt;add (&quot;test.xls&quot;);</code></pre>
 
 <h3 id="OpenOffice-and-LibreOffice-ODS-and-SXC">OpenOffice and LibreOffice (<code>ODS</code> and <code>SXC</code>)</h3>
 
-<p>For OpenOffice and/or LibreOffice this module uses <a href="https://metacpan.org/release/Spreadsheet-ParseODS">Spreadsheet::ParseODS</a> or <a href="https://metacpan.org/release/Spreadsheet-ReadSXC">Spreadsheet::ReadSXC</a></p>
+<p>For OpenOffice and/or LibreOffice this module uses <a href="https://metacpan.org/pod/Spreadsheet::ParseODS">Spreadsheet::ParseODS</a> or <a href="https://metacpan.org/release/Spreadsheet-ReadSXC">Spreadsheet::ReadSXC</a></p>
 
 <h3 id="Microsoft-Excel-XLSX-and-XLS">Microsoft Excel (<code>XLSX</code> and <code>XLS</code>)</h3>
 
@@ -1068,6 +1069,10 @@ Unless -A is used, all other options are passed on to xlscat</code></pre>
 <p>Show the differences between two spreadsheets.</p>
 
 <pre><code>usage: ssdiff [--verbose[=1]] file.xls file.xlsx</code></pre>
+
+<h1 id="Vulnerabilities">Vulnerabilities</h1>
+
+<p>As this is just a wrapper over the actual parsers, it cannot vouch for vulnerabilities in these parsers. We try to keep up with the CVE&#39;s as published, and check for weaknesses. For a more thorough report see <a href="https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html">this security-posting</a>.</p>
 
 <h1 id="TODO">TODO</h1>
 

@@ -39,7 +39,7 @@ The parser has to be available and is not provided by this module.
 ### OpenOffice and LibreOffice (`ODS` and `SXC`)
 
 For OpenOffice and/or LibreOffice this module uses
-[Spreadsheet::ParseODS](https://metacpan.org/release/Spreadsheet-ParseODS) or
+[Spreadsheet::ParseODS](https://metacpan.org/pod/Spreadsheet::ParseODS) or
 [Spreadsheet::ReadSXC](https://metacpan.org/release/Spreadsheet-ReadSXC)
 
 ### Microsoft Excel (`XLSX` and `XLS`)
@@ -1075,6 +1075,13 @@ Show a spreadsheet in a perl/Tk spreadsheet widget
 Show the differences between two spreadsheets.
 
     usage: ssdiff [--verbose[=1]] file.xls file.xlsx
+
+# Vulnerabilities
+
+As this is just a wrapper over the actual parsers, it cannot vouch for
+vulnerabilities in these parsers.  We try to keep up with the CVE's as
+published, and check for weaknesses. For a more thorough report see
+[this security-posting](https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html).
 
 # TODO
 

@@ -12,7 +12,7 @@ recommends "Encode"                   => "3.21";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";
 
-suggests   "Data::Dumper"             => "2.188";
+suggests   "Data::Dumper"             => "2.189";
 
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
@@ -27,7 +27,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302198";
+    recommends "Test::More"               => "1.302199";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -35,7 +35,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.04";
     recommends "Text::CSV_PP"             => "2.04";
-    recommends "Text::CSV_XS"             => "1.53";
+    recommends "Text::CSV_XS"             => "1.55";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {

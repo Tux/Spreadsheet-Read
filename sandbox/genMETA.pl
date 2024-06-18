@@ -79,9 +79,9 @@ recommends:
   Data::Peek:           0.52
   Data::Dumper:         2.183
 suggests:
-  Data::Dumper:         2.188
+  Data::Dumper:         2.189
 test_recommends:
-  Test::More:           1.302198
+  Test::More:           1.302199
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -97,7 +97,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.04
       Text::CSV_PP:                        2.04
-      Text::CSV_XS:                        1.53
+      Text::CSV_XS:                        1.55
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
