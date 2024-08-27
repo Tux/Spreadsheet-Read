@@ -782,11 +782,12 @@ sub ReadData {
 	    0x16	=> "yyyy-mm-dd hh:mm",	# m-d-yy h:mm
 	    );
 	$oBook->{FormatStr}{$_} = $def_fmt{$_} for keys %def_fmt;
-	my $oFmt = $parse_type eq "XLSX"
+	my $oFmt = eval { $parse_type eq "XLSX"
 	    ? $can{xlsx} eq "Spreadsheet::XLSX"
 		? Spreadsheet::XLSX::Fmt2007->new
 		: Spreadsheet::ParseExcel::FmtDefault->new
-	    :     Spreadsheet::ParseExcel::FmtDefault->new;
+	    :     Spreadsheet::ParseExcel::FmtDefault->new
+	    };
 
 	$debug > 20 and _dump ("oBook before conversion", $oBook);
 	if ($can{xlsx} eq "Excel::ValueReader::XLSX" and !exists $oBook->{SheetCount}) {
@@ -1012,7 +1013,7 @@ sub ReadData {
 			    }
 			defined $fmt and $fmt =~ s/\\//g;
 			$opt{cells} and	# Formatted value
-			    $sheet{$cell} = defined $val ? $FmT && exists $def_fmt{$FmT->{FmtIdx}}
+			    $sheet{$cell} = $oFmt && defined $val ? $FmT && exists $def_fmt{$FmT->{FmtIdx}}
 				? $oFmt->ValFmt ($oWkC, $oBook)
 				: $oWkC->Value : undef;
 			if ($opt{attr}) {
