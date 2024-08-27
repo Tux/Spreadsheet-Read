@@ -27,7 +27,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302199";
+    recommends "Test::More"               => "1.302201";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -35,7 +35,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.04";
     recommends "Text::CSV_PP"             => "2.04";
-    recommends "Text::CSV_XS"             => "1.55";
+    recommends "Text::CSV_XS"             => "1.56";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
@@ -47,13 +47,13 @@ feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
 feature "opt_ods", "Provides parsing of OpenOffice spreadsheets" => sub {
     requires   "Spreadsheet::ParseODS"    => "0.26";
 
-    recommends "Spreadsheet::ParseODS"    => "0.38";
+    recommends "Spreadsheet::ParseODS"    => "0.39";
     };
 
 feature "opt_sxc", "Provides parsing of OpenOffice spreadsheets old style" => sub {
     requires   "Spreadsheet::ReadSXC"     => "0.26";
 
-    recommends "Spreadsheet::ReadSXC"     => "0.38";
+    recommends "Spreadsheet::ReadSXC"     => "0.39";
     };
 
 feature "opt_tools", "Spreadsheet tools" => sub {
