@@ -13,10 +13,9 @@ use     Spreadsheet::Read;
 Spreadsheet::Read::parses ("csv") or
     plan skip_all => "Cannot use $ENV{SPREADSHEET_READ_CSV}";
 
-my $csv;
-ok ($csv = ReadData ("files/macosx.csv"),	"Read/Parse csv file");
-
-#use DP; DDumper $csv;
+# EOF without \r
+my (%opt, $csv) = $Text::CSV_XS::VERSION ge "1.58" ? (strict_eol => 0) : ();
+ok ($csv = ReadData ("files/macosx.csv", %opt), "Read/Parse csv file");
 
 is ($csv->[1]{maxrow},		16,		"Last row");
 is ($csv->[1]{maxcol},		15,		"Last column");

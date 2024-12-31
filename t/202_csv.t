@@ -8,11 +8,13 @@ use     Test::More;
 require Test::NoWarnings;
 
 use     Spreadsheet::Read;
-Spreadsheet::Read::parses ("csv") or
+my $p = Spreadsheet::Read::parses ("csv") or
     plan skip_all => "No CSV parser found";
 
-my $csv;
-ok ($csv = ReadData ("files/macosx.csv"),	"Read/Parse csv file");
+my (%opt, $csv);
+# EOF without \r
+$p eq "Text::CSV_XS" && $Text::CSV_XS::VERSION ge "1.58" and $opt{strict_eol} = 0;
+ok ($csv = ReadData ("files/macosx.csv", %opt), "Read/Parse csv file");
 
 #use DP; DDumper $csv;
 

@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.91";
+our $VERSION = "0.92";
 sub  Version { $VERSION }
 
 use Carp;
@@ -623,6 +623,10 @@ sub ReadData {
 	    $in = $txt;	# Now pray ...
 	    }
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
+	!exists $parser_opts{strict_eol}
+	    && $data[0]{parser}  eq "Text::CSV_XS"
+	    && $data[0]{version} ge "1.58"
+	    and $parser_opts{strict_eol} = 1;
 	my $csv = $can{csv}->new ({
 	    %parser_opts,
 
