@@ -1215,4 +1215,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.40.0                      2024-08-27                          STDIN(1)
+perl v5.40.0                      2024-12-31                          STDIN(1)

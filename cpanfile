@@ -27,7 +27,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302201";
+    recommends "Test::More"               => "1.302207";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -35,7 +35,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.04";
     recommends "Text::CSV_PP"             => "2.04";
-    recommends "Text::CSV_XS"             => "1.56";
+    recommends "Text::CSV_XS"             => "1.58";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
