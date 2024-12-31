@@ -478,8 +478,11 @@ foreach my $si (1 .. $sc) {
     defined $sn or $sn = "";
     my $active = $s->{active} ? " (Active)" : "";
     my $hidden = $s->{hidden} ? " (Hidden)" : "";
-    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows%s%s\n",
-	$file, $si, $name_len, $sn, $nc, $nr, $active, $hidden;
+    my $eolt   = $s->{eolt}   ? ", EOL = $s->{eolt}" : "";
+    $eolt =~ s/\n/\\n/g; $eolt =~ s/\r/\\r/g; $eolt =~ s/\t/\\t/g;
+    $eolt =~ s/([\x00-\x1f])/sprintf "\\x{%02x}", ord $1/ge;
+    $opt_v and printf STDERR "%s - %02d: [ %-*s ] %3d Cols, %5d Rows%s%s%s\n",
+	$file, $si, $name_len, $sn, $nc, $nr, $active, $hidden, $eolt;
     $opt_i && !$is_grep and next;
 
     if (@opt_F) {

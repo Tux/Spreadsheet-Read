@@ -650,6 +650,7 @@ sub ReadData {
 		$opt{attr}  and $data[1]{attr}[$c + 1][$r] = { @def_attr };
 		}
 	    }
+	$parser_opts{strict_eol} and $data[1]{eolt} = $csv->eol_type;
 	$csv->eof () or $data[0]{error} = [ $csv->error_diag ];
 	close $in;
 
