@@ -97,7 +97,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.04
       Text::CSV_PP:                        2.04
-      Text::CSV_XS:                        1.58
+      Text::CSV_XS:                        1.59
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:

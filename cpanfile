@@ -35,7 +35,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.04";
     recommends "Text::CSV_PP"             => "2.04";
-    recommends "Text::CSV_XS"             => "1.58";
+    recommends "Text::CSV_XS"             => "1.59";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
