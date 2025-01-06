@@ -1085,6 +1085,8 @@ vulnerabilities in these parsers.  We try to keep up with the CVE's as
 published, and check for weaknesses. For a more thorough report see
 [this security-posting](https://security.metacpan.org/2024/02/10/vulnerable-spreadsheet-parsing-modules.html).
 
+For vulnerabilities in this module, please read `SECURITY.md`.
+
 # TODO
 
 - Options

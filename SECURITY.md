@@ -99,4 +99,3 @@ newer versions as recommended.
 ## Usage
 
 Please see the software documentation for further information.
-
