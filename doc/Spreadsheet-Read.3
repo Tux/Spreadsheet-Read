@@ -57,16 +57,14 @@
 .if n .ds AD l
 .\" ========================================================================
 .\"
-.IX Title "STDIN 1"
-.TH STDIN 1 2024-12-31 "perl v5.40.0" "User Contributed Perl Documentation"
+.IX Title "Read 3"
+.TH Read 3 2025-01-06 "perl v5.40.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH NAME
-.Vb 1
-\& Spreadsheet::Read \- Read the data from a spreadsheet
-.Ve
+Spreadsheet::Read \- Read the data from a spreadsheet
 .SH SYNOPSIS
 .IX Header "SYNOPSIS"
 .Vb 9
@@ -101,7 +99,8 @@ return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 .PP
 The parser has to be available and is not provided by this module.
-.PP
+.SS "Supported spreadsheets"
+.IX Subsection "Supported spreadsheets"
 \fIOpenOffice and LibreOffice (\fR\f(CI\*(C`ODS\*(C'\fR\fI and \fR\f(CI\*(C`SXC\*(C'\fR\fI)\fR
 .IX Subsection "OpenOffice and LibreOffice (ODS and SXC)"
 .PP
@@ -1165,7 +1164,7 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
 \&                    #n   \- order on column # numeric ascending
 \&                    #r   \- order on column # lexical descending
 \&                    #rn  \- order on column # numeric descending
-\& 
+\&
 \& Examples:
 \&     xlscat   \-i foo.xls
 \&     xlscat   \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd
@@ -1241,7 +1240,7 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
 \&                    #n   \- order on column # numeric ascending
 \&                    #r   \- order on column # lexical descending
 \&                    #rn  \- order on column # numeric descending
-\& 
+\&
 \& Examples:
 \&     xlscat   \-i foo.xls
 \&     xlscat   \-\-in\-sep=: \-\-sort=3n \-L /etc/passwd

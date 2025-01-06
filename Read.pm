@@ -4,7 +4,7 @@ package Spreadsheet::Read;
 
 =head1 NAME
 
- Spreadsheet::Read - Read the data from a spreadsheet
+Spreadsheet::Read - Read the data from a spreadsheet
 
 =head1 SYNOPSIS
 
@@ -1635,6 +1635,8 @@ module that does the actual spreadsheet scanning.
 
 The parser has to be available and is not provided by this module.
 
+=head2 Supported spreadsheets
+
 =head3 OpenOffice and LibreOffice (C<ODS> and C<SXC>)
 
 For OpenOffice and/or LibreOffice this module uses
@@ -2562,7 +2564,7 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
                     #n   - order on column # numeric ascending
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
- 
+
  Examples:
      xlscat   -i foo.xls
      xlscat   --in-sep=: --sort=3n -L /etc/passwd
@@ -2636,7 +2638,7 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
                     #n   - order on column # numeric ascending
                     #r   - order on column # lexical descending
                     #rn  - order on column # numeric descending
- 
+
  Examples:
      xlscat   -i foo.xls
      xlscat   --in-sep=: --sort=3n -L /etc/passwd

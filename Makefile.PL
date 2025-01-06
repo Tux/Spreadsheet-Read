@@ -149,15 +149,8 @@ sub postamble {
 	'	-@rm -f Debian_CPANTS.txt',
 	'',
 	'doc docs:		doc/Spreadsheet-Read.md doc/Spreadsheet-Read.html doc/Spreadsheet-Read.man',
-	'	-@rm -f pod2html.tmp',
 	'doc/Spreadsheet-Read.md:	Read.pm',
-	'	pod2markdown  < $? > $@',
-	'doc/Spreadsheet-Read.html:	Read.pm',
-	'	pod2html      < $? 2>&1 | grep -v "^Cannot find" > $@',
-	'doc/Spreadsheet-Read.3:	Read.pm',
-	'	pod2man       < $? > $@',
-	'doc/Spreadsheet-Read.man:	doc/Spreadsheet-Read.3',
-	'	nroff2man     < $? > $@',
+	'	perl doc/make-doc.pl',
 	@pc,
 	'';
     } # postamble

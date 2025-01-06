@@ -1,6 +1,6 @@
 # NAME
 
-    Spreadsheet::Read - Read the data from a spreadsheet
+Spreadsheet::Read - Read the data from a spreadsheet
 
 # SYNOPSIS
 
@@ -35,6 +35,8 @@ return its content in a universal manner independent of the parsing
 module that does the actual spreadsheet scanning.
 
 The parser has to be available and is not provided by this module.
+
+## Supported spreadsheets
 
 ### OpenOffice and LibreOffice (`ODS` and `SXC`)
 
@@ -957,7 +959,7 @@ Show (parts of) a spreadsheet in plain text, CSV, or HTML
                        #n   - order on column # numeric ascending
                        #r   - order on column # lexical descending
                        #rn  - order on column # numeric descending
-    
+
     Examples:
         xlscat   -i foo.xls
         xlscat   --in-sep=: --sort=3n -L /etc/passwd
@@ -1031,7 +1033,7 @@ Show (parts of) a spreadsheet that match a pattern in plain text, CSV, or HTML
                        #n   - order on column # numeric ascending
                        #r   - order on column # lexical descending
                        #rn  - order on column # numeric descending
-    
+
     Examples:
         xlscat   -i foo.xls
         xlscat   --in-sep=: --sort=3n -L /etc/passwd

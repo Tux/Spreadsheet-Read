@@ -1,7 +1,7 @@
-STDIN(1)              User Contributed Perl Documentation             STDIN(1)
+Read(3)               User Contributed Perl Documentation              Read(3)
 
 NAME
-        Spreadsheet::Read - Read the data from a spreadsheet
+       Spreadsheet::Read - Read the data from a spreadsheet
 
 SYNOPSIS
         use Spreadsheet::Read;
@@ -35,6 +35,7 @@ DESCRIPTION
 
        The parser has to be available and is not provided by this module.
 
+   Supported spreadsheets
        OpenOffice and LibreOffice ("ODS" and "SXC")
 
        For OpenOffice and/or LibreOffice this module uses
@@ -1215,4 +1216,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.40.0                      2024-12-31                          STDIN(1)
+perl v5.40.0                      2025-01-06                           Read(3)
