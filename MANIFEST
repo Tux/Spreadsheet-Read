@@ -1,10 +1,15 @@
-Changes
-CONTRIBUTING.md
-cpanfile
-scripts/ss2tk
-scripts/ssdiff
-scripts/xlscat
-scripts/xlsx2csv
+MANIFEST		This file
+README
+Changes			Change history
+CONTRIBUTING.md		Guide in how to contribute
+SECURITY.md		Guide for reporting security issues
+cpanfile		Requirements, recommendations, and suggestions
+Makefile.PL		Makefile generator
+Read.pm			Spreadsheet processor
+scripts/ss2tk		Display a spreadsheet with perl/Tk notebook
+scripts/ssdiff		Deep-diff two spreadsheets
+scripts/xlscat		Display, filter, and convert spreadsheets
+scripts/xlsx2csv	Convert spreadsheet to CSV
 examples/ss-dups-tk.pl
 files/Active2.xls
 files/Active2.xlsx
@@ -63,10 +68,6 @@ files/test_x.txt
 files/values.ods
 files/values.xls
 files/values.xlsx
-Makefile.PL
-MANIFEST
-README
-Read.pm
 t/10_basics.t
 t/11_call.t
 t/200_csv.t
