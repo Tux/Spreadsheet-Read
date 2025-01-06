@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # ss-dup-tk.pl: Find dups in spreadsheet
-#	  (m)'18 [28-03-2018] Copyright H.M.Brand 2005-2024
+#	  (m)'18 [28-03-2018] Copyright H.M.Brand 2005-2025
 
 use strict;
 use warnings;

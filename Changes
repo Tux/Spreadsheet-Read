@@ -2,6 +2,7 @@
     * Make strict_eol default to 1 for CSV when supported
     * Show detected EOL for CSV in xlscat when known
     * Add SECURITY.md
+    * It's 2025
 
 0.91	- 27 Aug 2024, H.Merijn Brand
     * Exclude OLE::Storage_Lite-0.21
