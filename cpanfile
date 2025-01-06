@@ -7,7 +7,7 @@ requires   "File::Temp"               => "0.22";  # ignore : CVE-2011-4116
 requires   "List::Util";
 
 recommends "Data::Dumper"             => "2.183";
-recommends "Data::Peek"               => "0.52";
+recommends "Data::Peek"               => "0.53";
 recommends "Encode"                   => "3.21";
 recommends "File::Temp"               => "0.2311";
 recommends "IO::Scalar";

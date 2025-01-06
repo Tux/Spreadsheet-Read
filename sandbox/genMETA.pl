@@ -76,7 +76,7 @@ recommends:
   IO::Scalar:           0
   Encode:               3.21
   File::Temp:           0.2311
-  Data::Peek:           0.52
+  Data::Peek:           0.53
   Data::Dumper:         2.183
 suggests:
   Data::Dumper:         2.189
