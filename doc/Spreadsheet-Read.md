@@ -619,14 +619,18 @@ Note that the indexes in the returned list are 0-based.
 
     my $arrayref = $sheet->cellrange ("B3:D5");
     my $arrayref = $sheet->cellrange (2, 3, 4, 5);
+    my $arrayref = $sheet->cellrange (-4, -5, -1, -1);
 
-Return an arrayref with the selected cells from `<$sheet-`{cell}>>.
-All cells in the requested range outside of the existing data in the sheet are ignored.
+Return an arrayref with the selected cells from `$sheet->{cell}`.
+When the range is given as (top-left, bottom-right) numeric CR pairs, negative
+values are allowed (count from rigth/bottom) and automatically clipped to be
+inside the existing data set.
 
 ### range
 
     my $hashref = $sheet->range ("B3:D5");
     my $hashref = $sheet->range (2, 3, 4, 5);
+    my $hashref = $sheet->range (-4, -5, -1, -1);
 
 Return a hashref with all the fields in the given range. When the range is given
 as (top-left, bottom-right) numeric CR pairs, negative values are allowed (count

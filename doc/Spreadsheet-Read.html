@@ -660,14 +660,16 @@ my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code
 <h3 id="cellrange">cellrange</h3>
 
 <pre><code>my $arrayref = $sheet-&gt;cellrange (&quot;B3:D5&quot;);
-my $arrayref = $sheet-&gt;cellrange (2, 3, 4, 5);</code></pre>
+my $arrayref = $sheet-&gt;cellrange (2, 3, 4, 5);
+my $arrayref = $sheet-&gt;cellrange (-4, -5, -1, -1);</code></pre>
 
-<p>Return an arrayref with the selected cells from <code>&lt;$sheet-</code>{cell}&gt;&gt;. All cells in the requested range outside of the existing data in the sheet are ignored.</p>
+<p>Return an arrayref with the selected cells from <code>$sheet-&gt;{cell}</code>. When the range is given as (top-left, bottom-right) numeric CR pairs, negative values are allowed (count from rigth/bottom) and automatically clipped to be inside the existing data set.</p>
 
 <h3 id="range">range</h3>
 
 <pre><code>my $hashref = $sheet-&gt;range (&quot;B3:D5&quot;);
-my $hashref = $sheet-&gt;range (2, 3, 4, 5);</code></pre>
+my $hashref = $sheet-&gt;range (2, 3, 4, 5);
+my $hashref = $sheet-&gt;range (-4, -5, -1, -1);</code></pre>
 
 <p>Return a hashref with all the fields in the given range. When the range is given as (top-left, bottom-right) numeric CR pairs, negative values are allowed (count from rigth/bottom) and automatically clipped to be inside the existing data set.</p>
 
