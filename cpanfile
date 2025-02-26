@@ -27,15 +27,15 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302207";
+    recommends "Test::More"               => "1.302209";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.04";
-    recommends "Text::CSV_PP"             => "2.04";
-    recommends "Text::CSV_XS"             => "1.59";
+    recommends "Text::CSV"                => "2.05";
+    recommends "Text::CSV_PP"             => "2.05";
+    recommends "Text::CSV_XS"             => "1.60";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
@@ -75,5 +75,5 @@ feature "opt_xlsx", "Provides parsing of Microsoft Excel 2007 files" => sub {
     requires   "Spreadsheet::ParseExcel::FmtDefault";
     requires   "Spreadsheet::ParseXLSX"   => "0.24";
 
-    recommends "Spreadsheet::ParseXLSX"   => "0.35";
+    recommends "Spreadsheet::ParseXLSX"   => "0.36";
     };

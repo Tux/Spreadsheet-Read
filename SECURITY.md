@@ -3,7 +3,7 @@
 Report issues via email at: H.Merijn Brand <perl5@tux.freedom.nl>.
 
 
-This is the Security Policy for the Perl Spreadsheet::Read distribution.
+This is the Security Policy for Spreadsheet::Read.
 
 The latest version of the Security Policy can be found in the
 [git repository for Spreadsheet::Read](https://github.com/Tux/Spreadsheet-Read).
