@@ -626,7 +626,11 @@ sub ReadData {
 	$debug > 1 and print STDERR "CSV sep_char '$sep', quote_char '$quo'\n";
 	if (!exists $parser_opts{strict_eol} and
 	     my $ka = $data[0]{parser}->can ("known_attributes")) {
-	    grep m/^strict_eol$/ => $ka->() and $parser_opts{strict_eol} = 1;
+	    if (grep m/^strict_eol$/ => $ka->()) {
+		unless ($data[0]{parser} =~ m/CSV_PP$/ && $data[0]{version} le "2.05") {
+		    $parser_opts{strict_eol} = 1;
+		    }
+		}
 	    }
 	my $csv = $can{csv}->new ({
 	    %parser_opts,
