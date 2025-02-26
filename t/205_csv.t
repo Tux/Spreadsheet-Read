@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 261;
+my     $tests = 271;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -225,6 +225,28 @@ is_deeply ([ $csv->sheets ], [qw( files/test.csv files/test.csv[2] Test )], "She
 
 is ($csv->col2label (4),             "D",  "col2label as book  method");
 is ($csv->sheet (1)->col2label (27), "AA", "col2label as sheet method");
+
+is_deeply ($csv->sheet (1)->range ("A2:B3"), {
+    A2 => "A2", A3 => "A3", B2 => "B2", B3 => "" }, "range (A2:B3)");
+is_deeply ($csv->sheet (1)->range ("S5:V12"), {
+    S5 => "LASTFIELD" },                            "range (S5:V12)");
+is_deeply ($csv->sheet (1)->range (1, 2, 2, 3), {
+    A2 => "A2", A3 => "A3", B2 => "B2", B3 => "" }, "range (1, 2, 2, 3)");
+is_deeply ($csv->sheet (1)->range (19, 5, 22, 12), {
+    S5 => "LASTFIELD" },                            "range (19, 5, 22, 12)");
+is_deeply ($csv->sheet (1)->range (-1, -1, -1, -1), {
+    S5 => "LASTFIELD" },                            "range (-1, -1, -1, -1)");
+
+is_deeply ($csv->sheet (1)->cellrange ("A2:B3"), [
+    [ "A2", "A3"], [ "B2", "" ]],                   "cellrange (A2:B3)");
+is_deeply ($csv->sheet (1)->cellrange ("S5:V12"), [
+    [ "LASTFIELD" ]],                               "cellrange (S5:V12)");
+is_deeply ($csv->sheet (1)->cellrange (1, 2, 2, 3), [
+    [ "A2", "A3"], [ "B2", "" ]],                   "cellrange (1, 2, 2, 3)");
+is_deeply ($csv->sheet (1)->cellrange (19, 5, 22, 12), [
+    [ "LASTFIELD" ]],                               "cellrange (19, 5, 22, 12)");
+is_deeply ($csv->sheet (1)->cellrange (-1, -1, -1, -1), [
+    [ "LASTFIELD" ]],                               "cellrange (-1, -1, -1, -1)");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();

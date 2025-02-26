@@ -3,15 +3,17 @@
 use 5.038002;
 use warnings;
 
-our $VERSION = "0.03 - 20250106";
+our $VERSION = "0.05 - 20250116";
 our $CMD = $0 =~ s{.*/}{}r;
 
 sub usage {
     my $err = shift and select STDERR;
-    say "usage: $CMD [-v[#]]";
+    say "usage: $CMD [-v[#]] [--pod]";
     exit $err;
     } # usage
 
+use Cwd;
+use Pod::Text;
 use File::Find;
 use List::Util   qw( first          );
 use Encode       qw( encode decode  );
@@ -19,6 +21,8 @@ use Getopt::Long qw(:config bundling);
 GetOptions (
     "help|?"		=> sub { usage (0); },
     "V|version"		=> sub { say "$CMD [$VERSION]"; exit 0; },
+
+    "p|pod!"		=> \ my $pod,
 
     "v|verbose:1"	=> \(my $opt_v = 0),
     ) or usage (1);
@@ -41,6 +45,7 @@ if (@pm == 0 and open my $fh, "<", "Makefile.PL") {
 	}
     }
 
+push @pm => @ARGV;
 @pm = sort grep { ! -l $_ } @pm;
 @pm or die "No documentation source files found\n";
 
@@ -51,16 +56,32 @@ if ($opt_v) {
 
 sub dext {
     my ($pm, $ext) = @_;
-    my $fn = $pm =~ s{^lib/(?:App/)?}{}r
+    my $fn = $pm =~ s{^lib/}{}r
+		 =~ s{^(?:App|scripts|examples)/}{}r
 		 =~ s{/}{-}gr
-		 =~ s{\.pm$}{.$ext}r
-		 =~ s{^(?=Peek\.)}{Data-}r
-		 =~ s{^(?=Read\.)}{Spreadsheet-}r
+		 =~ s{(?:\.pm)?$}{.$ext}r	# examples, scripts
+		 =~ s{^(?=CSV_XS\.)}{Text-}r
+		 =~ s{^(?=Peek\.)}  {Data-}r
+		 =~ s{^(?=Read\.)}  {Spreadsheet-}r
+		 =~ s{^(SpeedTest)} {\L$1}ri
 		 =~ s{^}{doc/}r;
+    getcwd =~ m/Config-Perl/ and
+	$fn =~ s{doc/\K}{Config-Perl-};
     $fn;
     } # dext
 
 my %enc;
+my %pod;
+{   # Check if file had pod at all
+    foreach my $pm (@pm) {
+	open my $fh, ">", \$pod{$pm};
+	Pod::Text->new->parse_from_file ($pm, $fh);
+	close $fh;
+
+	$pod && $pod{$pm} and link $pm => dext ($pm, "pod");
+	}
+    }
+
 eval { require Pod::Checker; };
 if ($@) {
     warn "Cannot convert pod to markdown: $@\n";
@@ -79,9 +100,8 @@ else {
 	close $eh;
 	$enc{$pm} = $pc->{encoding};
 	$err && $err =~ m/\S/ or next;
-	# Add exceptios here for on empty previous paragraphs
-	# as it uses =head2 for all possible invocation alternatives
-	# Ignore these warnings if those are all
+	# Ignore warnings here on empty previous paragraphs as it
+	# uses =head2 for all possible invocation alternatives
 	if (my $ni = $ignore_empty{$pm}) {
 	    my $pat = qr{ WARNING: empty section };
 	    my @err = split m/\n+/ => $err;
@@ -103,9 +123,8 @@ if ($@) {
 else {
     foreach my $pm (@pm) {
 	my $md = dext ($pm, "md");
-	printf STDERR "%-43s <- %s\n", $md, $pm if $opt_v;
 	my $enc = $enc{$pm} ? "encoding($enc{$pm})" : "bytes";
-	say "$pm ($enc)" if $opt_v > 1;
+	printf STDERR "%-43s <- %s (%s)\n", $md, $pm, $enc if $opt_v;
 	open my $ph, "<:$enc", $pm;
 	my $p = Pod::Markdown->new ();
 	$p->output_string (\my $m);
@@ -130,8 +149,9 @@ if ($@) {
     }
 else {
     foreach my $pm (@pm) {
+	$pod{$pm} or next; # Skip HTML for files without pod
 	my $html = dext ($pm, "html");
-	printf STDERR "%-43s <- %s\n", $html, $pm if $opt_v;
+	printf STDERR "%-43s <- %s (%s)\n", $html, $pm, $enc{$pm} // "-" if $opt_v;
 	my $tf = "x_$$.html";
 	unlink $tf if -e $tf;
 	Pod::Html::pod2html ("--infile=$pm", "--outfile=$tf", "--quiet");
@@ -190,6 +210,7 @@ else {
 		       |\x{201d}|\xe2\x80\x9d	)}{"}grx	# "
 		=~ s{(?:\x{2212}|\xe2\x88\x92
 		       |\x{2010}|\xe2\x80\x90	)}{-}grx	# -
+		=~ s{(?:\x{2022}|\xe2\x80\xa2	)}{*}grx	# BULLET
 		=~ s{(?:\e\[|\x9b)[0-9;]*m}	  {}grx);	# colors
 	    }
 

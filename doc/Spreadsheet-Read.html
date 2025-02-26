@@ -58,6 +58,8 @@
           <li><a href="#cellcolumn">cellcolumn</a></li>
           <li><a href="#row1">row</a></li>
           <li><a href="#cellrow1">cellrow</a></li>
+          <li><a href="#cellrange">cellrange</a></li>
+          <li><a href="#range">range</a></li>
           <li><a href="#rows1">rows</a></li>
           <li><a href="#merged_from">merged_from</a></li>
           <li><a href="#label">label</a></li>
@@ -654,6 +656,20 @@ my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code
 <p>Get full row of unformatted values (like <code>$sheet-&gt;{cell}[1][3] .. $sheet-&gt;{cell}[7][3]</code>)</p>
 
 <p>Note that the indexes in the returned list are 0-based.</p>
+
+<h3 id="cellrange">cellrange</h3>
+
+<pre><code>my $arrayref = $sheet-&gt;cellrange (&quot;B3:D5&quot;);
+my $arrayref = $sheet-&gt;cellrange (2, 3, 4, 5);</code></pre>
+
+<p>Return an arrayref with the selected cells from <code>&lt;$sheet-</code>{cell}&gt;&gt;. All cells in the requested range outside of the existing data in the sheet are ignored.</p>
+
+<h3 id="range">range</h3>
+
+<pre><code>my $hashref = $sheet-&gt;range (&quot;B3:D5&quot;);
+my $hashref = $sheet-&gt;range (2, 3, 4, 5);</code></pre>
+
+<p>Return a hashref with all the fields in the given range. When the range is given as (top-left, bottom-right) numeric CR pairs, negative values are allowed (count from rigth/bottom) and automatically clipped to be inside the existing data set.</p>
 
 <h3 id="rows1">rows</h3>
 

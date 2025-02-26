@@ -1,3 +1,6 @@
+0.93	- 26 Feb 2025, H.Merijn Brand
+    * Add ranges and cellranges
+
 0.92	- 06 Jan 2025, H.Merijn Brand
     * Make strict_eol default to 1 for CSV when supported
     * Show detected EOL for CSV in xlscat when known
