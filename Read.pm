@@ -627,7 +627,8 @@ sub ReadData {
 	if (!exists $parser_opts{strict_eol} and
 	     my $ka = $data[0]{parser}->can ("known_attributes")) {
 	    if (grep m/^strict_eol$/ => $ka->()) {
-		unless ($data[0]{parser} =~ m/CSV_PP$/ && $data[0]{version} le "2.05") {
+		#use DP;::diag DDumper \@data;
+		unless ($data[0]{parser} =~ m/CSV_PP$/ && $data[0]{version} le "2.06") {
 		    $parser_opts{strict_eol} = 1;
 		    }
 		}
