@@ -67,7 +67,7 @@ configure_requires:
 configure_recommends:
   ExtUtils::MakeMaker:  7.22
 configure_suggests:
-  ExtUtils::MakeMaker:  7.70
+  ExtUtils::MakeMaker:  7.72
 test_requires:
   Test::Harness:        0
   Test::More:           0.88
@@ -95,8 +95,8 @@ optional_features:
     requires:
       Text::CSV_XS:                        0.71
     recommends:
-      Text::CSV:                           2.05
-      Text::CSV_PP:                        2.05
+      Text::CSV:                           2.06
+      Text::CSV_PP:                        2.06
       Text::CSV_XS:                        1.60
   opt_xls:
     description:        Provides parsing of Microsoft Excel files

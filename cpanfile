@@ -19,7 +19,7 @@ on "configure" => sub {
 
     recommends "ExtUtils::MakeMaker"      => "7.22";
 
-    suggests   "ExtUtils::MakeMaker"      => "7.70";
+    suggests   "ExtUtils::MakeMaker"      => "7.72";
     };
 
 on "test" => sub {
@@ -33,8 +33,8 @@ on "test" => sub {
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
     requires   "Text::CSV_XS"             => "0.71";
 
-    recommends "Text::CSV"                => "2.05";
-    recommends "Text::CSV_PP"             => "2.05";
+    recommends "Text::CSV"                => "2.06";
+    recommends "Text::CSV_PP"             => "2.06";
     recommends "Text::CSV_XS"             => "1.60";
     };
 
