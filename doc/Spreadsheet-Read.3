@@ -763,6 +763,8 @@ pair (1 based):
 \& my @col = $sheet\->column ($col);
 .Ve
 .PP
+\&\f(CW$col\fR can be numeric (1\-based) or traditional.
+.PP
 Get full column of formatted values (like \f(CW\*(C`$sheet\->{C1} .. $sheet\->{C9}\*(C'\fR)
 .PP
 Note that the indexes in the returned list are 0\-based.
@@ -773,6 +775,8 @@ Note that the indexes in the returned list are 0\-based.
 .Vb 1
 \& my @col = $sheet\->cellcolumn ($col);
 .Ve
+.PP
+\&\f(CW$col\fR can be numeric (1\-based) or traditional.
 .PP
 Get full column of unformatted values (like \f(CW\*(C`$sheet\->{cell}[3][1] .. $sheet\->{cell}[3][9]\*(C'\fR)
 .PP

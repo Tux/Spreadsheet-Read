@@ -599,6 +599,8 @@ pair (1 based):
 
     my @col = $sheet->column ($col);
 
+`$col` can be numeric (1-based) or traditional.
+
 Get full column of formatted values (like `$sheet->{C1} .. $sheet->{C9}`)
 
 Note that the indexes in the returned list are 0-based.
@@ -606,6 +608,8 @@ Note that the indexes in the returned list are 0-based.
 ### cellcolumn
 
     my @col = $sheet->cellcolumn ($col);
+
+`$col` can be numeric (1-based) or traditional.
 
 Get full column of unformatted values (like `$sheet->{cell}[3][1] .. $sheet->{cell}[3][9]`)
 

@@ -314,7 +314,7 @@ sub cr2cell {
 # cell2cr ("D18") => (4, 18)
 sub cell2cr {
     ref $_[0] eq __PACKAGE__ and shift;
-    my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
+    my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z-z]+)([0-9]+)$/) or return (0, 0);
     (label2col ($cc), $r);
     } # cell2cr
 
@@ -1588,18 +1588,22 @@ sub row {
     } # row
 
 # my @col = $sheet->cellcolumn (1);
+# my @col = $sheet->cellcolumn ("A");
 sub cellcolumn {
     my ($sheet, $col) = @_;
-    defined $col && $col > 0 && $col <= $sheet->{maxcol} or return;
+    defined $col or return;
+    $col =~ m/^[A-Za-z]+$/ and $col = label2col ($col);
+    $col > 0 && $col <= $sheet->{maxcol} or return;
     my $s = $sheet->{cell};
     map { $s->[$col][$_] } 1..$sheet->{maxrow};
     } # cellcolumn
 
 # my @col = $sheet->column (1);
+# my @col = $sheet->column ("A");
 sub column {
     my ($sheet, $col) = @_;
     defined $col or return;
-    $col =~ m/^[A-Za-z]+$/ and $col = label2col (uc $col);
+    $col =~ m/^[A-Za-z]+$/ and $col = label2col ($col);
     $col > 0 && $col <= $sheet->{maxcol} or return;
     map { $sheet->{$sheet->cr2cell ($col, $_)} } 1..$sheet->{maxrow};
     } # column
@@ -2304,6 +2308,8 @@ pair (1 based):
 
  my @col = $sheet->column ($col);
 
+C<$col> can be numeric (1-based) or traditional.
+
 Get full column of formatted values (like C<< $sheet->{C1} .. $sheet->{C9} >>)
 
 Note that the indexes in the returned list are 0-based.
@@ -2311,6 +2317,8 @@ Note that the indexes in the returned list are 0-based.
 =head3 cellcolumn
 
  my @col = $sheet->cellcolumn ($col);
+
+C<$col> can be numeric (1-based) or traditional.
 
 Get full column of unformatted values (like C<< $sheet->{cell}[3][1] .. $sheet->{cell}[3][9] >>)
 

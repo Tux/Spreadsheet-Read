@@ -641,6 +641,8 @@ my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code
 
 <pre><code>my @col = $sheet-&gt;column ($col);</code></pre>
 
+<p><code>$col</code> can be numeric (1-based) or traditional.</p>
+
 <p>Get full column of formatted values (like <code>$sheet-&gt;{C1} .. $sheet-&gt;{C9}</code>)</p>
 
 <p>Note that the indexes in the returned list are 0-based.</p>
@@ -648,6 +650,8 @@ my ($col, $row) = $sheet-&gt;cell2cr (&quot;AB4&quot;); # returns (28,  4)</code
 <h3 id="cellcolumn">cellcolumn</h3>
 
 <pre><code>my @col = $sheet-&gt;cellcolumn ($col);</code></pre>
+
+<p><code>$col</code> can be numeric (1-based) or traditional.</p>
 
 <p>Get full column of unformatted values (like <code>$sheet-&gt;{cell}[3][1] .. $sheet-&gt;{cell}[3][9]</code>)</p>
 

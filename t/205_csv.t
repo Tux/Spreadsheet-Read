@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 273;
+my     $tests = 275;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -71,11 +71,13 @@ is ($sheet->row     (255), undef, "No such row 255");
 is ($sheet->row     (-55), undef, "No such row -55");
 is ($sheet->row     (  0), undef, "No such row   0");
 
-is_deeply ([$sheet->cellcolumn (1)], ["A1","A2","A3","A4",""], "col 1");
+is_deeply ([$sheet->cellcolumn (  1)], ["A1","A2","A3","A4",""], "col 1");
+is_deeply ([$sheet->cellcolumn ("A")], ["A1","A2","A3","A4",""], "col 1");
 is ($sheet->cellcolumn (255), undef, "No such col 255");
 is ($sheet->cellcolumn (-55), undef, "No such col -55");
 is ($sheet->cellcolumn (  0), undef, "No such col   0");
-is_deeply ([$sheet->column     (1)], ["A1","A2","A3","A4",""], "col 1");
+is_deeply ([$sheet->column       (1)], ["A1","A2","A3","A4",""], "col 1");
+is_deeply ([$sheet->column     ("A")], ["A1","A2","A3","A4",""], "col 1");
 is ($sheet->column     (255), undef, "No such col 255");
 is ($sheet->column     (-55), undef, "No such col -55");
 is ($sheet->column     (  0), undef, "No such col   0");

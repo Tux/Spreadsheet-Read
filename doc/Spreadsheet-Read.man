@@ -588,6 +588,8 @@ DESCRIPTION
 
         my @col = $sheet->column ($col);
 
+       $col can be numeric (1-based) or traditional.
+
        Get full column of formatted values (like "$sheet->{C1} ..
        $sheet->{C9}")
 
@@ -596,6 +598,8 @@ DESCRIPTION
        cellcolumn
 
         my @col = $sheet->cellcolumn ($col);
+
+       $col can be numeric (1-based) or traditional.
 
        Get full column of unformatted values (like "$sheet->{cell}[3][1] ..
        $sheet->{cell}[3][9]")
