@@ -110,8 +110,8 @@ DESCRIPTION
        To keep as close contact to spreadsheet users, row and column 1 have
        index 1 too in the "cell" element of the sheet hash, so cell "A1" is
        the same as "cell" [1, 1] (column first). To switch between the two,
-       there are helper functions available: "cell2cr ()", "cr2cell ()", and
-       "col2label ()".
+       there are helper functions available: "cell2cr ()", "cr2cell ()",
+       "col2label ()" and "label2col ()".
 
        The "cell" hash entry contains unformatted data, while the hash entries
        with the traditional labels contain the formatted values (if
@@ -332,15 +332,27 @@ DESCRIPTION
 
        col2label
 
-        my $col_id = col2label (col);
+        my $col_id = col2label ($col);
 
-        my $col_id = $book->col2label (col);  # OO
+        my $col_id = $book->col2label ($col);  # OO
 
        "col2label ()" converts a "(column)" (1 based) to the letters used in
        the traditional cell notation:
 
          my $id = col2label ( 4); # $id now "D"
          my $id = col2label (28); # $id now "AB"
+
+       label2col
+
+        my $col = label2col ($id);
+
+        my $col = $book->label2col ($id);  # OO
+
+       "label2col ()" converts a "(column ID)" to the 1-based numeric
+       equivalent or "undef" on invalid $id.
+
+         my $c = label2col ("D");  # $c now 4
+         my $c = label2col ("AB"); # $c now 28
 
        cr2cell
 
@@ -1240,4 +1252,4 @@ COPYRIGHT AND LICENSE
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
 
-perl v5.40.1                      2025-03-14                           Read(3)
+perl v5.40.1                      2025-04-04                           Read(3)

@@ -32,6 +32,7 @@
           <li><a href="#new">new</a></li>
           <li><a href="#ReadData">ReadData</a></li>
           <li><a href="#col2label">col2label</a></li>
+          <li><a href="#label2col">label2col</a></li>
           <li><a href="#cr2cell">cr2cell</a></li>
           <li><a href="#cell2cr">cell2cr</a></li>
           <li><a href="#row">row</a></li>
@@ -191,7 +192,7 @@ $book-&gt;add (&quot;test.xls&quot;);</code></pre>
       :
       :</code></pre>
 
-<p>To keep as close contact to spreadsheet users, row and column 1 have index 1 too in the <code>cell</code> element of the sheet hash, so cell &quot;A1&quot; is the same as <code>cell</code> [1, 1] (column first). To switch between the two, there are helper functions available: <code>cell2cr ()</code>, <code>cr2cell ()</code>, and <code>col2label ()</code>.</p>
+<p>To keep as close contact to spreadsheet users, row and column 1 have index 1 too in the <code>cell</code> element of the sheet hash, so cell &quot;A1&quot; is the same as <code>cell</code> [1, 1] (column first). To switch between the two, there are helper functions available: <code>cell2cr ()</code>, <code>cr2cell ()</code>, <code>col2label ()</code> and <code>label2col ()</code>.</p>
 
 <p>The <code>cell</code> hash entry contains unformatted data, while the hash entries with the traditional labels contain the formatted values (if applicable).</p>
 
@@ -418,14 +419,25 @@ E1      E3</code></pre>
 
 <h3 id="col2label">col2label</h3>
 
-<pre><code>my $col_id = col2label (col);
+<pre><code>my $col_id = col2label ($col);
 
-my $col_id = $book-&gt;col2label (col);  # OO</code></pre>
+my $col_id = $book-&gt;col2label ($col);  # OO</code></pre>
 
 <p><code>col2label ()</code> converts a <code>(column)</code> (1 based) to the letters used in the traditional cell notation:</p>
 
 <pre><code>my $id = col2label ( 4); # $id now &quot;D&quot;
 my $id = col2label (28); # $id now &quot;AB&quot;</code></pre>
+
+<h3 id="label2col">label2col</h3>
+
+<pre><code>my $col = label2col ($id);
+
+my $col = $book-&gt;label2col ($id);  # OO</code></pre>
+
+<p><code>label2col ()</code> converts a <code>(column ID)</code> to the 1-based numeric equivalent or <code>undef</code> on invalid <code>$id</code>.</p>
+
+<pre><code>my $c = label2col (&quot;D&quot;);  # $c now 4
+my $c = label2col (&quot;AB&quot;); # $c now 28</code></pre>
 
 <h3 id="cr2cell">cr2cell</h3>
 

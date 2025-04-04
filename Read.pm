@@ -38,7 +38,7 @@ use 5.008001;
 use strict;
 use warnings;
 
-our $VERSION = "0.93";
+our $VERSION = "0.94";
 sub  Version { $VERSION }
 
 use Carp;
@@ -288,6 +288,20 @@ sub col2label {
     $cell;
     } # col2label
 
+# label2col ("D") => 4
+sub label2col {
+    ref $_[0] eq __PACKAGE__ and shift;
+    my $l = shift        or  return;
+    $l =~ m/^[0-9]+$/    and return $l + 0;
+    $l =~ m/^[A-Za-z]+$/ or  return;
+    $l = uc $l;
+    my $c = 0;
+    while ($l =~ s/^([A-Z])//) {
+	$c = 26 * $c + 1 + ord ($1) - ord ("A");
+	}
+    return $c;
+    } # label2col
+
 # cr2cell (4, 18) => "D18"
 # No prototype to allow 'cr2cell (@rowcol)'
 sub cr2cell {
@@ -301,11 +315,7 @@ sub cr2cell {
 sub cell2cr {
     ref $_[0] eq __PACKAGE__ and shift;
     my ($cc, $r) = (uc ($_[0]||"") =~ m/^([A-Z]+)([0-9]+)$/) or return (0, 0);
-    my $c = 0;
-    while ($cc =~ s/^([A-Z])//) {
-	$c = 26 * $c + 1 + ord ($1) - ord ("A");
-	}
-    ($c, $r);
+    (label2col ($cc), $r);
     } # cell2cr
 
 # my @row = cellrow ($book->[1], 1);
@@ -1531,6 +1541,11 @@ sub col2label {
     return Spreadsheet::Read::col2label (@_);
     } # col2label
 
+sub label2col {
+    $_[0] =~ m/::/ and shift; # class unused
+    return Spreadsheet::Read::label2col (@_);
+    } # label2col
+
 sub cr2cell {
     $_[0] =~ m/::/ and shift; # class unused
     return Spreadsheet::Read::cr2cell (@_);
@@ -1583,7 +1598,9 @@ sub cellcolumn {
 # my @col = $sheet->column (1);
 sub column {
     my ($sheet, $col) = @_;
-    defined $col && $col > 0 && $col <= $sheet->{maxcol} or return;
+    defined $col or return;
+    $col =~ m/^[A-Za-z]+$/ and $col = label2col (uc $col);
+    $col > 0 && $col <= $sheet->{maxcol} or return;
     map { $sheet->{$sheet->cr2cell ($col, $_)} } 1..$sheet->{maxrow};
     } # column
 
@@ -1793,7 +1810,7 @@ To keep as close contact to spreadsheet users, row and column 1 have
 index 1 too in the C<cell> element of the sheet hash, so cell "A1" is
 the same as C<cell> [1, 1] (column first). To switch between the two,
 there are helper functions available: C<cell2cr ()>, C<cr2cell ()>,
-and C<col2label ()>.
+C<col2label ()> and C<label2col ()>.
 
 The C<cell> hash entry contains unformatted data, while the hash entries
 with the traditional labels contain the formatted values (if applicable).
@@ -2034,15 +2051,27 @@ that parser supports attributes.
 
 =head3 col2label
 
- my $col_id = col2label (col);
+ my $col_id = col2label ($col);
 
- my $col_id = $book->col2label (col);  # OO
+ my $col_id = $book->col2label ($col);  # OO
 
 C<col2label ()> converts a C<(column)> (1 based) to the letters used in the
 traditional cell notation:
 
   my $id = col2label ( 4); # $id now "D"
   my $id = col2label (28); # $id now "AB"
+
+=head3 label2col
+
+ my $col = label2col ($id);
+
+ my $col = $book->label2col ($id);  # OO
+
+C<label2col ()> converts a C<(column ID)> to the 1-based numeric equivalent
+or C<undef> on invalid C<$id>.
+
+  my $c = label2col ("D");  # $c now 4
+  my $c = label2col ("AB"); # $c now 28
 
 =head3 cr2cell
 

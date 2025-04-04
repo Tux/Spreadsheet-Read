@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Read 3"
-.TH Read 3 2025-03-14 "perl v5.40.1" "User Contributed Perl Documentation"
+.TH Read 3 2025-04-04 "perl v5.40.1" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -180,7 +180,7 @@ To keep as close contact to spreadsheet users, row and column 1 have
 index 1 too in the \f(CW\*(C`cell\*(C'\fR element of the sheet hash, so cell "A1" is
 the same as \f(CW\*(C`cell\*(C'\fR [1, 1] (column first). To switch between the two,
 there are helper functions available: \f(CW\*(C`cell2cr ()\*(C'\fR, \f(CW\*(C`cr2cell ()\*(C'\fR,
-and \f(CW\*(C`col2label ()\*(C'\fR.
+\&\f(CW\*(C`col2label ()\*(C'\fR and \f(CW\*(C`label2col ()\*(C'\fR.
 .PP
 The \f(CW\*(C`cell\*(C'\fR hash entry contains unformatted data, while the hash entries
 with the traditional labels contain the formatted values (if applicable).
@@ -432,9 +432,9 @@ that parser supports attributes.
 .IX Subsection "col2label"
 .PP
 .Vb 1
-\& my $col_id = col2label (col);
+\& my $col_id = col2label ($col);
 \&
-\& my $col_id = $book\->col2label (col);  # OO
+\& my $col_id = $book\->col2label ($col);  # OO
 .Ve
 .PP
 \&\f(CW\*(C`col2label ()\*(C'\fR converts a \f(CW\*(C`(column)\*(C'\fR (1 based) to the letters used in the
@@ -443,6 +443,23 @@ traditional cell notation:
 .Vb 2
 \&  my $id = col2label ( 4); # $id now "D"
 \&  my $id = col2label (28); # $id now "AB"
+.Ve
+.PP
+\fIlabel2col\fR
+.IX Subsection "label2col"
+.PP
+.Vb 1
+\& my $col = label2col ($id);
+\&
+\& my $col = $book\->label2col ($id);  # OO
+.Ve
+.PP
+\&\f(CW\*(C`label2col ()\*(C'\fR converts a \f(CW\*(C`(column ID)\*(C'\fR to the 1\-based numeric equivalent
+or \f(CW\*(C`undef\*(C'\fR on invalid \f(CW$id\fR.
+.PP
+.Vb 2
+\&  my $c = label2col ("D");  # $c now 4
+\&  my $c = label2col ("AB"); # $c now 28
 .Ve
 .PP
 \fIcr2cell\fR

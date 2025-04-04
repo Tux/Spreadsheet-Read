@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 118;
+use Test::More tests => 131;
 use Test::NoWarnings;
 
 use Spreadsheet::Read qw(:DEFAULT parses rows );
@@ -61,7 +61,12 @@ foreach my $x ([         1,      1, "A",      "A1"      ],
     is ($cell, $x->[3], "Cell for ($c, $r)");
 
     is (Spreadsheet::Read::col2label ($x->[0]), $x->[2], "Col $c eq $x->[2]");
+    is (Spreadsheet::Read::label2col ($x->[2]), $x->[0], "Col $x->[2] eq $c") if $x->[2];
     }
+is (Spreadsheet::Read::label2col (undef), undef, "Col undef eq undef");
+is (Spreadsheet::Read::label2col (   ""), undef, "Col    '' eq undef");
+is (Spreadsheet::Read::label2col (   -2), undef, "Col    -2 eq undef");
+is (Spreadsheet::Read::label2col ("%_#"), undef, "Col   %_# eq undef");
 
 # Some illegal rows () calls
 for (undef, "", " ", 0, 1, [], {}) {

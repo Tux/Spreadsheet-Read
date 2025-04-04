@@ -1,3 +1,6 @@
+0.94	- 04 Apr 2025, H.Merijn Brand
+    * Add label2col ()
+
 0.93	- 17 Mar 2025, H.Merijn Brand
     * Add ranges and cellranges
 

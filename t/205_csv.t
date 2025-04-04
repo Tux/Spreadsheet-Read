@@ -5,7 +5,7 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 271;
+my     $tests = 273;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -223,8 +223,10 @@ is_deeply ($sheet2, $sheet3, "Compare sheets");
 ok ($csv->add ("files/test.csv", label => "Test"), "Add with label");
 is_deeply ([ $csv->sheets ], [qw( files/test.csv files/test.csv[2] Test )], "Sheet names");
 
-is ($csv->col2label (4),             "D",  "col2label as book  method");
-is ($csv->sheet (1)->col2label (27), "AA", "col2label as sheet method");
+is ($csv->col2label (4),               "D",  "col2label as book  method");
+is ($csv->sheet (1)->col2label (27),   "AA", "col2label as sheet method");
+is ($csv->label2col ("D"),             4,    "label2col as book  method");
+is ($csv->sheet (1)->label2col ("AA"), 27,   "label2col as sheet method");
 
 is_deeply ($csv->sheet (1)->range ("A2:B3"), {
     A2 => "A2", A3 => "A3", B2 => "B2", B3 => "" }, "range (A2:B3)");
