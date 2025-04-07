@@ -53,8 +53,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 ok ($csv = ReadDataStream ("files/test_m.csv", sep => ";"),	"Read/Parse M\$ csv file");
@@ -69,8 +69,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 ok ($csv = ReadDataStream ("files/test_x.csv", sep => "=", quote => "_"),
@@ -86,8 +86,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 unless ($ENV{AUTOMATED_TESTING}) {

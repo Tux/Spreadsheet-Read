@@ -47,8 +47,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 ok ($csv = ReadData ("files/test_m.csv"),	"Read/Parse M\$ csv file");
@@ -63,8 +63,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 ok ($csv = ReadData ("files/test_x.csv", sep => "=", quote => "_"),
@@ -80,8 +80,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 foreach my $attr ("strip", "trim") {
@@ -171,9 +171,9 @@ foreach my $attr ("pivot", "transpose") {
     ok (1, "Undefined fields");
     foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
 	my ($c, $r) = cell2cr ($cell);
-	is ($csv->[1]{cell}[$r][$c],	"",   	"Unformatted cell $cell");
+	is ($csv->[1]{cell}[$r][$c],	"",	"Unformatted cell $cell");
 	my $llec = cr2cell ($r, $c);
-	is ($csv->[1]{$llec},		"",   	"Formatted   cell $cell");
+	is ($csv->[1]{$llec},		"",	"Formatted   cell $cell");
 	}
     }
 

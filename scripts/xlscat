@@ -115,7 +115,7 @@ my $enc_i;		# Input  encoding
 my $enc_o;		# Output encoding
 GetOptions (
     "help|?"		=> sub { usage (0); },
-    "V|version" 	=> sub { print "$CMD [$VERSION] Spreadsheet::Read [$Spreadsheet::Read::VERSION]\n"; exit 0; },
+    "V|version"		=> sub { print "$CMD [$VERSION] Spreadsheet::Read [$Spreadsheet::Read::VERSION]\n"; exit 0; },
       "list"		=> sub { list_parsers (); },
 
     # Input CSV

@@ -35,20 +35,20 @@ sub usage {
 
 use Getopt::Long qw( :config bundling noignorecase passthrough );
 GetOptions (
-    "help|?"    	=> sub { usage 0; },
-    "V|version" 	=> sub { print "$cmd [$VERSION]\n"; exit 0; },
+    "help|?"		=> sub { usage 0; },
+    "V|version"		=> sub { print "$cmd [$VERSION]\n"; exit 0; },
       "man"		=> sub { pod_nroff    (); },
       "info"		=> sub { pod_text     (); },
       "list"		=> sub { list_parsers (); },
 
-    "o|c|out=s"	 	=> \ my $csv,
+    "o|c|out=s"		=> \ my $csv,
     "i|x|in=s"		=> \ my $xls,
-    "f|force!"  	=> \ my $opt_f,
+    "f|force!"		=> \ my $opt_f,
 
     "s|sep=s"		=> \ my $opt_s,
 
-    "A|all!"    	=> \ my $opt_A,
-    "N|no-pfx!" 	=> \ my $opt_N,
+    "A|all!"		=> \ my $opt_A,
+    "N|no-pfx!"		=> \ my $opt_N,
     "Z|zip!"		=> \ my $opt_Z,
     "J|join=s"		=> \(my $opt_J = "-"),
 

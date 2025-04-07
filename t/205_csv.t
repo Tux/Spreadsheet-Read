@@ -97,10 +97,10 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = $csv->cell2cr ($cell);
-    is ($sheet->{cell}[$c][$r],	"",   	"Unformatted cell $cell direct");
-    is ($sheet->{$cell},	"",   	"Formatted   cell $cell direct");
-    is ($sheet->cell ($c, $r),	"",   	"Unformatted cell $cell method");
-    is ($sheet->cell ($cell),	"",   	"Formatted   cell $cell method");
+    is ($sheet->{cell}[$c][$r],	"",	"Unformatted cell $cell direct");
+    is ($sheet->{$cell},	"",	"Formatted   cell $cell direct");
+    is ($sheet->cell ($c, $r),	"",	"Unformatted cell $cell method");
+    is ($sheet->cell ($cell),	"",	"Formatted   cell $cell method");
     }
 
 ok ($csv = Spreadsheet::Read->new ("files/test_m.csv"),	"Read/Parse M\$ csv file");
@@ -116,8 +116,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = $sheet->cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 ok ($csv = Spreadsheet::Read->new ("files/test_x.csv", sep => "=", quote => "_"),
@@ -133,8 +133,8 @@ foreach my $cell (qw( A1 A2 A3 A4 B1 B2 B4 C3 C4 D1 D3 )) {
 ok (1, "Undefined fields");
 foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
     my ($c, $r) = cell2cr ($cell);
-    is ($csv->[1]{cell}[$c][$r],	"",   	"Unformatted cell $cell");
-    is ($csv->[1]{$cell},		"",   	"Formatted   cell $cell");
+    is ($csv->[1]{cell}[$c][$r],	"",	"Unformatted cell $cell");
+    is ($csv->[1]{$cell},		"",	"Formatted   cell $cell");
     }
 
 {   # RT#74976 - Error Received when reading empty sheets
