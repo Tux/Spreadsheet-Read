@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # xls2csv: Convert supported spreadsheet formats to CSV
-#	   (m)'25 [2025-04-07] Copyright H.M.Brand 2008-2025
+#	   (m)'24 [2024-12-16] Copyright H.M.Brand 2008-2025
 
 require 5.008001;
 

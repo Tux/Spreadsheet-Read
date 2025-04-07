@@ -16,13 +16,15 @@ if ($ENV{PERLBREW_HOME} and $ENV{PERLBREW_HOME} eq "/home/njh/.perlbrew") {
 sub link_or_copy {
     my ($source, $dest) = @_;
 
+    -f $dest and unlink $dest;
     link ($source, $dest) or copy ($source, $dest);
     } # link_or_copy
 
+link_or_copy "scripts/xlsx2csv", "scripts/xls2csv";
+link_or_copy "scripts/xlscat",   "scripts/xlsgrep";
+
 my @exe;
 unless (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING} == 1) {
-    -f "scripts/xls2csv" or link_or_copy "scripts/xlsx2csv", "scripts/xls2csv";
-    -f "scripts/xlsgrep" or link_or_copy "scripts/xlscat",   "scripts/xlsgrep";
     for ( [ "xlscat",	"Convert Spreadsheet to plain text or CSV"	],
 	  [ "xlsgrep",	"Grep pattern from Spreadsheet"			],
 	  [ "ss2tk",	"Show a Spreadsheet in Perl/Tk"			],
