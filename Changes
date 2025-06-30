@@ -1,5 +1,6 @@
-0.94	- 04 Apr 2025, H.Merijn Brand
+0.94	- 30 Jun 2025, H.Merijn Brand
     * Add label2col ()
+    * $sheet->{attr} should always be there, might be empty (issue#56)
 
 0.93	- 17 Mar 2025, H.Merijn Brand
     * Add ranges and cellranges

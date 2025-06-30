@@ -18,8 +18,8 @@ BEGIN { delete @ENV{qw( LANG LC_ALL LC_DATE )}; }
 ok (my $xls = ReadData ("files/Dates.xlsx",
     attr => 1, dtfmt => "yyyy-mm-dd"), "Excel Date testcase");
 
-ok (my $ss = $xls->[1],	"sheet");
-is ($ss->{attr}, undef,	"attr");
+ok (my $ss = $xls->[1],	    "sheet");
+is_deeply ($ss->{attr}, [], "attr");
 
 ok (1, "$xls->[0]{parser} $xls->[0]{version} does not support formats");
 

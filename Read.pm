@@ -826,6 +826,8 @@ sub ReadData {
 		    mincol => 1,
 		    indx   => 1,
 		    merged => [],
+		    cell   => [],
+		    attr   => [],
 		    };
 		# Transpose to column vectors.
 		# The A1, B5 etc items could be added here as well.
