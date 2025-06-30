@@ -19,11 +19,17 @@ my $attr = $ss->{attr};
 
 foreach my $row (1 .. 19) {
     my @type = map { $ss->{attr}[$_][$row]{type} } 0 .. 3;
-    is ($type[1], "numeric",	"Type A$row numeric");
-    foreach my $col (2, 3) {	# Allow numeric for percentage in main test
-	my $cell   = ("A".."C")[$col - 1].$row;
-	my $expect = $type[$col] eq "numeric" ? "numeric" : "percentage";
-	is ($type[$col], $expect, "Type B$row percentage");
+
+    SKIP: {
+	defined $type[1] or
+	    skip "$xls->[0]{parser} $xls->[0]{version} does not reliably support types", 3;
+
+	is ($type[1], "numeric",	"Type A$row numeric");
+	foreach my $col (2, 3) {	# Allow numeric for percentage in main test
+	    my $cell   = ("A".."C")[$col - 1].$row;
+	    my $expect = $type[$col] eq "numeric" ? "numeric" : "percentage";
+	    is ($type[$col], $expect, "Type B$row percentage");
+	    }
 	}
 
     SKIP: {
