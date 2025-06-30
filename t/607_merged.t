@@ -15,7 +15,13 @@ my $parser = Spreadsheet::Read::parses ("xlsx") or
 $parser eq "Spreadsheet::XLSX" and
     plan skip_all => "No merged cell support in $parser";
 
-ok (my $ss = ReadData ("files/merged.xlsx", attr => 1)->[1], "Read merged xlsx");
+my $xls = ReadData ("files/merged.xlsx", attr => 1);
+my $ss  = $xls->[1];
+
+defined $ss->{attr}[1][1]{merged} or
+    plan skip_all => "$xls->[0]{parser} $xls->[0]{version} does not support merge information";
+
+ok ($ss, "Read merged xlsx");
 
 is ($ss->{attr}[1][1]{merged}, 0, "unmerged A1");
 is ($ss->{attr}[2][1]{merged}, 1, "  merged B1");
