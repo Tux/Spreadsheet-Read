@@ -9,17 +9,17 @@ requires   "List::Util";
 recommends "Data::Dumper"             => "2.183";
 recommends "Data::Peek"               => "0.53";
 recommends "Encode"                   => "3.21";
-recommends "File::Temp"               => "0.2311";
+recommends "File::Temp"               => "0.2312";
 recommends "IO::Scalar";
 
-suggests   "Data::Dumper"             => "2.189";
+suggests   "Data::Dumper"             => "2.192";
 
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
 
     recommends "ExtUtils::MakeMaker"      => "7.22";
 
-    suggests   "ExtUtils::MakeMaker"      => "7.72";
+    suggests   "ExtUtils::MakeMaker"      => "7.76";
     };
 
 on "test" => sub {
@@ -27,7 +27,7 @@ on "test" => sub {
     requires   "Test::More"               => "0.88";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302209";
+    recommends "Test::More"               => "1.302219";
     };
 
 feature "opt_csv", "Provides parsing of CSV streams" => sub {
@@ -35,7 +35,7 @@ feature "opt_csv", "Provides parsing of CSV streams" => sub {
 
     recommends "Text::CSV"                => "2.06";
     recommends "Text::CSV_PP"             => "2.06";
-    recommends "Text::CSV_XS"             => "1.60";
+    recommends "Text::CSV_XS"             => "1.61";
     };
 
 feature "opt_gnumeric", "Provides parsing of Gnumeric spreadsheets" => sub {
@@ -67,7 +67,7 @@ feature "opt_xls", "Provides parsing of Microsoft Excel files" => sub {
     requires   "Spreadsheet::ParseExcel"  => "0.34";
     requires   "Spreadsheet::ParseExcel::FmtDefault";
 
-    recommends "OLE::Storage_Lite"        => "0.22";
+    recommends "OLE::Storage_Lite"        => "0.24";
     recommends "Spreadsheet::ParseExcel"  => "0.66";
     };
 

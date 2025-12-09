@@ -46,7 +46,7 @@ version:                VERSION
 abstract:               Meta-Wrapper for reading spreadsheet data
 license:                perl
 author:
-  - H.Merijn Brand <perl5@tux.freedom.nl>
+  - H.Merijn Brand <HMBRAND@cpan.org>
 generated_by:           Author
 distribution_type:      module
 provides:
@@ -67,7 +67,7 @@ configure_requires:
 configure_recommends:
   ExtUtils::MakeMaker:  7.22
 configure_suggests:
-  ExtUtils::MakeMaker:  7.72
+  ExtUtils::MakeMaker:  7.76
 test_requires:
   Test::Harness:        0
   Test::More:           0.88
@@ -75,13 +75,13 @@ test_requires:
 recommends:
   IO::Scalar:           0
   Encode:               3.21
-  File::Temp:           0.2311
+  File::Temp:           0.2312
   Data::Peek:           0.53
   Data::Dumper:         2.183
 suggests:
-  Data::Dumper:         2.189
+  Data::Dumper:         2.192
 test_recommends:
-  Test::More:           1.302209
+  Test::More:           1.302219
 resources:
   license:              http://dev.perl.org/licenses/
   repository:           https://github.com/Tux/Spreadsheet-Read
@@ -97,7 +97,7 @@ optional_features:
     recommends:
       Text::CSV:                           2.06
       Text::CSV_PP:                        2.06
-      Text::CSV_XS:                        1.60
+      Text::CSV_XS:                        1.61
   opt_xls:
     description:        Provides parsing of Microsoft Excel files
     requires:
@@ -106,7 +106,7 @@ optional_features:
       OLE::Storage_Lite:                   "!= 0.21"
     recommends:
       Spreadsheet::ParseExcel:             0.66
-      OLE::Storage_Lite:                   0.22
+      OLE::Storage_Lite:                   0.24
   opt_xlsx:
     description:        Provides parsing of Microsoft Excel 2007 files
     requires:
