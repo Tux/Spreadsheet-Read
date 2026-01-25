@@ -1,3 +1,6 @@
+0.95	- 25 Jan 2026, H.Merijn Brand
+    * It's 2026
+
 0.94	- 09 Dec 2025, H.Merijn Brand
     * Add label2col ()
     * $sheet->{attr} should always be there, might be empty (issue#56)

@@ -12,8 +12,6 @@ recommends "Encode"                   => "3.21";
 recommends "File::Temp"               => "0.2312";
 recommends "IO::Scalar";
 
-suggests   "Data::Dumper"             => "2.192";
-
 on "configure" => sub {
     requires   "ExtUtils::MakeMaker";
 

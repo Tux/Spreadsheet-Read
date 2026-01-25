@@ -78,8 +78,6 @@ recommends:
   File::Temp:           0.2312
   Data::Peek:           0.53
   Data::Dumper:         2.183
-suggests:
-  Data::Dumper:         2.192
 test_recommends:
   Test::More:           1.302219
 resources:
