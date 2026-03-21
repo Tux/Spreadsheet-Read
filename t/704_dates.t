@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my $tests = 18;
 use Test::More;
 require Test::NoWarnings;
 
@@ -28,6 +27,5 @@ ok ($gnumeric = ReadData ("files/Dates.gnumeric"), "Gnumeric date tests");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

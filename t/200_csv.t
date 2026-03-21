@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 295;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -179,6 +178,5 @@ foreach my $attr ("pivot", "transpose") {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

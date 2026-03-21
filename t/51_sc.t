@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 26;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -55,6 +54,5 @@ foreach my $clip (0, 2) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

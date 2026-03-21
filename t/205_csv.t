@@ -5,7 +5,6 @@ use warnings;
 
 # OO version of 200_csv.t
 
-my     $tests = 275;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -254,6 +253,5 @@ is_deeply ($csv->sheet (1)->cellrange (-1, -1, -1, -1), [
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

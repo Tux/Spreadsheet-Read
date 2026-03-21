@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 116;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -155,6 +154,5 @@ is ($ss->{F1},		"",    "formatted a single '");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 256;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -44,6 +43,5 @@ foreach my $col (1 .. $#clr) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

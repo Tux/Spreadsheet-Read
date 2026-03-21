@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 118;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -90,6 +89,5 @@ foreach my $cell (qw( B3 C1 C2 D2 D4 )) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ParseODS"; }
 
-my     $tests = 128;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -17,7 +16,7 @@ my $parser = Spreadsheet::Read::parses ("ods") or
 my $pv = $parser->VERSION;
 print STDERR "# Parser: $parser-$pv\n";
 
-my $notyet = $pv lt "0.25" and $tests -= 10;
+my $notyet = $pv lt "0.25";
 
 {   my $ref;
     $ref = ReadData ("no_such_file.ods");
@@ -186,6 +185,5 @@ is ($ss->{F1},		"'",   "formatted a single '");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

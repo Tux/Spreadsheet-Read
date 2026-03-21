@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::ParseXLSX"; }
 
-my     $tests = 103;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -77,6 +76,5 @@ SKIP: {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

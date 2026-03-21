@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::XLSX"; }
 
-my     $tests = 77;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -38,6 +37,5 @@ foreach my $row (1 .. 19) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

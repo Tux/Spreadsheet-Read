@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Excel::ValueReader::XLSX"; }
 
-my     $tests = 3;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -19,6 +18,5 @@ ok (1, "No percentage support in $xls->[0]{parser}");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

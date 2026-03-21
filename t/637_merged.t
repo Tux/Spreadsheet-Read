@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Excel::ValueReader::XLSX"; }
 
-my $tests = 2;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -20,6 +19,5 @@ ok (1, "No merged cell support in $parser");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 6;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -55,6 +54,5 @@ ok ($xls,				"Open with options, let's see if we get any warnings");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

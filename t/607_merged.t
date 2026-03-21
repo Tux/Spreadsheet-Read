@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 22;
 use     Test::More;
 require Test::NoWarnings;
 

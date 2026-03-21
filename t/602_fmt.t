@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 40;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -59,6 +58,5 @@ SKIP: {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();
