@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ParseODS"; }
 
-my     $tests = 103;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -79,4 +78,4 @@ SKIP: {
 #    Test::NoWarnings::had_no_warnings ();
 #    $tests++;
 #    }
-done_testing ($tests);
+done_testing ();

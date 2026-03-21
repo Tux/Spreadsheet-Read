@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Excel::ValueReader::XLSX"; }
 
-my     $tests = 3;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -23,6 +22,5 @@ is ($fmt->{attr}[2][2]{merged}, undef, "$xls->[0]{parser} does not support attri
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

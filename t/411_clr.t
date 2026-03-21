@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ParseODS"; }
 
-my     $tests = 266;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -70,4 +69,4 @@ is ($ods->sheet (1)->attr ("C3")->bogus_attr,	undef, "C3 bogus attribute OO meth
 #    Test::NoWarnings::had_no_warnings ();
 #    $tests++;
 #    }
-done_testing ($tests);
+done_testing ();

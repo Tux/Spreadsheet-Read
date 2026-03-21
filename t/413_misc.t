@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_ODS} = "Spreadsheet::ParseODS"; }
 
-my     $tests = 5;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -52,4 +51,4 @@ ok (!exists $ods->[1]{A1},		"undef works as option value for 'cells'");
 #    Test::NoWarnings::had_no_warnings ();
 #    $tests++;
 #    }
-done_testing ($tests);
+done_testing ();

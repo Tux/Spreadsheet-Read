@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -44,7 +43,6 @@ my @base = (
 if ($parser->VERSION > 0.23) {
     open my $fh, "<", "files/test.sxc" or die "files/test.sxc: $!\n";
     push @base => [ $fh,	"Parse sxc file handle"	];
-    $tests += 100;
     }
 foreach my $base (@base) {
     my ($txt, $msg) = @$base;
@@ -130,6 +128,5 @@ foreach my $base (@base) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

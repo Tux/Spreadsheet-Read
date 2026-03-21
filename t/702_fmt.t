@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my $tests = 30;
 use Test::More;
 require Test::NoWarnings;
 
@@ -45,6 +44,5 @@ ok ($book = ReadData ("files/attr.gnumeric", attr => 1),
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-my     $tests = 301;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -44,7 +43,6 @@ my @base = (
 if ($parser->VERSION > 0.24) {
     open my $fh, "<", "files/test.ods" or die "files/test.ods: $!\n";
     push @base => [ $fh,	"Parse ods file handle"	];
-    $tests += 100;
     }
 
 foreach my $base (@base) {
@@ -131,6 +129,5 @@ foreach my $base (@base) {
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

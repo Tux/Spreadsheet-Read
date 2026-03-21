@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_CSV} = "Text::CSV_PP"; }
 
-my     $tests = 4;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -25,9 +24,8 @@ is ($csv->[1]{cell}[$csv->[1]{maxcol}][$csv->[1]{maxrow}],
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();
 
 __END__
 ok (1, "Defined fields");

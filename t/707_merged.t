@@ -5,7 +5,6 @@ use warnings;
 
 use Test::More;
 require Test::NoWarnings;
-my $tests = 41;
 
 use Spreadsheet::Read;
 
@@ -74,6 +73,5 @@ is ( $ss->merged_from (9, 9, 9), undef, "merged_from (9, 9, 9)");
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

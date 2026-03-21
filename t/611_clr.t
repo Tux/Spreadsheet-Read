@@ -5,7 +5,6 @@ use warnings;
 
 BEGIN { $ENV{SPREADSHEET_READ_XLSX} = "Spreadsheet::ParseXLSX"; }
 
-my     $tests = 266;
 use     Test::More;
 require Test::NoWarnings;
 
@@ -62,6 +61,5 @@ is ($xls->sheet (1)->attr ("C3")->bogus_attr,	undef, "C3 bogus attribute OO meth
 
 unless ($ENV{AUTOMATED_TESTING}) {
     Test::NoWarnings::had_no_warnings ();
-    $tests++;
     }
-done_testing ($tests);
+done_testing ();

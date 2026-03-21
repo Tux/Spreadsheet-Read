@@ -8,4 +8,4 @@ require Test::NoWarnings;
 
 ok (1, "Spreadsheet::ReadSXC never supported colors");
 
-done_testing (1);
+done_testing ();
