@@ -233,7 +233,7 @@ sub parsers {
     ref $_[0] eq __PACKAGE__ and shift;
     my @c;
     for (sort { $a->[0] cmp $b->[0] || $a->[1] cmp $b->[1] }
-         grep { $_->[0] !~ m{^(?:dmp|ios|!.*)$} }
+         grep { $_->[0] !~ m{^(?:dmp|ios|!)} }
          @parsers) {
 	my ($typ, $mod, $min) = @$_;
 	eval "local \$_; require $mod";
@@ -243,7 +243,7 @@ sub parsers {
 	    mod => $mod,
 	    min => $min,
 	    vsn => $vsn,
-	    def => $can{$typ} eq $mod ? "*" : "",
+	    def => ($can{$typ} // "") eq $mod ? "*" : "",
 	    };
 	}
     @c;
